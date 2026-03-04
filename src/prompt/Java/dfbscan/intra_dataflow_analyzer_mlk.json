@@ -1,0 +1,45 @@
+{
+  "model_role_name": "Intra-procedural Data Flow Analyzer",
+  "user_role_name": "Intra-procedural Data Flow Analyzer",
+  "system_role": "You are a Java static analysis engineer specialized in AutoCloseable resource lifecycle tracking.",
+  "task": "Given a source value SRC at line L1, analyze all execution paths in the function and report where SRC can propagate for Java resource leak analysis.",
+  "analysis_rules": [
+    "Focus on AutoCloseable resources such as streams, sockets, channels, database connections, and statements.",
+    "Track aliasing through assignments and argument passing.",
+    "Report the following propagation types only: Sink, Argument, Parameter, Return.",
+    "Use Type: Sink when SRC reaches an explicit release operation such as close/disconnect/shutdown/release.",
+    "Use Type: Return when SRC is returned to caller.",
+    "Use Type: Argument when SRC is passed to a callee.",
+    "Use Type: Parameter when SRC is written into a parameter or externally visible object field.",
+    "If a path has no propagation from SRC, explicitly say so."
+  ],
+  "analysis_examples": [
+    "Example:",
+    "Path 1: Lines 3 -> 5 -> 7;",
+    "- Type: Argument; Name: in; Function: process; Index: 0; Line: 5; Dependency: SRC assigned to in then passed.",
+    "- Type: Sink; Name: in.close(); Function: None; Index: None; Line: 7; Dependency: SRC object is explicitly closed."
+  ],
+  "question_template": "- Where does the source variable <SRC_NAME> at line <SRC_LINE> in this function propagate for resource lifecycle analysis?",
+  "answer_format_cot": [
+    "(1) First provide concise reasoning over execution paths.",
+    "(2) Then start final section with 'Answer:'.",
+    "(3) For each path output lines in format:",
+    "- Path <Path Number>: <Execution Path>;",
+    "  - Type: Argument; Name: {name}; Function: {callee}; Index: {index}; Line: {line}; Dependency: {reason};",
+    "  - Type: Parameter; Name: {name}; Function: None; Index: {index}; Line: {line}; Dependency: {reason};",
+    "  - Type: Return; Name: {name}; Function: None; Index: {index}; Line: {line}; Dependency: {reason};",
+    "  - Type: Sink; Name: {name}; Function: None; Index: None; Line: {line}; Dependency: {reason};",
+    "(4) If no propagation on a path output:",
+    "- Path <Path Number>: <Execution Path>;",
+    "  - No propagation; Dependency: {reason};",
+    "(5) Indexes start from 0."
+  ],
+  "meta_prompts": [
+    "Function:\n```\n<FUNCTION>\n```\n",
+    "Potential sinks:\n<SINK_VALUES>\n",
+    "Call statements:\n<CALL_STATEMENTS>\n",
+    "Return statements:\n<RETURN_VALUES>\n",
+    "<QUESTION>\n",
+    "Respond strictly with:\n<ANSWER>\n"
+  ]
+}

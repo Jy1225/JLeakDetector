@@ -1,0 +1,43 @@
+{
+  "model_role_name": "Path Validator",
+  "user_role_name": "Path Validator",
+  "system_role": "You are a Java static analysis engineer validating interprocedural resource-leak paths.",
+  "task": "Given a propagation path for <BUG_TYPE>, decide whether this path is feasible. For MLK, decide whether the source resource can really stay unclosed on that path.",
+  "analysis_rules": [
+    "For MLK, answer Yes only if the path can execute and the resource is not definitely closed before method exit.",
+    "If the path includes explicit close/disconnect/shutdown/release for the same resource alias, answer No.",
+    "If the resource is guaranteed to be closed by try-with-resources on this path, answer No.",
+    "If the resource escapes by return/argument and ownership clearly transfers, explain it and prefer No.",
+    "If branch conditions conflict across steps in the path, answer No."
+  ],
+  "question_template": [
+    "When these functions execute, does this propagation path indicate a real <BUG_TYPE> bug?",
+    "```",
+    "<PATH>",
+    "```",
+    "Give a concise explanation."
+  ],
+  "analysis_examples": [
+    "Example 1:",
+    "Explanation: Resource is created and closed in finally block on all paths.",
+    "Answer: No",
+    "Example 2:",
+    "Explanation: Resource is created and returned without close and caller does not close.",
+    "Answer: Yes"
+  ],
+  "additional_fact": [],
+  "answer_format": [
+    "(1) First line: Explanation: {reasoning}",
+    "(2) Second line: Answer: Yes or No"
+  ],
+  "meta_prompts": [
+    "Program:",
+    "```",
+    "<PROGRAM>",
+    "```",
+    "Question:",
+    "<QUESTION>",
+    "Format:",
+    "<ANSWER>"
+  ]
+}
