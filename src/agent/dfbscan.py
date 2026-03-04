@@ -100,6 +100,7 @@ class DFBScanAgent(Agent):
             if self.language == "Java" and self.bug_type == "MLK"
             else None
         )
+        self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.state = DFBScanState(self.src_values, self.sink_values)
@@ -378,7 +379,7 @@ class DFBScanAgent(Agent):
                         ValueLabel.ARG,
                         ValueLabel.OUT,
                     }:
-                        # For other propagation types, check further external matches.
+                        # Case 3: external mapping exists, keep inter-procedural exploration.
                         if (value, ctx) in external_match_snapshot:
                             for value_next, ctx_next in external_match_snapshot[
                                 (value, ctx)
@@ -387,6 +388,29 @@ class DFBScanAgent(Agent):
                                     src_value,
                                     (value_next, ctx_next),
                                     path_with_unknown_status + [value, value_next],
+                                )
+                        # Case 1 / Case 2 for Java MLK:
+                        #   - no real transfer -> leak candidate
+                        #   - real transfer but chain broken -> responsibility transfer
+                        elif self.language == "Java" and self.bug_type == "MLK":
+                            transfer_kind, reason = (
+                                self.__classify_java_mlk_external_termination(value)
+                            )
+                            if transfer_kind == "no_real_transfer":
+                                candidate_path = path_with_unknown_status + [value]
+                                if src_value not in candidate_path:
+                                    candidate_path = [src_value] + candidate_path
+                                self.state.update_potential_buggy_paths(
+                                    src_value, candidate_path
+                                )
+                            else:
+                                transfer_path = path_with_unknown_status + [value]
+                                if src_value not in transfer_path:
+                                    transfer_path = [src_value] + transfer_path
+                                self.__record_java_mlk_transfer(
+                                    src_value,
+                                    transfer_path,
+                                    reason,
                                 )
 
         # Process if the current value has external value matches.
@@ -572,6 +596,7 @@ class DFBScanAgent(Agent):
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
+        self.__dump_java_mlk_transfer_records()
         return
 
     def start_scan(self) -> None:
@@ -610,6 +635,7 @@ class DFBScanAgent(Agent):
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
+        self.__dump_java_mlk_transfer_records()
         return
 
     def __process_src_value(self, src_value: Value) -> None:
@@ -738,6 +764,58 @@ class DFBScanAgent(Agent):
                 ) as bug_info_file:
                     json.dump(bug_report_dict, bug_info_file, indent=4)
         return
+
+    def __classify_java_mlk_external_termination(self, value: Value) -> Tuple[str, str]:
+        """
+        Classify terminal external-style values for Java MLK when no external match exists.
+        Return:
+          - ("no_real_transfer", reason): should be treated as leak candidate
+          - ("ownership_transfer", reason): ownership transfer and stop reporting
+        """
+        function = self.ts_analyzer.get_function_from_localvalue(value)
+
+        if value.label == ValueLabel.ARG and self.java_mlk_validator is not None:
+            if self.java_mlk_validator.is_non_ownership_argument(value, function):
+                return (
+                    "no_real_transfer",
+                    "argument does not imply ownership transfer (e.g., println/logging)",
+                )
+            return (
+                "ownership_transfer",
+                "argument likely transfers ownership but inter-procedural chain is missing",
+            )
+
+        if value.label in {ValueLabel.RET, ValueLabel.OUT, ValueLabel.PARA}:
+            return (
+                "ownership_transfer",
+                "resource escapes function boundary and ownership is treated as transferred",
+            )
+
+        return ("ownership_transfer", "default ownership transfer")
+
+    def __record_java_mlk_transfer(
+        self, src_value: Value, path: List[Value], reason: str
+    ) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        src_key = str(src_value)
+        path_key = str(path)
+        with self.lock:
+            if src_key not in self.java_mlk_transfer_records:
+                self.java_mlk_transfer_records[src_key] = {}
+            self.java_mlk_transfer_records[src_key][path_key] = reason
+        self.logger.print_log(
+            "Classified as Java MLK responsibility transfer:", src_key, reason
+        )
+
+    def __dump_java_mlk_transfer_records(self) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        transfer_path = self.res_dir_path + "/transfer_info.json"
+        with self.lock:
+            payload = dict(self.java_mlk_transfer_records)
+        with open(transfer_path, "w") as transfer_file:
+            json.dump(payload, transfer_file, indent=4)
 
     def __post_validate_java_mlk_with_objid(
         self,

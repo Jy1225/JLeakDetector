@@ -47,6 +47,35 @@ class JavaResourceOwnershipValidator:
         "switch",
         "case",
     }
+    NON_OWNERSHIP_METHODS = {
+        "println",
+        "print",
+        "printf",
+        "format",
+        "tostring",
+        "hashcode",
+        "equals",
+        "requirenonnull",
+        "debug",
+        "info",
+        "warn",
+        "error",
+        "trace",
+    }
+    OWNERSHIP_TRANSFER_METHODS = {
+        "put",
+        "add",
+        "offer",
+        "push",
+        "enqueue",
+        "register",
+        "retain",
+        "cache",
+        "store",
+        "save",
+        "setresource",
+        "setstream",
+    }
 
     def __init__(self, ts_analyzer: TSAnalyzer) -> None:
         self.ts_analyzer = ts_analyzer
@@ -80,7 +109,7 @@ class JavaResourceOwnershipValidator:
                     points_to.setdefault(token, set()).add(objid)
                 continue
 
-            self._apply_event(value, points_to, obj_state)
+            self._apply_event(value, function, points_to, obj_state)
 
         if len(src_objids) == 0:
             return False, "no source object id built"
@@ -90,7 +119,7 @@ class JavaResourceOwnershipValidator:
                 continue
             if obj_state[src_objid] == ObjState.OPEN:
                 return True, "source object remains OPEN"
-        return False, "source object is CLOSED or ESCAPED"
+        return False, "source object is not OPEN (closed or transferred)"
 
     def _new_objid(
         self,
@@ -106,6 +135,7 @@ class JavaResourceOwnershipValidator:
     def _apply_event(
         self,
         value: Value,
+        function: Optional[Function],
         points_to: Dict[str, Set[ObjID]],
         obj_state: Dict[ObjID, ObjState],
     ) -> None:
@@ -123,10 +153,16 @@ class JavaResourceOwnershipValidator:
                     obj_state[objid] = ObjState.CLOSED
             return
 
-        if value.label in {ValueLabel.RET, ValueLabel.ARG, ValueLabel.PARA, ValueLabel.OUT}:
-            for objid in related_objids:
-                if obj_state.get(objid) == ObjState.OPEN:
-                    obj_state[objid] = ObjState.ESCAPED
+        if value.label in {ValueLabel.RET, ValueLabel.PARA, ValueLabel.OUT}:
+            # Do not directly mark ESCAPED here. Responsibility transfer is decided
+            # by agent-level chain classification (case2/case3), not by local event.
+            return
+
+        if value.label == ValueLabel.ARG:
+            # Keep OPEN in validator; whether ARG transfers ownership is handled by
+            # agent-level termination classification to avoid premature false negatives.
+            _ = self.is_non_ownership_argument(value, function)
+            return
 
     def _is_assignment_expr(self, expr: str) -> bool:
         cleaned = expr.replace("==", "").replace(">=", "").replace("<=", "").replace("!=", "")
@@ -151,6 +187,43 @@ class JavaResourceOwnershipValidator:
     def _extract_identifier_tokens(self, expr: str) -> List[str]:
         tokens = self.IDENTIFIER_RE.findall(expr)
         return [token for token in tokens if token not in self.KEYWORDS]
+
+    def is_non_ownership_argument(
+        self, value: Value, function: Optional[Function]
+    ) -> bool:
+        """
+        Best-effort classification for ARG values that do not transfer resource ownership.
+        """
+        if value.label != ValueLabel.ARG:
+            return False
+        if function is None:
+            return False
+
+        line_text = self.ts_analyzer.get_content_by_line_number(
+            value.line_number, value.file
+        )
+        method_name = self._extract_invoked_method_name(line_text)
+        normalized_name = method_name.lower()
+
+        if "System.out." in line_text or "System.err." in line_text:
+            return True
+        if normalized_name in self.NON_OWNERSHIP_METHODS:
+            return True
+        if normalized_name in self.OWNERSHIP_TRANSFER_METHODS:
+            return False
+        if "logger." in line_text.lower() or ".log(" in line_text.lower():
+            return True
+        return False
+
+    def _extract_invoked_method_name(self, line_text: str) -> str:
+        # Prefer qualified invocations such as obj.foo(...)
+        qualified = re.findall(r"\.\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(", line_text)
+        if len(qualified) > 0:
+            return qualified[-1]
+        plain = re.findall(r"([A-Za-z_][A-Za-z0-9_]*)\s*\(", line_text)
+        if len(plain) > 0:
+            return plain[-1]
+        return ""
 
     def _build_context_hash(self, function: Optional[Function]) -> str:
         if function is None:
