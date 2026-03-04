@@ -3,10 +3,10 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # --- Defaults ---
-LANGUAGE="Python"
-MODEL="claude-3.7"
+LANGUAGE="Java"
+MODEL="deepseek-chat"
 DEFAULT_PROJECT_NAME="toy"
-DEFAULT_BUG_TYPE="NPD"     # allowed: MLK, NPD, UAF
+DEFAULT_BUG_TYPE="MLK"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="dfbscan"
 
 # Construct the default project *path* from LANGUAGE + DEFAULT_PROJECT_NAME
@@ -79,7 +79,7 @@ python3 repoaudit.py \
   --project-path "$PROJECT_PATH_ABS" \
   --bug-type "$BUG_TYPE" \
   "${REACHABILITY_FLAG[@]}" \
-  --temperature 0.0 \
+  --temperature 1.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 3 \
   --max-neural-workers 30
