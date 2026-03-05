@@ -8,6 +8,7 @@ class MLKCase31_InterproceduralReturnLeak {
     public void run(String primaryPath, String backupPath, boolean useBackup)
         throws IOException {
         InputStream in = chooseStream(primaryPath, backupPath, useBackup);
+        function1(in);
         traceResource(in);
         consumeInAnotherFunction(in, false);
         if (totalBytes > 2048) {
@@ -54,6 +55,25 @@ class MLKCase31_InterproceduralReturnLeak {
             System.out.println("EOF reached");
         }
         //in.close();
+    }
+
+    private void function1(InputStream in){
+        int var=in.read();
+        function2(in);
+        if(var>=0){
+            in.close();
+        }
+    }
+
+    private void function2(InputStream in){
+        int var=in.read();
+        if(var<0){
+           function3(in);
+        }
+    }
+
+    private void function3(InputStream in){
+        in.close();
     }
 
     private void traceResource(InputStream in) {
