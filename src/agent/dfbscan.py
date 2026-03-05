@@ -471,14 +471,18 @@ class DFBScanAgent(Agent):
                                     )
 
                     if has_empty_path_set and not self.is_reachable:
-                        # Empty-only callee path with external mapping (e.g., trace/log helper)
-                        # should be continued by external recursion instead of finalized here.
-                        # Also treat PARA-only utility callees (no sink/terminal) as passthrough
-                        # even when external mapping snapshot is incomplete in this context.
+                        # Empty-only callee path should be continued (not finalized) when:
+                        # 1) it still has explicit external mapping; or
+                        # 2) it comes from an ARG that has sibling inter-procedural ARG
+                        #    branches in the same caller path_set (helper-only branch).
                         pure_empty_passthrough = (
                             (
                                 current_value_with_context in external_match_snapshot
-                                or current_value.label == ValueLabel.PARA
+                                or self.__has_sibling_continue_arg_for_para(
+                                    current_value_with_context,
+                                    reachable_values_snapshot,
+                                    external_match_snapshot,
+                                )
                             )
                             and len(all_sink_edges) == 0
                             and len(all_terminal_edges) == 0
@@ -924,6 +928,52 @@ class DFBScanAgent(Agent):
             )
 
         return ("ownership_transfer", "default ownership transfer")
+
+    def __has_sibling_continue_arg_for_para(
+        self,
+        para_with_ctx: Tuple[Value, CallContext],
+        reachable_values_snapshot: Dict[
+            Tuple[Value, CallContext], List[Set[Tuple[Value, CallContext]]]
+        ],
+        external_match_snapshot: Dict[
+            Tuple[Value, CallContext], Set[Tuple[Value, CallContext]]
+        ],
+    ) -> bool:
+        """
+        Check whether this PARA leaf comes from an ARG call site that has sibling
+        inter-procedural ARG branches in the same caller path_set.
+
+        This is used to suppress helper-only duplicate branches such as:
+        run(in)->traceResource(in) + run(in)->consume(in) where traceResource is
+        no-propagation.
+        """
+        value, _ = para_with_ctx
+        if value.label != ValueLabel.PARA:
+            return False
+
+        incoming_args: List[Tuple[Value, CallContext]] = []
+        for external_start, external_ends in external_match_snapshot.items():
+            if para_with_ctx in external_ends and external_start[0].label == ValueLabel.ARG:
+                incoming_args.append(external_start)
+
+        if len(incoming_args) == 0:
+            return False
+
+        for incoming_arg in incoming_args:
+            for _, path_sets in reachable_values_snapshot.items():
+                for path_set in path_sets:
+                    if incoming_arg not in path_set:
+                        continue
+                    for sibling in path_set:
+                        if sibling == incoming_arg:
+                            continue
+                        sibling_value, _ = sibling
+                        if (
+                            sibling_value.label == ValueLabel.ARG
+                            and sibling in external_match_snapshot
+                        ):
+                            return True
+        return False
 
     def __record_java_mlk_transfer(
         self, src_value: Value, path: List[Value], reason: str
