@@ -1,0 +1,99 @@
+{
+    "0": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java, 7, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in;\n        in = new FileInputStream(path);\n        System.out.println(in);\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created and assigned to variable 'in', then passed as an argument to System.out.println, but there is no explicit close, no try-with-resources, no ownership transfer via return, and no conflicting branch conditions. The resource remains open when the method exits.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "1": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path, boolean closeIt) throws Exception {\n        InputStream in = new FileInputStream(path);\n        if (closeIt) {\n            in.close();\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is conditionally closed based on the boolean parameter `closeIt`. On the path where `closeIt` is false, the resource remains open at method exit. Since the path does not guarantee closure and there is no ownership transfer, the resource can stay unclosed.  \nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "2": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in = new FileInputStream(path);\n        int value = in.read();\n        if (value > 0) {\n            System.out.println(value);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 2 and there is no explicit close, disconnect, shutdown, or release call on the same resource alias anywhere in the method. The resource does not escape via return or argument, and there is no try-with-resources or conflicting branch conditions that guarantee closure. The path can execute without definite closure before method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "3": {
+        "bug_type": "MLK",
+        "buggy_value": "((SocketFactory.getDefault().createSocket(host, port), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 39, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildSocket",
+                "run",
+                "sendPing"
+            ],
+            [
+                "private Socket buildSocket(String host, int port) throws IOException {\n        Socket socket = SocketFactory.getDefault().createSocket(host, port);\n        if (port == 443) {\n            System.out.println(\"tls-like port\");\n        }\n        return socket;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B: source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void sendPing(Socket socket, boolean closeAfterSend) throws IOException {\n        socket.getOutputStream().write(1);\n        socket.getOutputStream().flush();\n        if (closeAfterSend) {\n            socket.close();\n        } else {\n            System.out.println(\"socket left open intentionally\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (Socket) is created in buildSocket and returned to the caller (run). It is then passed to sendPing, where it is conditionally closed based on the closeAfterSend parameter. In the given call in run, closeAfterSend is false, so the socket is not closed in sendPing. The socket is not closed elsewhere in run, and ownership is not clearly transferred (it is passed as an argument but not returned or stored in a way that transfers ownership). The path is feasible and the resource is not definitely closed before method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "4": {
+        "bug_type": "MLK",
+        "buggy_value": "((Files.newInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 20, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildFileStream",
+                "run",
+                "analyzeData"
+            ],
+            [
+                "private InputStream buildFileStream(Path path) throws IOException {\n        InputStream in = Files.newInputStream(path);\n        if (path.toString().endsWith(\".log\")) {\n            System.out.println(\"log input\");\n        }\n        return in;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B: source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void analyzeData(InputStream in, int level) throws IOException {\n        int b = in.read();\n        if (b > 0 && level > 10) {\n            in.close();\n        } else {\n            // Non-ownership API usage only; still should be considered leak.\n            System.out.println(\"first byte = \" + b);\n            System.out.println(\"stream handle = \" + in);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `InputStream` is created in `buildFileStream` and returned to the caller `run`, where it is passed to `analyzeData`. In `analyzeData`, the resource is only closed conditionally (if `b > 0 && level > 10`). Since `level` is passed as `0` from `run`, the condition fails, so the close is not executed. The resource is not closed elsewhere on this path, and there is no explicit close, try-with-resources, or ownership transfer via return/argument after this point. The path is feasible and the resource remains unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    }
+}

@@ -9,7 +9,7 @@ class MLKCase31_InterproceduralReturnLeak {
         throws IOException {
         InputStream in = chooseStream(primaryPath, backupPath, useBackup);
         traceResource(in);
-        consumeInAnotherFunction(in, false);
+        // consumeInAnotherFunction(in, false);
         if (totalBytes > 2048) {
             System.out.println("large payload: " + totalBytes);
         }
