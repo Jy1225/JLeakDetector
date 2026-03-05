@@ -351,6 +351,7 @@ class DFBScanAgent(Agent):
                 The propagation path accumulated so far.
         """
         reachable_values_snapshot = self.state.reachable_values_per_path
+        source_executed_snapshot = self.state.source_executed_per_path
         external_match_snapshot = self.state.external_value_match
 
         # If no propagation information exists for the current value, stop further processing.
@@ -373,8 +374,18 @@ class DFBScanAgent(Agent):
                         current_value_with_context, reachable_values_paths
                     )
                 )
-                for path_set in reachable_values_paths:
+                source_executed_paths = source_executed_snapshot.get(
+                    current_value_with_context, []
+                )
+                for path_index, path_set in enumerate(reachable_values_paths):
+                    source_executed = True
+                    if path_index < len(source_executed_paths):
+                        source_executed = source_executed_paths[path_index]
                     if not path_set:
+                        if not source_executed:
+                            # This branch does not execute the source. Do not treat it
+                            # as a leak/no-propagation terminal.
+                            continue
                         if ignore_empty_non_executed_return_branch:
                             continue
                         if not self.is_reachable:
@@ -624,6 +635,12 @@ class DFBScanAgent(Agent):
                         self.state.update_reachable_values_per_path(
                             (start_value, call_context), reachable_values_in_single_path
                         )
+                        source_executed = True
+                        if path_index < len(df_output.source_executed_per_path):
+                            source_executed = df_output.source_executed_per_path[path_index]
+                        self.state.update_source_executed_per_path(
+                            (start_value, call_context), source_executed
+                        )
 
                         delta_worklist = self.__update_worklist(
                             df_input, df_output, call_context, path_index
@@ -638,7 +655,10 @@ class DFBScanAgent(Agent):
                     pbar.update(1)
                     continue
 
-                for buggy_path in self.state.potential_buggy_paths[src_value].values():
+                buggy_paths = self.__filter_redundant_java_mlk_paths(
+                    src_value, self.state.potential_buggy_paths[src_value]
+                )
+                for buggy_path in buggy_paths:
                     pv_input = PathValidatorInput(
                         self.bug_type,
                         buggy_path,
@@ -808,6 +828,12 @@ class DFBScanAgent(Agent):
                 self.state.update_reachable_values_per_path(
                     (start_value, call_context), reachable_values_in_single_path
                 )
+                source_executed = True
+                if path_index < len(df_output.source_executed_per_path):
+                    source_executed = df_output.source_executed_per_path[path_index]
+                self.state.update_source_executed_per_path(
+                    (start_value, call_context), source_executed
+                )
 
                 delta_worklist = self.__update_worklist(
                     df_input, df_output, call_context, path_index
@@ -822,7 +848,10 @@ class DFBScanAgent(Agent):
             return
 
         # Validate buggy paths and generate bug reports
-        for buggy_path in self.state.potential_buggy_paths[src_value].values():
+        buggy_paths = self.__filter_redundant_java_mlk_paths(
+            src_value, self.state.potential_buggy_paths[src_value]
+        )
+        for buggy_path in buggy_paths:
             values_to_functions = {
                 value: self.ts_analyzer.get_function_from_localvalue(value)
                 for value in buggy_path
@@ -1025,6 +1054,37 @@ class DFBScanAgent(Agent):
         return self.java_mlk_validator.validate_candidate(
             src_value, buggy_path, values_to_functions
         )
+
+    def __filter_redundant_java_mlk_paths(
+        self, src_value: Value, buggy_paths: Dict[str, List[Value]]
+    ) -> List[List[Value]]:
+        paths = list(buggy_paths.values())
+        if self.language != "Java" or self.bug_type != "MLK":
+            return paths
+        if len(paths) <= 1:
+            return paths
+
+        path_sets = [set(str(value) for value in path) for path in paths]
+        keep = [True for _ in paths]
+
+        for i in range(len(paths)):
+            if not keep[i]:
+                continue
+            for j in range(len(paths)):
+                if i == j:
+                    continue
+                if len(path_sets[i]) >= len(path_sets[j]):
+                    continue
+                if path_sets[i].issubset(path_sets[j]):
+                    keep[i] = False
+                    break
+
+        filtered_paths = [paths[i] for i in range(len(paths)) if keep[i]]
+        if len(filtered_paths) < len(paths):
+            self.logger.print_log(
+                f"Pruned {len(paths) - len(filtered_paths)} short Java MLK candidate path(s) for source {str(src_value)}"
+            )
+        return filtered_paths
 
     def get_agent_state(self) -> DFBScanState:
         return self.state

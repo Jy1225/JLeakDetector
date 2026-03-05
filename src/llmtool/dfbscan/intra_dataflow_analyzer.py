@@ -32,8 +32,11 @@ class IntraDataFlowAnalyzerInput(LLMToolInput):
 
 
 class IntraDataFlowAnalyzerOutput(LLMToolOutput):
-    def __init__(self, reachable_values: List[Set[Value]]) -> None:
+    def __init__(
+        self, reachable_values: List[Set[Value]], source_executed_per_path: List[bool]
+    ) -> None:
         self.reachable_values = reachable_values
+        self.source_executed_per_path = source_executed_per_path
         return
 
     def __str__(self):
@@ -188,11 +191,20 @@ class IntraDataFlowAnalyzer(LLMTool):
 
         # Process paths to extract reachable values
         reachable_values = []
+        source_executed_per_path: List[bool] = []
         file_path = input.function.file_path
         start_line_number = input.function.start_line_number
+        source_line_in_function = (
+            input.summary_start.line_number - input.function.start_line_number + 1
+        )
 
         for single_path in paths:
             reachable_values_per_path = set()
+            source_executed = self._is_source_executed_in_path(
+                single_path.get("execution_path", ""),
+                source_line_in_function,
+                single_path.get("propagation_details", []),
+            )
             for detail in single_path["propagation_details"]:
                 if not detail["line"].isdigit():
                     continue
@@ -234,12 +246,27 @@ class IntraDataFlowAnalyzer(LLMTool):
                         Value(detail["name"], line_number, ValueLabel.SINK, file_path)
                     )
             reachable_values.append(reachable_values_per_path)
+            source_executed_per_path.append(source_executed)
 
-        output = IntraDataFlowAnalyzerOutput(reachable_values)
+        output = IntraDataFlowAnalyzerOutput(
+            reachable_values, source_executed_per_path
+        )
         self.logger.print_log(
             "Output of intra-procedural data-flow analyzer:", output.reachable_values
         )
         return output
+
+    def _is_source_executed_in_path(
+        self, execution_path: str, source_line_in_function: int, details: List[Dict[str, str]]
+    ) -> bool:
+        line_numbers = [int(item) for item in re.findall(r"\d+", execution_path)]
+        if source_line_in_function in line_numbers:
+            return True
+        # If parsing of execution lines is weak but the model still emitted propagation
+        # details for this path, treat source as executed to avoid over-pruning.
+        if len(details) > 0:
+            return True
+        return False
 
     def _normalize_detail_type(self, detail: Dict[str, str]) -> str:
         normalized = detail["type"].strip()

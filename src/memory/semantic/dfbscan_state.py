@@ -16,6 +16,8 @@ class DFBScanState(State):
         self._reachable_values_per_path: Dict[
             Tuple[Value, CallContext], List[Set[Tuple[Value, CallContext]]]
         ] = {}
+        # Whether source executes in each intra-procedural path (aligned by path index)
+        self._source_executed_per_path: Dict[Tuple[Value, CallContext], List[bool]] = {}
 
         # Match parameter/return value with argument/output value
         self._external_value_match: Dict[
@@ -31,6 +33,7 @@ class DFBScanState(State):
 
         # Create locks for each field
         self._reachable_values_lock = threading.Lock()
+        self._source_executed_lock = threading.Lock()
         self._external_value_match_lock = threading.Lock()
         self._potential_buggy_paths_lock = threading.Lock()
         self._bug_reports_lock = threading.Lock()
@@ -46,6 +49,14 @@ class DFBScanState(State):
             if start not in self._reachable_values_per_path:
                 self._reachable_values_per_path[start] = []
             self._reachable_values_per_path[start].append(ends)
+
+    def update_source_executed_per_path(
+        self, start: Tuple[Value, CallContext], source_executed: bool
+    ) -> None:
+        with self._source_executed_lock:
+            if start not in self._source_executed_per_path:
+                self._source_executed_per_path[start] = []
+            self._source_executed_per_path[start].append(source_executed)
 
     def update_external_value_match(
         self,
@@ -103,6 +114,11 @@ class DFBScanState(State):
         """
         with self._external_value_match_lock:
             return self._external_value_match.copy()
+
+    @property
+    def source_executed_per_path(self) -> Dict[Tuple[Value, CallContext], List[bool]]:
+        with self._source_executed_lock:
+            return self._source_executed_per_path.copy()
 
     @property
     def potential_buggy_paths(self) -> Dict[Value, Dict[str, List[Value]]]:
