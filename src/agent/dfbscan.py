@@ -368,8 +368,15 @@ class DFBScanAgent(Agent):
             if self.language == "Java" and self.bug_type == "MLK":
                 # Java-MLK must keep branch semantics. Process each path_set independently.
                 seen_continue_edges = set()
+                ignore_empty_non_executed_return_branch = (
+                    self.__is_non_executed_return_branch(
+                        current_value_with_context, reachable_values_paths
+                    )
+                )
                 for path_set in reachable_values_paths:
                     if not path_set:
+                        if ignore_empty_non_executed_return_branch:
+                            continue
                         if not self.is_reachable:
                             pure_empty_passthrough = (
                                 current_value_with_context in external_match_snapshot
@@ -901,6 +908,39 @@ class DFBScanAgent(Agent):
             )
 
         return ("ownership_transfer", "default ownership transfer")
+
+    def __is_non_executed_return_branch(
+        self,
+        current_value_with_context: Tuple[Value, CallContext],
+        reachable_values_paths: List[Set[Tuple[Value, CallContext]]],
+    ) -> bool:
+        """
+        Heuristic for Java MLK:
+        If the current value is a return-expression carrier (RET/OUT on a return line)
+        and this node has mixed reachable path sets (both empty and non-empty),
+        then empty path sets usually mean "source is not executed on this branch"
+        rather than "executed but leaked". In that case, ignore empty path sets.
+        """
+        value, _ = current_value_with_context
+        if value.label not in {ValueLabel.OUT, ValueLabel.RET}:
+            return False
+
+        has_non_empty = any(len(path_set) > 0 for path_set in reachable_values_paths)
+        has_empty = any(len(path_set) == 0 for path_set in reachable_values_paths)
+        if not (has_non_empty and has_empty):
+            return False
+
+        current_function = self.ts_analyzer.get_function_from_localvalue(value)
+        if current_function is None:
+            return False
+
+        return_values = self.ts_analyzer.get_return_values_in_single_function(
+            current_function
+        )
+        for ret_value in return_values:
+            if ret_value.line_number == value.line_number:
+                return True
+        return False
 
     def __has_sibling_continue_arg_for_para(
         self,
