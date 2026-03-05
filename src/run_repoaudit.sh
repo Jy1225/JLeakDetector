@@ -81,5 +81,5 @@ python3 repoaudit.py \
   "${REACHABILITY_FLAG[@]}" \
   --temperature 1.0 \
   --scan-type "$SCAN_TYPE" \
-  --call-depth 3 \
+  --call-depth 15 \
   --max-neural-workers 30
