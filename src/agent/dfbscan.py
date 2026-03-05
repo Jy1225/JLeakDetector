@@ -358,53 +358,103 @@ class DFBScanAgent(Agent):
             reachable_values_paths: List[Set[Tuple[Value, CallContext]]] = (
                 reachable_values_snapshot[current_value_with_context]
             )
-            for path_set in reachable_values_paths:
-                if not path_set:
-                    # For memory leak-style bug types we only update when the path is empty.
-                    if not self.is_reachable:
-                        self.state.update_potential_buggy_paths(
-                            src_value, path_with_unknown_status + [src_value]
-                        )
-                    continue
-                for value, ctx in path_set:
-                    if value.label == ValueLabel.SINK:
-                        # For NPD-style bug types
-                        if self.is_reachable:
-                            self.state.update_potential_buggy_paths(
-                                src_value, path_with_unknown_status + [value]
+            if self.language == "Java" and self.bug_type == "MLK":
+                # Java-MLK special handling: scan all path_set twice globally.
+                # This avoids "early terminal" on a partial path_set when another path_set
+                # still has a valid inter-procedural continuation.
+                all_continue_edges: List[
+                    Tuple[
+                        Tuple[Value, CallContext],
+                        Set[Tuple[Value, CallContext]],
+                    ]
+                ] = []
+                all_terminal_edges: List[Tuple[Value, CallContext]] = []
+                all_sink_edges: List[Tuple[Value, CallContext]] = []
+                has_empty_path_set = False
+
+                for path_set in reachable_values_paths:
+                    if not path_set:
+                        has_empty_path_set = True
+                        continue
+
+                    for value, ctx in path_set:
+                        if value.label == ValueLabel.SINK:
+                            all_sink_edges.append((value, ctx))
+                            continue
+
+                        if value.label in {
+                            ValueLabel.PARA,
+                            ValueLabel.RET,
+                            ValueLabel.ARG,
+                            ValueLabel.OUT,
+                        }:
+                            external_ends = external_match_snapshot.get((value, ctx))
+                            if external_ends:
+                                all_continue_edges.append(((value, ctx), external_ends))
+                            else:
+                                all_terminal_edges.append((value, ctx))
+
+                # Priority:
+                #   1) Any continue edge -> only continue (Case 3).
+                #   2) Otherwise sink edges.
+                #   3) Otherwise terminal external edges (Case 1/2).
+                #   4) Otherwise empty path_set fallback for source-must-reach-sink style.
+                handled_in_priority = False
+                if all_continue_edges:
+                    seen_continue_edges = set()
+                    for (value, ctx), external_ends in all_continue_edges:
+                        for value_next, ctx_next in external_ends:
+                            edge_key = ((value, ctx), (value_next, ctx_next))
+                            if edge_key in seen_continue_edges:
+                                continue
+                            seen_continue_edges.add(edge_key)
+                            self.__collect_potential_buggy_paths(
+                                src_value,
+                                (value_next, ctx_next),
+                                path_with_unknown_status + [value, value_next],
                             )
-                    elif value.label in {
-                        ValueLabel.PARA,
-                        ValueLabel.RET,
-                        ValueLabel.ARG,
-                        ValueLabel.OUT,
-                    }:
-                        # Case 3: external mapping exists, keep inter-procedural exploration.
-                        if (value, ctx) in external_match_snapshot:
-                            for value_next, ctx_next in external_match_snapshot[
-                                (value, ctx)
-                            ]:
-                                self.__collect_potential_buggy_paths(
-                                    src_value,
-                                    (value_next, ctx_next),
-                                    path_with_unknown_status + [value, value_next],
-                                )
-                        # Case 1 / Case 2 for Java MLK:
-                        #   - no real transfer -> leak candidate
-                        #   - real transfer but chain broken -> responsibility transfer
-                        elif self.language == "Java" and self.bug_type == "MLK":
+                    handled_in_priority = True
+                elif all_sink_edges:
+                    if self.is_reachable:
+                        seen_sinks = set()
+                        for sink_value, sink_ctx in all_sink_edges:
+                            sink_key = (sink_value, sink_ctx)
+                            if sink_key in seen_sinks:
+                                continue
+                            seen_sinks.add(sink_key)
+                            self.state.update_potential_buggy_paths(
+                                src_value, path_with_unknown_status + [sink_value]
+                            )
+                    handled_in_priority = True
+                elif all_terminal_edges:
+                    # If the current value can still be mapped outside this function
+                    # (e.g., PARA -> caller ARG side-effect), defer terminal judgement
+                    # and let the external-match recursion continue first.
+                    if current_value_with_context in external_match_snapshot:
+                        handled_in_priority = True
+                    else:
+                        seen_terminals = set()
+                        for terminal_value, terminal_ctx in all_terminal_edges:
+                            terminal_key = (terminal_value, terminal_ctx)
+                            if terminal_key in seen_terminals:
+                                continue
+                            seen_terminals.add(terminal_key)
                             transfer_kind, reason = (
-                                self.__classify_java_mlk_external_termination(value)
+                                self.__classify_java_mlk_external_termination(
+                                    terminal_value
+                                )
                             )
                             if transfer_kind == "no_real_transfer":
-                                candidate_path = path_with_unknown_status + [value]
+                                candidate_path = (
+                                    path_with_unknown_status + [terminal_value]
+                                )
                                 if src_value not in candidate_path:
                                     candidate_path = [src_value] + candidate_path
                                 self.state.update_potential_buggy_paths(
                                     src_value, candidate_path
                                 )
                             else:
-                                transfer_path = path_with_unknown_status + [value]
+                                transfer_path = path_with_unknown_status + [terminal_value]
                                 if src_value not in transfer_path:
                                     transfer_path = [src_value] + transfer_path
                                 self.__record_java_mlk_transfer(
@@ -412,6 +462,73 @@ class DFBScanAgent(Agent):
                                     transfer_path,
                                     reason,
                                 )
+                        handled_in_priority = True
+
+                if (
+                    (not handled_in_priority)
+                    and has_empty_path_set
+                    and not self.is_reachable
+                ):
+                    self.state.update_potential_buggy_paths(
+                        src_value, path_with_unknown_status + [src_value]
+                    )
+            else:
+                for path_set in reachable_values_paths:
+                    if not path_set:
+                        # For memory leak-style bug types we only update when the path is empty.
+                        if not self.is_reachable:
+                            self.state.update_potential_buggy_paths(
+                                src_value, path_with_unknown_status + [src_value]
+                            )
+                        continue
+
+                    # First pass: classify all values in this path_set.
+                    continue_edges: List[
+                        Tuple[
+                            Tuple[Value, CallContext],
+                            Set[Tuple[Value, CallContext]],
+                        ]
+                    ] = []
+                    terminal_edges: List[Tuple[Value, CallContext]] = []
+                    sink_edges: List[Tuple[Value, CallContext]] = []
+
+                    for value, ctx in path_set:
+                        if value.label == ValueLabel.SINK:
+                            sink_edges.append((value, ctx))
+                            continue
+
+                        if value.label in {
+                            ValueLabel.PARA,
+                            ValueLabel.RET,
+                            ValueLabel.ARG,
+                            ValueLabel.OUT,
+                        }:
+                            external_ends = external_match_snapshot.get((value, ctx))
+                            if external_ends:
+                                continue_edges.append(((value, ctx), external_ends))
+                            else:
+                                terminal_edges.append((value, ctx))
+
+                    # Second pass (priority):
+                    #   1) Continue edges first.
+                    #   2) Sink edges.
+                    if continue_edges:
+                        for (value, ctx), external_ends in continue_edges:
+                            for value_next, ctx_next in external_ends:
+                                self.__collect_potential_buggy_paths(
+                                    src_value,
+                                    (value_next, ctx_next),
+                                    path_with_unknown_status + [value, value_next],
+                                )
+                        continue
+
+                    if sink_edges:
+                        if self.is_reachable:
+                            for sink_value, _ in sink_edges:
+                                self.state.update_potential_buggy_paths(
+                                    src_value, path_with_unknown_status + [sink_value]
+                                )
+                        continue
 
         # Process if the current value has external value matches.
         if current_value_with_context in external_match_snapshot:
