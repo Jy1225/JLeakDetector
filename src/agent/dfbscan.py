@@ -201,6 +201,13 @@ class DFBScanAgent(Agent):
                                 )
 
             if value.label == ValueLabel.PARA:
+                # For Java MLK, PARA->ARG side-effect back propagation introduces
+                # cyclic caller/callee hops (e.g., run->traceResource->run) and
+                # leads to duplicate helper-only paths. MLK only needs ARG->PARA
+                # forward propagation to judge close-leak.
+                if self.language == "Java" and self.bug_type == "MLK":
+                    continue
+
                 # Consider side-effect.
                 # Example: the parameter *p is used in the function: p->f = null;
                 # We need to consider the side-effect of p.
@@ -355,6 +362,7 @@ class DFBScanAgent(Agent):
 
         # Process if the current value has reachable paths.
         if current_value_with_context in reachable_values_snapshot:
+            current_value, _ = current_value_with_context
             reachable_values_paths: List[Set[Tuple[Value, CallContext]]] = (
                 reachable_values_snapshot[current_value_with_context]
             )
@@ -465,8 +473,13 @@ class DFBScanAgent(Agent):
                     if has_empty_path_set and not self.is_reachable:
                         # Empty-only callee path with external mapping (e.g., trace/log helper)
                         # should be continued by external recursion instead of finalized here.
+                        # Also treat PARA-only utility callees (no sink/terminal) as passthrough
+                        # even when external mapping snapshot is incomplete in this context.
                         pure_empty_passthrough = (
-                            current_value_with_context in external_match_snapshot
+                            (
+                                current_value_with_context in external_match_snapshot
+                                or current_value.label == ValueLabel.PARA
+                            )
                             and len(all_sink_edges) == 0
                             and len(all_terminal_edges) == 0
                         )
