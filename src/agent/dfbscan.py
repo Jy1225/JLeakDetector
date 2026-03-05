@@ -7,6 +7,8 @@ from tqdm import tqdm
 
 from agent.agent import *
 
+from src.tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
+from src.tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
 from tstool.analyzer.TS_analyzer import *
 from tstool.analyzer.Cpp_TS_analyzer import *
 from tstool.analyzer.Go_TS_analyzer import *
@@ -17,7 +19,6 @@ from tstool.dfbscan_extractor.dfbscan_extractor import *
 from tstool.dfbscan_extractor.Cpp.Cpp_MLK_extractor import *
 from tstool.dfbscan_extractor.Cpp.Cpp_NPD_extractor import *
 from tstool.dfbscan_extractor.Cpp.Cpp_UAF_extractor import *
-from tstool.dfbscan_extractor.Java.Java_MLK_extractor import *
 from tstool.dfbscan_extractor.Java.Java_NPD_extractor import *
 from tstool.dfbscan_extractor.Python.Python_NPD_extractor import *
 from tstool.dfbscan_extractor.Go.Go_NPD_extractor import *
@@ -29,7 +30,6 @@ from llmtool.dfbscan.path_validator import *
 from memory.semantic.dfbscan_state import *
 from memory.syntactic.function import *
 from memory.syntactic.value import *
-from tstool.validator.java_resource_ownership_validator import *
 
 from ui.logger import *
 
@@ -396,10 +396,10 @@ class DFBScanAgent(Agent):
 
                 # Priority:
                 #   1) Any continue edge -> only continue (Case 3).
-                #   2) Otherwise sink edges.
-                #   3) Otherwise terminal external edges (Case 1/2).
-                #   4) Otherwise empty path_set fallback for source-must-reach-sink style.
-                handled_in_priority = False
+                #   2) For reachable-style bugs, sink edges.
+                #   3) Terminal external edges (Case 1/2).
+                #   4) For MLK (not-reachable mode), empty path_set is a leak path even
+                #      if other paths contain sink edges.
                 if all_continue_edges:
                     seen_continue_edges = set()
                     for (value, ctx), external_ends in all_continue_edges:
@@ -413,8 +413,7 @@ class DFBScanAgent(Agent):
                                 (value_next, ctx_next),
                                 path_with_unknown_status + [value, value_next],
                             )
-                    handled_in_priority = True
-                elif all_sink_edges:
+                else:
                     if self.is_reachable:
                         seen_sinks = set()
                         for sink_value, sink_ctx in all_sink_edges:
@@ -425,53 +424,56 @@ class DFBScanAgent(Agent):
                             self.state.update_potential_buggy_paths(
                                 src_value, path_with_unknown_status + [sink_value]
                             )
-                    handled_in_priority = True
-                elif all_terminal_edges:
-                    # If the current value can still be mapped outside this function
-                    # (e.g., PARA -> caller ARG side-effect), defer terminal judgement
-                    # and let the external-match recursion continue first.
-                    if current_value_with_context in external_match_snapshot:
-                        handled_in_priority = True
-                    else:
-                        seen_terminals = set()
-                        for terminal_value, terminal_ctx in all_terminal_edges:
-                            terminal_key = (terminal_value, terminal_ctx)
-                            if terminal_key in seen_terminals:
-                                continue
-                            seen_terminals.add(terminal_key)
-                            transfer_kind, reason = (
-                                self.__classify_java_mlk_external_termination(
-                                    terminal_value
-                                )
-                            )
-                            if transfer_kind == "no_real_transfer":
-                                candidate_path = (
-                                    path_with_unknown_status + [terminal_value]
-                                )
-                                if src_value not in candidate_path:
-                                    candidate_path = [src_value] + candidate_path
-                                self.state.update_potential_buggy_paths(
-                                    src_value, candidate_path
-                                )
-                            else:
-                                transfer_path = path_with_unknown_status + [terminal_value]
-                                if src_value not in transfer_path:
-                                    transfer_path = [src_value] + transfer_path
-                                self.__record_java_mlk_transfer(
-                                    src_value,
-                                    transfer_path,
-                                    reason,
-                                )
-                        handled_in_priority = True
 
-                if (
-                    (not handled_in_priority)
-                    and has_empty_path_set
-                    and not self.is_reachable
-                ):
-                    self.state.update_potential_buggy_paths(
-                        src_value, path_with_unknown_status + [src_value]
-                    )
+                    if all_terminal_edges:
+                        # If the current value can still be mapped outside this function
+                        # (e.g., PARA -> caller ARG side-effect), defer terminal judgement
+                        # and let the external-match recursion continue first.
+                        if current_value_with_context not in external_match_snapshot:
+                            seen_terminals = set()
+                            for terminal_value, terminal_ctx in all_terminal_edges:
+                                terminal_key = (terminal_value, terminal_ctx)
+                                if terminal_key in seen_terminals:
+                                    continue
+                                seen_terminals.add(terminal_key)
+                                transfer_kind, reason = (
+                                    self.__classify_java_mlk_external_termination(
+                                        terminal_value
+                                    )
+                                )
+                                if transfer_kind == "no_real_transfer":
+                                    candidate_path = (
+                                        path_with_unknown_status + [terminal_value]
+                                    )
+                                    if src_value not in candidate_path:
+                                        candidate_path = [src_value] + candidate_path
+                                    self.state.update_potential_buggy_paths(
+                                        src_value, candidate_path
+                                    )
+                                else:
+                                    transfer_path = (
+                                        path_with_unknown_status + [terminal_value]
+                                    )
+                                    if src_value not in transfer_path:
+                                        transfer_path = [src_value] + transfer_path
+                                    self.__record_java_mlk_transfer(
+                                        src_value,
+                                        transfer_path,
+                                        reason,
+                                    )
+
+                    if has_empty_path_set and not self.is_reachable:
+                        # Empty-only callee path with external mapping (e.g., trace/log helper)
+                        # should be continued by external recursion instead of finalized here.
+                        pure_empty_passthrough = (
+                            current_value_with_context in external_match_snapshot
+                            and len(all_sink_edges) == 0
+                            and len(all_terminal_edges) == 0
+                        )
+                        if not pure_empty_passthrough:
+                            self.state.update_potential_buggy_paths(
+                                src_value, path_with_unknown_status + [src_value]
+                            )
             else:
                 for path_set in reachable_values_paths:
                     if not path_set:
