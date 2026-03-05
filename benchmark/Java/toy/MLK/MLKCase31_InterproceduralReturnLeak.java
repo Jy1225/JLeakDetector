@@ -8,9 +8,9 @@ class MLKCase31_InterproceduralReturnLeak {
     public void run(String primaryPath, String backupPath, boolean useBackup)
         throws IOException {
         InputStream in = chooseStream(primaryPath, backupPath, useBackup);
-        function1(in);
         traceResource(in);
         consumeInAnotherFunction(in, false);
+        function1(in);
         if (totalBytes > 2048) {
             System.out.println("large payload: " + totalBytes);
         }
@@ -67,9 +67,7 @@ class MLKCase31_InterproceduralReturnLeak {
 
     private void function2(InputStream in){
         int var=in.read();
-        if(var<=-5){
-           function3(in);
-        }
+        function3(in);
     }
 
     private void function3(InputStream in){

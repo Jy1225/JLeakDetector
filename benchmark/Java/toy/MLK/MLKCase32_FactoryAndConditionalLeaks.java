@@ -46,6 +46,6 @@ class MLKCase32_FactoryAndConditionalLeaks {
     private void sendPing(Socket socket, boolean closeAfterSend) throws IOException {
         socket.getOutputStream().write(1);
         socket.getOutputStream().flush();
-        socket.close();
+        //socket.close();
     }
 }

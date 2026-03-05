@@ -1,0 +1,5 @@
+{
+    "((new FileReader(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java, 28, -1), ValueLabel.SRC)": {
+        "[((new FileReader(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java, 28, -1), ValueLabel.SRC), ((readerFile, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java, 29, 0), ValueLabel.ARG)]": "argument likely transfers ownership but inter-procedural chain is missing"
+    }
+}
