@@ -7,8 +7,8 @@ from tqdm import tqdm
 
 from agent.agent import *
 
-from src.tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
-from src.tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
+from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
+from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
 from tstool.analyzer.TS_analyzer import *
 from tstool.analyzer.Cpp_TS_analyzer import *
 from tstool.analyzer.Go_TS_analyzer import *

@@ -1,0 +1,203 @@
+{
+    "0": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java, 7, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in;\n        in = new FileInputStream(path);\n        System.out.println(in);\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created and assigned to variable `in`, then used in a print statement, but there is no explicit close, try-with-resources, or transfer of ownership via return/argument. The path does not contain any conflicting branches or guarantees of closure, so the resource remains unclosed when the method exits.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "1": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path, boolean closeIt) throws Exception {\n        InputStream in = new FileInputStream(path);\n        if (closeIt) {\n            in.close();\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is conditionally closed based on the boolean parameter `closeIt`. If `closeIt` is false, the resource is not closed before method exit, leaving it open. The propagation path indicates the source resource at line 2, and there is no guarantee of closure on all paths.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "2": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in = new FileInputStream(path);\n        int value = in.read();\n        if (value > 0) {\n            System.out.println(value);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 2 and there is no explicit close, disconnect, shutdown, or release call on the path. The method exits without closing the InputStream, and there is no try-with-resources or ownership transfer via return/argument. The path is feasible without branch conflicts.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "3": {
+        "bug_type": "MLK",
+        "buggy_value": "((Files.newInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 20, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildFileStream",
+                "run",
+                "analyzeData"
+            ],
+            [
+                "private InputStream buildFileStream(Path path) throws IOException {\n        InputStream in = Files.newInputStream(path);\n        if (path.toString().endsWith(\".log\")) {\n            System.out.println(\"log input\");\n        }\n        return in;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B: source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void analyzeData(InputStream in, int level) throws IOException {\n        int b = in.read();\n        if (b > 0 && level > 10) {\n            in.close();\n        } else {\n            // Non-ownership API usage only; still should be considered leak.\n            System.out.println(\"first byte = \" + b);\n            System.out.println(\"stream handle = \" + in);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `InputStream` is created in `buildFileStream` and returned to the caller `run`. It is then passed to `analyzeData`, which conditionally closes it only if `b > 0 && level > 10`. Since `level` is passed as `0` from `run`, the condition fails, and the close is not executed. The resource is not closed elsewhere on this path, and there is no explicit close, try-with-resources, or ownership transfer that guarantees closure. The path is feasible without branch conflicts.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "4": {
+        "bug_type": "MLK",
+        "buggy_value": "((SocketFactory.getDefault().createSocket(host, port), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 39, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildSocket",
+                "run",
+                "sendPing"
+            ],
+            [
+                "private Socket buildSocket(String host, int port) throws IOException {\n        Socket socket = SocketFactory.getDefault().createSocket(host, port);\n        if (port == 443) {\n            System.out.println(\"tls-like port\");\n        }\n        return socket;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B: source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void sendPing(Socket socket, boolean closeAfterSend) throws IOException {\n        socket.getOutputStream().write(1);\n        socket.getOutputStream().flush();\n        if (closeAfterSend) {\n            socket.close();\n        } else {\n            System.out.println(\"socket left open intentionally\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (Socket) is created in buildSocket and returned to the caller without being closed. In run, the socket is passed to sendPing with closeAfterSend = false, so the socket is not closed on that path. The resource escapes via return and argument passing, but ownership remains with the caller (run) which does not close it. No explicit close, try-with-resources, or conflicting branch conditions exist on this path.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "5": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(backupPath), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java, 36, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java"
+            ],
+            [
+                "openBackup",
+                "chooseStream",
+                "run",
+                "traceResource"
+            ],
+            [
+                "private InputStream openBackup(String backupPath) throws IOException {\n        InputStream in = new FileInputStream(backupPath);\n        if (backupPath.contains(\"daily\")) {\n            System.out.println(\"daily backup\");\n        }\n        return in;\n    }",
+                "private InputStream chooseStream(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        if (useBackup) {\n            return openBackup(backupPath);\n        }\n        return openPrimary(primaryPath);\n    }",
+                "public void run(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        InputStream in = chooseStream(primaryPath, backupPath, useBackup);\n        traceResource(in);\n        consumeInAnotherFunction(in, false);\n        if (totalBytes > 2048) {\n            System.out.println(\"large payload: \" + totalBytes);\n        }\n        // Intentionally no close() here: leak should survive interprocedural path.\n    }",
+                "private void traceResource(InputStream in) {\n        // Non-ownership transfer call; should not hide leak.\n        System.out.println(\"resource=\" + in);\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The propagation path shows that a FileInputStream is created in openBackup, returned through chooseStream to run, where it is passed to traceResource (which does not close it) and then used in consumeInAnotherFunction (not shown but presumably also does not close it). There is no explicit close, try-with-resources, or ownership transfer via return/argument that guarantees closure. The path is feasible and the resource is not definitely closed before method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "6": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(backupPath), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java, 36, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java"
+            ],
+            [
+                "openBackup",
+                "chooseStream",
+                "run",
+                "consumeInAnotherFunction"
+            ],
+            [
+                "private InputStream openBackup(String backupPath) throws IOException {\n        InputStream in = new FileInputStream(backupPath);\n        if (backupPath.contains(\"daily\")) {\n            System.out.println(\"daily backup\");\n        }\n        return in;\n    }",
+                "private InputStream chooseStream(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        if (useBackup) {\n            return openBackup(backupPath);\n        }\n        return openPrimary(primaryPath);\n    }",
+                "public void run(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        InputStream in = chooseStream(primaryPath, backupPath, useBackup);\n        traceResource(in);\n        consumeInAnotherFunction(in, false);\n        if (totalBytes > 2048) {\n            System.out.println(\"large payload: \" + totalBytes);\n        }\n        // Intentionally no close() here: leak should survive interprocedural path.\n    }",
+                "private void consumeInAnotherFunction(InputStream in, boolean closeAfterRead)\n        throws IOException {\n        int first = in.read();\n        if (first >= 0) {\n            totalBytes += first;\n        }\n        int second = in.read();\n        if (second >= 0) {\n            totalBytes += second;\n        }\n\n        if (closeAfterRead) {\n            in.close();\n        } else if (second == -1) {\n            System.out.println(\"EOF reached\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created in `openBackup` and returned without being closed. It propagates through `chooseStream` to `run`, where it is passed to `consumeInAnotherFunction`. In `consumeInAnotherFunction`, the parameter `closeAfterRead` is `false`, so the `close()` branch is not taken. The resource is never closed along this path, and there is no explicit close, try-with-resources, or ownership transfer that guarantees closure. The path is feasible without conflicting branches.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "7": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java, 28, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java"
+            ],
+            [
+                "openPrimary",
+                "chooseStream",
+                "run",
+                "traceResource"
+            ],
+            [
+                "private InputStream openPrimary(String path) throws IOException {\n        InputStream in = new FileInputStream(path);\n        if (path.endsWith(\".tmp\")) {\n            System.out.println(\"tmp file\");\n        }\n        return in;\n    }",
+                "private InputStream chooseStream(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        if (useBackup) {\n            return openBackup(backupPath);\n        }\n        return openPrimary(primaryPath);\n    }",
+                "public void run(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        InputStream in = chooseStream(primaryPath, backupPath, useBackup);\n        traceResource(in);\n        consumeInAnotherFunction(in, false);\n        if (totalBytes > 2048) {\n            System.out.println(\"large payload: \" + totalBytes);\n        }\n        // Intentionally no close() here: leak should survive interprocedural path.\n    }",
+                "private void traceResource(InputStream in) {\n        // Non-ownership transfer call; should not hide leak.\n        System.out.println(\"resource=\" + in);\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The propagation path shows that a FileInputStream is created in openPrimary, returned through chooseStream, assigned to 'in' in run, passed to traceResource (which does not close it), and then not closed in run. There is no explicit close, try-with-resources, or ownership transfer that guarantees closure. The path is feasible and the resource remains unclosed at method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "8": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java, 28, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase31_InterproceduralReturnLeak.java"
+            ],
+            [
+                "openPrimary",
+                "chooseStream",
+                "run",
+                "consumeInAnotherFunction"
+            ],
+            [
+                "private InputStream openPrimary(String path) throws IOException {\n        InputStream in = new FileInputStream(path);\n        if (path.endsWith(\".tmp\")) {\n            System.out.println(\"tmp file\");\n        }\n        return in;\n    }",
+                "private InputStream chooseStream(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        if (useBackup) {\n            return openBackup(backupPath);\n        }\n        return openPrimary(primaryPath);\n    }",
+                "public void run(String primaryPath, String backupPath, boolean useBackup)\n        throws IOException {\n        InputStream in = chooseStream(primaryPath, backupPath, useBackup);\n        traceResource(in);\n        consumeInAnotherFunction(in, false);\n        if (totalBytes > 2048) {\n            System.out.println(\"large payload: \" + totalBytes);\n        }\n        // Intentionally no close() here: leak should survive interprocedural path.\n    }",
+                "private void consumeInAnotherFunction(InputStream in, boolean closeAfterRead)\n        throws IOException {\n        int first = in.read();\n        if (first >= 0) {\n            totalBytes += first;\n        }\n        int second = in.read();\n        if (second >= 0) {\n            totalBytes += second;\n        }\n\n        if (closeAfterRead) {\n            in.close();\n        } else if (second == -1) {\n            System.out.println(\"EOF reached\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The propagation path shows a FileInputStream created in openPrimary, returned through chooseStream, passed to run, and then passed to consumeInAnotherFunction. The resource is never closed on this path\u2014there is no explicit close, no try-with-resources, and ownership transfers via return without closing. The comment in run explicitly states no close() is called, confirming the leak.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    }
+}
