@@ -11,7 +11,7 @@ class MLKCase32_FactoryAndConditionalLeaks {
         InputStream fileStream = buildFileStream(dataFile);
         analyzeData(fileStream, 0);
 
-        // Leak path B: source from factory method createSocket(...)
+        // Leak path B(fixed): source from factory method createSocket(...)
         Socket socket = buildSocket(host, port);
         sendPing(socket, false);
     }
@@ -46,10 +46,6 @@ class MLKCase32_FactoryAndConditionalLeaks {
     private void sendPing(Socket socket, boolean closeAfterSend) throws IOException {
         socket.getOutputStream().write(1);
         socket.getOutputStream().flush();
-        if (closeAfterSend) {
-            socket.close();
-        } else {
-            System.out.println("socket left open intentionally");
-        }
+        socket.close();
     }
 }

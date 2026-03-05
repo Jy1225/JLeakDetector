@@ -9,7 +9,7 @@ class MLKCase31_InterproceduralReturnLeak {
         throws IOException {
         InputStream in = chooseStream(primaryPath, backupPath, useBackup);
         traceResource(in);
-        // consumeInAnotherFunction(in, false);
+        consumeInAnotherFunction(in, false);
         if (totalBytes > 2048) {
             System.out.println("large payload: " + totalBytes);
         }
@@ -50,12 +50,10 @@ class MLKCase31_InterproceduralReturnLeak {
         if (second >= 0) {
             totalBytes += second;
         }
-
-        if (closeAfterRead) {
-            in.close();
-        } else if (second == -1) {
+        else if (second == -1) {
             System.out.println("EOF reached");
         }
+        //in.close();
     }
 
     private void traceResource(InputStream in) {
