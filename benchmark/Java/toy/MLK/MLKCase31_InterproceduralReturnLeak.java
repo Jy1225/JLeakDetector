@@ -67,7 +67,7 @@ class MLKCase31_InterproceduralReturnLeak {
 
     private void function2(InputStream in){
         int var=in.read();
-        if(var<0){
+        if(var<=-5){
            function3(in);
         }
     }
