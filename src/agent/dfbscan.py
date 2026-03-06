@@ -389,7 +389,18 @@ class DFBScanAgent(Agent):
                         if ignore_empty_non_executed_return_branch:
                             continue
                         if not self.is_reachable:
+                            has_sibling_continue = False
+                            current_value, _ = current_value_with_context
+                            if current_value.label in {ValueLabel.OUT, ValueLabel.PARA}:
+                                has_sibling_continue = (
+                                    self.__has_sibling_continue_external_edge(
+                                        reachable_values_paths,
+                                        external_match_snapshot,
+                                    )
+                                )
                             pure_empty_passthrough = (
+                                has_sibling_continue
+                                or
                                 current_value_with_context in external_match_snapshot
                                 or self.__has_sibling_continue_arg_for_para(
                                     current_value_with_context,
@@ -1049,6 +1060,35 @@ class DFBScanAgent(Agent):
                             return True
         return False
 
+    def __has_sibling_continue_external_edge(
+        self,
+        reachable_values_paths: List[Set[Tuple[Value, CallContext]]],
+        external_match_snapshot: Dict[
+            Tuple[Value, CallContext], Set[Tuple[Value, CallContext]]
+        ],
+    ) -> bool:
+        """
+        Whether any sibling path_set contains a continue edge (external match).
+        Used to suppress OUT/PARA empty-path short candidates when a real
+        inter-procedural continuation already exists in the same function.
+        """
+        for path_set in reachable_values_paths:
+            if len(path_set) == 0:
+                continue
+            for value_with_ctx in path_set:
+                value, _ = value_with_ctx
+                if value.label not in {
+                    ValueLabel.PARA,
+                    ValueLabel.RET,
+                    ValueLabel.ARG,
+                    ValueLabel.OUT,
+                }:
+                    continue
+                if value_with_ctx in external_match_snapshot:
+                    if len(external_match_snapshot[value_with_ctx]) > 0:
+                        return True
+        return False
+
     def __record_java_mlk_transfer(
         self, src_value: Value, path: List[Value], reason: str
     ) -> None:
@@ -1096,7 +1136,7 @@ class DFBScanAgent(Agent):
         if len(paths) <= 1:
             return paths
 
-        path_sets = [set(str(value) for value in path) for path in paths]
+        path_sets = [self.__normalize_java_mlk_path_for_dedup(path) for path in paths]
         keep = [True for _ in paths]
 
         for i in range(len(paths)):
@@ -1117,6 +1157,16 @@ class DFBScanAgent(Agent):
                 f"Pruned {len(paths) - len(filtered_paths)} short Java MLK candidate path(s) for source {str(src_value)}"
             )
         return filtered_paths
+
+    def __normalize_java_mlk_path_for_dedup(self, path: List[Value]) -> Set[str]:
+        normalized: Set[str] = set()
+        for value in path:
+            if value.label == ValueLabel.LOCAL and value.name.startswith(
+                "__NO_SINK_BRANCH_PATH_"
+            ):
+                continue
+            normalized.add(str(value))
+        return normalized
 
     def get_agent_state(self) -> DFBScanState:
         return self.state
