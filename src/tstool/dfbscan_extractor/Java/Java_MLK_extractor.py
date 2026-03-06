@@ -29,10 +29,21 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "OutputStream",
         "FileInputStream",
         "FileOutputStream",
+        "BufferedInputStream",
+        "BufferedOutputStream",
+        "DataInputStream",
+        "DataOutputStream",
         "Reader",
         "Writer",
+        "FileReader",
+        "FileWriter",
+        "InputStreamReader",
+        "OutputStreamWriter",
         "BufferedReader",
         "BufferedWriter",
+        "PrintStream",
+        "PrintWriter",
+        "RandomAccessFile",
         "Socket",
         "ServerSocket",
         "Connection",
@@ -43,6 +54,16 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "JarFile",
         "ZipFile",
         "Scanner",
+    }
+
+    # In-memory wrappers are excluded from external-resource leak scope.
+    RESOURCE_TYPE_EXCLUDELIST = {
+        # "ByteArrayInputStream",
+        # "ByteArrayOutputStream",
+        # "CharArrayReader",
+        # "CharArrayWriter",
+        # "StringReader",
+        # "StringWriter",
     }
 
     FACTORY_METHOD_NAMES = {
@@ -59,6 +80,8 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "prepareStatement",
         "createSocket",
         "accept",
+        "getResourceAsStream",
+        "openConnection",
     }
 
     CLOSE_METHOD_NAMES = {
@@ -184,6 +207,8 @@ class Java_MLK_Extractor(DFBScanExtractor):
     def _is_resource_type(self, type_name: str) -> bool:
         normalized = type_name.strip()
         if normalized == "":
+            return False
+        if normalized in self.RESOURCE_TYPE_EXCLUDELIST:
             return False
         if normalized in self.RESOURCE_TYPE_WHITELIST:
             return True
