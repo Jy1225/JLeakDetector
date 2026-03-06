@@ -76,6 +76,18 @@ class JavaResourceOwnershipValidator:
         "setresource",
         "setstream",
     }
+    RESOURCE_LIKE_SUFFIXES = (
+        "Stream",
+        "Reader",
+        "Writer",
+        "Channel",
+        "Socket",
+        "Connection",
+        "Statement",
+        "ResultSet",
+        "Scanner",
+        "FileSystem",
+    )
 
     def __init__(self, ts_analyzer: TSAnalyzer) -> None:
         self.ts_analyzer = ts_analyzer
@@ -202,6 +214,8 @@ class JavaResourceOwnershipValidator:
         line_text = self.ts_analyzer.get_content_by_line_number(
             value.line_number, value.file
         )
+        if self._is_resource_wrapping_constructor_argument(value, line_text):
+            return True
         method_name = self._extract_invoked_method_name(line_text)
         normalized_name = method_name.lower()
 
@@ -212,6 +226,104 @@ class JavaResourceOwnershipValidator:
         if normalized_name in self.OWNERSHIP_TRANSFER_METHODS:
             return False
         if "logger." in line_text.lower() or ".log(" in line_text.lower():
+            return True
+        return False
+
+    def _is_resource_wrapping_constructor_argument(
+        self, value: Value, line_text: str
+    ) -> bool:
+        """
+        Treat constructor wrapping calls as non-ownership transfer, e.g.:
+          readerBuffered = new BufferedReader(readerInputStream);
+        """
+        constructor_match = re.search(
+            r"new\s+([A-Za-z_][A-Za-z0-9_$.<>]*)\s*\((.*)\)",
+            line_text,
+        )
+        if constructor_match is None:
+            return False
+
+        created_type = self._normalize_type_name(constructor_match.group(1))
+        if not self._looks_resource_like_type(created_type):
+            return False
+
+        constructor_args = self._split_top_level_args(constructor_match.group(2))
+        arg_expr = ""
+        if 0 <= value.index < len(constructor_args):
+            arg_expr = constructor_args[value.index].strip()
+        elif value.name.strip() != "":
+            arg_expr = value.name.strip()
+
+        if arg_expr == "":
+            return False
+        if self._looks_literal_or_new_object(arg_expr):
+            return False
+        return True
+
+    def _normalize_type_name(self, raw_type: str) -> str:
+        normalized = raw_type.strip()
+        if "<" in normalized:
+            normalized = normalized.split("<", 1)[0]
+        if "." in normalized:
+            normalized = normalized.split(".")[-1]
+        return normalized.strip()
+
+    def _looks_resource_like_type(self, type_name: str) -> bool:
+        if type_name == "":
+            return False
+        for suffix in self.RESOURCE_LIKE_SUFFIXES:
+            if type_name.endswith(suffix):
+                return True
+        return False
+
+    def _split_top_level_args(self, args_text: str) -> List[str]:
+        args: List[str] = []
+        depth = 0
+        start = 0
+        in_single_quote = False
+        in_double_quote = False
+        escaped = False
+
+        for i, ch in enumerate(args_text):
+            if escaped:
+                escaped = False
+                continue
+            if ch == "\\":
+                escaped = True
+                continue
+            if ch == "'" and not in_double_quote:
+                in_single_quote = not in_single_quote
+                continue
+            if ch == '"' and not in_single_quote:
+                in_double_quote = not in_double_quote
+                continue
+            if in_single_quote or in_double_quote:
+                continue
+
+            if ch in "([{":
+                depth += 1
+            elif ch in ")]}":
+                depth = max(0, depth - 1)
+            elif ch == "," and depth == 0:
+                args.append(args_text[start:i].strip())
+                start = i + 1
+
+        last = args_text[start:].strip()
+        if last != "":
+            args.append(last)
+        return args
+
+    def _looks_literal_or_new_object(self, expr: str) -> bool:
+        text = expr.strip()
+        if text == "":
+            return True
+        if text.startswith(("\"", "'")):
+            return True
+        if re.fullmatch(r"[0-9]+", text):
+            return True
+        if text in {"true", "false", "null"}:
+            return True
+        if text.startswith("new "):
             return True
         return False
 

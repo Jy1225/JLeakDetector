@@ -398,8 +398,16 @@ class DFBScanAgent(Agent):
                                 )
                             )
                             if not pure_empty_passthrough:
+                                candidate_path = (
+                                    self.__build_java_mlk_empty_branch_candidate_path(
+                                        src_value,
+                                        current_value_with_context,
+                                        path_with_unknown_status,
+                                        path_index,
+                                    )
+                                )
                                 self.state.update_potential_buggy_paths(
-                                    src_value, path_with_unknown_status + [src_value]
+                                    src_value, candidate_path
                                 )
                         continue
 
@@ -937,6 +945,30 @@ class DFBScanAgent(Agent):
             )
 
         return ("ownership_transfer", "default ownership transfer")
+
+    def __build_java_mlk_empty_branch_candidate_path(
+        self,
+        src_value: Value,
+        current_value_with_context: Tuple[Value, CallContext],
+        path_with_unknown_status: List[Value],
+        path_index: int,
+    ) -> List[Value]:
+        """
+        Build a candidate path for empty path_set branches and attach a branch marker.
+        This helps PathValidator avoid being biased by close calls from other branches.
+        """
+        current_value, _ = current_value_with_context
+        marker = Value(
+            f"__NO_SINK_BRANCH_PATH_{path_index}__",
+            current_value.line_number,
+            ValueLabel.LOCAL,
+            current_value.file,
+        )
+        candidate_path = list(path_with_unknown_status)
+        candidate_path.append(marker)
+        if src_value not in candidate_path:
+            candidate_path = [src_value] + candidate_path
+        return candidate_path
 
     def __is_non_executed_return_branch(
         self,
