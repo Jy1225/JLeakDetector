@@ -1,0 +1,8 @@
+{
+    "((new InputStreamReader(System.in), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase33.java, 2, -1), ValueLabel.SRC)": {
+        "[((new InputStreamReader(System.in), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase33.java, 2, -1), ValueLabel.SRC), ((in, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase33.java, 2, 0), ValueLabel.ARG)]": "argument likely transfers ownership but inter-procedural chain is missing"
+    },
+    "((new InputStreamReader(System.in, \"UTF-8\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java, 26, -1), ValueLabel.SRC)": {
+        "[((new InputStreamReader(System.in, \"UTF-8\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java, 26, -1), ValueLabel.SRC), ((in, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java, 27, 0), ValueLabel.ARG)]": "argument likely transfers ownership but inter-procedural chain is missing"
+    }
+}
