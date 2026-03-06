@@ -113,6 +113,10 @@ class Java_MLK_Extractor(DFBScanExtractor):
             type_name = self._extract_creation_type_name(node, source_code)
             if not self._is_resource_type(type_name):
                 continue
+            # Avoid duplicate reporting for nested wrappers such as:
+            # new BufferedReader(new InputStreamReader(...))
+            if self._is_wrapped_inner_creation(node, source_code):
+                continue
             sources.append(
                 Value(
                     source_code[node.start_byte : node.end_byte],
@@ -258,6 +262,19 @@ class Java_MLK_Extractor(DFBScanExtractor):
             normalized = normalized.split(".")[-1]
         normalized = normalized.replace("[]", "")
         return normalized.strip()
+
+    def _is_wrapped_inner_creation(self, node: Node, source_code: str) -> bool:
+        """
+        Return True when this creation expression is an inner constructor argument
+        of another resource creation expression.
+        """
+        parent = node.parent
+        while parent is not None:
+            if parent.type == "object_creation_expression":
+                outer_type = self._extract_creation_type_name(parent, source_code)
+                return self._is_resource_type(outer_type)
+            parent = parent.parent
+        return False
 
     def _build_local_type_map(self, function: Function, source_code: str) -> Dict[str, str]:
         local_type_map: Dict[str, str] = {}
