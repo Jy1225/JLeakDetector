@@ -52,6 +52,11 @@ class JavaResourceOwnershipValidator:
         "print",
         "printf",
         "format",
+        "size",
+        "first",
+        "next",
+        "hasnext",
+        "readline",
         "tostring",
         "hashcode",
         "equals",
@@ -208,6 +213,9 @@ class JavaResourceOwnershipValidator:
         """
         if value.label != ValueLabel.ARG:
             return False
+        if value.name.strip() in {"this", "super"}:
+            # Receiver-style pseudo argument does not mean ownership transfer.
+            return True
         if function is None:
             return False
 
