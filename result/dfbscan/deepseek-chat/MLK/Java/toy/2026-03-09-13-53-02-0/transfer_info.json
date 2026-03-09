@@ -1,0 +1,5 @@
+{
+    "((new ZipFile(filename), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java, 37, -1), ValueLabel.SRC)": {
+        "[((new ZipFile(filename), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java, 37, -1), ValueLabel.SRC), ((this, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java, 39, 0), ValueLabel.ARG)]": "argument likely transfers ownership but inter-procedural chain is missing"
+    }
+}
