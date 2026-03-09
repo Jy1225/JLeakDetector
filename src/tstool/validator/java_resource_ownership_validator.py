@@ -222,6 +222,8 @@ class JavaResourceOwnershipValidator:
         line_text = self.ts_analyzer.get_content_by_line_number(
             value.line_number, value.file
         )
+        if self._is_non_transfer_receiver_call(value, line_text):
+            return True
         if self._is_resource_wrapping_constructor_argument(value, line_text):
             return True
         method_name = self._extract_invoked_method_name(line_text)
@@ -236,6 +238,39 @@ class JavaResourceOwnershipValidator:
         if "logger." in line_text.lower() or ".log(" in line_text.lower():
             return True
         return False
+
+    def _is_non_transfer_receiver_call(self, value: Value, line_text: str) -> bool:
+        """
+        Conservative rule for receiver-style usage:
+        when the tracked resource variable is the method receiver (e.g.,
+        conn.prepareStatement(...)), treat it as non-ownership transfer unless the
+        method name is explicitly in transfer APIs.
+        """
+        receiver_method_name = self._extract_receiver_method_name(value.name, line_text)
+        if receiver_method_name == "":
+            return False
+
+        normalized_name = receiver_method_name.lower()
+        if normalized_name in self.OWNERSHIP_TRANSFER_METHODS:
+            return False
+        return True
+
+    def _extract_receiver_method_name(self, receiver_name: str, line_text: str) -> str:
+        receiver_candidates = [receiver_name.strip()]
+        receiver_candidates.extend(self._extract_identifier_tokens(receiver_name))
+
+        seen = set()
+        for candidate in receiver_candidates:
+            if candidate == "" or candidate in seen:
+                continue
+            seen.add(candidate)
+            matches = re.findall(
+                rf"\b{re.escape(candidate)}\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+                line_text,
+            )
+            if len(matches) > 0:
+                return matches[-1]
+        return ""
 
     def _is_resource_wrapping_constructor_argument(
         self, value: Value, line_text: str
