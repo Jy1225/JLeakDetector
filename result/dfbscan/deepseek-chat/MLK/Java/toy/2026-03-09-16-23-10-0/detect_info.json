@@ -1,0 +1,201 @@
+{
+    "0": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase01_CloseableLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in = new FileInputStream(path);\n        int value = in.read();\n        if (value > 0) {\n            System.out.println(value);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created and stored in a local variable but never closed within the method. There is no explicit close, try-with-resources, or ownership transfer via return/argument. The path executes without conflicting branches, and the resource remains open at method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "1": {
+        "bug_type": "MLK",
+        "buggy_value": "((new BufferedReader(readerInputStream), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java, 27, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java"
+            ],
+            [
+                "bad"
+            ],
+            [
+                "public void bad()\n    {\n        BufferedReader readerBuffered = null;\n        InputStreamReader readerInputStream = null;\n        try\n        {\n            readerInputStream = new InputStreamReader(System.in, \"UTF-8\");\n            readerBuffered = new BufferedReader(readerInputStream);\n            String readString = readerBuffered.readLine();\n            \n            IO.writeLine(readString);\n        }\n        catch (UnsupportedEncodingException exceptUnsupportedEncoding)\n        {\n            IO.logger.log(Level.WARNING, \"Encoding is not supported!\", exceptUnsupportedEncoding);\n        }\n        catch (IOException exceptIO)\n        {\n            IO.logger.log(Level.WARNING, \"Error with stream reading\", exceptIO);\n        }\n        \n        /* FLAW: Streams are not closed */\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The path shows resource creation (BufferedReader) but no explicit close, disconnect, shutdown, or release call. The resource is not closed in a finally block, not in a try-with-resources, and does not escape via return or argument. The comment confirms the flaw that streams are not closed. The path is feasible and the resource remains unclosed at method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "2": {
+        "bug_type": "MLK",
+        "buggy_value": "((new InputStreamReader(System.in, \"UTF-8\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java, 26, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java"
+            ],
+            [
+                "bad"
+            ],
+            [
+                "public void bad()\n    {\n        BufferedReader readerBuffered = null;\n        InputStreamReader readerInputStream = null;\n        try\n        {\n            readerInputStream = new InputStreamReader(System.in, \"UTF-8\");\n            readerBuffered = new BufferedReader(readerInputStream);\n            String readString = readerBuffered.readLine();\n            \n            IO.writeLine(readString);\n        }\n        catch (UnsupportedEncodingException exceptUnsupportedEncoding)\n        {\n            IO.logger.log(Level.WARNING, \"Encoding is not supported!\", exceptUnsupportedEncoding);\n        }\n        catch (IOException exceptIO)\n        {\n            IO.logger.log(Level.WARNING, \"Error with stream reading\", exceptIO);\n        }\n        \n        /* FLAW: Streams are not closed */\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The path shows creation of InputStreamReader and BufferedReader but no explicit close/disconnect/shutdown/release call. The resource is not closed in a finally block, not in try-with-resources, and does not escape via return/argument. The comment confirms the flaw. The path is feasible and the resource remains unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "3": {
+        "bug_type": "MLK",
+        "buggy_value": "((SocketFactory.getDefault().createSocket(host, port), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 39, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildSocket",
+                "run",
+                "sendPing"
+            ],
+            [
+                "private Socket buildSocket(String host, int port) throws IOException {\n        Socket socket = SocketFactory.getDefault().createSocket(host, port);\n        if (port == 443) {\n            System.out.println(\"tls-like port\");\n        }\n        return socket;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B(fixed): source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void sendPing(Socket socket, boolean closeAfterSend) throws IOException {\n        socket.getOutputStream().write(1);\n        socket.getOutputStream().flush();\n        //socket.close();\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (Socket) is created in buildSocket and returned to the caller (run). The caller passes it to sendPing, which does not close it (the close call is commented out). The resource escapes via return, transferring ownership to the caller, but the caller does not close it either, leaving the resource unclosed at method exit. There is no explicit close, try-with-resources, or conflicting branch conditions on this path.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "4": {
+        "bug_type": "MLK",
+        "buggy_value": "((IO.getDBConnection(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 31, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java"
+            ],
+            [
+                "bad"
+            ],
+            [
+                "public void bad()\n    {\n        ResultSet resultSet = null;\n        Connection dBConnection = null;\n        PreparedStatement preparedStatement = null;\n\n        try\n        {\n            int intId = (new SecureRandom()).nextInt(200);\n\n            dBConnection = IO.getDBConnection();\n            preparedStatement = dBConnection.prepareStatement(\"select * from users where id=?\");\n            preparedStatement.setInt(1, intId);\n            \n            resultSet = preparedStatement.executeQuery();\n            \n            if (resultSet.first())\n            {\n                IO.writeString(resultSet.toString());\n            }\n        }\n        catch (SQLException exceptSql)\n        {\n            IO.logger.log(Level.WARNING, \"Error!\", exceptSql);\n        }\n        \n        /* FLAW: DB objects are never closed */\n        \n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (Connection) is created and assigned to dBConnection, but there is no explicit close, disconnect, shutdown, or release call on the same alias in the method. The method catches SQLException but does not close in a finally block or try-with-resources. The resource does not escape via return or argument, and there are no conflicting branch conditions. The comment confirms the flaw that DB objects are never closed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "5": {
+        "bug_type": "MLK",
+        "buggy_value": "((dBConnection.prepareStatement(\"select * from users where id=?\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 32, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java"
+            ],
+            [
+                "bad"
+            ],
+            [
+                "public void bad()\n    {\n        ResultSet resultSet = null;\n        Connection dBConnection = null;\n        PreparedStatement preparedStatement = null;\n\n        try\n        {\n            int intId = (new SecureRandom()).nextInt(200);\n\n            dBConnection = IO.getDBConnection();\n            preparedStatement = dBConnection.prepareStatement(\"select * from users where id=?\");\n            preparedStatement.setInt(1, intId);\n            \n            resultSet = preparedStatement.executeQuery();\n            \n            if (resultSet.first())\n            {\n                IO.writeString(resultSet.toString());\n            }\n        }\n        catch (SQLException exceptSql)\n        {\n            IO.logger.log(Level.WARNING, \"Error!\", exceptSql);\n        }\n        \n        /* FLAW: DB objects are never closed */\n        \n    }"
+            ]
+        ],
+        "explanation": "Explanation: The path shows dBConnection is created but never closed. There is no explicit close, try-with-resources, or ownership transfer via return/argument. The comment confirms the flaw. The path executes without branch conflicts, and the resource remains unclosed at method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "6": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java, 6, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase17_ConditionalCloseLeak.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path, boolean closeIt) throws Exception {\n        InputStream in = new FileInputStream(path);\n        if (closeIt) {\n            in.close();\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is only closed if the boolean parameter `closeIt` is true. Since `closeIt` is a parameter, there exists a feasible execution path where `closeIt` is false, the resource is not closed, and it is not returned or transferred. Therefore, the resource may stay unclosed on some executions.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "7": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java, 7, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase12_CloseableLeakByAssign.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(String path) throws Exception {\n        InputStream in;\n        in = new FileInputStream(path);\n        System.out.println(in);\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created and assigned to variable 'in', then used in a print statement, but there is no explicit close, try-with-resources, or ownership transfer via return/argument. The path does not contain conflicting branches or guaranteed closure, so the resource remains unclosed when the method exits.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "8": {
+        "bug_type": "MLK",
+        "buggy_value": "((preparedStatement.executeQuery(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 35, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java"
+            ],
+            [
+                "bad"
+            ],
+            [
+                "public void bad()\n    {\n        ResultSet resultSet = null;\n        Connection dBConnection = null;\n        PreparedStatement preparedStatement = null;\n\n        try\n        {\n            int intId = (new SecureRandom()).nextInt(200);\n\n            dBConnection = IO.getDBConnection();\n            preparedStatement = dBConnection.prepareStatement(\"select * from users where id=?\");\n            preparedStatement.setInt(1, intId);\n            \n            resultSet = preparedStatement.executeQuery();\n            \n            if (resultSet.first())\n            {\n                IO.writeString(resultSet.toString());\n            }\n        }\n        catch (SQLException exceptSql)\n        {\n            IO.logger.log(Level.WARNING, \"Error!\", exceptSql);\n        }\n        \n        /* FLAW: DB objects are never closed */\n        \n    }"
+            ]
+        ],
+        "explanation": "Explanation: The path shows that `preparedStatement.executeQuery()` is called, returning a `ResultSet` that is assigned to `resultSet`. The code includes a try-catch block but no explicit close, disconnect, shutdown, or release calls for `resultSet`, `preparedStatement`, or `dBConnection`. The comment indicates a flaw that DB objects are never closed. There is no try-with-resources, no ownership transfer via return/argument, and no conflicting branch conditions. The resource is not definitely closed before method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "9": {
+        "bug_type": "MLK",
+        "buggy_value": "((new BufferedReader(new InputStreamReader(System.in)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase33.java, 2, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase33.java"
+            ],
+            [
+                "run"
+            ],
+            [
+                "public void run(){\n    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n    //br.close();\n}"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created and stored in a local variable but never closed within the method. There is no explicit close, no try-with-resources, no ownership transfer, and no conflicting branch conditions. The path is feasible and the resource remains unclosed at method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    },
+    "10": {
+        "bug_type": "MLK",
+        "buggy_value": "((Files.newInputStream(path), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java, 20, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java",
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/MLKCase32_FactoryAndConditionalLeaks.java"
+            ],
+            [
+                "buildFileStream",
+                "run",
+                "analyzeData"
+            ],
+            [
+                "private InputStream buildFileStream(Path path) throws IOException {\n        InputStream in = Files.newInputStream(path);\n        if (path.toString().endsWith(\".log\")) {\n            System.out.println(\"log input\");\n        }\n        return in;\n    }",
+                "public void run(Path dataFile, String host, int port) throws Exception {\n        // Leak path A: source from factory method Files.newInputStream(...)\n        InputStream fileStream = buildFileStream(dataFile);\n        analyzeData(fileStream, 0);\n\n        // Leak path B(fixed): source from factory method createSocket(...)\n        Socket socket = buildSocket(host, port);\n        sendPing(socket, false);\n    }",
+                "private void analyzeData(InputStream in, int level) throws IOException {\n        int b = in.read();\n        if (b > 0 && level > 10) {\n            in.close();\n        } else {\n            // Non-ownership API usage only; still should be considered leak.\n            System.out.println(\"first byte = \" + b);\n            System.out.println(\"stream handle = \" + in);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `InputStream` is created in `buildFileStream` and returned to `run`, where it is passed to `analyzeData`. In `analyzeData`, the resource is only closed if both `b > 0` and `level > 10` are true. Since `level` is passed as `0` in the call `analyzeData(fileStream, 0)`, the condition `level > 10` is false, so the `close` branch is not taken. The resource is not closed elsewhere along this path, and there is no explicit close, try-with-resources, or ownership transfer by return/argument after this point. The path is feasible without branch conflicts.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False"
+    }
+}
