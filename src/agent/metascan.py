@@ -3,10 +3,7 @@ import os
 
 from agent.agent import *
 from tstool.analyzer.TS_analyzer import *
-from tstool.analyzer.Cpp_TS_analyzer import *
-from tstool.analyzer.Go_TS_analyzer import *
 from tstool.analyzer.Java_TS_analyzer import *
-from tstool.analyzer.Python_TS_analyzer import *
 from llmtool.LLM_utils import *
 from memory.semantic.metascan_state import *
 from pathlib import Path

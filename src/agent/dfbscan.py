@@ -10,18 +10,10 @@ from agent.agent import *
 from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
 from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
 from tstool.analyzer.TS_analyzer import *
-from tstool.analyzer.Cpp_TS_analyzer import *
-from tstool.analyzer.Go_TS_analyzer import *
 from tstool.analyzer.Java_TS_analyzer import *
-from tstool.analyzer.Python_TS_analyzer import *
 
 from tstool.dfbscan_extractor.dfbscan_extractor import *
-from tstool.dfbscan_extractor.Cpp.Cpp_MLK_extractor import *
-from tstool.dfbscan_extractor.Cpp.Cpp_NPD_extractor import *
-from tstool.dfbscan_extractor.Cpp.Cpp_UAF_extractor import *
 from tstool.dfbscan_extractor.Java.Java_NPD_extractor import *
-from tstool.dfbscan_extractor.Python.Python_NPD_extractor import *
-from tstool.dfbscan_extractor.Go.Go_NPD_extractor import *
 
 from llmtool.LLM_utils import *
 from llmtool.dfbscan.intra_dataflow_analyzer import *
