@@ -79,7 +79,7 @@ python3 repoaudit.py \
   --project-path "$PROJECT_PATH_ABS" \
   --bug-type "$BUG_TYPE" \
   "${REACHABILITY_FLAG[@]}" \
-  --temperature 1.0 \
+  --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
   --max-neural-workers 30
