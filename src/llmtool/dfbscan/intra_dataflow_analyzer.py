@@ -197,6 +197,7 @@ class IntraDataFlowAnalyzer(LLMTool):
         source_line_in_function = (
             input.summary_start.line_number - input.function.start_line_number + 1
         )
+        source_tokens = self._extract_identifier_tokens(input.summary_start.name)
 
         for single_path in paths:
             reachable_values_per_path = set()
@@ -204,6 +205,7 @@ class IntraDataFlowAnalyzer(LLMTool):
                 single_path.get("execution_path", ""),
                 source_line_in_function,
                 single_path.get("propagation_details", []),
+                source_tokens,
             )
             for detail in single_path["propagation_details"]:
                 if not detail["line"].isdigit():
@@ -257,16 +259,29 @@ class IntraDataFlowAnalyzer(LLMTool):
         return output
 
     def _is_source_executed_in_path(
-        self, execution_path: str, source_line_in_function: int, details: List[Dict[str, str]]
+        self,
+        execution_path: str,
+        source_line_in_function: int,
+        details: List[Dict[str, str]],
+        source_tokens: List[str],
     ) -> bool:
         line_numbers = [int(item) for item in re.findall(r"\d+", execution_path)]
         if source_line_in_function in line_numbers:
             return True
-        # If parsing of execution lines is weak but the model still emitted propagation
-        # details for this path, treat source as executed to avoid over-pruning.
-        if len(details) > 0:
-            return True
+
+        # Conservative fallback: only when the execution-path string has no parsable
+        # line number, and some propagation detail text explicitly mentions source tokens.
+        if len(line_numbers) == 0 and len(source_tokens) > 0:
+            for detail in details:
+                detail_name = detail.get("name", "")
+                for token in source_tokens:
+                    if re.search(rf"\b{re.escape(token)}\b", detail_name):
+                        return True
         return False
+
+    def _extract_identifier_tokens(self, expr: str) -> List[str]:
+        tokens = re.findall(r"[A-Za-z_][A-Za-z0-9_]*", expr)
+        return [token for token in tokens if token != "new"]
 
     def _normalize_detail_type(self, detail: Dict[str, str]) -> str:
         normalized = detail["type"].strip()

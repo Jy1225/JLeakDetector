@@ -18,8 +18,8 @@ Usage: run_scan.sh [PROJECT_PATH] [BUG_TYPE]
 
 Arguments:
   PROJECT_PATH   Optional absolute/relative path to the subject project.
-                 Defaults to: ../benchmark/Python/toy
-  BUG_TYPE       Optional bug type. One of: MLK, NPD, UAF. Defaults to: NPD
+                 Defaults to: ../benchmark/Java/toy
+  BUG_TYPE       Optional bug type. One of: MLK, NPD, UAF. Defaults to: MLK
 
 Bug type meanings:
   MLK  - Memory Leak
@@ -82,4 +82,4 @@ python3 repoaudit.py \
   --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
-  --max-neural-workers 30
+  --max-neural-workers 4

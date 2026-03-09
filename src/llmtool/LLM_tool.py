@@ -1,6 +1,7 @@
 from llmtool.LLM_utils import *
 from abc import ABC, abstractmethod
 from typing import Dict, Optional, Type, TypeVar, cast
+import threading
 from ui.logger import Logger
 
 
@@ -42,6 +43,7 @@ class LLMTool(ABC):
 
         self.model = LLM(model_name, self.logger, temperature)
         self.cache: Dict[LLMToolInput, LLMToolOutput] = {}
+        self._cache_lock = threading.Lock()
 
         self.input_token_cost = 0
         self.output_token_cost = 0
@@ -66,9 +68,11 @@ class LLMTool(ABC):
     def _invoke(self, input: LLMToolInput) -> Optional[LLMToolOutput]:
         class_name = type(self).__name__
         self.logger.print_console(f"The LLM Tool {class_name} is invoked.")
-        if input in self.cache:
+        with self._cache_lock:
+            cached_output = self.cache.get(input)
+        if cached_output is not None:
             self.logger.print_log("Cache hit.")
-            return self.cache[input]
+            return cached_output
 
         prompt = self._get_prompt(input)
         self.logger.print_log("Prompt:", "\n", prompt)
@@ -92,7 +96,8 @@ class LLMTool(ABC):
 
         self.total_query_num += single_query_num
         if output is not None:
-            self.cache[input] = output
+            with self._cache_lock:
+                self.cache[input] = output
         return output
 
     @abstractmethod

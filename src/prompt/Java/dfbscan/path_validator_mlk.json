@@ -16,7 +16,9 @@
   ],
   "strict_branch_marker_rules": [
     "If marker branch has no sink, answer No only when the same resource alias is guaranteed to be closed by finally or try-with-resources on all continuations of that marked branch.",
-    "A close in another conditional branch, or a close that can be skipped by earlier exception, is not enough to answer No for the marked branch."
+    "A close in another conditional branch, or a close that can be skipped by earlier exception, is not enough to answer No for the marked branch.",
+    "If the marker branch already executes the source allocation, treat a finally close on the same alias (including null-check guarded close) as guaranteed cleanup for that branch.",
+    "Do not answer Yes only by hypothesizing an exception before source assignment when marker semantics already says source is executed."
   ],
   "question_template": [
     "When these functions execute, does this propagation path indicate a real <BUG_TYPE> bug?",
