@@ -894,6 +894,30 @@ class DFBScanAgent(Agent):
             if pv_output is None:
                 continue
 
+            if (
+                self.language == "Java"
+                and self.bug_type == "MLK"
+                and not pv_output.is_reachable
+                and self.__has_java_mlk_no_sink_marker(buggy_path)
+                and self.__is_java_mlk_close_biased_negative(
+                    pv_output.explanation_str
+                )
+            ):
+                self.logger.print_log(
+                    "Re-validating Java MLK marker-path with strict branch semantics."
+                )
+                strict_pv_input = PathValidatorInput(
+                    self.bug_type,
+                    buggy_path,
+                    values_to_functions,
+                    strict_branch_semantics=True,
+                )
+                strict_pv_output = self.path_validator.invoke(
+                    strict_pv_input, PathValidatorOutput
+                )
+                if strict_pv_output is not None:
+                    pv_output = strict_pv_output
+
             if pv_output.is_reachable:
                 passed_post_validation, reason = (
                     self.__post_validate_java_mlk_with_objid(
@@ -1125,6 +1149,30 @@ class DFBScanAgent(Agent):
             return True, "validator disabled"
         return self.java_mlk_validator.validate_candidate(
             src_value, buggy_path, values_to_functions
+        )
+
+    def __has_java_mlk_no_sink_marker(self, path: List[Value]) -> bool:
+        for value in path:
+            if (
+                value.label == ValueLabel.LOCAL
+                and value.name.startswith("__NO_SINK_BRANCH_PATH_")
+            ):
+                return True
+        return False
+
+    def __is_java_mlk_close_biased_negative(self, explanation: str) -> bool:
+        text = explanation.lower()
+        if "answer: no" not in text:
+            return False
+        return any(
+            keyword in text
+            for keyword in [
+                "close",
+                "closed",
+                "finally",
+                "try-with-resources",
+                "sink",
+            ]
         )
 
     def __filter_redundant_java_mlk_paths(

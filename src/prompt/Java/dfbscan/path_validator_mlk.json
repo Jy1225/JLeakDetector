@@ -10,6 +10,14 @@
     "If the resource escapes by return/argument and ownership clearly transfers, explain it and prefer No.",
     "If branch conditions conflict across steps in the path, answer No."
   ],
+  "branch_marker_rules": [
+    "When a path contains __NO_SINK_BRANCH_PATH_* marker, it represents a specific branch where source is executed and no sink is reached on that branch.",
+    "Do not use close() statements from sibling branches to conclude this marker path is safe."
+  ],
+  "strict_branch_marker_rules": [
+    "If marker branch has no sink, answer No only when the same resource alias is guaranteed to be closed by finally or try-with-resources on all continuations of that marked branch.",
+    "A close in another conditional branch, or a close that can be skipped by earlier exception, is not enough to answer No for the marked branch."
+  ],
   "question_template": [
     "When these functions execute, does this propagation path indicate a real <BUG_TYPE> bug?",
     "```",

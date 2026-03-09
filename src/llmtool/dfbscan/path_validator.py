@@ -16,10 +16,12 @@ class PathValidatorInput(LLMToolInput):
         bug_type: str,
         values: List[Value],
         values_to_functions: Dict[Value, Optional[Function]],
+        strict_branch_semantics: bool = False,
     ) -> None:
         self.bug_type = bug_type
         self.values = values
         self.values_to_functions = values_to_functions
+        self.strict_branch_semantics = strict_branch_semantics
         return
 
     def __hash__(self) -> int:
@@ -103,6 +105,37 @@ class PathValidator(LLMTool):
             ]
         )
         prompt = prompt.replace("<PROGRAM>", program)
+
+        marker_values = [
+            value
+            for value in input.values
+            if value.label == ValueLabel.LOCAL
+            and value.name.startswith("__NO_SINK_BRANCH_PATH_")
+        ]
+        if len(marker_values) > 0:
+            branch_rules = prompt_template_dict.get("branch_marker_rules", [])
+            strict_branch_rules = prompt_template_dict.get(
+                "strict_branch_marker_rules", []
+            )
+            marker_names = ", ".join(
+                sorted(set(value.name for value in marker_values))
+            )
+
+            marker_hint_lines = [
+                "Branch marker context:",
+                f"- Active marker(s): {marker_names}",
+            ]
+            for rule in branch_rules:
+                marker_hint_lines.append(f"- {rule}")
+
+            if input.strict_branch_semantics:
+                marker_hint_lines.append(
+                    "- Strict mode enabled for this re-check."
+                )
+                for rule in strict_branch_rules:
+                    marker_hint_lines.append(f"- {rule}")
+
+            prompt += "\n\n" + "\n".join(marker_hint_lines)
         return prompt
 
     def _parse_response(
