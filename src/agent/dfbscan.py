@@ -485,9 +485,14 @@ class DFBScanAgent(Agent):
                                 )
                             )
                             if transfer_kind == "no_real_transfer":
-                                candidate_path = path_with_unknown_status + [terminal_value]
-                                if src_value not in candidate_path:
-                                    candidate_path = [src_value] + candidate_path
+                                candidate_path = (
+                                    self.__build_java_mlk_terminal_branch_candidate_path(
+                                        src_value,
+                                        path_with_unknown_status,
+                                        terminal_value,
+                                        path_index,
+                                    )
+                                )
                                 self.state.update_potential_buggy_paths(
                                     src_value, candidate_path
                                 )
@@ -1000,6 +1005,31 @@ class DFBScanAgent(Agent):
             current_value.file,
         )
         candidate_path = list(path_with_unknown_status)
+        candidate_path.append(marker)
+        if src_value not in candidate_path:
+            candidate_path = [src_value] + candidate_path
+        return candidate_path
+
+    def __build_java_mlk_terminal_branch_candidate_path(
+        self,
+        src_value: Value,
+        path_with_unknown_status: List[Value],
+        terminal_value: Value,
+        path_index: int,
+    ) -> List[Value]:
+        """
+        Build a candidate path for non-empty terminal branches that still have no
+        sink on this branch. Attach the same no-sink marker so strict branch
+        semantics can be applied during PathValidator re-check.
+        """
+        marker = Value(
+            f"__NO_SINK_BRANCH_PATH_{path_index}__",
+            terminal_value.line_number,
+            ValueLabel.LOCAL,
+            terminal_value.file,
+        )
+        candidate_path = list(path_with_unknown_status)
+        candidate_path.append(terminal_value)
         candidate_path.append(marker)
         if src_value not in candidate_path:
             candidate_path = [src_value] + candidate_path
