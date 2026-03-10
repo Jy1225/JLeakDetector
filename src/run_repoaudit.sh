@@ -82,4 +82,4 @@ python3 repoaudit.py \
   --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
-  --max-neural-workers 16
+  --max-neural-workers 8
