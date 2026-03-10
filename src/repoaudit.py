@@ -43,6 +43,9 @@ class RepoAudit:
         self.call_depth = args.call_depth
         self.max_symbolic_workers = args.max_symbolic_workers
         self.max_neural_workers = args.max_neural_workers
+        self.enable_z3_prefilter = args.enable_z3_prefilter
+        self.z3_shadow_mode = args.z3_shadow_mode
+        self.z3_timeout_ms = args.z3_timeout_ms
 
         self.bug_type = args.bug_type
         self.is_reachable = args.is_reachable
@@ -104,6 +107,9 @@ class RepoAudit:
                 self.temperature,
                 self.call_depth,
                 self.max_neural_workers,
+                self.enable_z3_prefilter,
+                self.z3_shadow_mode,
+                self.z3_timeout_ms,
             )
             dfbscan_agent.start_scan()
         return
@@ -214,6 +220,22 @@ def configure_args():
         type=int,
         default=1,
         help="Max neural workers for prompting-based analysis",
+    )
+    parser.add_argument(
+        "--enable-z3-prefilter",
+        action="store_true",
+        help="Enable Java MLK Z3 prefilter before LLM path validation",
+    )
+    parser.add_argument(
+        "--z3-shadow-mode",
+        action="store_true",
+        help="Run Z3 prefilter in shadow mode without skipping LLM",
+    )
+    parser.add_argument(
+        "--z3-timeout-ms",
+        type=int,
+        default=200,
+        help="Timeout in milliseconds for each Z3 prefilter check",
     )
     parser.add_argument("--bug-type", help="Bug type for dfbscan)")
     parser.add_argument(

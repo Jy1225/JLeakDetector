@@ -9,6 +9,7 @@ google-generativeai
 tqdm
 networkx
 streamlit
+z3-solver
 botocore
 boto3
 black

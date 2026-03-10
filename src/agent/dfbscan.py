@@ -9,6 +9,11 @@ from agent.agent import *
 
 from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
 from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
+from tstool.validator.java_z3_path_prefilter import (
+    JavaZ3PathPrefilter,
+    Z3PrefilterConfig,
+    Z3PrefilterStats,
+)
 from tstool.analyzer.TS_analyzer import *
 from tstool.analyzer.Java_TS_analyzer import *
 
@@ -40,6 +45,9 @@ class DFBScanAgent(Agent):
         temperature: float,
         call_depth: int,
         max_neural_workers: int = 30,
+        enable_z3_prefilter: bool = False,
+        z3_shadow_mode: bool = True,
+        z3_timeout_ms: int = 200,
         agent_id: int = 0,
     ) -> None:
         self.bug_type = bug_type
@@ -56,6 +64,9 @@ class DFBScanAgent(Agent):
         self.call_depth = call_depth
         self.max_neural_workers = max_neural_workers
         self.MAX_QUERY_NUM = 5
+        self.enable_z3_prefilter = enable_z3_prefilter
+        self.z3_shadow_mode = z3_shadow_mode
+        self.z3_timeout_ms = z3_timeout_ms
 
         self.lock = threading.Lock()
 
@@ -92,6 +103,19 @@ class DFBScanAgent(Agent):
             if self.language == "Java" and self.bug_type == "MLK"
             else None
         )
+        self.java_z3_prefilter = (
+            JavaZ3PathPrefilter(
+                self.ts_analyzer,
+                Z3PrefilterConfig(
+                    enabled=self.enable_z3_prefilter,
+                    timeout_ms=self.z3_timeout_ms,
+                    shadow_mode=self.z3_shadow_mode,
+                ),
+            )
+            if self.language == "Java" and self.bug_type == "MLK"
+            else None
+        )
+        self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
 
         self.src_values, self.sink_values = self.extractor.extract_all()
@@ -675,13 +699,18 @@ class DFBScanAgent(Agent):
                     src_value, self.state.potential_buggy_paths[src_value]
                 )
                 for buggy_path in buggy_paths:
+                    values_to_functions = {
+                        value: self.ts_analyzer.get_function_from_localvalue(value)
+                        for value in buggy_path
+                    }
+
+                    if self.__skip_by_java_z3_prefilter(buggy_path, values_to_functions):
+                        continue
+
                     pv_input = PathValidatorInput(
                         self.bug_type,
                         buggy_path,
-                        {
-                            value: self.ts_analyzer.get_function_from_localvalue(value)
-                            for value in buggy_path
-                        },
+                        values_to_functions,
                     )
                     pv_output = self.path_validator.invoke(
                         pv_input, PathValidatorOutput
@@ -695,12 +724,7 @@ class DFBScanAgent(Agent):
                             self.__post_validate_java_mlk_with_objid(
                                 src_value,
                                 buggy_path,
-                                {
-                                    value: self.ts_analyzer.get_function_from_localvalue(
-                                        value
-                                    )
-                                    for value in buggy_path
-                                },
+                                values_to_functions,
                             )
                         )
                         if not passed_post_validation:
@@ -749,6 +773,7 @@ class DFBScanAgent(Agent):
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.__dump_java_mlk_transfer_records()
+        self.__dump_z3_prefilter_stats()
         return
 
     def start_scan(self) -> None:
@@ -788,6 +813,7 @@ class DFBScanAgent(Agent):
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.__dump_java_mlk_transfer_records()
+        self.__dump_z3_prefilter_stats()
         return
 
     def __process_src_value(self, src_value: Value) -> None:
@@ -879,6 +905,9 @@ class DFBScanAgent(Agent):
                     functions.add(func)
 
             if self.state.check_existence(src_value, functions):
+                continue
+
+            if self.__skip_by_java_z3_prefilter(buggy_path, values_to_functions):
                 continue
 
             pv_input = PathValidatorInput(
@@ -1158,6 +1187,35 @@ class DFBScanAgent(Agent):
             payload = dict(self.java_mlk_transfer_records)
         with open(transfer_path, "w") as transfer_file:
             json.dump(payload, transfer_file, indent=4)
+
+    def __skip_by_java_z3_prefilter(
+        self,
+        buggy_path: List[Value],
+        values_to_functions: Dict[Value, Optional[Function]],
+    ) -> bool:
+        if self.java_z3_prefilter is None:
+            return False
+        z3_result = self.java_z3_prefilter.evaluate(buggy_path, values_to_functions)
+        self.z3_prefilter_stats.update(z3_result, self.z3_shadow_mode)
+        self.logger.print_log(
+            "[Z3 prefilter]",
+            f"verdict={z3_result.verdict}",
+            f"reason={z3_result.reason}",
+            f"parsed={z3_result.parsed_constraints}/{z3_result.total_constraints}",
+            f"elapsed_ms={z3_result.elapsed_ms:.2f}",
+        )
+        if len(z3_result.unsat_core) > 0:
+            self.logger.print_log("[Z3 prefilter] unsat_core:", z3_result.unsat_core)
+        return z3_result.should_skip_llm and not self.z3_shadow_mode
+
+    def __dump_z3_prefilter_stats(self) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        if self.java_z3_prefilter is None:
+            return
+        stats_path = self.res_dir_path + "/z3_prefilter_stats.json"
+        with open(stats_path, "w") as stats_file:
+            json.dump(self.z3_prefilter_stats.to_dict(), stats_file, indent=4)
 
     def __post_validate_java_mlk_with_objid(
         self,

@@ -8,6 +8,9 @@ MODEL="deepseek-chat"
 DEFAULT_PROJECT_NAME="toy"
 DEFAULT_BUG_TYPE="MLK"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="dfbscan"
+ENABLE_Z3_PREFILTER="true"   # true/false
+Z3_SHADOW_MODE="true"        # true/false
+Z3_TIMEOUT_MS=200            # per-path timeout in ms
 
 # Construct the default project *path* from LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -73,6 +76,15 @@ if [[ "$BUG_TYPE" == "NPD" || "$BUG_TYPE" == "UAF" ]]; then
   REACHABILITY_FLAG=(--is-reachable)
 fi
 
+Z3_FLAGS=()
+if [[ "$ENABLE_Z3_PREFILTER" == "true" ]]; then
+  Z3_FLAGS+=(--enable-z3-prefilter)
+fi
+if [[ "$Z3_SHADOW_MODE" == "true" ]]; then
+  Z3_FLAGS+=(--z3-shadow-mode)
+fi
+Z3_FLAGS+=(--z3-timeout-ms "$Z3_TIMEOUT_MS")
+
 python3 repoaudit.py \
   --language "$LANGUAGE" \
   --model-name "$MODEL" \
@@ -82,4 +94,5 @@ python3 repoaudit.py \
   --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
-  --max-neural-workers 8
+  --max-neural-workers 8 \
+  "${Z3_FLAGS[@]}"
