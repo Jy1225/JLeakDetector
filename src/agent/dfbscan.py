@@ -1260,24 +1260,44 @@ class DFBScanAgent(Agent):
             line_hints.setdefault(function.function_id, []).append(relative_line)
 
         # Extra hints from intra-procedural path line traces.
+        # We do not rely on source function only; instead, merge traces for all
+        # functions that are relevant to the current candidate path.
+        marker_indexes = self.__extract_java_mlk_marker_path_indexes(buggy_path)
+        state_snapshot = self.state.path_line_numbers_per_path
+        target_function_ids = {
+            function.function_id
+            for function in values_to_functions.values()
+            if function is not None
+        }
+        path_values = set(buggy_path)
         src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
         if src_function is not None:
-            state_snapshot = self.state.path_line_numbers_per_path
-            state_key = (src_value, CallContext(False))
-            if state_key in state_snapshot:
-                line_traces = state_snapshot[state_key]
-                marker_indexes = self.__extract_java_mlk_marker_path_indexes(buggy_path)
-                if len(marker_indexes) > 0:
-                    for marker_index in marker_indexes:
-                        if marker_index < 0 or marker_index >= len(line_traces):
-                            continue
-                        line_hints.setdefault(src_function.function_id, []).extend(
-                            line_traces[marker_index]
-                        )
-                elif len(line_traces) == 1:
-                    line_hints.setdefault(src_function.function_id, []).extend(
-                        line_traces[0]
-                    )
+            target_function_ids.add(src_function.function_id)
+
+        for (state_value, _), line_traces in state_snapshot.items():
+            function = self.ts_analyzer.get_function_from_localvalue(state_value)
+            if function is None:
+                continue
+            if function.function_id not in target_function_ids:
+                continue
+
+            selected_traces: List[List[int]] = []
+            if len(marker_indexes) > 0:
+                for marker_index in marker_indexes:
+                    if marker_index < 0 or marker_index >= len(line_traces):
+                        continue
+                    selected_traces.append(line_traces[marker_index])
+            elif len(line_traces) == 1:
+                selected_traces.append(line_traces[0])
+            elif state_value in path_values:
+                # Prefer traces that explicitly execute the state value line.
+                state_rel_line = function.file_line2function_line(state_value.line_number)
+                for trace in line_traces:
+                    if state_rel_line in trace:
+                        selected_traces.append(trace)
+
+            for trace in selected_traces:
+                line_hints.setdefault(function.function_id, []).extend(trace)
 
         for function_id in line_hints:
             line_hints[function_id] = sorted(
