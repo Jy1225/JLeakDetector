@@ -94,5 +94,5 @@ python3 repoaudit.py \
   --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
-  --max-neural-workers 8 \
+  --max-neural-workers 4 \
   "${Z3_FLAGS[@]}"
