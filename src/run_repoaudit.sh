@@ -9,7 +9,7 @@ DEFAULT_PROJECT_NAME="toy"
 DEFAULT_BUG_TYPE="MLK"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="dfbscan"
 ENABLE_Z3_PREFILTER="true"   # true/false
-Z3_SHADOW_MODE="true"        # true/false
+Z3_SHADOW_MODE="false"        # true/false
 Z3_TIMEOUT_MS=200            # per-path timeout in ms
 Z3_MIN_PARSED_CONSTRAINTS=2  # conservative UNSAT skip threshold
 
@@ -96,5 +96,5 @@ python3 repoaudit.py \
   --temperature 0.0 \
   --scan-type "$SCAN_TYPE" \
   --call-depth 15 \
-  --max-neural-workers 4 \
+  --max-neural-workers 16 \
   "${Z3_FLAGS[@]}"
