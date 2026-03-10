@@ -89,11 +89,12 @@ class DFBScanState(State):
             # Check if identical bug report already exists
             if bug_report in self._bug_reports.values():
                 return
-            # Add new unique bug report
-            self._bug_reports[self._total_bug_count] = bug_report
-
-        with self._total_bug_count_lock:
-            self._total_bug_count += 1
+            # Reserve a unique id and write the report atomically to avoid
+            # collisions when multiple worker threads report concurrently.
+            with self._total_bug_count_lock:
+                bug_report_id = self._total_bug_count
+                self._total_bug_count += 1
+            self._bug_reports[bug_report_id] = bug_report
 
     @property
     def reachable_values_per_path(
