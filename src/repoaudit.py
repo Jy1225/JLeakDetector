@@ -46,6 +46,7 @@ class RepoAudit:
         self.enable_z3_prefilter = args.enable_z3_prefilter
         self.z3_shadow_mode = args.z3_shadow_mode
         self.z3_timeout_ms = args.z3_timeout_ms
+        self.z3_min_parsed_constraints = args.z3_min_parsed_constraints
 
         self.bug_type = args.bug_type
         self.is_reachable = args.is_reachable
@@ -110,6 +111,7 @@ class RepoAudit:
                 self.enable_z3_prefilter,
                 self.z3_shadow_mode,
                 self.z3_timeout_ms,
+                self.z3_min_parsed_constraints,
             )
             dfbscan_agent.start_scan()
         return
@@ -236,6 +238,12 @@ def configure_args():
         type=int,
         default=200,
         help="Timeout in milliseconds for each Z3 prefilter check",
+    )
+    parser.add_argument(
+        "--z3-min-parsed-constraints",
+        type=int,
+        default=2,
+        help="Minimum parsed Z3 constraints required before UNSAT can skip LLM",
     )
     parser.add_argument("--bug-type", help="Bug type for dfbscan)")
     parser.add_argument(

@@ -11,6 +11,7 @@ SCAN_TYPE="dfbscan"
 ENABLE_Z3_PREFILTER="true"   # true/false
 Z3_SHADOW_MODE="true"        # true/false
 Z3_TIMEOUT_MS=200            # per-path timeout in ms
+Z3_MIN_PARSED_CONSTRAINTS=2  # conservative UNSAT skip threshold
 
 # Construct the default project *path* from LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -84,6 +85,7 @@ if [[ "$Z3_SHADOW_MODE" == "true" ]]; then
   Z3_FLAGS+=(--z3-shadow-mode)
 fi
 Z3_FLAGS+=(--z3-timeout-ms "$Z3_TIMEOUT_MS")
+Z3_FLAGS+=(--z3-min-parsed-constraints "$Z3_MIN_PARSED_CONSTRAINTS")
 
 python3 repoaudit.py \
   --language "$LANGUAGE" \

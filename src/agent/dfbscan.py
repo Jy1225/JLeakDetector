@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -48,6 +49,7 @@ class DFBScanAgent(Agent):
         enable_z3_prefilter: bool = False,
         z3_shadow_mode: bool = True,
         z3_timeout_ms: int = 200,
+        z3_min_parsed_constraints: int = 2,
         agent_id: int = 0,
     ) -> None:
         self.bug_type = bug_type
@@ -67,6 +69,7 @@ class DFBScanAgent(Agent):
         self.enable_z3_prefilter = enable_z3_prefilter
         self.z3_shadow_mode = z3_shadow_mode
         self.z3_timeout_ms = z3_timeout_ms
+        self.z3_min_parsed_constraints = z3_min_parsed_constraints
 
         self.lock = threading.Lock()
 
@@ -681,6 +684,14 @@ class DFBScanAgent(Agent):
                         self.state.update_source_executed_per_path(
                             (start_value, call_context), source_executed
                         )
+                        path_line_numbers: List[int] = []
+                        if path_index < len(df_output.path_line_numbers_per_path):
+                            path_line_numbers = df_output.path_line_numbers_per_path[
+                                path_index
+                            ]
+                        self.state.update_path_line_numbers_per_path(
+                            (start_value, call_context), path_line_numbers
+                        )
 
                         delta_worklist = self.__update_worklist(
                             df_input, df_output, call_context, path_index
@@ -704,7 +715,9 @@ class DFBScanAgent(Agent):
                         for value in buggy_path
                     }
 
-                    if self.__skip_by_java_z3_prefilter(buggy_path, values_to_functions):
+                    if self.__skip_by_java_z3_prefilter(
+                        src_value, buggy_path, values_to_functions
+                    ):
                         continue
 
                     pv_input = PathValidatorInput(
@@ -876,6 +889,12 @@ class DFBScanAgent(Agent):
                 self.state.update_source_executed_per_path(
                     (start_value, call_context), source_executed
                 )
+                path_line_numbers: List[int] = []
+                if path_index < len(df_output.path_line_numbers_per_path):
+                    path_line_numbers = df_output.path_line_numbers_per_path[path_index]
+                self.state.update_path_line_numbers_per_path(
+                    (start_value, call_context), path_line_numbers
+                )
 
                 delta_worklist = self.__update_worklist(
                     df_input, df_output, call_context, path_index
@@ -907,7 +926,9 @@ class DFBScanAgent(Agent):
             if self.state.check_existence(src_value, functions):
                 continue
 
-            if self.__skip_by_java_z3_prefilter(buggy_path, values_to_functions):
+            if self.__skip_by_java_z3_prefilter(
+                src_value, buggy_path, values_to_functions
+            ):
                 continue
 
             pv_input = PathValidatorInput(
@@ -1190,12 +1211,18 @@ class DFBScanAgent(Agent):
 
     def __skip_by_java_z3_prefilter(
         self,
+        src_value: Value,
         buggy_path: List[Value],
         values_to_functions: Dict[Value, Optional[Function]],
     ) -> bool:
         if self.java_z3_prefilter is None:
             return False
-        z3_result = self.java_z3_prefilter.evaluate(buggy_path, values_to_functions)
+        line_hints = self.__build_java_z3_line_hints(
+            src_value, buggy_path, values_to_functions
+        )
+        z3_result = self.java_z3_prefilter.evaluate(
+            buggy_path, values_to_functions, line_hints
+        )
         self.z3_prefilter_stats.update(z3_result, self.z3_shadow_mode)
         self.logger.print_log(
             "[Z3 prefilter]",
@@ -1206,7 +1233,71 @@ class DFBScanAgent(Agent):
         )
         if len(z3_result.unsat_core) > 0:
             self.logger.print_log("[Z3 prefilter] unsat_core:", z3_result.unsat_core)
+        if z3_result.should_skip_llm and z3_result.parsed_constraints < self.z3_min_parsed_constraints:
+            self.logger.print_log(
+                "[Z3 prefilter] Skip is suppressed:",
+                f"parsed_constraints={z3_result.parsed_constraints} < threshold={self.z3_min_parsed_constraints}",
+            )
+            return False
         return z3_result.should_skip_llm and not self.z3_shadow_mode
+
+    def __build_java_z3_line_hints(
+        self,
+        src_value: Value,
+        buggy_path: List[Value],
+        values_to_functions: Dict[Value, Optional[Function]],
+    ) -> Dict[int, List[int]]:
+        line_hints: Dict[int, List[int]] = {}
+
+        # Base hints from the concrete values on the candidate path.
+        for value in buggy_path:
+            function = values_to_functions.get(value)
+            if function is None:
+                continue
+            relative_line = function.file_line2function_line(value.line_number)
+            if relative_line <= 0:
+                continue
+            line_hints.setdefault(function.function_id, []).append(relative_line)
+
+        # Extra hints from intra-procedural path line traces.
+        src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+        if src_function is not None:
+            state_snapshot = self.state.path_line_numbers_per_path
+            state_key = (src_value, CallContext(False))
+            if state_key in state_snapshot:
+                line_traces = state_snapshot[state_key]
+                marker_indexes = self.__extract_java_mlk_marker_path_indexes(buggy_path)
+                if len(marker_indexes) > 0:
+                    for marker_index in marker_indexes:
+                        if marker_index < 0 or marker_index >= len(line_traces):
+                            continue
+                        line_hints.setdefault(src_function.function_id, []).extend(
+                            line_traces[marker_index]
+                        )
+                elif len(line_traces) == 1:
+                    line_hints.setdefault(src_function.function_id, []).extend(
+                        line_traces[0]
+                    )
+
+        for function_id in line_hints:
+            line_hints[function_id] = sorted(
+                set(line for line in line_hints[function_id] if line > 0)
+            )
+        return line_hints
+
+    def __extract_java_mlk_marker_path_indexes(self, path: List[Value]) -> List[int]:
+        indexes: List[int] = []
+        marker_re = re.compile(r"^__NO_SINK_BRANCH_PATH_(\d+)__$")
+        for value in path:
+            if value.label != ValueLabel.LOCAL:
+                continue
+            marker_match = marker_re.match(value.name)
+            if marker_match is None:
+                continue
+            marker_index = int(marker_match.group(1))
+            if marker_index not in indexes:
+                indexes.append(marker_index)
+        return indexes
 
     def __dump_z3_prefilter_stats(self) -> None:
         if self.language != "Java" or self.bug_type != "MLK":

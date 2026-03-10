@@ -67,6 +67,13 @@ class Z3PrefilterStats:
     disabled: int = 0
     skipped_by_unsat: int = 0
 
+    # Unknown sub-categories for observability.
+    no_constraint: int = 0
+    parse_fail: int = 0
+    timeout: int = 0
+    unsupported_expr: int = 0
+    has_if_but_unmapped: int = 0
+
     def update(self, result: Z3PrefilterResult, shadow_mode: bool) -> None:
         self.total += 1
         if result.verdict == Z3PrefilterVerdict.SAT:
@@ -80,6 +87,17 @@ class Z3PrefilterStats:
         else:
             self.disabled += 1
 
+        if result.reason == "no_constraint":
+            self.no_constraint += 1
+        elif result.reason == "parse_fail":
+            self.parse_fail += 1
+        elif result.reason == "timeout":
+            self.timeout += 1
+        elif result.reason == "unsupported_expr":
+            self.unsupported_expr += 1
+        elif result.reason == "has_if_but_unmapped":
+            self.has_if_but_unmapped += 1
+
     def to_dict(self) -> Dict[str, int]:
         return {
             "total": self.total,
@@ -88,20 +106,21 @@ class Z3PrefilterStats:
             "unknown": self.unknown,
             "disabled": self.disabled,
             "skipped_by_unsat": self.skipped_by_unsat,
+            "no_constraint": self.no_constraint,
+            "parse_fail": self.parse_fail,
+            "timeout": self.timeout,
+            "unsupported_expr": self.unsupported_expr,
+            "has_if_but_unmapped": self.has_if_but_unmapped,
         }
 
 
 class JavaZ3PathPrefilter:
     """
     Deterministic pre-filter for Java MLK paths.
-    It infers branch choices from path line numbers and checks their satisfiability.
+    It uses path line hints to infer branch choices and checks satisfiability.
     """
 
-    CMP_RE = re.compile(
-        r"^\s*([A-Za-z_]\w*|-?\d+|true|false)\s*"
-        r"(==|!=|<=|>=|<|>)\s*"
-        r"([A-Za-z_]\w*|-?\d+|true|false)\s*$"
-    )
+    IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.$\[\]]*$")
 
     def __init__(self, ts_analyzer: TSAnalyzer, config: Z3PrefilterConfig):
         self.ts_analyzer = ts_analyzer
@@ -111,6 +130,7 @@ class JavaZ3PathPrefilter:
         self,
         buggy_path: List[Value],
         values_to_functions: Dict[Value, Optional[Function]],
+        line_numbers_by_function: Optional[Dict[int, List[int]]] = None,
     ) -> Z3PrefilterResult:
         start = time.time()
 
@@ -123,48 +143,83 @@ class JavaZ3PathPrefilter:
                 Z3PrefilterVerdict.DISABLED, "z3-solver is not available"
             )
 
-        branch_constraints: Dict[
-            Tuple[int, int, int], Tuple[str, bool, str]
-        ] = {}
+        inferred_lines = self._build_line_hints_from_values(
+            buggy_path, values_to_functions
+        )
+        if line_numbers_by_function is not None:
+            for function_id, line_numbers in line_numbers_by_function.items():
+                if function_id not in inferred_lines:
+                    inferred_lines[function_id] = []
+                inferred_lines[function_id].extend(line_numbers)
+        for function_id in inferred_lines:
+            inferred_lines[function_id] = sorted(
+                set(ln for ln in inferred_lines[function_id] if ln > 0)
+            )
 
-        for value in buggy_path:
-            function = values_to_functions.get(value)
-            if function is None:
+        branch_constraints: Dict[Tuple[int, int, int], Tuple[str, bool, str]] = {}
+        has_if_but_unmapped = 0
+
+        functions = {
+            function.function_id: function
+            for function in values_to_functions.values()
+            if function is not None
+        }
+
+        for function_id, function in functions.items():
+            if len(function.if_statements) == 0:
                 continue
 
+            candidate_lines = inferred_lines.get(function_id, [])
+            if len(candidate_lines) == 0:
+                has_if_but_unmapped += 1
+                continue
+
+            mapped_for_function = False
             for (if_start, if_end), if_info in function.if_statements.items():
-                (_, _, cond_str, true_scope, else_scope) = if_info
+                (_, _, condition_str, true_scope, else_scope) = if_info
 
-                taken: Optional[bool] = None
-                if self._line_in_scope(value.line_number, true_scope):
-                    taken = True
-                elif self._line_in_scope(value.line_number, else_scope):
-                    taken = False
+                hit_true = any(
+                    self._line_in_scope(line_number, true_scope)
+                    for line_number in candidate_lines
+                )
+                hit_false = any(
+                    self._line_in_scope(line_number, else_scope)
+                    for line_number in candidate_lines
+                )
 
-                if taken is None:
+                # Ambiguous branch evidence is skipped conservatively.
+                if hit_true and hit_false:
+                    continue
+                if not hit_true and not hit_false:
                     continue
 
-                key = (function.function_id, if_start, if_end)
+                mapped_for_function = True
+                taken = hit_true and not hit_false
+                key = (function_id, if_start, if_end)
                 if key in branch_constraints:
                     _, existing_taken, _ = branch_constraints[key]
                     if existing_taken != taken:
                         return Z3PrefilterResult(
                             verdict=Z3PrefilterVerdict.UNSAT,
-                            reason=f"direct branch conflict at if({if_start},{if_end})",
+                            reason="unsat",
                             elapsed_ms=(time.time() - start) * 1000.0,
                         )
                 else:
-                    track_name = f"if_{function.function_id}_{if_start}_{if_end}"
-                    branch_constraints[key] = (cond_str, taken, track_name)
+                    track_name = f"if_{function_id}_{if_start}_{if_end}"
+                    branch_constraints[key] = (condition_str, taken, track_name)
 
                 if len(branch_constraints) >= self.config.max_constraints:
                     break
 
+            if not mapped_for_function:
+                has_if_but_unmapped += 1
+
         constraints = list(branch_constraints.values())
         if len(constraints) == 0:
+            reason = "has_if_but_unmapped" if has_if_but_unmapped > 0 else "no_constraint"
             return Z3PrefilterResult(
                 verdict=Z3PrefilterVerdict.UNKNOWN,
-                reason="no usable branch constraints",
+                reason=reason,
                 elapsed_ms=(time.time() - start) * 1000.0,
             )
 
@@ -173,20 +228,31 @@ class JavaZ3PathPrefilter:
 
         bool_vars: Dict[str, Any] = {}
         int_vars: Dict[str, Any] = {}
-
         parsed_constraints = 0
-        for cond_str, taken_true, track_name in constraints:
-            parsed = self._parse_expr(cond_str, bool_vars, int_vars)
-            if parsed is None:
+        parse_fail_count = 0
+        unsupported_only_count = 0
+
+        for condition_str, taken_true, track_name in constraints:
+            parsed_expr, parse_reason = self._parse_expr(
+                condition_str, bool_vars, int_vars
+            )
+            if parsed_expr is None:
+                if parse_reason == "unsupported_expr":
+                    unsupported_only_count += 1
+                else:
+                    parse_fail_count += 1
                 continue
 
             parsed_constraints += 1
-            solver.assert_and_track(parsed if taken_true else Not(parsed), Bool(track_name))
+            solver.assert_and_track(
+                parsed_expr if taken_true else Not(parsed_expr), Bool(track_name)
+            )
 
         if parsed_constraints == 0:
+            reason = "unsupported_expr" if unsupported_only_count > 0 else "parse_fail"
             return Z3PrefilterResult(
                 verdict=Z3PrefilterVerdict.UNKNOWN,
-                reason="constraints found but none parsable",
+                reason=reason,
                 elapsed_ms=(time.time() - start) * 1000.0,
                 total_constraints=len(constraints),
                 parsed_constraints=0,
@@ -198,7 +264,7 @@ class JavaZ3PathPrefilter:
         if check_result == unsat:
             return Z3PrefilterResult(
                 verdict=Z3PrefilterVerdict.UNSAT,
-                reason="unsat by z3",
+                reason="unsat",
                 elapsed_ms=elapsed_ms,
                 total_constraints=len(constraints),
                 parsed_constraints=parsed_constraints,
@@ -208,19 +274,37 @@ class JavaZ3PathPrefilter:
         if check_result == sat:
             return Z3PrefilterResult(
                 verdict=Z3PrefilterVerdict.SAT,
-                reason="sat by z3",
+                reason="sat",
                 elapsed_ms=elapsed_ms,
                 total_constraints=len(constraints),
                 parsed_constraints=parsed_constraints,
             )
 
+        reason_unknown = solver.reason_unknown().lower()
+        reason = "timeout" if "timeout" in reason_unknown else "unknown"
         return Z3PrefilterResult(
             verdict=Z3PrefilterVerdict.UNKNOWN,
-            reason="z3 returned unknown",
+            reason=reason,
             elapsed_ms=elapsed_ms,
             total_constraints=len(constraints),
             parsed_constraints=parsed_constraints,
         )
+
+    def _build_line_hints_from_values(
+        self,
+        buggy_path: List[Value],
+        values_to_functions: Dict[Value, Optional[Function]],
+    ) -> Dict[int, List[int]]:
+        hints: Dict[int, List[int]] = {}
+        for value in buggy_path:
+            function = values_to_functions.get(value)
+            if function is None:
+                continue
+            relative_line = function.file_line2function_line(value.line_number)
+            if relative_line <= 0:
+                continue
+            hints.setdefault(function.function_id, []).append(relative_line)
+        return hints
 
     def _line_in_scope(self, line_number: int, scope: Tuple[int, int]) -> bool:
         if len(scope) != 2:
@@ -268,70 +352,130 @@ class JavaZ3PathPrefilter:
         parts.append(text[start:].strip())
         return [item for item in parts if item]
 
+    def _find_comparison_op(self, text: str) -> Optional[Tuple[str, str, str]]:
+        operators = ["==", "!=", "<=", ">=", "<", ">"]
+        depth = 0
+        i = 0
+        while i < len(text):
+            ch = text[i]
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            elif depth == 0:
+                for op in operators:
+                    if text[i : i + len(op)] == op:
+                        left = text[:i].strip()
+                        right = text[i + len(op) :].strip()
+                        if left == "" or right == "":
+                            return None
+                        return left, op, right
+            i += 1
+        return None
+
     def _parse_expr(
         self,
         text: str,
         bool_vars: Dict[str, Any],
         int_vars: Dict[str, Any],
-    ) -> Optional[Any]:
+    ) -> Tuple[Optional[Any], str]:
         normalized = self._strip_outer_parentheses(text)
 
         or_parts = self._split_top_level(normalized, "||")
         if len(or_parts) > 1:
-            sub_exprs = [self._parse_expr(item, bool_vars, int_vars) for item in or_parts]
-            if any(item is None for item in sub_exprs):
-                return None
-            return Or(*sub_exprs)
+            sub_exprs: List[Any] = []
+            reason = "parse_fail"
+            for item in or_parts:
+                parsed, sub_reason = self._parse_expr(item, bool_vars, int_vars)
+                if parsed is None:
+                    if sub_reason == "unsupported_expr":
+                        reason = "unsupported_expr"
+                    return None, reason
+                if sub_reason == "unsupported_expr":
+                    reason = "unsupported_expr"
+                sub_exprs.append(parsed)
+            return Or(*sub_exprs), reason
 
         and_parts = self._split_top_level(normalized, "&&")
         if len(and_parts) > 1:
-            sub_exprs = [self._parse_expr(item, bool_vars, int_vars) for item in and_parts]
-            if any(item is None for item in sub_exprs):
-                return None
-            return And(*sub_exprs)
+            sub_exprs = []
+            reason = "parse_fail"
+            for item in and_parts:
+                parsed, sub_reason = self._parse_expr(item, bool_vars, int_vars)
+                if parsed is None:
+                    if sub_reason == "unsupported_expr":
+                        reason = "unsupported_expr"
+                    return None, reason
+                if sub_reason == "unsupported_expr":
+                    reason = "unsupported_expr"
+                sub_exprs.append(parsed)
+            return And(*sub_exprs), reason
 
         if normalized.startswith("!"):
-            sub_expr = self._parse_expr(normalized[1:].strip(), bool_vars, int_vars)
+            sub_expr, sub_reason = self._parse_expr(
+                normalized[1:].strip(), bool_vars, int_vars
+            )
             if sub_expr is None:
-                return None
-            return Not(sub_expr)
+                return None, sub_reason
+            return Not(sub_expr), sub_reason
 
         if normalized == "true":
-            return BoolVal(True)
+            return BoolVal(True), "parse_fail"
         if normalized == "false":
-            return BoolVal(False)
+            return BoolVal(False), "parse_fail"
 
-        cmp_match = self.CMP_RE.match(normalized)
-        if cmp_match is not None:
-            left_raw, op, right_raw = cmp_match.groups()
-            left_term = self._parse_comparison_term(
+        cmp_info = self._find_comparison_op(normalized)
+        if cmp_info is not None:
+            left_raw, op, right_raw = cmp_info
+            left_term, left_sort, left_reason = self._parse_comparison_term(
                 left_raw, right_raw, bool_vars, int_vars
             )
-            right_term = self._parse_comparison_term(
+            right_term, right_sort, right_reason = self._parse_comparison_term(
                 right_raw, left_raw, bool_vars, int_vars
             )
             if left_term is None or right_term is None:
-                return None
+                if "unsupported_expr" in {left_reason, right_reason}:
+                    return None, "unsupported_expr"
+                return None, "parse_fail"
+
+            if op in {"<", "<=", ">", ">="}:
+                if left_sort != "int" or right_sort != "int":
+                    return None, "parse_fail"
+            elif left_sort != right_sort:
+                return None, "parse_fail"
+
+            reason = (
+                "unsupported_expr"
+                if "unsupported_expr" in {left_reason, right_reason}
+                else "parse_fail"
+            )
             if op == "==":
-                return left_term == right_term
+                return left_term == right_term, reason
             if op == "!=":
-                return left_term != right_term
+                return left_term != right_term, reason
             if op == "<":
-                return left_term < right_term
+                return left_term < right_term, reason
             if op == "<=":
-                return left_term <= right_term
+                return left_term <= right_term, reason
             if op == ">":
-                return left_term > right_term
+                return left_term > right_term, reason
             if op == ">=":
-                return left_term >= right_term
-            return None
+                return left_term >= right_term, reason
+            return None, "parse_fail"
 
-        if re.match(r"^[A-Za-z_]\w*$", normalized):
-            if normalized not in bool_vars:
-                bool_vars[normalized] = Bool(normalized)
-            return bool_vars[normalized]
+        if self.IDENT_RE.match(normalized):
+            key = self._symbol_key(normalized, "b")
+            if key not in bool_vars:
+                bool_vars[key] = Bool(key)
+            return bool_vars[key], "parse_fail"
 
-        return None
+        if "(" in normalized and ")" in normalized:
+            key = self._symbol_key(normalized, "ub")
+            if key not in bool_vars:
+                bool_vars[key] = Bool(key)
+            return bool_vars[key], "unsupported_expr"
+
+        return None, "parse_fail"
 
     def _parse_comparison_term(
         self,
@@ -339,21 +483,53 @@ class JavaZ3PathPrefilter:
         peer: str,
         bool_vars: Dict[str, Any],
         int_vars: Dict[str, Any],
-    ) -> Optional[Any]:
-        normalized = token.strip()
+    ) -> Tuple[Optional[Any], str, str]:
+        normalized = self._strip_outer_parentheses(token)
+        peer_normalized = self._strip_outer_parentheses(peer)
+
         if normalized == "true":
-            return BoolVal(True)
+            return BoolVal(True), "bool", "parse_fail"
         if normalized == "false":
-            return BoolVal(False)
+            return BoolVal(False), "bool", "parse_fail"
+        if normalized == "null":
+            return IntVal(0), "int", "parse_fail"
         if re.match(r"^-?\d+$", normalized):
-            return IntVal(int(normalized))
-        if re.match(r"^[A-Za-z_]\w*$", normalized):
-            peer_is_bool_literal = peer in {"true", "false"}
-            if peer_is_bool_literal:
-                if normalized not in bool_vars:
-                    bool_vars[normalized] = Bool(normalized)
-                return bool_vars[normalized]
-            if normalized not in int_vars:
-                int_vars[normalized] = Int(normalized)
-            return int_vars[normalized]
-        return None
+            return IntVal(int(normalized)), "int", "parse_fail"
+
+        hint_is_bool = peer_normalized in {"true", "false"}
+        hint_is_int = peer_normalized == "null" or bool(
+            re.match(r"^-?\d+$", peer_normalized)
+        )
+
+        if self.IDENT_RE.match(normalized):
+            if hint_is_bool:
+                key = self._symbol_key(normalized, "b")
+                if key not in bool_vars:
+                    bool_vars[key] = Bool(key)
+                return bool_vars[key], "bool", "parse_fail"
+            key = self._symbol_key(normalized, "i")
+            if key not in int_vars:
+                int_vars[key] = Int(key)
+            return int_vars[key], "int", "parse_fail"
+
+        if "(" in normalized and ")" in normalized:
+            if hint_is_bool:
+                key = self._symbol_key(normalized, "ub")
+                if key not in bool_vars:
+                    bool_vars[key] = Bool(key)
+                return bool_vars[key], "bool", "unsupported_expr"
+            if hint_is_int or not hint_is_bool:
+                key = self._symbol_key(normalized, "ui")
+                if key not in int_vars:
+                    int_vars[key] = Int(key)
+                return int_vars[key], "int", "unsupported_expr"
+
+        return None, "unknown", "parse_fail"
+
+    def _symbol_key(self, token: str, prefix: str) -> str:
+        normalized = re.sub(r"[^A-Za-z0-9_]", "_", token)
+        if normalized == "":
+            normalized = "expr"
+        if len(normalized) > 40:
+            normalized = normalized[:40]
+        return f"{prefix}_{normalized}_{abs(hash(token)) % 100000}"

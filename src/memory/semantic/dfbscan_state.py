@@ -18,6 +18,8 @@ class DFBScanState(State):
         ] = {}
         # Whether source executes in each intra-procedural path (aligned by path index)
         self._source_executed_per_path: Dict[Tuple[Value, CallContext], List[bool]] = {}
+        # Relative line numbers for each intra-procedural path (aligned by path index)
+        self._path_line_numbers_per_path: Dict[Tuple[Value, CallContext], List[List[int]]] = {}
 
         # Match parameter/return value with argument/output value
         self._external_value_match: Dict[
@@ -34,6 +36,7 @@ class DFBScanState(State):
         # Create locks for each field
         self._reachable_values_lock = threading.Lock()
         self._source_executed_lock = threading.Lock()
+        self._path_line_numbers_lock = threading.Lock()
         self._external_value_match_lock = threading.Lock()
         self._potential_buggy_paths_lock = threading.Lock()
         self._bug_reports_lock = threading.Lock()
@@ -57,6 +60,14 @@ class DFBScanState(State):
             if start not in self._source_executed_per_path:
                 self._source_executed_per_path[start] = []
             self._source_executed_per_path[start].append(source_executed)
+
+    def update_path_line_numbers_per_path(
+        self, start: Tuple[Value, CallContext], line_numbers: List[int]
+    ) -> None:
+        with self._path_line_numbers_lock:
+            if start not in self._path_line_numbers_per_path:
+                self._path_line_numbers_per_path[start] = []
+            self._path_line_numbers_per_path[start].append(list(line_numbers))
 
     def update_external_value_match(
         self,
@@ -120,6 +131,13 @@ class DFBScanState(State):
     def source_executed_per_path(self) -> Dict[Tuple[Value, CallContext], List[bool]]:
         with self._source_executed_lock:
             return self._source_executed_per_path.copy()
+
+    @property
+    def path_line_numbers_per_path(
+        self,
+    ) -> Dict[Tuple[Value, CallContext], List[List[int]]]:
+        with self._path_line_numbers_lock:
+            return self._path_line_numbers_per_path.copy()
 
     @property
     def potential_buggy_paths(self) -> Dict[Value, Dict[str, List[Value]]]:

@@ -33,16 +33,22 @@ class IntraDataFlowAnalyzerInput(LLMToolInput):
 
 class IntraDataFlowAnalyzerOutput(LLMToolOutput):
     def __init__(
-        self, reachable_values: List[Set[Value]], source_executed_per_path: List[bool]
+        self,
+        reachable_values: List[Set[Value]],
+        source_executed_per_path: List[bool],
+        path_line_numbers_per_path: List[List[int]],
     ) -> None:
         self.reachable_values = reachable_values
         self.source_executed_per_path = source_executed_per_path
+        self.path_line_numbers_per_path = path_line_numbers_per_path
         return
 
     def __str__(self):
         output_str = ""
         for i, reachable_values_per_path in enumerate(self.reachable_values):
             output_str += f"Path {i}:\n"
+            if i < len(self.path_line_numbers_per_path):
+                output_str += f"  lines={self.path_line_numbers_per_path[i]}\n"
             for value in reachable_values_per_path:
                 output_str += f"- {value}\n"
         return output_str
@@ -192,6 +198,7 @@ class IntraDataFlowAnalyzer(LLMTool):
         # Process paths to extract reachable values
         reachable_values = []
         source_executed_per_path: List[bool] = []
+        path_line_numbers_per_path: List[List[int]] = []
         file_path = input.function.file_path
         start_line_number = input.function.start_line_number
         source_line_in_function = (
@@ -201,8 +208,11 @@ class IntraDataFlowAnalyzer(LLMTool):
 
         for single_path in paths:
             reachable_values_per_path = set()
+            path_line_numbers = self._extract_path_line_numbers(
+                single_path.get("execution_path", "")
+            )
             source_executed = self._is_source_executed_in_path(
-                single_path.get("execution_path", ""),
+                path_line_numbers,
                 source_line_in_function,
                 single_path.get("propagation_details", []),
                 source_tokens,
@@ -249,9 +259,10 @@ class IntraDataFlowAnalyzer(LLMTool):
                     )
             reachable_values.append(reachable_values_per_path)
             source_executed_per_path.append(source_executed)
+            path_line_numbers_per_path.append(path_line_numbers)
 
         output = IntraDataFlowAnalyzerOutput(
-            reachable_values, source_executed_per_path
+            reachable_values, source_executed_per_path, path_line_numbers_per_path
         )
         self.logger.print_log(
             "Output of intra-procedural data-flow analyzer:", output.reachable_values
@@ -260,24 +271,31 @@ class IntraDataFlowAnalyzer(LLMTool):
 
     def _is_source_executed_in_path(
         self,
-        execution_path: str,
+        path_line_numbers: List[int],
         source_line_in_function: int,
         details: List[Dict[str, str]],
         source_tokens: List[str],
     ) -> bool:
-        line_numbers = [int(item) for item in re.findall(r"\d+", execution_path)]
-        if source_line_in_function in line_numbers:
+        if source_line_in_function in path_line_numbers:
             return True
 
         # Conservative fallback: only when the execution-path string has no parsable
         # line number, and some propagation detail text explicitly mentions source tokens.
-        if len(line_numbers) == 0 and len(source_tokens) > 0:
+        if len(path_line_numbers) == 0 and len(source_tokens) > 0:
             for detail in details:
                 detail_name = detail.get("name", "")
                 for token in source_tokens:
                     if re.search(rf"\b{re.escape(token)}\b", detail_name):
                         return True
         return False
+
+    def _extract_path_line_numbers(self, execution_path: str) -> List[int]:
+        line_numbers: List[int] = []
+        for item in re.findall(r"\d+", execution_path):
+            value = int(item)
+            if value not in line_numbers:
+                line_numbers.append(value)
+        return line_numbers
 
     def _extract_identifier_tokens(self, expr: str) -> List[str]:
         tokens = re.findall(r"[A-Za-z_][A-Za-z0-9_]*", expr)
