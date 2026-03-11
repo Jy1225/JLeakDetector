@@ -39,6 +39,7 @@ import soot.tagkit.SourceLnPosTag;
 import soot.tagkit.Tag;
 import soot.toolkits.graph.Block;
 import soot.toolkits.graph.BriefBlockGraph;
+import soot.toolkits.graph.BriefUnitGraph;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 
 import java.util.ArrayDeque;
@@ -114,6 +115,109 @@ public final class BridgeMain {
                     && this.mayOpen == other.mayOpen
                     && this.escaped == other.escaped
                     && this.aliases.equals(other.aliases);
+        }
+    }
+
+    private static final class SourceGuaranteeResult {
+        private final boolean guaranteed;
+        private final String reason;
+        private final String proofKind;
+
+        private SourceGuaranteeResult(boolean guaranteed, String reason, String proofKind) {
+            this.guaranteed = guaranteed;
+            this.reason = reason;
+            this.proofKind = proofKind;
+        }
+    }
+
+    private static final class MustCloseFacts {
+        private final List<Integer> mustCloseSourceLines = new ArrayList<Integer>();
+        private final Map<String, Boolean> sourceCloseGuarantee = new LinkedHashMap<String, Boolean>();
+        private final Map<String, String> mustCloseReason = new LinkedHashMap<String, String>();
+        private final Map<String, String> sourceProofKind = new LinkedHashMap<String, String>();
+    }
+
+    private static final class BranchReachability {
+        private boolean trueFeasible;
+        private boolean falseFeasible;
+        private boolean trueConflict;
+        private boolean falseConflict;
+    }
+
+    private static final class ParsedComparison {
+        private final String localName;
+        private final double constant;
+        private final String operator;
+
+        private ParsedComparison(String localName, double constant, String operator) {
+            this.localName = localName;
+            this.constant = constant;
+            this.operator = operator;
+        }
+    }
+
+    private static final class RangeConstraint {
+        private Double lower;
+        private boolean lowerInclusive;
+        private Double upper;
+        private boolean upperInclusive;
+        private final Set<Double> notEquals = new HashSet<Double>();
+
+        private RangeConstraint copy() {
+            RangeConstraint copied = new RangeConstraint();
+            copied.lower = this.lower;
+            copied.lowerInclusive = this.lowerInclusive;
+            copied.upper = this.upper;
+            copied.upperInclusive = this.upperInclusive;
+            copied.notEquals.addAll(this.notEquals);
+            return copied;
+        }
+    }
+
+    private static final class ConstraintState {
+        private final Map<String, RangeConstraint> rangesByLocal = new HashMap<String, RangeConstraint>();
+
+        private ConstraintState copy() {
+            ConstraintState copied = new ConstraintState();
+            for (Map.Entry<String, RangeConstraint> entry : this.rangesByLocal.entrySet()) {
+                copied.rangesByLocal.put(entry.getKey(), entry.getValue().copy());
+            }
+            return copied;
+        }
+
+        private String fingerprint() {
+            List<String> keys = new ArrayList<String>(this.rangesByLocal.keySet());
+            Collections.sort(keys);
+            StringBuilder builder = new StringBuilder();
+            for (String key : keys) {
+                RangeConstraint range = this.rangesByLocal.get(key);
+                if (range == null) {
+                    continue;
+                }
+                builder.append(key).append(":");
+                builder.append(range.lower == null ? "-inf" : range.lower.toString());
+                builder.append(range.lowerInclusive ? "[" : "(");
+                builder.append(",");
+                builder.append(range.upper == null ? "+inf" : range.upper.toString());
+                builder.append(range.upperInclusive ? "]" : ")");
+                if (!range.notEquals.isEmpty()) {
+                    List<Double> neqValues = new ArrayList<Double>(range.notEquals);
+                    Collections.sort(neqValues);
+                    builder.append("!=").append(neqValues.toString());
+                }
+                builder.append(";");
+            }
+            return builder.toString();
+        }
+    }
+
+    private static final class BranchWorkItem {
+        private final Unit unit;
+        private final ConstraintState state;
+
+        private BranchWorkItem(Unit unit, ConstraintState state) {
+            this.unit = unit;
+            this.state = state;
         }
     }
 
@@ -201,6 +305,7 @@ public final class BridgeMain {
             String functionUid
     ) {
         List<SourceSite> sourceSites = collectSourceSites(body);
+        MustCloseFacts mustCloseFacts = collectMustCloseFacts(body, sourceSites);
 
         Map<String, Object> facts = new LinkedHashMap<String, Object>();
         facts.put("function_uid", functionUid);
@@ -211,7 +316,10 @@ public final class BridgeMain {
         facts.put("if_nodes", collectIfNodes(body));
         facts.put("close_sites", collectCloseSites(body));
         facts.put("source_lines", collectSourceLines(sourceSites));
-        facts.put("must_close_source_lines", collectMustCloseSourceLines(body, sourceSites));
+        facts.put("must_close_source_lines", mustCloseFacts.mustCloseSourceLines);
+        facts.put("source_close_guarantee", mustCloseFacts.sourceCloseGuarantee);
+        facts.put("must_close_reason", mustCloseFacts.mustCloseReason);
+        facts.put("source_proof_kind", mustCloseFacts.sourceProofKind);
         facts.put("generator", "soot-bridge");
         return facts;
     }
@@ -219,6 +327,7 @@ public final class BridgeMain {
     private static List<Map<String, Object>> collectIfNodes(Body body) {
         List<Map<String, Object>> ifNodes = new ArrayList<Map<String, Object>>();
         Map<Unit, Map<Local, Object>> constantInStates = computeConstantInStates(body);
+        IdentityHashMap<IfStmt, BranchReachability> branchReachability = analyzeBranchReachability(body);
         BriefBlockGraph blockGraph = new BriefBlockGraph(body);
         IdentityHashMap<Unit, Block> unitToBlock = new IdentityHashMap<Unit, Block>();
         IdentityHashMap<Block, int[]> blockScope = new IdentityHashMap<Block, int[]>();
@@ -254,13 +363,33 @@ public final class BridgeMain {
 
             Map<Local, Object> localConstants = constantInStates.get(unit);
             Boolean constantCond = evaluateConstantCondition(ifStmt.getCondition(), localConstants);
+            BranchReachability branchSummary = branchReachability.get(ifStmt);
+
+            boolean trueUnreachableByConst = constantCond != null && !constantCond.booleanValue();
+            boolean falseUnreachableByConst = constantCond != null && constantCond.booleanValue();
+            boolean trueUnreachableByPath = branchSummary != null
+                    && !branchSummary.trueFeasible
+                    && branchSummary.trueConflict;
+            boolean falseUnreachableByPath = branchSummary != null
+                    && !branchSummary.falseFeasible
+                    && branchSummary.falseConflict;
+
+            boolean trueUnreachable = trueUnreachableByConst || trueUnreachableByPath;
+            boolean falseUnreachable = falseUnreachableByConst || falseUnreachableByPath;
+            String trueReason = buildUnreachableReason(trueUnreachableByConst, trueUnreachableByPath);
+            String falseReason = buildUnreachableReason(falseUnreachableByConst, falseUnreachableByPath);
+
             Map<String, Object> node = new LinkedHashMap<String, Object>();
             node.put("line", line);
             node.put("condition", ifStmt.getCondition().toString());
             node.put("true_scope", toList(trueScope));
             node.put("false_scope", toList(falseScope));
-            node.put("true_unreachable", Boolean.valueOf(constantCond != null && !constantCond.booleanValue()));
-            node.put("false_unreachable", Boolean.valueOf(constantCond != null && constantCond.booleanValue()));
+            node.put("true_unreachable", Boolean.valueOf(trueUnreachable));
+            node.put("false_unreachable", Boolean.valueOf(falseUnreachable));
+            node.put("true_unreachable_reason", trueReason);
+            node.put("false_unreachable_reason", falseReason);
+            node.put("unreachable_reason", combineUnreachableReasons(trueReason, falseReason));
+            node.put("proof_kind", (trueUnreachable || falseUnreachable) ? "hard" : "none");
             ifNodes.add(node);
         }
 
@@ -362,26 +491,47 @@ public final class BridgeMain {
         return result;
     }
 
-    private static List<Integer> collectMustCloseSourceLines(
+    private static MustCloseFacts collectMustCloseFacts(
             Body body,
             List<SourceSite> sourceSites
     ) {
+        MustCloseFacts facts = new MustCloseFacts();
         Set<Integer> guaranteedLines = new HashSet<Integer>();
         ExceptionalUnitGraph graph = new ExceptionalUnitGraph(body);
+
         for (SourceSite sourceSite : sourceSites) {
-            if (sourceSite.local == null || sourceSite.line <= 0) {
+            if (sourceSite.line <= 0) {
                 continue;
             }
-            if (isSourceGuaranteedClosed(graph, sourceSite)) {
+            String lineKey = Integer.toString(sourceSite.line);
+            SourceGuaranteeResult result;
+            if (sourceSite.local == null) {
+                result = new SourceGuaranteeResult(
+                        false,
+                        "source_has_no_local_alias",
+                        "none"
+                );
+            } else {
+                result = analyzeSourceGuarantee(graph, sourceSite);
+            }
+
+            facts.sourceCloseGuarantee.put(lineKey, Boolean.valueOf(result.guaranteed));
+            facts.mustCloseReason.put(lineKey, result.reason);
+            facts.sourceProofKind.put(lineKey, result.proofKind);
+            if (result.guaranteed) {
                 guaranteedLines.add(Integer.valueOf(sourceSite.line));
             }
         }
-        List<Integer> result = new ArrayList<Integer>(guaranteedLines);
-        Collections.sort(result);
-        return result;
+
+        facts.mustCloseSourceLines.addAll(guaranteedLines);
+        Collections.sort(facts.mustCloseSourceLines);
+        return facts;
     }
 
-    private static boolean isSourceGuaranteedClosed(ExceptionalUnitGraph graph, SourceSite sourceSite) {
+    private static SourceGuaranteeResult analyzeSourceGuarantee(
+            ExceptionalUnitGraph graph,
+            SourceSite sourceSite
+    ) {
         IdentityHashMap<Unit, OpenState> outStates = new IdentityHashMap<Unit, OpenState>();
         Deque<Unit> worklist = new ArrayDeque<Unit>();
         Set<Unit> inQueue = new HashSet<Unit>();
@@ -411,18 +561,48 @@ public final class BridgeMain {
         }
 
         boolean seenCreatedOnExit = false;
+        boolean openAtExit = false;
+        boolean escaped = false;
         for (Unit tail : graph.getTails()) {
             OpenState exitState = outStates.get(tail);
             if (exitState == null || !exitState.created) {
                 continue;
             }
             seenCreatedOnExit = true;
-            if (exitState.mayOpen || exitState.escaped) {
-                return false;
+            if (exitState.mayOpen) {
+                openAtExit = true;
+            }
+            if (exitState.escaped) {
+                escaped = true;
             }
         }
 
-        return seenCreatedOnExit;
+        if (!seenCreatedOnExit) {
+            return new SourceGuaranteeResult(
+                    false,
+                    "source_not_reaching_method_exit",
+                    "none"
+            );
+        }
+        if (escaped) {
+            return new SourceGuaranteeResult(
+                    false,
+                    "alias_escaped_before_close",
+                    "none"
+            );
+        }
+        if (openAtExit) {
+            return new SourceGuaranteeResult(
+                    false,
+                    "open_resource_on_exit_path",
+                    "none"
+            );
+        }
+        return new SourceGuaranteeResult(
+                true,
+                "all_exit_paths_closed_for_alias",
+                "hard"
+        );
     }
 
     private static OpenState mergeOpenState(
@@ -455,8 +635,9 @@ public final class BridgeMain {
             SourceSite sourceSite
     ) {
         OpenState outState = inState.copy();
+        boolean isSourceUnit = unit == sourceSite.unit;
 
-        if (unit == sourceSite.unit) {
+        if (isSourceUnit) {
             outState.created = true;
             outState.mayOpen = true;
             outState.aliases.clear();
@@ -468,7 +649,11 @@ public final class BridgeMain {
         }
 
         if (unit instanceof AssignStmt) {
-            applyAliasTransfer((AssignStmt) unit, outState);
+            if (isSourceUnit) {
+                // Keep source alias seeded from the source statement itself.
+            } else {
+                applyAliasTransfer((AssignStmt) unit, outState);
+            }
         } else if (unit instanceof IdentityStmt) {
             Value leftOp = ((IdentityStmt) unit).getLeftOp();
             Local leftLocal = toLocal(leftOp);
@@ -616,6 +801,284 @@ public final class BridgeMain {
         }
 
         return inStates;
+    }
+
+    private static IdentityHashMap<IfStmt, BranchReachability> analyzeBranchReachability(Body body) {
+        BriefUnitGraph graph = new BriefUnitGraph(body);
+        IdentityHashMap<IfStmt, BranchReachability> summaries = new IdentityHashMap<IfStmt, BranchReachability>();
+        Deque<BranchWorkItem> worklist = new ArrayDeque<BranchWorkItem>();
+        Set<String> seen = new HashSet<String>();
+
+        for (Unit head : graph.getHeads()) {
+            worklist.addLast(new BranchWorkItem(head, new ConstraintState()));
+        }
+
+        while (!worklist.isEmpty()) {
+            BranchWorkItem current = worklist.removeFirst();
+            Unit unit = current.unit;
+            ConstraintState state = current.state;
+            String key = System.identityHashCode(unit) + "|" + state.fingerprint();
+            if (!seen.add(key)) {
+                continue;
+            }
+
+            if (unit instanceof IfStmt) {
+                IfStmt ifStmt = (IfStmt) unit;
+                BranchReachability summary = summaries.get(ifStmt);
+                if (summary == null) {
+                    summary = new BranchReachability();
+                    summaries.put(ifStmt, summary);
+                }
+                ParsedComparison parsed = parseComparisonFromCondition(ifStmt.getCondition());
+                Unit trueSucc = ifStmt.getTarget();
+                Unit falseSucc = resolveFalseSuccessor(graph, ifStmt);
+
+                if (parsed == null) {
+                    summary.trueFeasible = true;
+                    summary.falseFeasible = true;
+                    if (trueSucc != null) {
+                        worklist.addLast(new BranchWorkItem(trueSucc, state.copy()));
+                    }
+                    if (falseSucc != null) {
+                        worklist.addLast(new BranchWorkItem(falseSucc, state.copy()));
+                    }
+                    continue;
+                }
+
+                ConstraintState trueState = state.copy();
+                boolean trueSat = applyComparisonConstraint(trueState, parsed);
+                if (trueSat) {
+                    summary.trueFeasible = true;
+                    if (trueSucc != null) {
+                        worklist.addLast(new BranchWorkItem(trueSucc, trueState));
+                    }
+                } else {
+                    summary.trueConflict = true;
+                }
+
+                ConstraintState falseState = state.copy();
+                ParsedComparison negated = new ParsedComparison(
+                        parsed.localName,
+                        parsed.constant,
+                        negateComparisonOperator(parsed.operator)
+                );
+                boolean falseSat = applyComparisonConstraint(falseState, negated);
+                if (falseSat) {
+                    summary.falseFeasible = true;
+                    if (falseSucc != null) {
+                        worklist.addLast(new BranchWorkItem(falseSucc, falseState));
+                    }
+                } else {
+                    summary.falseConflict = true;
+                }
+                continue;
+            }
+
+            for (Unit successor : graph.getSuccsOf(unit)) {
+                worklist.addLast(new BranchWorkItem(successor, state.copy()));
+            }
+        }
+        return summaries;
+    }
+
+    private static Unit resolveFalseSuccessor(BriefUnitGraph graph, IfStmt ifStmt) {
+        Unit trueSucc = ifStmt.getTarget();
+        for (Unit successor : graph.getSuccsOf(ifStmt)) {
+            if (successor != trueSucc) {
+                return successor;
+            }
+        }
+        return null;
+    }
+
+    private static ParsedComparison parseComparisonFromCondition(Value conditionValue) {
+        if (!(conditionValue instanceof ConditionExpr)) {
+            return null;
+        }
+        ConditionExpr conditionExpr = (ConditionExpr) conditionValue;
+        String operator = toComparisonOperator(conditionExpr);
+        if (operator == null) {
+            return null;
+        }
+
+        Value left = conditionExpr.getOp1();
+        Value right = conditionExpr.getOp2();
+        Local local = toLocal(left);
+        Object constant = resolveConstantValue(right, Collections.<Local, Object>emptyMap());
+        boolean reversed = false;
+
+        if (local == null || !(constant instanceof Number)) {
+            local = toLocal(right);
+            constant = resolveConstantValue(left, Collections.<Local, Object>emptyMap());
+            reversed = true;
+        }
+        if (local == null || !(constant instanceof Number)) {
+            return null;
+        }
+
+        if (reversed) {
+            operator = reverseComparisonOperator(operator);
+        }
+        return new ParsedComparison(local.getName(), ((Number) constant).doubleValue(), operator);
+    }
+
+    private static String toComparisonOperator(ConditionExpr conditionExpr) {
+        if (conditionExpr instanceof soot.jimple.GtExpr) {
+            return ">";
+        }
+        if (conditionExpr instanceof soot.jimple.GeExpr) {
+            return ">=";
+        }
+        if (conditionExpr instanceof soot.jimple.LtExpr) {
+            return "<";
+        }
+        if (conditionExpr instanceof soot.jimple.LeExpr) {
+            return "<=";
+        }
+        if (conditionExpr instanceof soot.jimple.EqExpr) {
+            return "==";
+        }
+        if (conditionExpr instanceof soot.jimple.NeExpr) {
+            return "!=";
+        }
+        return null;
+    }
+
+    private static String reverseComparisonOperator(String operator) {
+        if (">".equals(operator)) {
+            return "<";
+        }
+        if (">=".equals(operator)) {
+            return "<=";
+        }
+        if ("<".equals(operator)) {
+            return ">";
+        }
+        if ("<=".equals(operator)) {
+            return ">=";
+        }
+        return operator;
+    }
+
+    private static String negateComparisonOperator(String operator) {
+        if (">".equals(operator)) {
+            return "<=";
+        }
+        if (">=".equals(operator)) {
+            return "<";
+        }
+        if ("<".equals(operator)) {
+            return ">=";
+        }
+        if ("<=".equals(operator)) {
+            return ">";
+        }
+        if ("==".equals(operator)) {
+            return "!=";
+        }
+        if ("!=".equals(operator)) {
+            return "==";
+        }
+        return operator;
+    }
+
+    private static boolean applyComparisonConstraint(ConstraintState state, ParsedComparison parsed) {
+        RangeConstraint range = state.rangesByLocal.get(parsed.localName);
+        if (range == null) {
+            range = new RangeConstraint();
+            state.rangesByLocal.put(parsed.localName, range);
+        }
+
+        if (">".equals(parsed.operator)) {
+            applyLowerBound(range, parsed.constant, false);
+        } else if (">=".equals(parsed.operator)) {
+            applyLowerBound(range, parsed.constant, true);
+        } else if ("<".equals(parsed.operator)) {
+            applyUpperBound(range, parsed.constant, false);
+        } else if ("<=".equals(parsed.operator)) {
+            applyUpperBound(range, parsed.constant, true);
+        } else if ("==".equals(parsed.operator)) {
+            applyLowerBound(range, parsed.constant, true);
+            applyUpperBound(range, parsed.constant, true);
+        } else if ("!=".equals(parsed.operator)) {
+            range.notEquals.add(Double.valueOf(parsed.constant));
+        }
+
+        return isRangeSatisfiable(range);
+    }
+
+    private static void applyLowerBound(RangeConstraint range, double value, boolean inclusive) {
+        if (range.lower == null) {
+            range.lower = Double.valueOf(value);
+            range.lowerInclusive = inclusive;
+            return;
+        }
+
+        int cmp = Double.compare(value, range.lower.doubleValue());
+        if (cmp > 0) {
+            range.lower = Double.valueOf(value);
+            range.lowerInclusive = inclusive;
+        } else if (cmp == 0) {
+            range.lowerInclusive = range.lowerInclusive && inclusive;
+        }
+    }
+
+    private static void applyUpperBound(RangeConstraint range, double value, boolean inclusive) {
+        if (range.upper == null) {
+            range.upper = Double.valueOf(value);
+            range.upperInclusive = inclusive;
+            return;
+        }
+
+        int cmp = Double.compare(value, range.upper.doubleValue());
+        if (cmp < 0) {
+            range.upper = Double.valueOf(value);
+            range.upperInclusive = inclusive;
+        } else if (cmp == 0) {
+            range.upperInclusive = range.upperInclusive && inclusive;
+        }
+    }
+
+    private static boolean isRangeSatisfiable(RangeConstraint range) {
+        if (range.lower != null && range.upper != null) {
+            int cmp = Double.compare(range.lower.doubleValue(), range.upper.doubleValue());
+            if (cmp > 0) {
+                return false;
+            }
+            if (cmp == 0) {
+                if (!(range.lowerInclusive && range.upperInclusive)) {
+                    return false;
+                }
+                return !range.notEquals.contains(range.lower);
+            }
+        }
+        return true;
+    }
+
+    private static String buildUnreachableReason(boolean byConst, boolean byPath) {
+        if (byConst) {
+            return "constant_condition_conflict";
+        }
+        if (byPath) {
+            return "path_constraint_conflict";
+        }
+        return "";
+    }
+
+    private static String combineUnreachableReasons(String trueReason, String falseReason) {
+        if (!trueReason.isEmpty() && !falseReason.isEmpty()) {
+            if (trueReason.equals(falseReason)) {
+                return trueReason;
+            }
+            return trueReason + ";" + falseReason;
+        }
+        if (!trueReason.isEmpty()) {
+            return trueReason;
+        }
+        if (!falseReason.isEmpty()) {
+            return falseReason;
+        }
+        return "";
     }
 
     private static Map<Local, Object> mergeConstantState(

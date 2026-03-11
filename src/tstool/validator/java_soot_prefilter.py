@@ -318,14 +318,38 @@ class JavaSootPrefilter:
 
             if hit_true and self._branch_unreachable(if_node, True):
                 if_line = self._safe_int(if_node.get("line"), -1)
+                reason = str(
+                    if_node.get(
+                        "true_unreachable_reason",
+                        if_node.get("unreachable_reason", ""),
+                    )
+                ).strip()
+                proof_kind = str(if_node.get("proof_kind", "")).strip()
+                reason_suffix = ""
+                if reason != "":
+                    reason_suffix += f"; reason={reason}"
+                if proof_kind != "":
+                    reason_suffix += f"; proof_kind={proof_kind}"
                 return (
-                    f"true branch is unreachable by Soot facts at if line {if_line}"
+                    f"true branch is unreachable by Soot facts at if line {if_line}{reason_suffix}"
                 )
 
             if hit_false and self._branch_unreachable(if_node, False):
                 if_line = self._safe_int(if_node.get("line"), -1)
+                reason = str(
+                    if_node.get(
+                        "false_unreachable_reason",
+                        if_node.get("unreachable_reason", ""),
+                    )
+                ).strip()
+                proof_kind = str(if_node.get("proof_kind", "")).strip()
+                reason_suffix = ""
+                if reason != "":
+                    reason_suffix += f"; reason={reason}"
+                if proof_kind != "":
+                    reason_suffix += f"; proof_kind={proof_kind}"
                 return (
-                    f"false branch is unreachable by Soot facts at if line {if_line}"
+                    f"false branch is unreachable by Soot facts at if line {if_line}{reason_suffix}"
                 )
 
         return None
@@ -340,12 +364,28 @@ class JavaSootPrefilter:
             return "all source allocations are guaranteed to close by Soot facts"
 
         guaranteed_lines: Set[int] = set()
+        reason_by_line: Dict[int, str] = {}
+        proof_by_line: Dict[int, str] = {}
         for key in [
             "must_close_sources",
             "must_close_source_lines",
             "guaranteed_close_sources",
         ]:
             guaranteed_lines.update(self._to_int_set(method_facts.get(key)))
+
+        raw_reason_map = method_facts.get("must_close_reason", {})
+        if isinstance(raw_reason_map, dict):
+            for line_key, reason in raw_reason_map.items():
+                line_no = self._safe_int(line_key, -1)
+                if line_no > 0:
+                    reason_by_line[line_no] = str(reason).strip()
+
+        raw_proof_map = method_facts.get("source_proof_kind", {})
+        if isinstance(raw_proof_map, dict):
+            for line_key, proof_kind in raw_proof_map.items():
+                line_no = self._safe_int(line_key, -1)
+                if line_no > 0:
+                    proof_by_line[line_no] = str(proof_kind).strip()
 
         line_guarantee_obj = method_facts.get("source_close_guarantee", {})
         if isinstance(line_guarantee_obj, dict):
@@ -356,7 +396,17 @@ class JavaSootPrefilter:
         guaranteed_lines = set(line for line in guaranteed_lines if line > 0)
         for src_line in source_lines:
             if src_line in guaranteed_lines:
-                return f"source line {src_line} is guaranteed to close by Soot facts"
+                details = []
+                if src_line in reason_by_line and reason_by_line[src_line] != "":
+                    details.append(f"reason={reason_by_line[src_line]}")
+                if src_line in proof_by_line and proof_by_line[src_line] != "":
+                    details.append(f"proof_kind={proof_by_line[src_line]}")
+                suffix = ""
+                if len(details) > 0:
+                    suffix = "; " + ", ".join(details)
+                return (
+                    f"source line {src_line} is guaranteed to close by Soot facts{suffix}"
+                )
         return None
 
     def _branch_hit(
