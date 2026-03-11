@@ -134,6 +134,7 @@ class DFBScanAgent(Agent):
         )
         self.soot_prefilter_stats = SootPrefilterStats()
         self.soot_prefilter_source_skipped = 0
+        self.soot_source_gate_events = []
         self.java_z3_prefilter = (
             JavaZ3PathPrefilter(
                 self.ts_analyzer,
@@ -826,6 +827,7 @@ class DFBScanAgent(Agent):
             f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
         )
         self.__dump_java_mlk_transfer_records()
+        self.__dump_soot_source_gate_events()
         self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
         return
@@ -870,6 +872,7 @@ class DFBScanAgent(Agent):
             f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
         )
         self.__dump_java_mlk_transfer_records()
+        self.__dump_soot_source_gate_events()
         self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
         return
@@ -1292,22 +1295,135 @@ class DFBScanAgent(Agent):
         soot_result = self.java_soot_prefilter.evaluate(
             [src_value], {src_value: src_function}
         )
+        strict_hard_safe, strict_reason = self.java_soot_prefilter.evaluate_source_hard_safety(
+            src_value, src_function
+        )
+        skip_suppressed_by_strict = soot_result.should_skip_llm and not strict_hard_safe
+        should_skip = (
+            soot_result.should_skip_llm
+            and strict_hard_safe
+            and not self.soot_shadow_mode
+        )
         self.logger.print_log(
             "[Soot source gate]",
             f"verdict={soot_result.verdict}",
             f"reason={soot_result.reason}",
+            f"strict_hard_safe={strict_hard_safe}",
+            f"strict_reason={strict_reason}",
             f"elapsed_ms={soot_result.elapsed_ms:.2f}",
         )
         if len(soot_result.evidence) > 0:
             self.logger.print_log("[Soot source gate] evidence:", soot_result.evidence[0])
-        if soot_result.should_skip_llm and not self.soot_shadow_mode:
+        if skip_suppressed_by_strict:
+            self.logger.print_log(
+                "[Soot source gate] Skip suppressed by strict hard-proof policy."
+            )
+        if should_skip:
             with self.lock:
                 self.soot_prefilter_source_skipped += 1
             self.logger.print_log(
                 f"[Soot source gate] Skip source before path search: {str(src_value)}"
             )
-            return True
-        return False
+        self.__record_soot_source_gate_event(
+            src_value=src_value,
+            src_function=src_function,
+            soot_result=soot_result,
+            strict_hard_safe=strict_hard_safe,
+            strict_reason=strict_reason,
+            blocked_by_soot=should_skip,
+            skip_suppressed_by_strict=skip_suppressed_by_strict,
+        )
+        return should_skip
+
+    def __record_soot_source_gate_event(
+        self,
+        src_value: Value,
+        src_function: Function,
+        soot_result,
+        strict_hard_safe: bool,
+        strict_reason: str,
+        blocked_by_soot: bool,
+        skip_suppressed_by_strict: bool,
+    ) -> None:
+        function_uid = src_function.function_uid or src_function.function_name
+        function_name_lower = src_function.function_name.lower()
+        in_bad_method = "bad" in function_name_lower
+        event = {
+            "src_value": str(src_value),
+            "src_line": src_value.line_number,
+            "src_file": src_value.file,
+            "function_uid": function_uid,
+            "function_name": src_function.function_name,
+            "prefilter_verdict": str(soot_result.verdict),
+            "prefilter_reason": soot_result.reason,
+            "strict_hard_safe": strict_hard_safe,
+            "strict_reason": strict_reason,
+            "blocked_by_soot": blocked_by_soot,
+            "skip_suppressed_by_strict": skip_suppressed_by_strict,
+            "shadow_mode": self.soot_shadow_mode,
+            "in_bad_method": in_bad_method,
+            "evidence": soot_result.evidence[0] if len(soot_result.evidence) > 0 else "",
+        }
+        with self.lock:
+            self.soot_source_gate_events.append(event)
+
+    def __dump_soot_source_gate_events(self) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        if self.java_soot_prefilter is None:
+            return
+        events_path = self.res_dir_path + "/soot_source_gate_events.json"
+        with self.lock:
+            events_payload = list(self.soot_source_gate_events)
+
+        total = len(events_payload)
+        blocked = sum(1 for item in events_payload if bool(item["blocked_by_soot"]))
+        suppressed = sum(
+            1 for item in events_payload if bool(item["skip_suppressed_by_strict"])
+        )
+        bad_total = sum(1 for item in events_payload if bool(item["in_bad_method"]))
+        bad_blocked = sum(
+            1
+            for item in events_payload
+            if bool(item["in_bad_method"]) and bool(item["blocked_by_soot"])
+        )
+        bad_pass = bad_total - bad_blocked
+        good_total = total - bad_total
+        good_blocked = blocked - bad_blocked
+        good_pass = good_total - good_blocked
+
+        summary = {
+            "total": total,
+            "blocked": blocked,
+            "passed": total - blocked,
+            "suppressed_by_strict_policy": suppressed,
+            "bad_method_total": bad_total,
+            "bad_method_blocked": bad_blocked,
+            "bad_method_passed": bad_pass,
+            "good_or_unknown_method_total": good_total,
+            "good_or_unknown_method_blocked": good_blocked,
+            "good_or_unknown_method_passed": good_pass,
+            # Proxy confusion matrix: "bad*" methods are treated as positives.
+            "proxy_confusion_matrix": {
+                "tp_bad_passed": bad_pass,
+                "fn_bad_blocked": bad_blocked,
+                "tn_good_blocked": good_blocked,
+                "fp_good_passed": good_pass,
+            },
+        }
+
+        payload = {
+            "summary": summary,
+            "events": events_payload,
+        }
+        with open(events_path, "w") as events_file:
+            json.dump(payload, events_file, indent=4)
+
+        if bad_blocked > 0:
+            self.logger.print_log(
+                "[Soot source gate] Warning:",
+                f"blocked {bad_blocked} source(s) in bad* methods. Consider turning on shadow mode for source gate.",
+            )
 
     def __skip_by_java_z3_prefilter(
         self,
@@ -1436,6 +1552,17 @@ class DFBScanAgent(Agent):
         stats_path = self.res_dir_path + "/soot_prefilter_stats.json"
         payload = self.soot_prefilter_stats.to_dict()
         payload["source_skipped_before_path_search"] = self.soot_prefilter_source_skipped
+        with self.lock:
+            source_events = list(self.soot_source_gate_events)
+        payload["source_skip_suppressed_by_strict"] = sum(
+            1 for item in source_events if bool(item.get("skip_suppressed_by_strict", False))
+        )
+        payload["source_bad_method_blocked"] = sum(
+            1
+            for item in source_events
+            if bool(item.get("in_bad_method", False))
+            and bool(item.get("blocked_by_soot", False))
+        )
         with open(stats_path, "w") as stats_file:
             json.dump(payload, stats_file, indent=4)
 

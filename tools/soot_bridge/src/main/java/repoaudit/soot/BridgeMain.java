@@ -661,20 +661,22 @@ public final class BridgeMain {
             );
         }
         if (openAtExit) {
-            if (closeWitnessCount >= 2) {
-                return new SourceGuaranteeResult(
-                        true,
-                        "multi_close_witness_on_alias_paths",
-                        "hard",
-                        firstOpenExitLine,
-                        escapeSiteLine,
-                        aliasCountOnFailure,
-                        closeWitnessCount
-                );
-            }
             return new SourceGuaranteeResult(
                     false,
-                    "open_resource_on_exit_path",
+                    closeWitnessCount >= 2
+                            ? "open_resource_on_exit_path_with_multi_close_witness"
+                            : "open_resource_on_exit_path",
+                    closeWitnessCount >= 2 ? "heuristic" : "none",
+                    firstOpenExitLine,
+                    escapeSiteLine,
+                    aliasCountOnFailure,
+                    closeWitnessCount
+            );
+        }
+        if (closeWitnessCount <= 0) {
+            return new SourceGuaranteeResult(
+                    false,
+                    "hard_proof_missing_close_witness",
                     "none",
                     firstOpenExitLine,
                     escapeSiteLine,

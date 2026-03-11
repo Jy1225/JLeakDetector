@@ -222,6 +222,58 @@ class JavaSootPrefilter:
             evidence=fallback_evidence[:1],
         )
 
+    def evaluate_source_hard_safety(
+        self, src_value: Value, src_function: Function
+    ) -> Tuple[bool, str]:
+        if not self.config.enabled:
+            return False, "soot_prefilter_disabled"
+        if self._facts_load_error != "":
+            return False, "facts_unavailable"
+
+        method_facts = self._resolve_method_facts(src_function)
+        if method_facts is None:
+            return False, "method_unmapped"
+
+        if self._safe_bool(method_facts.get("all_sources_hard_closed")):
+            proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
+            if proof_kind in {"", "hard"}:
+                return True, "method_all_sources_hard_closed"
+            return False, "method_proof_not_hard"
+
+        source_line_candidates: Set[int] = {src_value.line_number}
+        relative_line = src_function.file_line2function_line(src_value.line_number)
+        if relative_line > 0:
+            source_line_candidates.add(relative_line)
+
+        source_guarantee_obj = method_facts.get("source_close_guarantee", {})
+        reason_obj = method_facts.get("must_close_reason", {})
+        proof_obj = method_facts.get("source_proof_kind", {})
+        if not isinstance(source_guarantee_obj, dict):
+            return False, "source_close_guarantee_missing"
+
+        for src_line in source_line_candidates:
+            guaranteed = self._safe_bool(
+                source_guarantee_obj.get(str(src_line), source_guarantee_obj.get(src_line))
+            )
+            if not guaranteed:
+                continue
+            line_reason = ""
+            if isinstance(reason_obj, dict):
+                line_reason = str(
+                    reason_obj.get(str(src_line), reason_obj.get(src_line, ""))
+                ).strip()
+            line_proof = ""
+            if isinstance(proof_obj, dict):
+                line_proof = str(
+                    proof_obj.get(str(src_line), proof_obj.get(src_line, ""))
+                ).strip()
+            is_hard = line_proof.lower() == "hard" and line_reason == "all_exit_paths_closed_for_alias"
+            if is_hard:
+                return True, f"line_{src_line}_all_exit_paths_closed_for_alias"
+            return False, f"line_{src_line}_not_strict_hard"
+
+        return False, "source_line_not_hard_safe"
+
     def _load_facts(self) -> None:
         facts_path = self.config.facts_path.strip()
         if facts_path == "":
@@ -410,11 +462,19 @@ class JavaSootPrefilter:
         guaranteed_lines = set(line for line in guaranteed_lines if line > 0)
         for src_line in source_lines:
             if src_line in guaranteed_lines:
+                line_reason = reason_by_line.get(src_line, "")
+                line_proof = proof_by_line.get(src_line, "")
+                is_hard = (
+                    line_proof.lower() == "hard"
+                    and line_reason == "all_exit_paths_closed_for_alias"
+                )
+                if not is_hard:
+                    continue
                 details = []
-                if src_line in reason_by_line and reason_by_line[src_line] != "":
-                    details.append(f"reason={reason_by_line[src_line]}")
-                if src_line in proof_by_line and proof_by_line[src_line] != "":
-                    details.append(f"proof_kind={proof_by_line[src_line]}")
+                if line_reason != "":
+                    details.append(f"reason={line_reason}")
+                if line_proof != "":
+                    details.append(f"proof_kind={line_proof}")
                 suffix = ""
                 if len(details) > 0:
                     suffix = "; " + ", ".join(details)
@@ -427,7 +487,12 @@ class JavaSootPrefilter:
         self, method_facts: Dict[str, Any]
     ) -> Optional[str]:
         if self._safe_bool(method_facts.get("all_sources_hard_closed")):
-            return "all sources in this method are hard-guaranteed to close by Soot facts"
+            method_proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
+            if method_proof_kind in {"", "hard"}:
+                return (
+                    "all sources in this method are hard-guaranteed to close by Soot facts"
+                )
+            return None
 
         source_lines = self._to_int_set(method_facts.get("source_lines"))
         source_lines = set(line for line in source_lines if line > 0)
