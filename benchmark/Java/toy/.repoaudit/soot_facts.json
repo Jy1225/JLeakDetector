@@ -1,6 +1,6 @@
 {
   "generator": "soot-bridge",
-  "generated_at": 1773212339766,
+  "generated_at": 1773214641651,
   "line_mode": "absolute",
   "methods": {
     "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
@@ -13,6 +13,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase12_CloseableLeakByAssign.run(String)": {
@@ -29,6 +32,15 @@
         7
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "7": false
+      },
+      "must_close_reason": {
+        "7": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "7": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase02_CloseableClosed.\u003cinit\u003e()": {
@@ -41,6 +53,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase02_CloseableClosed.run(String)": {
@@ -64,7 +79,11 @@
             9
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -76,7 +95,18 @@
       "source_lines": [
         6
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        6
+      ],
+      "source_close_guarantee": {
+        "6": true
+      },
+      "must_close_reason": {
+        "6": "all_exit_paths_closed_for_alias"
+      },
+      "source_proof_kind": {
+        "6": "hard"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase17_ConditionalCloseLeak.\u003cinit\u003e()": {
@@ -89,6 +119,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase17_ConditionalCloseLeak.run(String,boolean)": {
@@ -113,7 +146,11 @@
             8
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -126,6 +163,15 @@
         6
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "6": false
+      },
+      "must_close_reason": {
+        "6": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "6": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase34_ContradictoryBranchUnsat.\u003cinit\u003e()": {
@@ -138,6 +184,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase34_ContradictoryBranchUnsat.run(String,int)": {
@@ -162,7 +211,11 @@
             9
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 9,
@@ -176,7 +229,11 @@
             11
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": true,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "path_constraint_conflict",
+          "unreachable_reason": "path_constraint_conflict",
+          "proof_kind": "hard"
         }
       ],
       "close_sites": [
@@ -193,6 +250,15 @@
         6
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "6": false
+      },
+      "must_close_reason": {
+        "6": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "6": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase01_CloseableLeak.\u003cinit\u003e()": {
@@ -205,6 +271,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase01_CloseableLeak.run(String)": {
@@ -228,7 +297,11 @@
             9
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -236,6 +309,15 @@
         6
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "6": false
+      },
+      "must_close_reason": {
+        "6": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "6": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.\u003cinit\u003e()": {
@@ -248,6 +330,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()": {
@@ -269,7 +354,11 @@
             39
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 49,
@@ -283,7 +372,11 @@
             51
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -301,6 +394,18 @@
         29
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "28": false,
+        "29": false
+      },
+      "must_close_reason": {
+        "28": "alias_escaped_before_close",
+        "29": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "28": "none",
+        "29": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good1()": {
@@ -322,7 +427,11 @@
             90
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 88,
@@ -336,7 +445,11 @@
             90
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 88,
@@ -350,7 +463,11 @@
             90
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 100,
@@ -364,7 +481,11 @@
             102
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 100,
@@ -378,7 +499,11 @@
             102
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 100,
@@ -392,7 +517,11 @@
             102
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -426,6 +555,18 @@
         74
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "73": false,
+        "74": false
+      },
+      "must_close_reason": {
+        "73": "alias_escaped_before_close",
+        "74": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "73": "none",
+        "74": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good()": {
@@ -438,6 +579,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.main(String)": {
@@ -452,6 +596,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.\u003cinit\u003e()": {
@@ -464,6 +611,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()": {
@@ -485,7 +635,11 @@
             38
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 48,
@@ -499,7 +653,11 @@
             50
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -517,6 +675,18 @@
         28
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "27": false,
+        "28": false
+      },
+      "must_close_reason": {
+        "27": "alias_escaped_before_close",
+        "28": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "27": "none",
+        "28": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good1()": {
@@ -538,7 +708,11 @@
             89
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 87,
@@ -552,7 +726,11 @@
             89
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 87,
@@ -566,7 +744,11 @@
             89
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -580,7 +762,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -594,7 +780,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -608,7 +798,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -642,6 +836,18 @@
         72
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "71": false,
+        "72": false
+      },
+      "must_close_reason": {
+        "71": "alias_escaped_before_close",
+        "72": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "71": "none",
+        "72": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good()": {
@@ -654,6 +860,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.main(String)": {
@@ -668,6 +877,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cinit\u003e()": {
@@ -680,6 +892,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()": {
@@ -692,6 +907,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.bad()": {
@@ -704,6 +922,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperGood1()": {
@@ -716,6 +937,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good1()": {
@@ -728,6 +952,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good()": {
@@ -740,6 +967,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.main(String)": {
@@ -754,6 +984,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cclinit\u003e()": {
@@ -766,6 +999,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.\u003cinit\u003e()": {
@@ -778,6 +1014,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()": {
@@ -799,7 +1038,11 @@
             40
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 46,
@@ -813,7 +1056,11 @@
             48
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 58,
@@ -827,7 +1074,11 @@
             60
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 70,
@@ -841,7 +1092,11 @@
             72
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -864,6 +1119,21 @@
         36
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "32": false,
+        "33": false,
+        "36": false
+      },
+      "must_close_reason": {
+        "32": "open_resource_on_exit_path",
+        "33": "open_resource_on_exit_path",
+        "36": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "32": "none",
+        "33": "none",
+        "36": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good1()": {
@@ -885,7 +1155,11 @@
             105
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 118,
@@ -899,7 +1173,11 @@
             120
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 118,
@@ -913,7 +1191,11 @@
             120
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 118,
@@ -927,7 +1209,11 @@
             120
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 130,
@@ -941,7 +1227,11 @@
             132
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 130,
@@ -955,7 +1245,11 @@
             132
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 130,
@@ -969,7 +1263,11 @@
             132
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 142,
@@ -983,7 +1281,11 @@
             144
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 142,
@@ -997,7 +1299,11 @@
             144
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 142,
@@ -1011,7 +1317,11 @@
             144
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -1058,6 +1368,21 @@
         101
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "97": false,
+        "98": false,
+        "101": false
+      },
+      "must_close_reason": {
+        "97": "open_resource_on_exit_path",
+        "98": "open_resource_on_exit_path",
+        "101": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "97": "none",
+        "98": "none",
+        "101": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good()": {
@@ -1070,6 +1395,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.main(String)": {
@@ -1084,6 +1412,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.\u003cinit\u003e()": {
@@ -1096,6 +1427,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()": {
@@ -1110,6 +1444,15 @@
         25
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "25": false
+      },
+      "must_close_reason": {
+        "25": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "25": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good1()": {
@@ -1131,7 +1474,11 @@
             65
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 63,
@@ -1145,7 +1492,11 @@
             65
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 63,
@@ -1159,7 +1510,11 @@
             65
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 63,
@@ -1173,7 +1528,11 @@
             65
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -1198,6 +1557,15 @@
         46
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "46": false
+      },
+      "must_close_reason": {
+        "46": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "46": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good()": {
@@ -1210,6 +1578,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.main(String)": {
@@ -1224,6 +1595,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.\u003cinit\u003e()": {
@@ -1236,6 +1610,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()": {
@@ -1251,6 +1628,18 @@
         28
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "27": false,
+        "28": false
+      },
+      "must_close_reason": {
+        "27": "alias_escaped_before_close",
+        "28": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "27": "none",
+        "28": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good1()": {
@@ -1272,7 +1661,11 @@
             63
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 61,
@@ -1286,7 +1679,11 @@
             63
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 61,
@@ -1300,7 +1697,11 @@
             63
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 74,
@@ -1314,7 +1715,11 @@
             76
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 74,
@@ -1328,7 +1733,11 @@
             76
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 74,
@@ -1342,7 +1751,11 @@
             76
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -1376,6 +1789,18 @@
         48
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "47": false,
+        "48": false
+      },
+      "must_close_reason": {
+        "47": "alias_escaped_before_close",
+        "48": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "47": "none",
+        "48": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good()": {
@@ -1388,6 +1813,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.main(String)": {
@@ -1402,6 +1830,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.IO.\u003cinit\u003e()": {
@@ -1414,6 +1845,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeLine(String)": {
@@ -1428,6 +1862,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeLine(int)": {
@@ -1442,6 +1879,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeString(String)": {
@@ -1456,6 +1896,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.IO.getDBConnection()": {
@@ -1470,6 +1913,15 @@
         27
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "27": false
+      },
+      "must_close_reason": {
+        "27": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "27": "none"
+      },
       "generator": "soot-bridge"
     },
     "juliet.support.IO.\u003cclinit\u003e()": {
@@ -1482,6 +1934,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.\u003cinit\u003e()": {
@@ -1494,6 +1949,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.good()": {
@@ -1506,6 +1964,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.mainFromParent(String)": {
@@ -1520,6 +1981,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.\u003cinit\u003e()": {
@@ -1532,6 +1996,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.run(Path,String,int)": {
@@ -1548,6 +2015,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.buildFileStream(Path)": {
@@ -1571,7 +2041,11 @@
             22
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -1579,6 +2053,15 @@
         20
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "20": false
+      },
+      "must_close_reason": {
+        "20": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "20": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.analyzeData(InputStream,int)": {
@@ -1603,7 +2086,11 @@
             29
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 29,
@@ -1617,7 +2104,11 @@
             30
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -1628,6 +2119,9 @@
       ],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.buildSocket(String,int)": {
@@ -1652,7 +2146,11 @@
             41
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -1660,6 +2158,15 @@
         39
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "39": false
+      },
+      "must_close_reason": {
+        "39": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "39": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.sendPing(Socket,boolean)": {
@@ -1678,6 +2185,18 @@
         48
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "47": false,
+        "48": false
+      },
+      "must_close_reason": {
+        "47": "open_resource_on_exit_path",
+        "48": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "47": "none",
+        "48": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.\u003cinit\u003e()": {
@@ -1690,6 +2209,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.run(String,String,boolean)": {
@@ -1715,12 +2237,19 @@
             15
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.chooseStream(String,String,boolean)": {
@@ -1746,12 +2275,19 @@
             23
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.openPrimary(String)": {
@@ -1775,7 +2311,11 @@
             31
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -1783,6 +2323,15 @@
         29
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "29": false
+      },
+      "must_close_reason": {
+        "29": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "29": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.openBackup(String)": {
@@ -1806,7 +2355,11 @@
             39
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -1814,6 +2367,15 @@
         37
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "37": false
+      },
+      "must_close_reason": {
+        "37": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "37": "none"
+      },
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.consumeInAnotherFunction(InputStream,boolean)": {
@@ -1838,7 +2400,11 @@
             48
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 51,
@@ -1852,7 +2418,11 @@
             52
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 54,
@@ -1866,12 +2436,19 @@
             55
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function1(InputStream)": {
@@ -1895,7 +2472,11 @@
             64
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -1906,6 +2487,9 @@
       ],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function2(InputStream)": {
@@ -1920,6 +2504,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function3(InputStream)": {
@@ -1939,6 +2526,9 @@
       ],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.traceResource(InputStream)": {
@@ -1953,6 +2543,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase03_TryWithResourcesSafe.\u003cinit\u003e()": {
@@ -1965,6 +2558,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase03_TryWithResourcesSafe.run(String)": {
@@ -1988,7 +2584,11 @@
             9
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -2005,6 +2605,15 @@
         6
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "6": false
+      },
+      "must_close_reason": {
+        "6": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "6": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.\u003cinit\u003e()": {
@@ -2017,6 +2626,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeLine(String)": {
@@ -2031,6 +2643,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeLine(int)": {
@@ -2045,6 +2660,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeString(String)": {
@@ -2059,6 +2677,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.getDBConnection()": {
@@ -2073,6 +2694,15 @@
         27
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "27": false
+      },
+      "must_close_reason": {
+        "27": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "27": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.\u003cclinit\u003e()": {
@@ -2085,6 +2715,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.\u003cinit\u003e()": {
@@ -2097,6 +2730,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.good()": {
@@ -2109,6 +2745,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.mainFromParent(String)": {
@@ -2123,6 +2762,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase33.\u003cinit\u003e()": {
@@ -2135,6 +2777,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "MLKCase33.run()": {
@@ -2149,6 +2794,15 @@
         6
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "6": false
+      },
+      "must_close_reason": {
+        "6": "alias_escaped_before_close"
+      },
+      "source_proof_kind": {
+        "6": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.\u003cinit\u003e()": {
@@ -2161,6 +2815,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()": {
@@ -2176,6 +2833,18 @@
         27
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "26": false,
+        "27": false
+      },
+      "must_close_reason": {
+        "26": "alias_escaped_before_close",
+        "27": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "26": "none",
+        "27": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good1()": {
@@ -2197,7 +2866,11 @@
             71
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 69,
@@ -2211,7 +2884,11 @@
             71
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 69,
@@ -2225,7 +2902,11 @@
             71
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 69,
@@ -2239,7 +2920,11 @@
             71
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2253,7 +2938,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2267,7 +2956,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2281,7 +2974,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2295,7 +2992,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -2337,6 +3038,18 @@
         51
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "50": false,
+        "51": false
+      },
+      "must_close_reason": {
+        "50": "alias_escaped_before_close",
+        "51": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "50": "none",
+        "51": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good()": {
@@ -2349,6 +3062,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.main(String)": {
@@ -2363,6 +3079,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.\u003cinit\u003e()": {
@@ -2375,6 +3094,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()": {
@@ -2396,7 +3118,11 @@
             39
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [],
@@ -2406,6 +3132,21 @@
         35
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "31": false,
+        "32": false,
+        "35": false
+      },
+      "must_close_reason": {
+        "31": "open_resource_on_exit_path",
+        "32": "open_resource_on_exit_path",
+        "35": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "31": "none",
+        "32": "none",
+        "35": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good1()": {
@@ -2427,7 +3168,11 @@
             69
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2441,7 +3186,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2455,7 +3204,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 81,
@@ -2469,7 +3222,11 @@
             83
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 93,
@@ -2483,7 +3240,11 @@
             95
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 93,
@@ -2497,7 +3258,11 @@
             95
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 93,
@@ -2511,7 +3276,11 @@
             95
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 105,
@@ -2525,7 +3294,11 @@
             107
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 105,
@@ -2539,7 +3312,11 @@
             107
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 105,
@@ -2553,7 +3330,11 @@
             107
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -2600,6 +3381,21 @@
         65
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "61": false,
+        "62": false,
+        "65": false
+      },
+      "must_close_reason": {
+        "61": "open_resource_on_exit_path",
+        "62": "open_resource_on_exit_path",
+        "65": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "61": "none",
+        "62": "none",
+        "65": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good()": {
@@ -2612,6 +3408,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.main(String)": {
@@ -2626,6 +3425,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.\u003cinit\u003e()": {
@@ -2638,6 +3440,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()": {
@@ -2659,7 +3464,11 @@
             25
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 44,
@@ -2673,7 +3482,11 @@
             46
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -2686,6 +3499,15 @@
         37
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "37": false
+      },
+      "must_close_reason": {
+        "37": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "37": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good1()": {
@@ -2707,7 +3529,11 @@
             70
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -2721,7 +3547,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -2735,7 +3565,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -2749,7 +3583,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         },
         {
           "line": 99,
@@ -2763,7 +3601,11 @@
             101
           ],
           "true_unreachable": false,
-          "false_unreachable": false
+          "false_unreachable": false,
+          "true_unreachable_reason": "",
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [
@@ -2788,6 +3630,15 @@
         82
       ],
       "must_close_source_lines": [],
+      "source_close_guarantee": {
+        "82": false
+      },
+      "must_close_reason": {
+        "82": "open_resource_on_exit_path"
+      },
+      "source_proof_kind": {
+        "82": "none"
+      },
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good()": {
@@ -2800,6 +3651,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.main(String)": {
@@ -2814,6 +3668,9 @@
       "close_sites": [],
       "source_lines": [],
       "must_close_source_lines": [],
+      "source_close_guarantee": {},
+      "must_close_reason": {},
+      "source_proof_kind": {},
       "generator": "soot-bridge"
     }
   }
