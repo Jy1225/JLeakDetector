@@ -1,0 +1,2820 @@
+{
+  "generator": "soot-bridge",
+  "generated_at": 1773210241919,
+  "line_mode": "absolute",
+  "methods": {
+    "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
+      "function_uid": "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()",
+      "file": "MLKCase12_CloseableLeakByAssign.java",
+      "class_name": "MLKCase12_CloseableLeakByAssign",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase12_CloseableLeakByAssign.run(String)": {
+      "function_uid": "MLKCase12_CloseableLeakByAssign.run(String)",
+      "file": "MLKCase12_CloseableLeakByAssign.java",
+      "class_name": "MLKCase12_CloseableLeakByAssign",
+      "method_name": "run",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        7
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase02_CloseableClosed.\u003cinit\u003e()": {
+      "function_uid": "MLKCase02_CloseableClosed.\u003cinit\u003e()",
+      "file": "MLKCase02_CloseableClosed.java",
+      "class_name": "MLKCase02_CloseableClosed",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase02_CloseableClosed.run(String)": {
+      "function_uid": "MLKCase02_CloseableClosed.run(String)",
+      "file": "MLKCase02_CloseableClosed.java",
+      "class_name": "MLKCase02_CloseableClosed",
+      "method_name": "run",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [
+        {
+          "line": 8,
+          "condition": "$stack5 \u003c\u003d 0",
+          "true_scope": [
+            11,
+            12
+          ],
+          "false_scope": [
+            9,
+            9
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 11,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase17_ConditionalCloseLeak.\u003cinit\u003e()": {
+      "function_uid": "MLKCase17_ConditionalCloseLeak.\u003cinit\u003e()",
+      "file": "MLKCase17_ConditionalCloseLeak.java",
+      "class_name": "MLKCase17_ConditionalCloseLeak",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase17_ConditionalCloseLeak.run(String,boolean)": {
+      "function_uid": "MLKCase17_ConditionalCloseLeak.run(String,boolean)",
+      "file": "MLKCase17_ConditionalCloseLeak.java",
+      "class_name": "MLKCase17_ConditionalCloseLeak",
+      "method_name": "run",
+      "param_types": [
+        "String",
+        "boolean"
+      ],
+      "if_nodes": [
+        {
+          "line": 7,
+          "condition": "closeIt \u003d\u003d 0",
+          "true_scope": [
+            10,
+            10
+          ],
+          "false_scope": [
+            8,
+            8
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 8,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase34_ContradictoryBranchUnsat.\u003cinit\u003e()": {
+      "function_uid": "MLKCase34_ContradictoryBranchUnsat.\u003cinit\u003e()",
+      "file": "MLKCaseUNSAT.java",
+      "class_name": "MLKCase34_ContradictoryBranchUnsat",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase34_ContradictoryBranchUnsat.run(String,int)": {
+      "function_uid": "MLKCase34_ContradictoryBranchUnsat.run(String,int)",
+      "file": "MLKCaseUNSAT.java",
+      "class_name": "MLKCase34_ContradictoryBranchUnsat",
+      "method_name": "run",
+      "param_types": [
+        "String",
+        "int"
+      ],
+      "if_nodes": [
+        {
+          "line": 8,
+          "condition": "level \u003c\u003d 0",
+          "true_scope": [
+            16,
+            16
+          ],
+          "false_scope": [
+            9,
+            9
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 9,
+          "condition": "level \u003e 0",
+          "true_scope": [
+            13,
+            13
+          ],
+          "false_scope": [
+            11,
+            11
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 13,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        },
+        {
+          "line": 16,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase01_CloseableLeak.\u003cinit\u003e()": {
+      "function_uid": "MLKCase01_CloseableLeak.\u003cinit\u003e()",
+      "file": "MLKCase01_CloseableLeak.java",
+      "class_name": "MLKCase01_CloseableLeak",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase01_CloseableLeak.run(String)": {
+      "function_uid": "MLKCase01_CloseableLeak.run(String)",
+      "file": "MLKCase01_CloseableLeak.java",
+      "class_name": "MLKCase01_CloseableLeak",
+      "method_name": "run",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [
+        {
+          "line": 8,
+          "condition": "$stack5 \u003c\u003d 0",
+          "true_scope": [
+            11,
+            11
+          ],
+          "false_scope": [
+            9,
+            9
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 37,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            45,
+            45
+          ],
+          "false_scope": [
+            39,
+            39
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 49,
+          "condition": "$stack7 \u003d\u003d null",
+          "true_scope": [
+            57,
+            57
+          ],
+          "false_scope": [
+            51,
+            51
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 39,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 51,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        28,
+        29
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good1()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good1()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 88,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            96,
+            96
+          ],
+          "false_scope": [
+            90,
+            90
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 88,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            96,
+            96
+          ],
+          "false_scope": [
+            90,
+            90
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 88,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            96,
+            96
+          ],
+          "false_scope": [
+            90,
+            90
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 100,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            108,
+            108
+          ],
+          "false_scope": [
+            102,
+            102
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 100,
+          "condition": "readerFile \u003d\u003d null",
+          "true_scope": [
+            108,
+            108
+          ],
+          "false_scope": [
+            102,
+            102
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 100,
+          "condition": "readerFile \u003d\u003d null",
+          "true_scope": [
+            108,
+            108
+          ],
+          "false_scope": [
+            102,
+            102
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 90,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 90,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 90,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 102,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        },
+        {
+          "line": 102,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        },
+        {
+          "line": 102,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        73,
+        74
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.main(String)",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 36,
+          "condition": "$stack7 \u003d\u003d null",
+          "true_scope": [
+            44,
+            44
+          ],
+          "false_scope": [
+            38,
+            38
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 48,
+          "condition": "$stack5 \u003d\u003d null",
+          "true_scope": [
+            56,
+            56
+          ],
+          "false_scope": [
+            50,
+            50
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 38,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 50,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        27,
+        28
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good1()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good1()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 87,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            95,
+            95
+          ],
+          "false_scope": [
+            89,
+            89
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 87,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            95,
+            95
+          ],
+          "false_scope": [
+            89,
+            89
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 87,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            95,
+            95
+          ],
+          "false_scope": [
+            89,
+            89
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "$stack6 \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "readerInputStream \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "readerInputStream \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 89,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 89,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 89,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        71,
+        72
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.main(String)",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "helperBad",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.bad()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.bad()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperGood1()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperGood1()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "helperGood1",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good1()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good1()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.main(String)",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cclinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cclinit\u003e()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "method_name": "\u003cclinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 38,
+          "condition": "$stack11 \u003d\u003d 0",
+          "true_scope": [
+            46,
+            46
+          ],
+          "false_scope": [
+            40,
+            40
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 46,
+          "condition": "$stack10 \u003d\u003d null",
+          "true_scope": [
+            54,
+            54
+          ],
+          "false_scope": [
+            48,
+            48
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 58,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            66,
+            66
+          ],
+          "false_scope": [
+            60,
+            60
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 70,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            78,
+            78
+          ],
+          "false_scope": [
+            72,
+            72
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 48,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 60,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 72,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        32,
+        33,
+        36
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good1()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good1()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 103,
+          "condition": "$stack12 \u003d\u003d 0",
+          "true_scope": [
+            118,
+            118
+          ],
+          "false_scope": [
+            105,
+            105
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 118,
+          "condition": "$stack11 \u003d\u003d null",
+          "true_scope": [
+            126,
+            126
+          ],
+          "false_scope": [
+            120,
+            120
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 118,
+          "condition": "resultSet \u003d\u003d null",
+          "true_scope": [
+            126,
+            126
+          ],
+          "false_scope": [
+            120,
+            120
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 118,
+          "condition": "resultSet \u003d\u003d null",
+          "true_scope": [
+            126,
+            126
+          ],
+          "false_scope": [
+            120,
+            120
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 130,
+          "condition": "$stack10 \u003d\u003d null",
+          "true_scope": [
+            138,
+            138
+          ],
+          "false_scope": [
+            132,
+            132
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 130,
+          "condition": "preparedStatement \u003d\u003d null",
+          "true_scope": [
+            138,
+            138
+          ],
+          "false_scope": [
+            132,
+            132
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 130,
+          "condition": "preparedStatement \u003d\u003d null",
+          "true_scope": [
+            138,
+            138
+          ],
+          "false_scope": [
+            132,
+            132
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 142,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            150,
+            150
+          ],
+          "false_scope": [
+            144,
+            144
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 142,
+          "condition": "dBConnection \u003d\u003d null",
+          "true_scope": [
+            150,
+            150
+          ],
+          "false_scope": [
+            144,
+            144
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 142,
+          "condition": "dBConnection \u003d\u003d null",
+          "true_scope": [
+            150,
+            150
+          ],
+          "false_scope": [
+            144,
+            144
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 120,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 120,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 120,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 132,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 132,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 132,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 144,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        },
+        {
+          "line": 144,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        },
+        {
+          "line": 144,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        97,
+        98,
+        101
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good()": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good()",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.main(String)",
+      "file": "juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        25
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good1()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good1()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 63,
+          "condition": "$stack5 \u003d\u003d null",
+          "true_scope": [
+            71,
+            71
+          ],
+          "false_scope": [
+            65,
+            65
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 63,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            71,
+            71
+          ],
+          "false_scope": [
+            65,
+            65
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 63,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            71,
+            71
+          ],
+          "false_scope": [
+            65,
+            65
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 63,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            71,
+            71
+          ],
+          "false_scope": [
+            65,
+            65
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 65,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 65,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 65,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 65,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        46
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.main(String)",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.\u003cinit\u003e()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.\u003cinit\u003e()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        27,
+        28
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good1()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good1()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 61,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            69,
+            69
+          ],
+          "false_scope": [
+            63,
+            63
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 61,
+          "condition": "readerFile \u003d\u003d null",
+          "true_scope": [
+            69,
+            69
+          ],
+          "false_scope": [
+            63,
+            63
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 61,
+          "condition": "readerFile \u003d\u003d null",
+          "true_scope": [
+            69,
+            69
+          ],
+          "false_scope": [
+            63,
+            63
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 74,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            82,
+            82
+          ],
+          "false_scope": [
+            76,
+            76
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 74,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            82,
+            82
+          ],
+          "false_scope": [
+            76,
+            76
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 74,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            82,
+            82
+          ],
+          "false_scope": [
+            76,
+            76
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 63,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        },
+        {
+          "line": 63,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        },
+        {
+          "line": 63,
+          "invoke": "\u003cjava.io.FileReader: void close()\u003e"
+        },
+        {
+          "line": 76,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 76,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 76,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        47,
+        48
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good()": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good()",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.main(String)": {
+      "function_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.main(String)",
+      "file": "juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.\u003cinit\u003e()": {
+      "function_uid": "juliet.support.IO.\u003cinit\u003e()",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.writeLine(String)": {
+      "function_uid": "juliet.support.IO.writeLine(String)",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "writeLine",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.writeLine(int)": {
+      "function_uid": "juliet.support.IO.writeLine(int)",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "writeLine",
+      "param_types": [
+        "int"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.writeString(String)": {
+      "function_uid": "juliet.support.IO.writeString(String)",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "writeString",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.getDBConnection()": {
+      "function_uid": "juliet.support.IO.getDBConnection()",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "getDBConnection",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        27
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.IO.\u003cclinit\u003e()": {
+      "function_uid": "juliet.support.IO.\u003cclinit\u003e()",
+      "file": "juliet/support/IO.java",
+      "class_name": "juliet.support.IO",
+      "method_name": "\u003cclinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.AbstractTestCase.\u003cinit\u003e()": {
+      "function_uid": "juliet.support.AbstractTestCase.\u003cinit\u003e()",
+      "file": "juliet/support/AbstractTestCase.java",
+      "class_name": "juliet.support.AbstractTestCase",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.AbstractTestCase.good()": {
+      "function_uid": "juliet.support.AbstractTestCase.good()",
+      "file": "juliet/support/AbstractTestCase.java",
+      "class_name": "juliet.support.AbstractTestCase",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "juliet.support.AbstractTestCase.mainFromParent(String)": {
+      "function_uid": "juliet.support.AbstractTestCase.mainFromParent(String)",
+      "file": "juliet/support/AbstractTestCase.java",
+      "class_name": "juliet.support.AbstractTestCase",
+      "method_name": "mainFromParent",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.\u003cinit\u003e()": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.\u003cinit\u003e()",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.run(Path,String,int)": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.run(Path,String,int)",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "run",
+      "param_types": [
+        "Path",
+        "String",
+        "int"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.buildFileStream(Path)": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.buildFileStream(Path)",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "buildFileStream",
+      "param_types": [
+        "Path"
+      ],
+      "if_nodes": [
+        {
+          "line": 21,
+          "condition": "$stack6 \u003d\u003d 0",
+          "true_scope": [
+            24,
+            24
+          ],
+          "false_scope": [
+            22,
+            22
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        20
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.analyzeData(InputStream,int)": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.analyzeData(InputStream,int)",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "analyzeData",
+      "param_types": [
+        "InputStream",
+        "int"
+      ],
+      "if_nodes": [
+        {
+          "line": 29,
+          "condition": "$stack4 \u003c\u003d 0",
+          "true_scope": [
+            33,
+            34
+          ],
+          "false_scope": [
+            29,
+            29
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 29,
+          "condition": "level \u003c\u003d 10",
+          "true_scope": [
+            33,
+            34
+          ],
+          "false_scope": [
+            30,
+            30
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 30,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.buildSocket(String,int)": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.buildSocket(String,int)",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "buildSocket",
+      "param_types": [
+        "String",
+        "int"
+      ],
+      "if_nodes": [
+        {
+          "line": 40,
+          "condition": "port !\u003d 443",
+          "true_scope": [
+            43,
+            43
+          ],
+          "false_scope": [
+            41,
+            41
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        39
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase32_FactoryAndConditionalLeaks.sendPing(Socket,boolean)": {
+      "function_uid": "MLKCase32_FactoryAndConditionalLeaks.sendPing(Socket,boolean)",
+      "file": "MLKCase32_FactoryAndConditionalLeaks.java",
+      "class_name": "MLKCase32_FactoryAndConditionalLeaks",
+      "method_name": "sendPing",
+      "param_types": [
+        "Socket",
+        "boolean"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        47,
+        48
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.\u003cinit\u003e()": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.\u003cinit\u003e()",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.run(String,String,boolean)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.run(String,String,boolean)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "run",
+      "param_types": [
+        "String",
+        "String",
+        "boolean"
+      ],
+      "if_nodes": [
+        {
+          "line": 14,
+          "condition": "$stack6 \u003c\u003d 2048",
+          "true_scope": [
+            18,
+            18
+          ],
+          "false_scope": [
+            15,
+            15
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.chooseStream(String,String,boolean)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.chooseStream(String,String,boolean)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "chooseStream",
+      "param_types": [
+        "String",
+        "String",
+        "boolean"
+      ],
+      "if_nodes": [
+        {
+          "line": 22,
+          "condition": "useBackup \u003d\u003d 0",
+          "true_scope": [
+            25,
+            25
+          ],
+          "false_scope": [
+            23,
+            23
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.openPrimary(String)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.openPrimary(String)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "openPrimary",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [
+        {
+          "line": 30,
+          "condition": "$stack4 \u003d\u003d 0",
+          "true_scope": [
+            33,
+            33
+          ],
+          "false_scope": [
+            31,
+            31
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        29
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.openBackup(String)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.openBackup(String)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "openBackup",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [
+        {
+          "line": 38,
+          "condition": "$stack4 \u003d\u003d 0",
+          "true_scope": [
+            41,
+            41
+          ],
+          "false_scope": [
+            39,
+            39
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        37
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.consumeInAnotherFunction(InputStream,boolean)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.consumeInAnotherFunction(InputStream,boolean)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "consumeInAnotherFunction",
+      "param_types": [
+        "InputStream",
+        "boolean"
+      ],
+      "if_nodes": [
+        {
+          "line": 47,
+          "condition": "$stack5 \u003c 0",
+          "true_scope": [
+            50,
+            51
+          ],
+          "false_scope": [
+            48,
+            48
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 51,
+          "condition": "$stack6 \u003c 0",
+          "true_scope": [
+            54,
+            54
+          ],
+          "false_scope": [
+            52,
+            52
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 54,
+          "condition": "$stack6 !\u003d $i0",
+          "true_scope": [
+            58,
+            58
+          ],
+          "false_scope": [
+            55,
+            55
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.function1(InputStream)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.function1(InputStream)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "function1",
+      "param_types": [
+        "InputStream"
+      ],
+      "if_nodes": [
+        {
+          "line": 63,
+          "condition": "$stack3 \u003c 0",
+          "true_scope": [
+            66,
+            66
+          ],
+          "false_scope": [
+            64,
+            64
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 64,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.function2(InputStream)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.function2(InputStream)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "function2",
+      "param_types": [
+        "InputStream"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.function3(InputStream)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.function3(InputStream)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "function3",
+      "param_types": [
+        "InputStream"
+      ],
+      "if_nodes": [],
+      "close_sites": [
+        {
+          "line": 74,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase31_InterproceduralReturnLeak.traceResource(InputStream)": {
+      "function_uid": "MLKCase31_InterproceduralReturnLeak.traceResource(InputStream)",
+      "file": "MLKCase31_InterproceduralReturnLeak.java",
+      "class_name": "MLKCase31_InterproceduralReturnLeak",
+      "method_name": "traceResource",
+      "param_types": [
+        "InputStream"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase03_TryWithResourcesSafe.\u003cinit\u003e()": {
+      "function_uid": "MLKCase03_TryWithResourcesSafe.\u003cinit\u003e()",
+      "file": "MLKCase03_TryWithResourcesSafe.java",
+      "class_name": "MLKCase03_TryWithResourcesSafe",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase03_TryWithResourcesSafe.run(String)": {
+      "function_uid": "MLKCase03_TryWithResourcesSafe.run(String)",
+      "file": "MLKCase03_TryWithResourcesSafe.java",
+      "class_name": "MLKCase03_TryWithResourcesSafe",
+      "method_name": "run",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [
+        {
+          "line": 8,
+          "condition": "$stack6 \u003c\u003d 0",
+          "true_scope": [
+            11,
+            11
+          ],
+          "false_scope": [
+            9,
+            9
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 6,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        },
+        {
+          "line": 11,
+          "invoke": "\u003cjava.io.InputStream: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.\u003cinit\u003e()": {
+      "function_uid": "testcasesupport.IO.\u003cinit\u003e()",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.writeLine(String)": {
+      "function_uid": "testcasesupport.IO.writeLine(String)",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "writeLine",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.writeLine(int)": {
+      "function_uid": "testcasesupport.IO.writeLine(int)",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "writeLine",
+      "param_types": [
+        "int"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.writeString(String)": {
+      "function_uid": "testcasesupport.IO.writeString(String)",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "writeString",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.getDBConnection()": {
+      "function_uid": "testcasesupport.IO.getDBConnection()",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "getDBConnection",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        27
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.IO.\u003cclinit\u003e()": {
+      "function_uid": "testcasesupport.IO.\u003cclinit\u003e()",
+      "file": "testcasesupport/IO.java",
+      "class_name": "testcasesupport.IO",
+      "method_name": "\u003cclinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.AbstractTestCase.\u003cinit\u003e()": {
+      "function_uid": "testcasesupport.AbstractTestCase.\u003cinit\u003e()",
+      "file": "testcasesupport/AbstractTestCase.java",
+      "class_name": "testcasesupport.AbstractTestCase",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.AbstractTestCase.good()": {
+      "function_uid": "testcasesupport.AbstractTestCase.good()",
+      "file": "testcasesupport/AbstractTestCase.java",
+      "class_name": "testcasesupport.AbstractTestCase",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcasesupport.AbstractTestCase.mainFromParent(String)": {
+      "function_uid": "testcasesupport.AbstractTestCase.mainFromParent(String)",
+      "file": "testcasesupport/AbstractTestCase.java",
+      "class_name": "testcasesupport.AbstractTestCase",
+      "method_name": "mainFromParent",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase33.\u003cinit\u003e()": {
+      "function_uid": "MLKCase33.\u003cinit\u003e()",
+      "file": "MLKCase33.java",
+      "class_name": "MLKCase33",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "MLKCase33.run()": {
+      "function_uid": "MLKCase33.run()",
+      "file": "MLKCase33.java",
+      "class_name": "MLKCase33",
+      "method_name": "run",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        6
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.\u003cinit\u003e()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.\u003cinit\u003e()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [
+        26,
+        27
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good1()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good1()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 69,
+          "condition": "$stack8 \u003d\u003d null",
+          "true_scope": [
+            77,
+            77
+          ],
+          "false_scope": [
+            71,
+            71
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 69,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            77,
+            77
+          ],
+          "false_scope": [
+            71,
+            71
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 69,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            77,
+            77
+          ],
+          "false_scope": [
+            71,
+            71
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 69,
+          "condition": "readerBuffered \u003d\u003d null",
+          "true_scope": [
+            77,
+            77
+          ],
+          "false_scope": [
+            71,
+            71
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "$stack6 \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "readerInputStream \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "readerInputStream \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "readerInputStream \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 71,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 71,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 71,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 71,
+          "invoke": "\u003cjava.io.BufferedReader: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.io.InputStreamReader: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        50,
+        51
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.main(String)": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.main(String)",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.\u003cinit\u003e()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.\u003cinit\u003e()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 37,
+          "condition": "$stack10 \u003d\u003d 0",
+          "true_scope": [
+            45,
+            45
+          ],
+          "false_scope": [
+            39,
+            39
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [],
+      "source_lines": [
+        31,
+        32,
+        35
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good1()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good1()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 67,
+          "condition": "$stack12 \u003d\u003d 0",
+          "true_scope": [
+            81,
+            81
+          ],
+          "false_scope": [
+            69,
+            69
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "$stack11 \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "resultSet \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 81,
+          "condition": "resultSet \u003d\u003d null",
+          "true_scope": [
+            89,
+            89
+          ],
+          "false_scope": [
+            83,
+            83
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 93,
+          "condition": "$stack10 \u003d\u003d null",
+          "true_scope": [
+            101,
+            101
+          ],
+          "false_scope": [
+            95,
+            95
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 93,
+          "condition": "preparedStatement \u003d\u003d null",
+          "true_scope": [
+            101,
+            101
+          ],
+          "false_scope": [
+            95,
+            95
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 93,
+          "condition": "preparedStatement \u003d\u003d null",
+          "true_scope": [
+            101,
+            101
+          ],
+          "false_scope": [
+            95,
+            95
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 105,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            113,
+            113
+          ],
+          "false_scope": [
+            107,
+            107
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 105,
+          "condition": "dBConnection \u003d\u003d null",
+          "true_scope": [
+            113,
+            113
+          ],
+          "false_scope": [
+            107,
+            107
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 105,
+          "condition": "dBConnection \u003d\u003d null",
+          "true_scope": [
+            113,
+            113
+          ],
+          "false_scope": [
+            107,
+            107
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 83,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 83,
+          "invoke": "\u003cjava.sql.ResultSet: void close()\u003e"
+        },
+        {
+          "line": 95,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 95,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 95,
+          "invoke": "\u003cjava.sql.PreparedStatement: void close()\u003e"
+        },
+        {
+          "line": 107,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        },
+        {
+          "line": 107,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        },
+        {
+          "line": 107,
+          "invoke": "\u003cjava.sql.Connection: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        61,
+        62,
+        65
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good()": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good()",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.main(String)": {
+      "function_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.main(String)",
+      "file": "testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.\u003cinit\u003e()": {
+      "function_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.\u003cinit\u003e()",
+      "file": "testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "method_name": "\u003cinit\u003e",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()": {
+      "function_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()",
+      "file": "testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "method_name": "bad",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 22,
+          "condition": "$stack6 \u003c 0",
+          "true_scope": [
+            30,
+            30
+          ],
+          "false_scope": [
+            25,
+            25
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 44,
+          "condition": "$stack7 \u003d\u003d null",
+          "true_scope": [
+            52,
+            52
+          ],
+          "false_scope": [
+            46,
+            46
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 46,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        37
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good1()": {
+      "function_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good1()",
+      "file": "testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "method_name": "good1",
+      "param_types": [],
+      "if_nodes": [
+        {
+          "line": 67,
+          "condition": "$stack8 \u003c 0",
+          "true_scope": [
+            78,
+            99
+          ],
+          "false_scope": [
+            70,
+            70
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "$stack9 \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        },
+        {
+          "line": 99,
+          "condition": "zFile \u003d\u003d null",
+          "true_scope": [
+            107,
+            107
+          ],
+          "false_scope": [
+            101,
+            101
+          ],
+          "true_unreachable": false,
+          "false_unreachable": false
+        }
+      ],
+      "close_sites": [
+        {
+          "line": 101,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        },
+        {
+          "line": 101,
+          "invoke": "\u003cjava.util.zip.ZipFile: void close()\u003e"
+        }
+      ],
+      "source_lines": [
+        82
+      ],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good()": {
+      "function_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good()",
+      "file": "testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "method_name": "good",
+      "param_types": [],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    },
+    "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.main(String)": {
+      "function_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.main(String)",
+      "file": "testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "method_name": "main",
+      "param_types": [
+        "String"
+      ],
+      "if_nodes": [],
+      "close_sites": [],
+      "source_lines": [],
+      "must_close_source_lines": [],
+      "generator": "soot-bridge"
+    }
+  }
+}
