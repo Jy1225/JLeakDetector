@@ -1,6 +1,6 @@
 {
   "generator": "soot-bridge",
-  "generated_at": 1773214641651,
+  "generated_at": 1773218874322,
   "line_mode": "absolute",
   "methods": {
     "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
@@ -16,6 +16,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase12_CloseableLeakByAssign.run(String)": {
@@ -41,6 +47,20 @@
       "source_proof_kind": {
         "7": "none"
       },
+      "first_open_exit_line": {
+        "7": 9
+      },
+      "escape_site_line": {
+        "7": 8
+      },
+      "alias_count_on_failure": {
+        "7": 1
+      },
+      "close_witness_count": {
+        "7": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase02_CloseableClosed.\u003cinit\u003e()": {
@@ -56,6 +76,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase02_CloseableClosed.run(String)": {
@@ -107,6 +133,20 @@
       "source_proof_kind": {
         "6": "hard"
       },
+      "first_open_exit_line": {
+        "6": -1
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 0
+      },
+      "close_witness_count": {
+        "6": 1
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "MLKCase17_ConditionalCloseLeak.\u003cinit\u003e()": {
@@ -122,6 +162,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase17_ConditionalCloseLeak.run(String,boolean)": {
@@ -172,6 +218,20 @@
       "source_proof_kind": {
         "6": "none"
       },
+      "first_open_exit_line": {
+        "6": 10
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 1
+      },
+      "close_witness_count": {
+        "6": 1
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase34_ContradictoryBranchUnsat.\u003cinit\u003e()": {
@@ -187,6 +247,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase34_ContradictoryBranchUnsat.run(String,int)": {
@@ -249,16 +315,32 @@
       "source_lines": [
         6
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        6
+      ],
       "source_close_guarantee": {
-        "6": false
+        "6": true
       },
       "must_close_reason": {
-        "6": "open_resource_on_exit_path"
+        "6": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "6": "none"
+        "6": "hard"
       },
+      "first_open_exit_line": {
+        "6": 18
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 1
+      },
+      "close_witness_count": {
+        "6": 2
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "MLKCase01_CloseableLeak.\u003cinit\u003e()": {
@@ -274,6 +356,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase01_CloseableLeak.run(String)": {
@@ -318,6 +406,20 @@
       "source_proof_kind": {
         "6": "none"
       },
+      "first_open_exit_line": {
+        "6": 11
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 1
+      },
+      "close_witness_count": {
+        "6": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.\u003cinit\u003e()": {
@@ -333,6 +435,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()": {
@@ -393,19 +501,39 @@
         28,
         29
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        28
+      ],
       "source_close_guarantee": {
-        "28": false,
+        "28": true,
         "29": false
       },
       "must_close_reason": {
-        "28": "alias_escaped_before_close",
+        "28": "multi_close_witness_on_alias_paths",
         "29": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
-        "28": "none",
+        "28": "hard",
         "29": "none"
       },
+      "first_open_exit_line": {
+        "28": 63,
+        "29": 63
+      },
+      "escape_site_line": {
+        "28": -1,
+        "29": -1
+      },
+      "alias_count_on_failure": {
+        "28": 2,
+        "29": 1
+      },
+      "close_witness_count": {
+        "28": 2,
+        "29": 1
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good1()": {
@@ -554,19 +682,40 @@
         73,
         74
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        73,
+        74
+      ],
       "source_close_guarantee": {
-        "73": false,
-        "74": false
+        "73": true,
+        "74": true
       },
       "must_close_reason": {
-        "73": "alias_escaped_before_close",
-        "74": "open_resource_on_exit_path"
+        "73": "multi_close_witness_on_alias_paths",
+        "74": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "73": "none",
-        "74": "none"
+        "73": "hard",
+        "74": "hard"
       },
+      "first_open_exit_line": {
+        "73": 109,
+        "74": 109
+      },
+      "escape_site_line": {
+        "73": -1,
+        "74": -1
+      },
+      "alias_count_on_failure": {
+        "73": 4,
+        "74": 2
+      },
+      "close_witness_count": {
+        "73": 6,
+        "74": 3
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good()": {
@@ -582,6 +731,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.main(String)": {
@@ -599,6 +754,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.\u003cinit\u003e()": {
@@ -614,6 +775,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()": {
@@ -674,19 +841,39 @@
         27,
         28
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        27
+      ],
       "source_close_guarantee": {
-        "27": false,
+        "27": true,
         "28": false
       },
       "must_close_reason": {
-        "27": "alias_escaped_before_close",
+        "27": "multi_close_witness_on_alias_paths",
         "28": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
-        "27": "none",
+        "27": "hard",
         "28": "none"
       },
+      "first_open_exit_line": {
+        "27": 62,
+        "28": 62
+      },
+      "escape_site_line": {
+        "27": -1,
+        "28": -1
+      },
+      "alias_count_on_failure": {
+        "27": 2,
+        "28": 1
+      },
+      "close_witness_count": {
+        "27": 2,
+        "28": 1
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good1()": {
@@ -835,19 +1022,40 @@
         71,
         72
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        71,
+        72
+      ],
       "source_close_guarantee": {
-        "71": false,
-        "72": false
+        "71": true,
+        "72": true
       },
       "must_close_reason": {
-        "71": "alias_escaped_before_close",
-        "72": "open_resource_on_exit_path"
+        "71": "multi_close_witness_on_alias_paths",
+        "72": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "71": "none",
-        "72": "none"
+        "71": "hard",
+        "72": "hard"
       },
+      "first_open_exit_line": {
+        "71": 108,
+        "72": 108
+      },
+      "escape_site_line": {
+        "71": -1,
+        "72": -1
+      },
+      "alias_count_on_failure": {
+        "71": 4,
+        "72": 2
+      },
+      "close_witness_count": {
+        "71": 6,
+        "72": 3
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good()": {
@@ -863,6 +1071,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.main(String)": {
@@ -880,6 +1094,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cinit\u003e()": {
@@ -895,6 +1115,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()": {
@@ -910,6 +1136,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.bad()": {
@@ -925,6 +1157,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperGood1()": {
@@ -940,6 +1178,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good1()": {
@@ -955,6 +1199,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.good()": {
@@ -970,6 +1220,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.main(String)": {
@@ -987,6 +1243,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.\u003cclinit\u003e()": {
@@ -1002,6 +1264,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.\u003cinit\u003e()": {
@@ -1017,6 +1285,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()": {
@@ -1134,6 +1408,28 @@
         "33": "none",
         "36": "none"
       },
+      "first_open_exit_line": {
+        "32": 85,
+        "33": 85,
+        "36": 85
+      },
+      "escape_site_line": {
+        "32": -1,
+        "33": -1,
+        "36": -1
+      },
+      "alias_count_on_failure": {
+        "32": 1,
+        "33": 1,
+        "36": 1
+      },
+      "close_witness_count": {
+        "32": 1,
+        "33": 1,
+        "36": 1
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good1()": {
@@ -1367,22 +1663,48 @@
         98,
         101
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        97,
+        98,
+        101
+      ],
       "source_close_guarantee": {
-        "97": false,
-        "98": false,
-        "101": false
+        "97": true,
+        "98": true,
+        "101": true
       },
       "must_close_reason": {
-        "97": "open_resource_on_exit_path",
-        "98": "open_resource_on_exit_path",
-        "101": "open_resource_on_exit_path"
+        "97": "multi_close_witness_on_alias_paths",
+        "98": "multi_close_witness_on_alias_paths",
+        "101": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "97": "none",
-        "98": "none",
-        "101": "none"
+        "97": "hard",
+        "98": "hard",
+        "101": "hard"
       },
+      "first_open_exit_line": {
+        "97": 151,
+        "98": 151,
+        "101": 151
+      },
+      "escape_site_line": {
+        "97": -1,
+        "98": -1,
+        "101": -1
+      },
+      "alias_count_on_failure": {
+        "97": 2,
+        "98": 2,
+        "101": 2
+      },
+      "close_witness_count": {
+        "97": 3,
+        "98": 3,
+        "101": 3
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good()": {
@@ -1398,6 +1720,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.main(String)": {
@@ -1415,6 +1743,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.\u003cinit\u003e()": {
@@ -1430,6 +1764,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()": {
@@ -1453,6 +1793,20 @@
       "source_proof_kind": {
         "25": "none"
       },
+      "first_open_exit_line": {
+        "25": 38
+      },
+      "escape_site_line": {
+        "25": -1
+      },
+      "alias_count_on_failure": {
+        "25": 1
+      },
+      "close_witness_count": {
+        "25": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good1()": {
@@ -1556,16 +1910,32 @@
       "source_lines": [
         46
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        46
+      ],
       "source_close_guarantee": {
-        "46": false
+        "46": true
       },
       "must_close_reason": {
-        "46": "open_resource_on_exit_path"
+        "46": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "46": "none"
+        "46": "hard"
       },
+      "first_open_exit_line": {
+        "46": 72
+      },
+      "escape_site_line": {
+        "46": -1
+      },
+      "alias_count_on_failure": {
+        "46": 2
+      },
+      "close_witness_count": {
+        "46": 4
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good()": {
@@ -1581,6 +1951,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.main(String)": {
@@ -1598,6 +1974,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.\u003cinit\u003e()": {
@@ -1613,6 +1995,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()": {
@@ -1633,13 +2021,31 @@
         "28": false
       },
       "must_close_reason": {
-        "27": "alias_escaped_before_close",
+        "27": "open_resource_on_exit_path",
         "28": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
         "27": "none",
         "28": "none"
       },
+      "first_open_exit_line": {
+        "27": 38,
+        "28": 38
+      },
+      "escape_site_line": {
+        "27": -1,
+        "28": -1
+      },
+      "alias_count_on_failure": {
+        "27": 2,
+        "28": 1
+      },
+      "close_witness_count": {
+        "27": 0,
+        "28": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good1()": {
@@ -1788,19 +2194,40 @@
         47,
         48
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        47,
+        48
+      ],
       "source_close_guarantee": {
-        "47": false,
-        "48": false
+        "47": true,
+        "48": true
       },
       "must_close_reason": {
-        "47": "alias_escaped_before_close",
-        "48": "open_resource_on_exit_path"
+        "47": "multi_close_witness_on_alias_paths",
+        "48": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "47": "none",
-        "48": "none"
+        "47": "hard",
+        "48": "hard"
       },
+      "first_open_exit_line": {
+        "47": 83,
+        "48": 83
+      },
+      "escape_site_line": {
+        "47": -1,
+        "48": -1
+      },
+      "alias_count_on_failure": {
+        "47": 4,
+        "48": 2
+      },
+      "close_witness_count": {
+        "47": 6,
+        "48": 3
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good()": {
@@ -1816,6 +2243,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.main(String)": {
@@ -1833,6 +2266,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.\u003cinit\u003e()": {
@@ -1848,6 +2287,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeLine(String)": {
@@ -1865,6 +2310,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeLine(int)": {
@@ -1882,6 +2333,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.writeString(String)": {
@@ -1899,6 +2356,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.getDBConnection()": {
@@ -1922,6 +2385,20 @@
       "source_proof_kind": {
         "27": "none"
       },
+      "first_open_exit_line": {
+        "27": 27
+      },
+      "escape_site_line": {
+        "27": 27
+      },
+      "alias_count_on_failure": {
+        "27": 1
+      },
+      "close_witness_count": {
+        "27": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.IO.\u003cclinit\u003e()": {
@@ -1937,6 +2414,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.\u003cinit\u003e()": {
@@ -1952,6 +2435,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.good()": {
@@ -1967,6 +2456,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.support.AbstractTestCase.mainFromParent(String)": {
@@ -1984,6 +2479,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.\u003cinit\u003e()": {
@@ -1999,6 +2500,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.run(Path,String,int)": {
@@ -2018,6 +2525,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.buildFileStream(Path)": {
@@ -2062,6 +2575,20 @@
       "source_proof_kind": {
         "20": "none"
       },
+      "first_open_exit_line": {
+        "20": 24
+      },
+      "escape_site_line": {
+        "20": 24
+      },
+      "alias_count_on_failure": {
+        "20": 1
+      },
+      "close_witness_count": {
+        "20": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.analyzeData(InputStream,int)": {
@@ -2122,6 +2649,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.buildSocket(String,int)": {
@@ -2167,6 +2700,20 @@
       "source_proof_kind": {
         "39": "none"
       },
+      "first_open_exit_line": {
+        "39": 43
+      },
+      "escape_site_line": {
+        "39": 43
+      },
+      "alias_count_on_failure": {
+        "39": 1
+      },
+      "close_witness_count": {
+        "39": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase32_FactoryAndConditionalLeaks.sendPing(Socket,boolean)": {
@@ -2197,6 +2744,24 @@
         "47": "none",
         "48": "none"
       },
+      "first_open_exit_line": {
+        "47": 50,
+        "48": 50
+      },
+      "escape_site_line": {
+        "47": -1,
+        "48": -1
+      },
+      "alias_count_on_failure": {
+        "47": 1,
+        "48": 1
+      },
+      "close_witness_count": {
+        "47": 0,
+        "48": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.\u003cinit\u003e()": {
@@ -2212,6 +2777,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.run(String,String,boolean)": {
@@ -2250,6 +2821,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.chooseStream(String,String,boolean)": {
@@ -2288,6 +2865,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.openPrimary(String)": {
@@ -2332,6 +2915,20 @@
       "source_proof_kind": {
         "29": "none"
       },
+      "first_open_exit_line": {
+        "29": 33
+      },
+      "escape_site_line": {
+        "29": 33
+      },
+      "alias_count_on_failure": {
+        "29": 1
+      },
+      "close_witness_count": {
+        "29": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.openBackup(String)": {
@@ -2376,6 +2973,20 @@
       "source_proof_kind": {
         "37": "none"
       },
+      "first_open_exit_line": {
+        "37": 41
+      },
+      "escape_site_line": {
+        "37": 41
+      },
+      "alias_count_on_failure": {
+        "37": 1
+      },
+      "close_witness_count": {
+        "37": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.consumeInAnotherFunction(InputStream,boolean)": {
@@ -2449,6 +3060,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function1(InputStream)": {
@@ -2490,6 +3107,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function2(InputStream)": {
@@ -2507,6 +3130,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.function3(InputStream)": {
@@ -2529,6 +3158,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase31_InterproceduralReturnLeak.traceResource(InputStream)": {
@@ -2546,6 +3181,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase03_TryWithResourcesSafe.\u003cinit\u003e()": {
@@ -2561,6 +3202,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase03_TryWithResourcesSafe.run(String)": {
@@ -2604,16 +3251,32 @@
       "source_lines": [
         6
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        6
+      ],
       "source_close_guarantee": {
-        "6": false
+        "6": true
       },
       "must_close_reason": {
-        "6": "open_resource_on_exit_path"
+        "6": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "6": "none"
+        "6": "hard"
       },
+      "first_open_exit_line": {
+        "6": 11
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 1
+      },
+      "close_witness_count": {
+        "6": 2
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.\u003cinit\u003e()": {
@@ -2629,6 +3292,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeLine(String)": {
@@ -2646,6 +3315,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeLine(int)": {
@@ -2663,6 +3338,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.writeString(String)": {
@@ -2680,6 +3361,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.getDBConnection()": {
@@ -2703,6 +3390,20 @@
       "source_proof_kind": {
         "27": "none"
       },
+      "first_open_exit_line": {
+        "27": 27
+      },
+      "escape_site_line": {
+        "27": 27
+      },
+      "alias_count_on_failure": {
+        "27": 1
+      },
+      "close_witness_count": {
+        "27": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.\u003cclinit\u003e()": {
@@ -2718,6 +3419,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.\u003cinit\u003e()": {
@@ -2733,6 +3440,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.good()": {
@@ -2748,6 +3461,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.AbstractTestCase.mainFromParent(String)": {
@@ -2765,6 +3484,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase33.\u003cinit\u003e()": {
@@ -2780,6 +3505,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase33.run()": {
@@ -2798,11 +3529,25 @@
         "6": false
       },
       "must_close_reason": {
-        "6": "alias_escaped_before_close"
+        "6": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
         "6": "none"
       },
+      "first_open_exit_line": {
+        "6": 8
+      },
+      "escape_site_line": {
+        "6": -1
+      },
+      "alias_count_on_failure": {
+        "6": 2
+      },
+      "close_witness_count": {
+        "6": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.\u003cinit\u003e()": {
@@ -2818,6 +3563,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()": {
@@ -2838,13 +3589,31 @@
         "27": false
       },
       "must_close_reason": {
-        "26": "alias_escaped_before_close",
+        "26": "open_resource_on_exit_path",
         "27": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
         "26": "none",
         "27": "none"
       },
+      "first_open_exit_line": {
+        "26": 42,
+        "27": 42
+      },
+      "escape_site_line": {
+        "26": -1,
+        "27": -1
+      },
+      "alias_count_on_failure": {
+        "26": 2,
+        "27": 1
+      },
+      "close_witness_count": {
+        "26": 0,
+        "27": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good1()": {
@@ -3037,19 +3806,40 @@
         50,
         51
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        50,
+        51
+      ],
       "source_close_guarantee": {
-        "50": false,
-        "51": false
+        "50": true,
+        "51": true
       },
       "must_close_reason": {
-        "50": "alias_escaped_before_close",
-        "51": "open_resource_on_exit_path"
+        "50": "multi_close_witness_on_alias_paths",
+        "51": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "50": "none",
-        "51": "none"
+        "50": "hard",
+        "51": "hard"
       },
+      "first_open_exit_line": {
+        "50": 90,
+        "51": 90
+      },
+      "escape_site_line": {
+        "50": -1,
+        "51": -1
+      },
+      "alias_count_on_failure": {
+        "50": 4,
+        "51": 2
+      },
+      "close_witness_count": {
+        "50": 8,
+        "51": 4
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good()": {
@@ -3065,6 +3855,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.main(String)": {
@@ -3082,6 +3878,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.\u003cinit\u003e()": {
@@ -3097,6 +3899,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()": {
@@ -3147,6 +3955,28 @@
         "32": "none",
         "35": "none"
       },
+      "first_open_exit_line": {
+        "31": 49,
+        "32": 49,
+        "35": 49
+      },
+      "escape_site_line": {
+        "31": -1,
+        "32": -1,
+        "35": -1
+      },
+      "alias_count_on_failure": {
+        "31": 1,
+        "32": 1,
+        "35": 1
+      },
+      "close_witness_count": {
+        "31": 0,
+        "32": 0,
+        "35": 0
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good1()": {
@@ -3380,22 +4210,48 @@
         62,
         65
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        61,
+        62,
+        65
+      ],
       "source_close_guarantee": {
-        "61": false,
-        "62": false,
-        "65": false
+        "61": true,
+        "62": true,
+        "65": true
       },
       "must_close_reason": {
-        "61": "open_resource_on_exit_path",
-        "62": "open_resource_on_exit_path",
-        "65": "open_resource_on_exit_path"
+        "61": "multi_close_witness_on_alias_paths",
+        "62": "multi_close_witness_on_alias_paths",
+        "65": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "61": "none",
-        "62": "none",
-        "65": "none"
+        "61": "hard",
+        "62": "hard",
+        "65": "hard"
       },
+      "first_open_exit_line": {
+        "61": 114,
+        "62": 114,
+        "65": 114
+      },
+      "escape_site_line": {
+        "61": -1,
+        "62": -1,
+        "65": -1
+      },
+      "alias_count_on_failure": {
+        "61": 2,
+        "62": 2,
+        "65": 2
+      },
+      "close_witness_count": {
+        "61": 3,
+        "62": 3,
+        "65": 3
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good()": {
@@ -3411,6 +4267,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.main(String)": {
@@ -3428,6 +4290,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.\u003cinit\u003e()": {
@@ -3443,6 +4311,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()": {
@@ -3508,6 +4382,20 @@
       "source_proof_kind": {
         "37": "none"
       },
+      "first_open_exit_line": {
+        "37": 62
+      },
+      "escape_site_line": {
+        "37": -1
+      },
+      "alias_count_on_failure": {
+        "37": 1
+      },
+      "close_witness_count": {
+        "37": 1
+      },
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good1()": {
@@ -3629,16 +4517,32 @@
       "source_lines": [
         82
       ],
-      "must_close_source_lines": [],
+      "must_close_source_lines": [
+        82
+      ],
       "source_close_guarantee": {
-        "82": false
+        "82": true
       },
       "must_close_reason": {
-        "82": "open_resource_on_exit_path"
+        "82": "multi_close_witness_on_alias_paths"
       },
       "source_proof_kind": {
-        "82": "none"
+        "82": "hard"
       },
+      "first_open_exit_line": {
+        "82": 108
+      },
+      "escape_site_line": {
+        "82": -1
+      },
+      "alias_count_on_failure": {
+        "82": 2
+      },
+      "close_witness_count": {
+        "82": 4
+      },
+      "all_sources_hard_closed": true,
+      "method_proof_kind": "hard",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good()": {
@@ -3654,6 +4558,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.main(String)": {
@@ -3671,6 +4581,12 @@
       "source_close_guarantee": {},
       "must_close_reason": {},
       "source_proof_kind": {},
+      "first_open_exit_line": {},
+      "escape_site_line": {},
+      "alias_count_on_failure": {},
+      "close_witness_count": {},
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     }
   }
