@@ -57,7 +57,7 @@ class MLKCase31_InterproceduralReturnLeak {
         //in.close();
     }
 
-    private void function1(InputStream in){
+    private void function1(InputStream in) throws IOException {
         int var=in.read();
         function2(in);
         if(var>=0){
@@ -65,12 +65,12 @@ class MLKCase31_InterproceduralReturnLeak {
         }
     }
 
-    private void function2(InputStream in){
+    private void function2(InputStream in) throws IOException {
         int var=in.read();
         function3(in);
     }
 
-    private void function3(InputStream in){
+    private void function3(InputStream in) throws IOException {
         in.close();
     }
 
