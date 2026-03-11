@@ -133,6 +133,7 @@ class DFBScanAgent(Agent):
             else None
         )
         self.soot_prefilter_stats = SootPrefilterStats()
+        self.soot_prefilter_source_skipped = 0
         self.java_z3_prefilter = (
             JavaZ3PathPrefilter(
                 self.ts_analyzer,
@@ -641,6 +642,10 @@ class DFBScanAgent(Agent):
                     pbar.update(1)
                     continue
 
+                if self.__skip_source_by_java_soot_prefilter(src_value, src_function):
+                    pbar.update(1)
+                    continue
+
                 initial_context = CallContext(False)
                 worklist.append((src_value, src_function, initial_context))
 
@@ -817,6 +822,9 @@ class DFBScanAgent(Agent):
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
+        self.logger.print_console(
+            f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
+        )
         self.__dump_java_mlk_transfer_records()
         self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
@@ -858,6 +866,9 @@ class DFBScanAgent(Agent):
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
+        self.logger.print_console(
+            f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
+        )
         self.__dump_java_mlk_transfer_records()
         self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
@@ -867,6 +878,8 @@ class DFBScanAgent(Agent):
         worklist = []
         src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
         if src_function is None:
+            return
+        if self.__skip_source_by_java_soot_prefilter(src_value, src_function):
             return
         initial_context = CallContext(False)
 
@@ -1269,6 +1282,33 @@ class DFBScanAgent(Agent):
             self.logger.print_log("[Soot prefilter] evidence:", soot_result.evidence[0])
         return soot_result.should_skip_llm and not self.soot_shadow_mode
 
+    def __skip_source_by_java_soot_prefilter(
+        self, src_value: Value, src_function: Optional[Function]
+    ) -> bool:
+        if self.java_soot_prefilter is None:
+            return False
+        if src_function is None:
+            return False
+        soot_result = self.java_soot_prefilter.evaluate(
+            [src_value], {src_value: src_function}
+        )
+        self.logger.print_log(
+            "[Soot source gate]",
+            f"verdict={soot_result.verdict}",
+            f"reason={soot_result.reason}",
+            f"elapsed_ms={soot_result.elapsed_ms:.2f}",
+        )
+        if len(soot_result.evidence) > 0:
+            self.logger.print_log("[Soot source gate] evidence:", soot_result.evidence[0])
+        if soot_result.should_skip_llm and not self.soot_shadow_mode:
+            with self.lock:
+                self.soot_prefilter_source_skipped += 1
+            self.logger.print_log(
+                f"[Soot source gate] Skip source before path search: {str(src_value)}"
+            )
+            return True
+        return False
+
     def __skip_by_java_z3_prefilter(
         self,
         src_value: Value,
@@ -1394,8 +1434,10 @@ class DFBScanAgent(Agent):
         if self.java_soot_prefilter is None:
             return
         stats_path = self.res_dir_path + "/soot_prefilter_stats.json"
+        payload = self.soot_prefilter_stats.to_dict()
+        payload["source_skipped_before_path_search"] = self.soot_prefilter_source_skipped
         with open(stats_path, "w") as stats_file:
-            json.dump(self.soot_prefilter_stats.to_dict(), stats_file, indent=4)
+            json.dump(payload, stats_file, indent=4)
 
     def __post_validate_java_mlk_with_objid(
         self,

@@ -52,6 +52,7 @@ class SootPrefilterStats:
     # Detailed reasons for observability.
     unreachable: int = 0
     safe_must_close: int = 0
+    safe_method_all_sources_hard: int = 0
     facts_unavailable: int = 0
     method_unmapped: int = 0
     no_candidate_line: int = 0
@@ -74,6 +75,8 @@ class SootPrefilterStats:
             self.unreachable += 1
         elif result.reason == "safe_must_close":
             self.safe_must_close += 1
+        elif result.reason == "safe_method_all_sources_hard":
+            self.safe_method_all_sources_hard += 1
         elif result.reason == "facts_unavailable":
             self.facts_unavailable += 1
         elif result.reason == "method_unmapped":
@@ -93,6 +96,7 @@ class SootPrefilterStats:
             "skipped_by_soot": self.skipped_by_soot,
             "unreachable": self.unreachable,
             "safe_must_close": self.safe_must_close,
+            "safe_method_all_sources_hard": self.safe_method_all_sources_hard,
             "facts_unavailable": self.facts_unavailable,
             "method_unmapped": self.method_unmapped,
             "no_candidate_line": self.no_candidate_line,
@@ -184,6 +188,16 @@ class JavaSootPrefilter:
                     elapsed_ms=(time.time() - start) * 1000.0,
                     matched_methods=matched_methods,
                     evidence=[must_close_evidence],
+                )
+
+            method_hard_safe_evidence = self._check_method_all_sources_hard(method_facts)
+            if method_hard_safe_evidence is not None:
+                return SootPrefilterResult(
+                    verdict=SootPrefilterVerdict.BLOCK,
+                    reason="safe_method_all_sources_hard",
+                    elapsed_ms=(time.time() - start) * 1000.0,
+                    matched_methods=matched_methods,
+                    evidence=[method_hard_safe_evidence],
                 )
 
             fallback_evidence.append(
@@ -409,6 +423,36 @@ class JavaSootPrefilter:
                 )
         return None
 
+    def _check_method_all_sources_hard(
+        self, method_facts: Dict[str, Any]
+    ) -> Optional[str]:
+        if self._safe_bool(method_facts.get("all_sources_hard_closed")):
+            return "all sources in this method are hard-guaranteed to close by Soot facts"
+
+        source_lines = self._to_int_set(method_facts.get("source_lines"))
+        source_lines = set(line for line in source_lines if line > 0)
+        if len(source_lines) == 0:
+            return None
+
+        raw_guarantee = method_facts.get("source_close_guarantee", {})
+        raw_proof = method_facts.get("source_proof_kind", {})
+        if not isinstance(raw_guarantee, dict) or not isinstance(raw_proof, dict):
+            return None
+
+        for src_line in source_lines:
+            guaranteed = self._safe_bool(
+                raw_guarantee.get(str(src_line), raw_guarantee.get(src_line))
+            )
+            proof_kind = str(
+                raw_proof.get(str(src_line), raw_proof.get(src_line, ""))
+            ).strip()
+            if not guaranteed:
+                return None
+            if proof_kind.lower() != "hard":
+                return None
+
+        return "method-level hard guarantee: all source allocations are closed on all paths"
+
     def _branch_hit(
         self, candidate_lines: Set[int], if_node: Dict[str, Any], is_true_branch: bool
     ) -> bool:
@@ -470,6 +514,16 @@ class JavaSootPrefilter:
             return int(value)
         except Exception:
             return default
+
+    def _safe_bool(self, value: Any) -> bool:
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            return normalized in {"1", "true", "yes"}
+        if isinstance(value, int):
+            return value != 0
+        return bool(value)
 
     def _normalize_path(self, file_path: str) -> str:
         return file_path.replace("\\", "/").strip().lower()

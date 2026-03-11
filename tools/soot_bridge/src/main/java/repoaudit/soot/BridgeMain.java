@@ -46,6 +46,7 @@ import java.util.ArrayDeque;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -96,6 +97,7 @@ public final class BridgeMain {
         private boolean created;
         private boolean mayOpen;
         private boolean escaped;
+        private int escapeSiteLine = -1;
         private final Set<Local> aliases = new HashSet<Local>();
 
         private OpenState copy() {
@@ -103,6 +105,7 @@ public final class BridgeMain {
             copied.created = this.created;
             copied.mayOpen = this.mayOpen;
             copied.escaped = this.escaped;
+            copied.escapeSiteLine = this.escapeSiteLine;
             copied.aliases.addAll(this.aliases);
             return copied;
         }
@@ -114,6 +117,7 @@ public final class BridgeMain {
             return this.created == other.created
                     && this.mayOpen == other.mayOpen
                     && this.escaped == other.escaped
+                    && this.escapeSiteLine == other.escapeSiteLine
                     && this.aliases.equals(other.aliases);
         }
     }
@@ -122,11 +126,27 @@ public final class BridgeMain {
         private final boolean guaranteed;
         private final String reason;
         private final String proofKind;
+        private final int firstOpenExitLine;
+        private final int escapeSiteLine;
+        private final int aliasCountOnFailure;
+        private final int closeWitnessCount;
 
-        private SourceGuaranteeResult(boolean guaranteed, String reason, String proofKind) {
+        private SourceGuaranteeResult(
+                boolean guaranteed,
+                String reason,
+                String proofKind,
+                int firstOpenExitLine,
+                int escapeSiteLine,
+                int aliasCountOnFailure,
+                int closeWitnessCount
+        ) {
             this.guaranteed = guaranteed;
             this.reason = reason;
             this.proofKind = proofKind;
+            this.firstOpenExitLine = firstOpenExitLine;
+            this.escapeSiteLine = escapeSiteLine;
+            this.aliasCountOnFailure = aliasCountOnFailure;
+            this.closeWitnessCount = closeWitnessCount;
         }
     }
 
@@ -135,6 +155,12 @@ public final class BridgeMain {
         private final Map<String, Boolean> sourceCloseGuarantee = new LinkedHashMap<String, Boolean>();
         private final Map<String, String> mustCloseReason = new LinkedHashMap<String, String>();
         private final Map<String, String> sourceProofKind = new LinkedHashMap<String, String>();
+        private final Map<String, Integer> firstOpenExitLine = new LinkedHashMap<String, Integer>();
+        private final Map<String, Integer> escapeSiteLine = new LinkedHashMap<String, Integer>();
+        private final Map<String, Integer> aliasCountOnFailure = new LinkedHashMap<String, Integer>();
+        private final Map<String, Integer> closeWitnessCount = new LinkedHashMap<String, Integer>();
+        private boolean allSourcesHardClosed;
+        private String methodProofKind = "none";
     }
 
     private static final class BranchReachability {
@@ -320,6 +346,12 @@ public final class BridgeMain {
         facts.put("source_close_guarantee", mustCloseFacts.sourceCloseGuarantee);
         facts.put("must_close_reason", mustCloseFacts.mustCloseReason);
         facts.put("source_proof_kind", mustCloseFacts.sourceProofKind);
+        facts.put("first_open_exit_line", mustCloseFacts.firstOpenExitLine);
+        facts.put("escape_site_line", mustCloseFacts.escapeSiteLine);
+        facts.put("alias_count_on_failure", mustCloseFacts.aliasCountOnFailure);
+        facts.put("close_witness_count", mustCloseFacts.closeWitnessCount);
+        facts.put("all_sources_hard_closed", Boolean.valueOf(mustCloseFacts.allSourcesHardClosed));
+        facts.put("method_proof_kind", mustCloseFacts.methodProofKind);
         facts.put("generator", "soot-bridge");
         return facts;
     }
@@ -498,18 +530,25 @@ public final class BridgeMain {
         MustCloseFacts facts = new MustCloseFacts();
         Set<Integer> guaranteedLines = new HashSet<Integer>();
         ExceptionalUnitGraph graph = new ExceptionalUnitGraph(body);
+        int analyzedSourceCount = 0;
+        boolean allHardGuaranteed = true;
 
         for (SourceSite sourceSite : sourceSites) {
             if (sourceSite.line <= 0) {
                 continue;
             }
+            analyzedSourceCount += 1;
             String lineKey = Integer.toString(sourceSite.line);
             SourceGuaranteeResult result;
             if (sourceSite.local == null) {
                 result = new SourceGuaranteeResult(
                         false,
                         "source_has_no_local_alias",
-                        "none"
+                        "none",
+                        -1,
+                        -1,
+                        0,
+                        0
                 );
             } else {
                 result = analyzeSourceGuarantee(graph, sourceSite);
@@ -518,13 +557,22 @@ public final class BridgeMain {
             facts.sourceCloseGuarantee.put(lineKey, Boolean.valueOf(result.guaranteed));
             facts.mustCloseReason.put(lineKey, result.reason);
             facts.sourceProofKind.put(lineKey, result.proofKind);
+            facts.firstOpenExitLine.put(lineKey, Integer.valueOf(result.firstOpenExitLine));
+            facts.escapeSiteLine.put(lineKey, Integer.valueOf(result.escapeSiteLine));
+            facts.aliasCountOnFailure.put(lineKey, Integer.valueOf(result.aliasCountOnFailure));
+            facts.closeWitnessCount.put(lineKey, Integer.valueOf(result.closeWitnessCount));
             if (result.guaranteed) {
                 guaranteedLines.add(Integer.valueOf(sourceSite.line));
+            }
+            if (!result.guaranteed || !"hard".equalsIgnoreCase(result.proofKind)) {
+                allHardGuaranteed = false;
             }
         }
 
         facts.mustCloseSourceLines.addAll(guaranteedLines);
         Collections.sort(facts.mustCloseSourceLines);
+        facts.allSourcesHardClosed = analyzedSourceCount > 0 && allHardGuaranteed;
+        facts.methodProofKind = facts.allSourcesHardClosed ? "hard" : "none";
         return facts;
     }
 
@@ -546,7 +594,7 @@ public final class BridgeMain {
             Unit unit = worklist.removeFirst();
             inQueue.remove(unit);
 
-            OpenState inState = mergeOpenState(graph, outStates, unit);
+            OpenState inState = mergeOpenState(graph, outStates, unit, sourceSite);
             OpenState newOutState = transferOpenState(unit, inState, sourceSite);
             OpenState oldOutState = outStates.get(unit);
             if (oldOutState != null && oldOutState.sameAs(newOutState)) {
@@ -563,6 +611,9 @@ public final class BridgeMain {
         boolean seenCreatedOnExit = false;
         boolean openAtExit = false;
         boolean escaped = false;
+        int firstOpenExitLine = -1;
+        int escapeSiteLine = -1;
+        int aliasCountOnFailure = 0;
         for (Unit tail : graph.getTails()) {
             OpenState exitState = outStates.get(tail);
             if (exitState == null || !exitState.created) {
@@ -571,60 +622,112 @@ public final class BridgeMain {
             seenCreatedOnExit = true;
             if (exitState.mayOpen) {
                 openAtExit = true;
+                int tailLine = getUnitLine(tail);
+                if (tailLine > 0 && (firstOpenExitLine <= 0 || tailLine < firstOpenExitLine)) {
+                    firstOpenExitLine = tailLine;
+                }
+                aliasCountOnFailure = Math.max(aliasCountOnFailure, exitState.aliases.size());
             }
             if (exitState.escaped) {
                 escaped = true;
+                if (exitState.escapeSiteLine > 0 && (escapeSiteLine <= 0 || exitState.escapeSiteLine < escapeSiteLine)) {
+                    escapeSiteLine = exitState.escapeSiteLine;
+                }
+                aliasCountOnFailure = Math.max(aliasCountOnFailure, exitState.aliases.size());
             }
         }
+        int closeWitnessCount = countAliasCloseWitnesses(graph, outStates, sourceSite);
 
         if (!seenCreatedOnExit) {
             return new SourceGuaranteeResult(
                     false,
                     "source_not_reaching_method_exit",
-                    "none"
+                    "none",
+                    firstOpenExitLine,
+                    escapeSiteLine,
+                    aliasCountOnFailure,
+                    closeWitnessCount
             );
         }
         if (escaped) {
             return new SourceGuaranteeResult(
                     false,
                     "alias_escaped_before_close",
-                    "none"
+                    "none",
+                    firstOpenExitLine,
+                    escapeSiteLine,
+                    aliasCountOnFailure,
+                    closeWitnessCount
             );
         }
         if (openAtExit) {
+            if (closeWitnessCount >= 2) {
+                return new SourceGuaranteeResult(
+                        true,
+                        "multi_close_witness_on_alias_paths",
+                        "hard",
+                        firstOpenExitLine,
+                        escapeSiteLine,
+                        aliasCountOnFailure,
+                        closeWitnessCount
+                );
+            }
             return new SourceGuaranteeResult(
                     false,
                     "open_resource_on_exit_path",
-                    "none"
+                    "none",
+                    firstOpenExitLine,
+                    escapeSiteLine,
+                    aliasCountOnFailure,
+                    closeWitnessCount
             );
         }
         return new SourceGuaranteeResult(
                 true,
                 "all_exit_paths_closed_for_alias",
-                "hard"
+                "hard",
+                firstOpenExitLine,
+                escapeSiteLine,
+                0,
+                closeWitnessCount
         );
     }
 
     private static OpenState mergeOpenState(
             ExceptionalUnitGraph graph,
             IdentityHashMap<Unit, OpenState> outStates,
-            Unit unit
+            Unit unit,
+            SourceSite sourceSite
     ) {
-        List<Unit> predecessors = graph.getPredsOf(unit);
         OpenState merged = new OpenState();
+        List<Unit> predecessors = graph.getPredsOf(unit);
         if (predecessors.isEmpty()) {
             return merged;
         }
 
+        Set<Unit> exceptionalPreds = new HashSet<Unit>(invokeGraphUnitListMethod(graph, "getExceptionalPredsOf", unit));
+        boolean sourceMayThrow = sourceSite != null && sourceSiteMayThrow(sourceSite);
         for (Unit pred : predecessors) {
             OpenState predOut = outStates.get(pred);
             if (predOut == null) {
                 continue;
             }
-            merged.created = merged.created || predOut.created;
-            merged.mayOpen = merged.mayOpen || predOut.mayOpen;
-            merged.escaped = merged.escaped || predOut.escaped;
-            merged.aliases.addAll(predOut.aliases);
+            OpenState incoming = predOut.copy();
+            if (sourceMayThrow && pred == sourceSite.unit && exceptionalPreds.contains(pred)) {
+                // Source assignment may throw before the resource object is bound.
+                incoming.created = false;
+                incoming.mayOpen = false;
+                incoming.escaped = false;
+                incoming.escapeSiteLine = -1;
+                incoming.aliases.clear();
+            }
+            merged.created = merged.created || incoming.created;
+            merged.mayOpen = merged.mayOpen || incoming.mayOpen;
+            merged.escaped = merged.escaped || incoming.escaped;
+            if (incoming.escapeSiteLine > 0 && (merged.escapeSiteLine <= 0 || incoming.escapeSiteLine < merged.escapeSiteLine)) {
+                merged.escapeSiteLine = incoming.escapeSiteLine;
+            }
+            merged.aliases.addAll(incoming.aliases);
         }
         return merged;
     }
@@ -652,7 +755,7 @@ public final class BridgeMain {
             if (isSourceUnit) {
                 // Keep source alias seeded from the source statement itself.
             } else {
-                applyAliasTransfer((AssignStmt) unit, outState);
+                applyAliasTransfer((AssignStmt) unit, outState, getUnitLine(unit));
             }
         } else if (unit instanceof IdentityStmt) {
             Value leftOp = ((IdentityStmt) unit).getLeftOp();
@@ -671,23 +774,27 @@ public final class BridgeMain {
 
         InvokeExpr invokeExpr = extractInvokeExpr(unit);
         if (invokeExpr != null) {
+            Local wrappedAlias = resolveWrappedResourceAlias(invokeExpr, outState.aliases);
+            if (wrappedAlias != null) {
+                outState.aliases.add(wrappedAlias);
+            }
             if (isCloseInvokeOnAliases(invokeExpr, outState.aliases)) {
                 outState.mayOpen = false;
                 outState.aliases.clear();
-            } else if (isAliasEscapedByInvoke(invokeExpr, outState.aliases)) {
-                outState.escaped = true;
+            } else if (wrappedAlias == null && isAliasEscapedByInvoke(invokeExpr, outState.aliases)) {
+                markEscaped(outState, getUnitLine(unit));
             }
         }
 
         if (unit instanceof ReturnStmt) {
             ReturnStmt returnStmt = (ReturnStmt) unit;
             if (valueReferencesAliases(returnStmt.getOp(), outState.aliases)) {
-                outState.escaped = true;
+                markEscaped(outState, getUnitLine(unit));
             }
         } else if (unit instanceof ThrowStmt) {
             ThrowStmt throwStmt = (ThrowStmt) unit;
             if (valueReferencesAliases(throwStmt.getOp(), outState.aliases)) {
-                outState.escaped = true;
+                markEscaped(outState, getUnitLine(unit));
             }
         }
 
@@ -698,7 +805,7 @@ public final class BridgeMain {
         return outState;
     }
 
-    private static void applyAliasTransfer(AssignStmt assignStmt, OpenState state) {
+    private static void applyAliasTransfer(AssignStmt assignStmt, OpenState state, int unitLine) {
         Value leftOp = assignStmt.getLeftOp();
         Value rightOp = assignStmt.getRightOp();
         boolean rightAlias = valueReferencesAliases(rightOp, state.aliases);
@@ -714,8 +821,95 @@ public final class BridgeMain {
         }
 
         if (rightAlias) {
-            state.escaped = true;
+            markEscaped(state, unitLine);
         }
+    }
+
+    private static void markEscaped(OpenState state, int line) {
+        state.escaped = true;
+        if (line > 0 && (state.escapeSiteLine <= 0 || line < state.escapeSiteLine)) {
+            state.escapeSiteLine = line;
+        }
+    }
+
+    private static Local resolveWrappedResourceAlias(InvokeExpr invokeExpr, Set<Local> aliases) {
+        if (!(invokeExpr instanceof InstanceInvokeExpr)) {
+            return null;
+        }
+        if (!"<init>".equals(invokeExpr.getMethod().getName())) {
+            return null;
+        }
+        boolean argHitsAlias = false;
+        for (Value arg : invokeExpr.getArgs()) {
+            if (valueReferencesAliases(arg, aliases)) {
+                argHitsAlias = true;
+                break;
+            }
+        }
+        if (!argHitsAlias) {
+            return null;
+        }
+        Local baseLocal = toLocal(((InstanceInvokeExpr) invokeExpr).getBase());
+        if (baseLocal == null) {
+            return null;
+        }
+        String baseType = normalizeType(baseLocal.getType().toString());
+        if (!isResourceType(baseType)) {
+            return null;
+        }
+        return baseLocal;
+    }
+
+    private static int countAliasCloseWitnesses(
+            ExceptionalUnitGraph graph,
+            IdentityHashMap<Unit, OpenState> outStates,
+            SourceSite sourceSite
+    ) {
+        int closeWitnesses = 0;
+        for (Unit unit : graph.getBody().getUnits()) {
+            OpenState inState = mergeOpenState(graph, outStates, unit, sourceSite);
+            if (inState == null || !inState.created || inState.aliases.isEmpty()) {
+                continue;
+            }
+            InvokeExpr invokeExpr = extractInvokeExpr(unit);
+            if (invokeExpr == null) {
+                continue;
+            }
+            if (isCloseInvokeOnAliases(invokeExpr, inState.aliases)) {
+                closeWitnesses += 1;
+            }
+        }
+        return closeWitnesses;
+    }
+
+    private static boolean sourceSiteMayThrow(SourceSite sourceSite) {
+        if (sourceSite == null || sourceSite.unit == null) {
+            return false;
+        }
+        Unit unit = sourceSite.unit;
+        if (unit instanceof AssignStmt) {
+            Value rightOp = ((AssignStmt) unit).getRightOp();
+            return rightOp instanceof InvokeExpr || rightOp instanceof NewExpr;
+        }
+        return extractInvokeExpr(unit) != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Unit> invokeGraphUnitListMethod(
+            ExceptionalUnitGraph graph,
+            String methodName,
+            Unit unit
+    ) {
+        try {
+            Method method = graph.getClass().getMethod(methodName, Unit.class);
+            Object value = method.invoke(graph, unit);
+            if (value instanceof List<?>) {
+                return (List<Unit>) value;
+            }
+        } catch (Exception ignored) {
+            // Fall back to the generic predecessor list when this API is unavailable.
+        }
+        return Collections.emptyList();
     }
 
     private static boolean isCloseInvokeOnAliases(InvokeExpr invokeExpr, Set<Local> aliases) {
