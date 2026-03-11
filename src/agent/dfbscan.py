@@ -10,6 +10,11 @@ from agent.agent import *
 
 from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
 from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
+from tstool.validator.java_soot_prefilter import (
+    JavaSootPrefilter,
+    SootPrefilterConfig,
+    SootPrefilterStats,
+)
 from tstool.validator.java_z3_path_prefilter import (
     JavaZ3PathPrefilter,
     Z3PrefilterConfig,
@@ -46,6 +51,10 @@ class DFBScanAgent(Agent):
         temperature: float,
         call_depth: int,
         max_neural_workers: int = 30,
+        enable_soot_prefilter: bool = False,
+        soot_shadow_mode: bool = True,
+        soot_facts_path: str = "",
+        soot_timeout_ms: int = 200,
         enable_z3_prefilter: bool = False,
         z3_shadow_mode: bool = True,
         z3_timeout_ms: int = 200,
@@ -66,6 +75,10 @@ class DFBScanAgent(Agent):
         self.call_depth = call_depth
         self.max_neural_workers = max_neural_workers
         self.MAX_QUERY_NUM = 5
+        self.enable_soot_prefilter = enable_soot_prefilter
+        self.soot_shadow_mode = soot_shadow_mode
+        self.soot_facts_path = soot_facts_path
+        self.soot_timeout_ms = soot_timeout_ms
         self.enable_z3_prefilter = enable_z3_prefilter
         self.z3_shadow_mode = z3_shadow_mode
         self.z3_timeout_ms = z3_timeout_ms
@@ -106,6 +119,20 @@ class DFBScanAgent(Agent):
             if self.language == "Java" and self.bug_type == "MLK"
             else None
         )
+        self.java_soot_prefilter = (
+            JavaSootPrefilter(
+                self.ts_analyzer,
+                SootPrefilterConfig(
+                    enabled=self.enable_soot_prefilter,
+                    shadow_mode=self.soot_shadow_mode,
+                    facts_path=self.soot_facts_path,
+                    timeout_ms=self.soot_timeout_ms,
+                ),
+            )
+            if self.language == "Java" and self.bug_type == "MLK"
+            else None
+        )
+        self.soot_prefilter_stats = SootPrefilterStats()
         self.java_z3_prefilter = (
             JavaZ3PathPrefilter(
                 self.ts_analyzer,
@@ -715,6 +742,11 @@ class DFBScanAgent(Agent):
                         for value in buggy_path
                     }
 
+                    if self.__skip_by_java_soot_prefilter(
+                        src_value, buggy_path, values_to_functions
+                    ):
+                        continue
+
                     if self.__skip_by_java_z3_prefilter(
                         src_value, buggy_path, values_to_functions
                     ):
@@ -786,6 +818,7 @@ class DFBScanAgent(Agent):
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.__dump_java_mlk_transfer_records()
+        self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
         return
 
@@ -826,6 +859,7 @@ class DFBScanAgent(Agent):
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.__dump_java_mlk_transfer_records()
+        self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
         return
 
@@ -924,6 +958,11 @@ class DFBScanAgent(Agent):
                     functions.add(func)
 
             if self.state.check_existence(src_value, functions):
+                continue
+
+            if self.__skip_by_java_soot_prefilter(
+                src_value, buggy_path, values_to_functions
+            ):
                 continue
 
             if self.__skip_by_java_z3_prefilter(
@@ -1209,6 +1248,27 @@ class DFBScanAgent(Agent):
         with open(transfer_path, "w") as transfer_file:
             json.dump(payload, transfer_file, indent=4)
 
+    def __skip_by_java_soot_prefilter(
+        self,
+        src_value: Value,
+        buggy_path: List[Value],
+        values_to_functions: Dict[Value, Optional[Function]],
+    ) -> bool:
+        if self.java_soot_prefilter is None:
+            return False
+        soot_result = self.java_soot_prefilter.evaluate(buggy_path, values_to_functions)
+        self.soot_prefilter_stats.update(soot_result, self.soot_shadow_mode)
+        self.logger.print_log(
+            "[Soot prefilter]",
+            f"verdict={soot_result.verdict}",
+            f"reason={soot_result.reason}",
+            f"matched_methods={soot_result.matched_methods}",
+            f"elapsed_ms={soot_result.elapsed_ms:.2f}",
+        )
+        if len(soot_result.evidence) > 0:
+            self.logger.print_log("[Soot prefilter] evidence:", soot_result.evidence[0])
+        return soot_result.should_skip_llm and not self.soot_shadow_mode
+
     def __skip_by_java_z3_prefilter(
         self,
         src_value: Value,
@@ -1327,6 +1387,15 @@ class DFBScanAgent(Agent):
         stats_path = self.res_dir_path + "/z3_prefilter_stats.json"
         with open(stats_path, "w") as stats_file:
             json.dump(self.z3_prefilter_stats.to_dict(), stats_file, indent=4)
+
+    def __dump_soot_prefilter_stats(self) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        if self.java_soot_prefilter is None:
+            return
+        stats_path = self.res_dir_path + "/soot_prefilter_stats.json"
+        with open(stats_path, "w") as stats_file:
+            json.dump(self.soot_prefilter_stats.to_dict(), stats_file, indent=4)
 
     def __post_validate_java_mlk_with_objid(
         self,
