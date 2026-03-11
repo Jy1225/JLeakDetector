@@ -337,7 +337,11 @@ public final class BridgeMain {
         return -1;
     }
 
-    private static Boolean evaluateConstantCondition(ConditionExpr conditionExpr) {
+    private static Boolean evaluateConstantCondition(Value conditionValue) {
+        if (!(conditionValue instanceof ConditionExpr)) {
+            return null;
+        }
+        ConditionExpr conditionExpr = (ConditionExpr) conditionValue;
         if (!(conditionExpr.getOp1() instanceof soot.jimple.Constant)) {
             return null;
         }
