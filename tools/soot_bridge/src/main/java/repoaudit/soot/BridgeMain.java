@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import soot.Body;
 import soot.G;
+import soot.Local;
 import soot.PackManager;
 import soot.Scene;
 import soot.SootClass;
@@ -11,18 +12,26 @@ import soot.SootMethod;
 import soot.Type;
 import soot.Unit;
 import soot.Value;
+import soot.ValueBox;
 import soot.jimple.AssignStmt;
+import soot.jimple.ArrayRef;
 import soot.jimple.BinopExpr;
+import soot.jimple.CastExpr;
 import soot.jimple.ConditionExpr;
 import soot.jimple.DoubleConstant;
+import soot.jimple.FieldRef;
 import soot.jimple.FloatConstant;
+import soot.jimple.IdentityStmt;
 import soot.jimple.IfStmt;
 import soot.jimple.IntConstant;
+import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.LongConstant;
 import soot.jimple.NewExpr;
 import soot.jimple.NullConstant;
+import soot.jimple.ReturnStmt;
 import soot.jimple.Stmt;
+import soot.jimple.ThrowStmt;
 import soot.options.Options;
 import soot.tagkit.LineNumberTag;
 import soot.tagkit.SourceFileTag;
@@ -30,13 +39,16 @@ import soot.tagkit.SourceLnPosTag;
 import soot.tagkit.Tag;
 import soot.toolkits.graph.Block;
 import soot.toolkits.graph.BriefBlockGraph;
+import soot.toolkits.graph.ExceptionalUnitGraph;
 
+import java.util.ArrayDeque;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -47,6 +59,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class BridgeMain {
+    private static final Object NULL_CONST_MARKER = new Object();
     private static final Set<String> CLOSE_METHOD_NAMES = buildCloseMethodNames();
     private static final Set<String> FACTORY_METHOD_NAMES = buildFactoryMethodNames();
     private static final Set<String> RESOURCE_TYPE_WHITELIST = buildResourceTypeWhitelist();
@@ -64,6 +77,44 @@ public final class BridgeMain {
     };
 
     private BridgeMain() {
+    }
+
+    private static final class SourceSite {
+        private final int line;
+        private final Unit unit;
+        private final Local local;
+
+        private SourceSite(int line, Unit unit, Local local) {
+            this.line = line;
+            this.unit = unit;
+            this.local = local;
+        }
+    }
+
+    private static final class OpenState {
+        private boolean created;
+        private boolean mayOpen;
+        private boolean escaped;
+        private final Set<Local> aliases = new HashSet<Local>();
+
+        private OpenState copy() {
+            OpenState copied = new OpenState();
+            copied.created = this.created;
+            copied.mayOpen = this.mayOpen;
+            copied.escaped = this.escaped;
+            copied.aliases.addAll(this.aliases);
+            return copied;
+        }
+
+        private boolean sameAs(OpenState other) {
+            if (other == null) {
+                return false;
+            }
+            return this.created == other.created
+                    && this.mayOpen == other.mayOpen
+                    && this.escaped == other.escaped
+                    && this.aliases.equals(other.aliases);
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -149,6 +200,8 @@ public final class BridgeMain {
             Body body,
             String functionUid
     ) {
+        List<SourceSite> sourceSites = collectSourceSites(body);
+
         Map<String, Object> facts = new LinkedHashMap<String, Object>();
         facts.put("function_uid", functionUid);
         facts.put("file", inferSourceFile(sootClass));
@@ -157,14 +210,15 @@ public final class BridgeMain {
         facts.put("param_types", normalizeParamTypes(sootMethod.getParameterTypes()));
         facts.put("if_nodes", collectIfNodes(body));
         facts.put("close_sites", collectCloseSites(body));
-        facts.put("source_lines", collectSourceLines(body));
-        facts.put("must_close_source_lines", new ArrayList<Integer>());
+        facts.put("source_lines", collectSourceLines(sourceSites));
+        facts.put("must_close_source_lines", collectMustCloseSourceLines(body, sourceSites));
         facts.put("generator", "soot-bridge");
         return facts;
     }
 
     private static List<Map<String, Object>> collectIfNodes(Body body) {
         List<Map<String, Object>> ifNodes = new ArrayList<Map<String, Object>>();
+        Map<Unit, Map<Local, Object>> constantInStates = computeConstantInStates(body);
         BriefBlockGraph blockGraph = new BriefBlockGraph(body);
         IdentityHashMap<Unit, Block> unitToBlock = new IdentityHashMap<Unit, Block>();
         IdentityHashMap<Block, int[]> blockScope = new IdentityHashMap<Block, int[]>();
@@ -198,7 +252,8 @@ public final class BridgeMain {
                 }
             }
 
-            Boolean constantCond = evaluateConstantCondition(ifStmt.getCondition());
+            Map<Local, Object> localConstants = constantInStates.get(unit);
+            Boolean constantCond = evaluateConstantCondition(ifStmt.getCondition(), localConstants);
             Map<String, Object> node = new LinkedHashMap<String, Object>();
             node.put("line", line);
             node.put("condition", ifStmt.getCondition().toString());
@@ -251,8 +306,9 @@ public final class BridgeMain {
         return closeSites;
     }
 
-    private static List<Integer> collectSourceLines(Body body) {
-        Set<Integer> lines = new HashSet<Integer>();
+    private static List<SourceSite> collectSourceSites(Body body) {
+        List<SourceSite> sites = new ArrayList<SourceSite>();
+        Set<String> seen = new HashSet<String>();
         for (Unit unit : body.getUnits()) {
             int line = getUnitLine(unit);
             if (line <= 0) {
@@ -260,34 +316,517 @@ public final class BridgeMain {
             }
 
             if (unit instanceof AssignStmt) {
-                Value rightOp = ((AssignStmt) unit).getRightOp();
+                AssignStmt assignStmt = (AssignStmt) unit;
+                Value rightOp = assignStmt.getRightOp();
+                Local leftLocal = toLocal(assignStmt.getLeftOp());
+
                 if (rightOp instanceof NewExpr) {
                     String typeName = normalizeType(((NewExpr) rightOp).getBaseType().toString());
                     if (isResourceType(typeName)) {
-                        lines.add(Integer.valueOf(line));
-                        continue;
+                        if (addSourceSite(sites, seen, line, unit, leftLocal)) {
+                            continue;
+                        }
                     }
                 }
+
+                if (rightOp instanceof InvokeExpr) {
+                    if (isFactoryResourceInvoke((InvokeExpr) rightOp)) {
+                        addSourceSite(sites, seen, line, unit, leftLocal);
+                    }
+                }
+                continue;
             }
 
             InvokeExpr invokeExpr = extractInvokeExpr(unit);
             if (invokeExpr == null) {
                 continue;
             }
-            String methodName = invokeExpr.getMethod().getName();
-            String returnType = normalizeType(invokeExpr.getMethod().getReturnType().toString());
-            if (!FACTORY_METHOD_NAMES.contains(methodName)) {
+            if (isFactoryResourceInvoke(invokeExpr)) {
+                addSourceSite(sites, seen, line, unit, null);
+            }
+        }
+        return sites;
+    }
+
+    private static List<Integer> collectSourceLines(List<SourceSite> sourceSites) {
+        Set<Integer> lines = new HashSet<Integer>();
+        for (SourceSite sourceSite : sourceSites) {
+            if (sourceSite.line <= 0) {
                 continue;
             }
-            if (!isResourceType(returnType)) {
-                continue;
-            }
-            lines.add(Integer.valueOf(line));
+            lines.add(Integer.valueOf(sourceSite.line));
         }
 
         List<Integer> result = new ArrayList<Integer>(lines);
         Collections.sort(result);
         return result;
+    }
+
+    private static List<Integer> collectMustCloseSourceLines(
+            Body body,
+            List<SourceSite> sourceSites
+    ) {
+        Set<Integer> guaranteedLines = new HashSet<Integer>();
+        ExceptionalUnitGraph graph = new ExceptionalUnitGraph(body);
+        for (SourceSite sourceSite : sourceSites) {
+            if (sourceSite.local == null || sourceSite.line <= 0) {
+                continue;
+            }
+            if (isSourceGuaranteedClosed(graph, sourceSite)) {
+                guaranteedLines.add(Integer.valueOf(sourceSite.line));
+            }
+        }
+        List<Integer> result = new ArrayList<Integer>(guaranteedLines);
+        Collections.sort(result);
+        return result;
+    }
+
+    private static boolean isSourceGuaranteedClosed(ExceptionalUnitGraph graph, SourceSite sourceSite) {
+        IdentityHashMap<Unit, OpenState> outStates = new IdentityHashMap<Unit, OpenState>();
+        Deque<Unit> worklist = new ArrayDeque<Unit>();
+        Set<Unit> inQueue = new HashSet<Unit>();
+
+        for (Unit unit : graph.getBody().getUnits()) {
+            worklist.addLast(unit);
+            inQueue.add(unit);
+            outStates.put(unit, new OpenState());
+        }
+
+        while (!worklist.isEmpty()) {
+            Unit unit = worklist.removeFirst();
+            inQueue.remove(unit);
+
+            OpenState inState = mergeOpenState(graph, outStates, unit);
+            OpenState newOutState = transferOpenState(unit, inState, sourceSite);
+            OpenState oldOutState = outStates.get(unit);
+            if (oldOutState != null && oldOutState.sameAs(newOutState)) {
+                continue;
+            }
+            outStates.put(unit, newOutState);
+            for (Unit succ : graph.getSuccsOf(unit)) {
+                if (inQueue.add(succ)) {
+                    worklist.addLast(succ);
+                }
+            }
+        }
+
+        boolean seenCreatedOnExit = false;
+        for (Unit tail : graph.getTails()) {
+            OpenState exitState = outStates.get(tail);
+            if (exitState == null || !exitState.created) {
+                continue;
+            }
+            seenCreatedOnExit = true;
+            if (exitState.mayOpen || exitState.escaped) {
+                return false;
+            }
+        }
+
+        return seenCreatedOnExit;
+    }
+
+    private static OpenState mergeOpenState(
+            ExceptionalUnitGraph graph,
+            IdentityHashMap<Unit, OpenState> outStates,
+            Unit unit
+    ) {
+        List<Unit> predecessors = graph.getPredsOf(unit);
+        OpenState merged = new OpenState();
+        if (predecessors.isEmpty()) {
+            return merged;
+        }
+
+        for (Unit pred : predecessors) {
+            OpenState predOut = outStates.get(pred);
+            if (predOut == null) {
+                continue;
+            }
+            merged.created = merged.created || predOut.created;
+            merged.mayOpen = merged.mayOpen || predOut.mayOpen;
+            merged.escaped = merged.escaped || predOut.escaped;
+            merged.aliases.addAll(predOut.aliases);
+        }
+        return merged;
+    }
+
+    private static OpenState transferOpenState(
+            Unit unit,
+            OpenState inState,
+            SourceSite sourceSite
+    ) {
+        OpenState outState = inState.copy();
+
+        if (unit == sourceSite.unit) {
+            outState.created = true;
+            outState.mayOpen = true;
+            outState.aliases.clear();
+            outState.aliases.add(sourceSite.local);
+        }
+
+        if (!outState.created) {
+            return outState;
+        }
+
+        if (unit instanceof AssignStmt) {
+            applyAliasTransfer((AssignStmt) unit, outState);
+        } else if (unit instanceof IdentityStmt) {
+            Value leftOp = ((IdentityStmt) unit).getLeftOp();
+            Local leftLocal = toLocal(leftOp);
+            if (leftLocal != null) {
+                outState.aliases.remove(leftLocal);
+            }
+        } else {
+            for (ValueBox defBox : unit.getDefBoxes()) {
+                Local definedLocal = toLocal(defBox.getValue());
+                if (definedLocal != null) {
+                    outState.aliases.remove(definedLocal);
+                }
+            }
+        }
+
+        InvokeExpr invokeExpr = extractInvokeExpr(unit);
+        if (invokeExpr != null) {
+            if (isCloseInvokeOnAliases(invokeExpr, outState.aliases)) {
+                outState.mayOpen = false;
+                outState.aliases.clear();
+            } else if (isAliasEscapedByInvoke(invokeExpr, outState.aliases)) {
+                outState.escaped = true;
+            }
+        }
+
+        if (unit instanceof ReturnStmt) {
+            ReturnStmt returnStmt = (ReturnStmt) unit;
+            if (valueReferencesAliases(returnStmt.getOp(), outState.aliases)) {
+                outState.escaped = true;
+            }
+        } else if (unit instanceof ThrowStmt) {
+            ThrowStmt throwStmt = (ThrowStmt) unit;
+            if (valueReferencesAliases(throwStmt.getOp(), outState.aliases)) {
+                outState.escaped = true;
+            }
+        }
+
+        if (outState.escaped) {
+            outState.mayOpen = true;
+        }
+
+        return outState;
+    }
+
+    private static void applyAliasTransfer(AssignStmt assignStmt, OpenState state) {
+        Value leftOp = assignStmt.getLeftOp();
+        Value rightOp = assignStmt.getRightOp();
+        boolean rightAlias = valueReferencesAliases(rightOp, state.aliases);
+
+        Local leftLocal = toLocal(leftOp);
+        if (leftLocal != null) {
+            if (rightAlias) {
+                state.aliases.add(leftLocal);
+            } else {
+                state.aliases.remove(leftLocal);
+            }
+            return;
+        }
+
+        if (rightAlias) {
+            state.escaped = true;
+        }
+    }
+
+    private static boolean isCloseInvokeOnAliases(InvokeExpr invokeExpr, Set<Local> aliases) {
+        if (!(invokeExpr instanceof InstanceInvokeExpr)) {
+            return false;
+        }
+        String methodName = invokeExpr.getMethod().getName().toLowerCase(Locale.ROOT);
+        if (!CLOSE_METHOD_NAMES.contains(methodName)) {
+            return false;
+        }
+        Value base = ((InstanceInvokeExpr) invokeExpr).getBase();
+        return valueReferencesAliases(base, aliases);
+    }
+
+    private static boolean isAliasEscapedByInvoke(InvokeExpr invokeExpr, Set<Local> aliases) {
+        for (Value arg : invokeExpr.getArgs()) {
+            if (valueReferencesAliases(arg, aliases)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean valueReferencesAliases(Value value, Set<Local> aliases) {
+        if (value == null || aliases.isEmpty()) {
+            return false;
+        }
+        if (value instanceof Local) {
+            return aliases.contains((Local) value);
+        }
+        if (value instanceof CastExpr) {
+            return valueReferencesAliases(((CastExpr) value).getOp(), aliases);
+        }
+        if (value instanceof ArrayRef) {
+            return valueReferencesAliases(((ArrayRef) value).getBase(), aliases);
+        }
+        if (value instanceof FieldRef) {
+            if (value instanceof soot.jimple.InstanceFieldRef) {
+                return valueReferencesAliases(((soot.jimple.InstanceFieldRef) value).getBase(), aliases);
+            }
+            return false;
+        }
+        if (value instanceof BinopExpr) {
+            BinopExpr binopExpr = (BinopExpr) value;
+            return valueReferencesAliases(binopExpr.getOp1(), aliases)
+                    || valueReferencesAliases(binopExpr.getOp2(), aliases);
+        }
+        return false;
+    }
+
+    private static Map<Unit, Map<Local, Object>> computeConstantInStates(Body body) {
+        ExceptionalUnitGraph graph = new ExceptionalUnitGraph(body);
+        IdentityHashMap<Unit, Map<Local, Object>> inStates = new IdentityHashMap<Unit, Map<Local, Object>>();
+        IdentityHashMap<Unit, Map<Local, Object>> outStates = new IdentityHashMap<Unit, Map<Local, Object>>();
+        Deque<Unit> worklist = new ArrayDeque<Unit>();
+        Set<Unit> inQueue = new HashSet<Unit>();
+
+        for (Unit unit : body.getUnits()) {
+            inStates.put(unit, new HashMap<Local, Object>());
+            outStates.put(unit, new HashMap<Local, Object>());
+            worklist.addLast(unit);
+            inQueue.add(unit);
+        }
+
+        while (!worklist.isEmpty()) {
+            Unit unit = worklist.removeFirst();
+            inQueue.remove(unit);
+
+            Map<Local, Object> mergedIn = mergeConstantState(graph, outStates, unit);
+            inStates.put(unit, mergedIn);
+
+            Map<Local, Object> newOut = transferConstantState(unit, mergedIn);
+            Map<Local, Object> oldOut = outStates.get(unit);
+            if (mapsEqual(oldOut, newOut)) {
+                continue;
+            }
+            outStates.put(unit, newOut);
+            for (Unit succ : graph.getSuccsOf(unit)) {
+                if (inQueue.add(succ)) {
+                    worklist.addLast(succ);
+                }
+            }
+        }
+
+        return inStates;
+    }
+
+    private static Map<Local, Object> mergeConstantState(
+            ExceptionalUnitGraph graph,
+            IdentityHashMap<Unit, Map<Local, Object>> outStates,
+            Unit unit
+    ) {
+        List<Unit> predecessors = graph.getPredsOf(unit);
+        if (predecessors.isEmpty()) {
+            return new HashMap<Local, Object>();
+        }
+
+        Map<Local, Object> merged = null;
+        for (Unit predecessor : predecessors) {
+            Map<Local, Object> predOut = outStates.get(predecessor);
+            if (predOut == null) {
+                predOut = Collections.emptyMap();
+            }
+            if (merged == null) {
+                merged = new HashMap<Local, Object>(predOut);
+                continue;
+            }
+
+            List<Local> keys = new ArrayList<Local>(merged.keySet());
+            for (Local key : keys) {
+                if (!predOut.containsKey(key)) {
+                    merged.remove(key);
+                    continue;
+                }
+                Object oldValue = merged.get(key);
+                Object newValue = predOut.get(key);
+                if (!constantValuesEqual(oldValue, newValue)) {
+                    merged.remove(key);
+                }
+            }
+        }
+
+        if (merged == null) {
+            return new HashMap<Local, Object>();
+        }
+        return merged;
+    }
+
+    private static Map<Local, Object> transferConstantState(Unit unit, Map<Local, Object> inState) {
+        Map<Local, Object> outState = new HashMap<Local, Object>(inState);
+
+        if (unit instanceof AssignStmt) {
+            AssignStmt assignStmt = (AssignStmt) unit;
+            Local leftLocal = toLocal(assignStmt.getLeftOp());
+            if (leftLocal != null) {
+                Object value = resolveConstantValue(assignStmt.getRightOp(), inState);
+                if (value == null) {
+                    outState.remove(leftLocal);
+                } else {
+                    outState.put(leftLocal, value);
+                }
+            }
+            return outState;
+        }
+
+        if (unit instanceof IdentityStmt) {
+            Local leftLocal = toLocal(((IdentityStmt) unit).getLeftOp());
+            if (leftLocal != null) {
+                outState.remove(leftLocal);
+            }
+            return outState;
+        }
+
+        for (ValueBox defBox : unit.getDefBoxes()) {
+            Local local = toLocal(defBox.getValue());
+            if (local != null) {
+                outState.remove(local);
+            }
+        }
+        return outState;
+    }
+
+    private static boolean mapsEqual(Map<Local, Object> left, Map<Local, Object> right) {
+        if (left == null || right == null) {
+            return left == right;
+        }
+        if (left.size() != right.size()) {
+            return false;
+        }
+        for (Map.Entry<Local, Object> entry : left.entrySet()) {
+            if (!right.containsKey(entry.getKey())) {
+                return false;
+            }
+            if (!constantValuesEqual(entry.getValue(), right.get(entry.getKey()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean constantValuesEqual(Object left, Object right) {
+        return left == right || (left != null && left.equals(right));
+    }
+
+    private static Object resolveConstantValue(Value value, Map<Local, Object> constantEnv) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof soot.jimple.Constant) {
+            return convertConstant((soot.jimple.Constant) value);
+        }
+        if (value instanceof Local) {
+            if (constantEnv == null) {
+                return null;
+            }
+            return constantEnv.get((Local) value);
+        }
+        if (value instanceof CastExpr) {
+            return resolveConstantValue(((CastExpr) value).getOp(), constantEnv);
+        }
+        if (value instanceof BinopExpr) {
+            return resolveBinopConstant((BinopExpr) value, constantEnv);
+        }
+        return null;
+    }
+
+    private static Object resolveBinopConstant(BinopExpr expr, Map<Local, Object> constantEnv) {
+        Object left = resolveConstantValue(expr.getOp1(), constantEnv);
+        Object right = resolveConstantValue(expr.getOp2(), constantEnv);
+        if (!(left instanceof Number) || !(right instanceof Number)) {
+            return null;
+        }
+
+        String symbol = expr.getSymbol();
+        if (symbol == null) {
+            return null;
+        }
+        symbol = symbol.trim();
+
+        double lv = ((Number) left).doubleValue();
+        double rv = ((Number) right).doubleValue();
+        long li = ((Number) left).longValue();
+        long ri = ((Number) right).longValue();
+
+        if ("+".equals(symbol)) {
+            return Double.valueOf(lv + rv);
+        }
+        if ("-".equals(symbol)) {
+            return Double.valueOf(lv - rv);
+        }
+        if ("*".equals(symbol)) {
+            return Double.valueOf(lv * rv);
+        }
+        if ("/".equals(symbol)) {
+            if (rv == 0.0d) {
+                return null;
+            }
+            return Double.valueOf(lv / rv);
+        }
+        if ("%".equals(symbol)) {
+            if (rv == 0.0d) {
+                return null;
+            }
+            return Double.valueOf(lv % rv);
+        }
+        if ("&".equals(symbol)) {
+            return Long.valueOf(li & ri);
+        }
+        if ("|".equals(symbol)) {
+            return Long.valueOf(li | ri);
+        }
+        if ("^".equals(symbol)) {
+            return Long.valueOf(li ^ ri);
+        }
+        if ("<<".equals(symbol)) {
+            return Long.valueOf(li << ((int) ri));
+        }
+        if (">>".equals(symbol)) {
+            return Long.valueOf(li >> ((int) ri));
+        }
+        if (">>>".equals(symbol)) {
+            return Long.valueOf(li >>> ((int) ri));
+        }
+        return null;
+    }
+
+    private static boolean addSourceSite(
+            List<SourceSite> sites,
+            Set<String> seen,
+            int line,
+            Unit unit,
+            Local local
+    ) {
+        String localName = local == null ? "<none>" : local.getName();
+        String key = line + ":" + unit.hashCode() + ":" + localName;
+        if (!seen.add(key)) {
+            return false;
+        }
+        sites.add(new SourceSite(line, unit, local));
+        return true;
+    }
+
+    private static Local toLocal(Value value) {
+        if (value instanceof Local) {
+            return (Local) value;
+        }
+        return null;
+    }
+
+    private static boolean isFactoryResourceInvoke(InvokeExpr invokeExpr) {
+        String methodName = invokeExpr.getMethod().getName();
+        if (!FACTORY_METHOD_NAMES.contains(methodName)) {
+            return false;
+        }
+        String returnType = normalizeType(invokeExpr.getMethod().getReturnType().toString());
+        return isResourceType(returnType);
     }
 
     private static InvokeExpr extractInvokeExpr(Unit unit) {
@@ -338,28 +877,32 @@ public final class BridgeMain {
     }
 
     private static Boolean evaluateConstantCondition(Value conditionValue) {
+        return evaluateConstantCondition(conditionValue, Collections.<Local, Object>emptyMap());
+    }
+
+    private static Boolean evaluateConstantCondition(
+            Value conditionValue,
+            Map<Local, Object> constantEnv
+    ) {
         if (!(conditionValue instanceof ConditionExpr)) {
             return null;
         }
         ConditionExpr conditionExpr = (ConditionExpr) conditionValue;
-        if (!(conditionExpr.getOp1() instanceof soot.jimple.Constant)) {
-            return null;
-        }
-        if (!(conditionExpr.getOp2() instanceof soot.jimple.Constant)) {
-            return null;
-        }
-        Object left = convertConstant((soot.jimple.Constant) conditionExpr.getOp1());
-        Object right = convertConstant((soot.jimple.Constant) conditionExpr.getOp2());
+
+        Object left = resolveConstantValue(conditionExpr.getOp1(), constantEnv);
+        Object right = resolveConstantValue(conditionExpr.getOp2(), constantEnv);
         if (left == null || right == null) {
             return null;
         }
 
-        if (left instanceof NullConstant || right instanceof NullConstant) {
+        boolean leftNull = isNullConstantValue(left);
+        boolean rightNull = isNullConstantValue(right);
+        if (leftNull || rightNull) {
             if (conditionExpr instanceof soot.jimple.EqExpr) {
-                return Boolean.valueOf(left instanceof NullConstant && right instanceof NullConstant);
+                return Boolean.valueOf(leftNull && rightNull);
             }
             if (conditionExpr instanceof soot.jimple.NeExpr) {
-                return Boolean.valueOf(!(left instanceof NullConstant && right instanceof NullConstant));
+                return Boolean.valueOf(!(leftNull && rightNull));
             }
             return null;
         }
@@ -390,6 +933,10 @@ public final class BridgeMain {
         return null;
     }
 
+    private static boolean isNullConstantValue(Object value) {
+        return value == NULL_CONST_MARKER;
+    }
+
     private static Object convertConstant(soot.jimple.Constant constant) {
         if (constant instanceof IntConstant) {
             return Integer.valueOf(((IntConstant) constant).value);
@@ -404,7 +951,7 @@ public final class BridgeMain {
             return Double.valueOf(((DoubleConstant) constant).value);
         }
         if (constant instanceof NullConstant) {
-            return constant;
+            return NULL_CONST_MARKER;
         }
         return null;
     }
