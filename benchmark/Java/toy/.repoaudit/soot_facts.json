@@ -1,6 +1,6 @@
 {
   "generator": "soot-bridge",
-  "generated_at": 1773218874322,
+  "generated_at": 1773226106565,
   "line_mode": "absolute",
   "methods": {
     "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
@@ -315,17 +315,15 @@
       "source_lines": [
         6
       ],
-      "must_close_source_lines": [
-        6
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "6": true
+        "6": false
       },
       "must_close_reason": {
-        "6": "multi_close_witness_on_alias_paths"
+        "6": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "6": "hard"
+        "6": "heuristic"
       },
       "first_open_exit_line": {
         "6": 18
@@ -339,8 +337,8 @@
       "close_witness_count": {
         "6": 2
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "MLKCase01_CloseableLeak.\u003cinit\u003e()": {
@@ -501,19 +499,17 @@
         28,
         29
       ],
-      "must_close_source_lines": [
-        28
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "28": true,
+        "28": false,
         "29": false
       },
       "must_close_reason": {
-        "28": "multi_close_witness_on_alias_paths",
+        "28": "open_resource_on_exit_path_with_multi_close_witness",
         "29": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
-        "28": "hard",
+        "28": "heuristic",
         "29": "none"
       },
       "first_open_exit_line": {
@@ -682,21 +678,18 @@
         73,
         74
       ],
-      "must_close_source_lines": [
-        73,
-        74
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "73": true,
-        "74": true
+        "73": false,
+        "74": false
       },
       "must_close_reason": {
-        "73": "multi_close_witness_on_alias_paths",
-        "74": "multi_close_witness_on_alias_paths"
+        "73": "open_resource_on_exit_path_with_multi_close_witness",
+        "74": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "73": "hard",
-        "74": "hard"
+        "73": "heuristic",
+        "74": "heuristic"
       },
       "first_open_exit_line": {
         "73": 109,
@@ -714,8 +707,8 @@
         "73": 6,
         "74": 3
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.good()": {
@@ -841,19 +834,17 @@
         27,
         28
       ],
-      "must_close_source_lines": [
-        27
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "27": true,
+        "27": false,
         "28": false
       },
       "must_close_reason": {
-        "27": "multi_close_witness_on_alias_paths",
+        "27": "open_resource_on_exit_path_with_multi_close_witness",
         "28": "open_resource_on_exit_path"
       },
       "source_proof_kind": {
-        "27": "hard",
+        "27": "heuristic",
         "28": "none"
       },
       "first_open_exit_line": {
@@ -1022,21 +1013,18 @@
         71,
         72
       ],
-      "must_close_source_lines": [
-        71,
-        72
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "71": true,
-        "72": true
+        "71": false,
+        "72": false
       },
       "must_close_reason": {
-        "71": "multi_close_witness_on_alias_paths",
-        "72": "multi_close_witness_on_alias_paths"
+        "71": "open_resource_on_exit_path_with_multi_close_witness",
+        "72": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "71": "hard",
-        "72": "hard"
+        "71": "heuristic",
+        "72": "heuristic"
       },
       "first_open_exit_line": {
         "71": 108,
@@ -1054,8 +1042,8 @@
         "71": 6,
         "72": 3
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.good()": {
@@ -1663,25 +1651,21 @@
         98,
         101
       ],
-      "must_close_source_lines": [
-        97,
-        98,
-        101
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "97": true,
-        "98": true,
-        "101": true
+        "97": false,
+        "98": false,
+        "101": false
       },
       "must_close_reason": {
-        "97": "multi_close_witness_on_alias_paths",
-        "98": "multi_close_witness_on_alias_paths",
-        "101": "multi_close_witness_on_alias_paths"
+        "97": "open_resource_on_exit_path_with_multi_close_witness",
+        "98": "open_resource_on_exit_path_with_multi_close_witness",
+        "101": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "97": "hard",
-        "98": "hard",
-        "101": "hard"
+        "97": "heuristic",
+        "98": "heuristic",
+        "101": "heuristic"
       },
       "first_open_exit_line": {
         "97": 151,
@@ -1703,8 +1687,8 @@
         "98": 3,
         "101": 3
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good()": {
@@ -1910,17 +1894,15 @@
       "source_lines": [
         46
       ],
-      "must_close_source_lines": [
-        46
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "46": true
+        "46": false
       },
       "must_close_reason": {
-        "46": "multi_close_witness_on_alias_paths"
+        "46": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "46": "hard"
+        "46": "heuristic"
       },
       "first_open_exit_line": {
         "46": 72
@@ -1934,8 +1916,8 @@
       "close_witness_count": {
         "46": 4
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.good()": {
@@ -2194,21 +2176,18 @@
         47,
         48
       ],
-      "must_close_source_lines": [
-        47,
-        48
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "47": true,
-        "48": true
+        "47": false,
+        "48": false
       },
       "must_close_reason": {
-        "47": "multi_close_witness_on_alias_paths",
-        "48": "multi_close_witness_on_alias_paths"
+        "47": "open_resource_on_exit_path_with_multi_close_witness",
+        "48": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "47": "hard",
-        "48": "hard"
+        "47": "heuristic",
+        "48": "heuristic"
       },
       "first_open_exit_line": {
         "47": 83,
@@ -2226,8 +2205,8 @@
         "47": 6,
         "48": 3
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.good()": {
@@ -3251,17 +3230,15 @@
       "source_lines": [
         6
       ],
-      "must_close_source_lines": [
-        6
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "6": true
+        "6": false
       },
       "must_close_reason": {
-        "6": "multi_close_witness_on_alias_paths"
+        "6": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "6": "hard"
+        "6": "heuristic"
       },
       "first_open_exit_line": {
         "6": 11
@@ -3275,8 +3252,8 @@
       "close_witness_count": {
         "6": 2
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcasesupport.IO.\u003cinit\u003e()": {
@@ -3806,21 +3783,18 @@
         50,
         51
       ],
-      "must_close_source_lines": [
-        50,
-        51
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "50": true,
-        "51": true
+        "50": false,
+        "51": false
       },
       "must_close_reason": {
-        "50": "multi_close_witness_on_alias_paths",
-        "51": "multi_close_witness_on_alias_paths"
+        "50": "open_resource_on_exit_path_with_multi_close_witness",
+        "51": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "50": "hard",
-        "51": "hard"
+        "50": "heuristic",
+        "51": "heuristic"
       },
       "first_open_exit_line": {
         "50": 90,
@@ -3838,8 +3812,8 @@
         "50": 8,
         "51": 4
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.good()": {
@@ -4210,25 +4184,21 @@
         62,
         65
       ],
-      "must_close_source_lines": [
-        61,
-        62,
-        65
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "61": true,
-        "62": true,
-        "65": true
+        "61": false,
+        "62": false,
+        "65": false
       },
       "must_close_reason": {
-        "61": "multi_close_witness_on_alias_paths",
-        "62": "multi_close_witness_on_alias_paths",
-        "65": "multi_close_witness_on_alias_paths"
+        "61": "open_resource_on_exit_path_with_multi_close_witness",
+        "62": "open_resource_on_exit_path_with_multi_close_witness",
+        "65": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "61": "hard",
-        "62": "hard",
-        "65": "hard"
+        "61": "heuristic",
+        "62": "heuristic",
+        "65": "heuristic"
       },
       "first_open_exit_line": {
         "61": 114,
@@ -4250,8 +4220,8 @@
         "62": 3,
         "65": 3
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.good()": {
@@ -4517,17 +4487,15 @@
       "source_lines": [
         82
       ],
-      "must_close_source_lines": [
-        82
-      ],
+      "must_close_source_lines": [],
       "source_close_guarantee": {
-        "82": true
+        "82": false
       },
       "must_close_reason": {
-        "82": "multi_close_witness_on_alias_paths"
+        "82": "open_resource_on_exit_path_with_multi_close_witness"
       },
       "source_proof_kind": {
-        "82": "hard"
+        "82": "heuristic"
       },
       "first_open_exit_line": {
         "82": 108
@@ -4541,8 +4509,8 @@
       "close_witness_count": {
         "82": 4
       },
-      "all_sources_hard_closed": true,
-      "method_proof_kind": "hard",
+      "all_sources_hard_closed": false,
+      "method_proof_kind": "none",
       "generator": "soot-bridge"
     },
     "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.good()": {
