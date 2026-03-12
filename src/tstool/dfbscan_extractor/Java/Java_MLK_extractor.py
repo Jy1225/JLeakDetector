@@ -1,3 +1,4 @@
+import re
 from typing import Dict, List, Set
 
 from tstool.analyzer.Java_TS_analyzer import *
@@ -22,6 +23,11 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "ResultSet",
         "Session",
         "FileSystem",
+        "Lock",
+        "Semaphore",
+        "Selector",
+        "Executor",
+        "ThreadPool",
     )
 
     RESOURCE_TYPE_WHITELIST = {
@@ -65,11 +71,13 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "SeekableByteChannel",
         "DirectoryStream",
         "WatchService",
+        "Selector",
         "Connection",
         "Statement",
         "PreparedStatement",
         "CallableStatement",
         "ResultSet",
+        "DataSource",
         "JarFile",
         "JarInputStream",
         "JarOutputStream",
@@ -79,6 +87,19 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "GZIPInputStream",
         "GZIPOutputStream",
         "Scanner",
+        "URLConnection",
+        "HttpURLConnection",
+        "HttpsURLConnection",
+        "ExecutorService",
+        "ScheduledExecutorService",
+        "ThreadPoolExecutor",
+        "ForkJoinPool",
+        "ReentrantLock",
+        "ReadWriteLock",
+        "ReentrantReadWriteLock",
+        "Lock",
+        "StampedLock",
+        "Semaphore",
     }
 
     # In-memory wrappers are excluded from external-resource leak scope.
@@ -122,6 +143,21 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "accept",
         "getResourceAsStream",
         "openConnection",
+        "newFixedThreadPool",
+        "newCachedThreadPool",
+        "newSingleThreadExecutor",
+        "newSingleThreadScheduledExecutor",
+        "newScheduledThreadPool",
+        "newWorkStealingPool",
+        "newVirtualThreadPerTaskExecutor",
+        "newThreadPerTaskExecutor",
+        "createTempFile",
+        "createTempDirectory",
+    }
+
+    TEMP_RESOURCE_FACTORY_METHOD_NAMES = {
+        "createTempFile",
+        "createTempDirectory",
     }
 
     CLOSE_METHOD_NAMES = {
@@ -129,14 +165,28 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "abort",
         "disconnect",
         "shutdown",
+        "shutdownNow",
+        "unlock",
+        "tryUnlock",
         "release",
+        "delete",
+        "deleteIfExists",
         "stop",
+    }
+
+    ACQUIRE_METHOD_NAMES = {
+        "lock",
+        "tryLock",
+        "lockInterruptibly",
+        "acquire",
+        "acquireUninterruptibly",
     }
 
     def extract_sources(self, function: Function) -> List[Value]:
         sources: List[Value] = []
         sources.extend(self._extract_new_resource_sources(function))
         sources.extend(self._extract_factory_resource_sources(function))
+        sources.extend(self._extract_acquire_sources(function))
         sources.extend(self._extract_twr_sources(function))
         return self._dedup_values(sources)
 
@@ -209,6 +259,32 @@ class Java_MLK_Extractor(DFBScanExtractor):
                         function.file_path,
                     )
                 )
+        return sources
+
+    def _extract_acquire_sources(self, function: Function) -> List[Value]:
+        """
+        Extract non-AutoCloseable resource acquire points, e.g.:
+          lock.lock();
+          semaphore.acquire();
+        """
+        source_code = self.ts_analyzer.code_in_files[function.file_path]
+        local_type_map = self._build_local_type_map(function, source_code)
+        sources: List[Value] = []
+        invocations = find_nodes_by_type(function.parse_tree_root_node, "method_invocation")
+        for node in invocations:
+            method_name = self._get_invocation_name(node, source_code)
+            if method_name not in self.ACQUIRE_METHOD_NAMES:
+                continue
+            if not self._is_acquire_on_resource_receiver(node, source_code, local_type_map):
+                continue
+            sources.append(
+                Value(
+                    source_code[node.start_byte : node.end_byte],
+                    self._line_of(node, source_code),
+                    ValueLabel.SRC,
+                    function.file_path,
+                )
+            )
         return sources
 
     def _extract_explicit_close_sinks(self, function: Function) -> List[Value]:
@@ -377,12 +453,17 @@ class Java_MLK_Extractor(DFBScanExtractor):
         if parent is None:
             return False
 
+        method_name = self._get_invocation_name(invocation_node, source_code)
+        allow_without_type = method_name in self.TEMP_RESOURCE_FACTORY_METHOD_NAMES
+
         if parent.type == "variable_declarator":
             var_name = ""
             for child in parent.children:
                 if child.type == "identifier":
                     var_name = source_code[child.start_byte : child.end_byte]
                     break
+            if allow_without_type:
+                return var_name.strip() != ""
             return self._is_resource_type(local_type_map.get(var_name, ""))
 
         if parent.type == "assignment_expression":
@@ -392,8 +473,38 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if left is None:
                 return False
             left_name = source_code[left.start_byte : left.end_byte].strip()
+            if allow_without_type:
+                return left_name != ""
             return self._is_resource_type(local_type_map.get(left_name, ""))
 
+        return False
+
+    def _is_acquire_on_resource_receiver(
+        self,
+        invocation_node: Node,
+        source_code: str,
+        local_type_map: Dict[str, str],
+    ) -> bool:
+        invocation_text = source_code[
+            invocation_node.start_byte : invocation_node.end_byte
+        ].strip()
+        if invocation_text == "":
+            return False
+
+        receiver_match = re.match(
+            r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*[A-Za-z_][A-Za-z0-9_]*\s*\(",
+            invocation_text,
+        )
+        if receiver_match is not None:
+            receiver_name = receiver_match.group(1).strip()
+            receiver_type = local_type_map.get(receiver_name, "")
+            if self._is_resource_type(receiver_type):
+                return True
+
+        # Fallback: keep lock/semaphore acquisition patterns even without local type.
+        lowered = invocation_text.lower()
+        if ".lock(" in lowered or ".trylock(" in lowered or ".acquire(" in lowered:
+            return True
         return False
 
     def _find_try_with_resources_nodes(self, root_node: Node) -> List[Node]:

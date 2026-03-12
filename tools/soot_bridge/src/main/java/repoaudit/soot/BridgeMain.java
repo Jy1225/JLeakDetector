@@ -64,6 +64,8 @@ public final class BridgeMain {
     private static final Object NULL_CONST_MARKER = new Object();
     private static final Set<String> CLOSE_METHOD_NAMES = buildCloseMethodNames();
     private static final Set<String> FACTORY_METHOD_NAMES = buildFactoryMethodNames();
+    private static final Set<String> TEMP_RESOURCE_FACTORY_METHOD_NAMES = buildTempResourceFactoryMethodNames();
+    private static final Set<String> ACQUIRE_METHOD_NAMES = buildAcquireMethodNames();
     private static final Set<String> RESOURCE_TYPE_WHITELIST = buildResourceTypeWhitelist();
     private static final String[] RESOURCE_SUFFIXES = new String[]{
             "Stream",
@@ -75,7 +77,12 @@ public final class BridgeMain {
             "Statement",
             "ResultSet",
             "Session",
-            "FileSystem"
+            "FileSystem",
+            "Lock",
+            "Semaphore",
+            "Selector",
+            "Executor",
+            "ThreadPool"
     };
 
     private BridgeMain() {
@@ -504,6 +511,14 @@ public final class BridgeMain {
             }
             if (isFactoryResourceInvoke(invokeExpr)) {
                 addSourceSite(sites, seen, line, unit, null);
+                continue;
+            }
+            if (isAcquireResourceInvoke(invokeExpr)) {
+                Local sourceAlias = null;
+                if (invokeExpr instanceof InstanceInvokeExpr) {
+                    sourceAlias = toLocal(((InstanceInvokeExpr) invokeExpr).getBase());
+                }
+                addSourceSite(sites, seen, line, unit, sourceAlias);
             }
         }
         return sites;
@@ -1484,8 +1499,24 @@ public final class BridgeMain {
         if (!FACTORY_METHOD_NAMES.contains(methodName)) {
             return false;
         }
+        if (TEMP_RESOURCE_FACTORY_METHOD_NAMES.contains(methodName)) {
+            return true;
+        }
         String returnType = normalizeType(invokeExpr.getMethod().getReturnType().toString());
         return isResourceType(returnType);
+    }
+
+    private static boolean isAcquireResourceInvoke(InvokeExpr invokeExpr) {
+        String methodName = invokeExpr.getMethod().getName();
+        if (!ACQUIRE_METHOD_NAMES.contains(methodName)) {
+            return false;
+        }
+        if (!(invokeExpr instanceof InstanceInvokeExpr)) {
+            return false;
+        }
+        Value base = ((InstanceInvokeExpr) invokeExpr).getBase();
+        String baseType = normalizeType(base.getType().toString());
+        return isResourceType(baseType);
     }
 
     private static InvokeExpr extractInvokeExpr(Unit unit) {
@@ -1697,7 +1728,20 @@ public final class BridgeMain {
 
     private static Set<String> buildCloseMethodNames() {
         Set<String> set = new HashSet<String>();
-        Collections.addAll(set, "close", "abort", "disconnect", "shutdown", "release", "stop");
+        Collections.addAll(
+                set,
+                "close",
+                "abort",
+                "disconnect",
+                "shutdown",
+                "shutdownnow",
+                "unlock",
+                "tryunlock",
+                "release",
+                "delete",
+                "deleteifexists",
+                "stop"
+        );
         return set;
     }
 
@@ -1734,8 +1778,30 @@ public final class BridgeMain {
                 "createSocket",
                 "accept",
                 "getResourceAsStream",
-                "openConnection"
+                "openConnection",
+                "newFixedThreadPool",
+                "newCachedThreadPool",
+                "newSingleThreadExecutor",
+                "newSingleThreadScheduledExecutor",
+                "newScheduledThreadPool",
+                "newWorkStealingPool",
+                "newVirtualThreadPerTaskExecutor",
+                "newThreadPerTaskExecutor",
+                "createTempFile",
+                "createTempDirectory"
         );
+        return set;
+    }
+
+    private static Set<String> buildTempResourceFactoryMethodNames() {
+        Set<String> set = new HashSet<String>();
+        Collections.addAll(set, "createTempFile", "createTempDirectory");
+        return set;
+    }
+
+    private static Set<String> buildAcquireMethodNames() {
+        Set<String> set = new HashSet<String>();
+        Collections.addAll(set, "lock", "tryLock", "lockInterruptibly", "acquire", "acquireUninterruptibly");
         return set;
     }
 
@@ -1773,18 +1839,39 @@ public final class BridgeMain {
                 "ServerSocketChannel",
                 "DatagramChannel",
                 "FileChannel",
+                "AsynchronousFileChannel",
+                "SeekableByteChannel",
+                "DirectoryStream",
+                "WatchService",
+                "Selector",
                 "Connection",
                 "Statement",
                 "PreparedStatement",
                 "CallableStatement",
                 "ResultSet",
+                "DataSource",
                 "JarFile",
+                "JarInputStream",
+                "JarOutputStream",
                 "ZipFile",
                 "ZipInputStream",
                 "ZipOutputStream",
                 "GZIPInputStream",
                 "GZIPOutputStream",
-                "Scanner"
+                "Scanner",
+                "URLConnection",
+                "HttpURLConnection",
+                "HttpsURLConnection",
+                "ExecutorService",
+                "ScheduledExecutorService",
+                "ThreadPoolExecutor",
+                "ForkJoinPool",
+                "ReentrantLock",
+                "ReadWriteLock",
+                "ReentrantReadWriteLock",
+                "Lock",
+                "StampedLock",
+                "Semaphore"
         );
         return set;
     }

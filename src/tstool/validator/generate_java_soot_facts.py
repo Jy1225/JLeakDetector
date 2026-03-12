@@ -125,10 +125,17 @@ def _build_regex_fallback_facts(code_in_files: Dict[str, str]) -> Dict[str, obje
     class_re = re.compile(r"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)")
 
     resource_hint_re = re.compile(
-        r"\b(new\s+\w*(?:Stream|Reader|Writer|Socket|Channel|Connection|Statement|ResultSet)\b|"
-        r"getConnection\s*\(|prepareStatement\s*\(|executeQuery\s*\()"
+        r"\b(new\s+\w*(?:Stream|Reader|Writer|Socket|Channel|Connection|Statement|ResultSet|"
+        r"Lock|Semaphore|Executor|ThreadPool|WatchService|Selector)\b|"
+        r"getConnection\s*\(|prepareStatement\s*\(|executeQuery\s*\(|"
+        r"createTempFile\s*\(|createTempDirectory\s*\(|"
+        r"new(?:Fixed|Cached|SingleThread|Scheduled|WorkStealing)\w*Pool\s*\(|"
+        r"newVirtualThreadPerTaskExecutor\s*\(|newThreadPerTaskExecutor\s*\(|"
+        r"\.(?:lock|tryLock|acquire)\s*\()"
     )
-    close_hint_re = re.compile(r"\.(?:close|disconnect|shutdown|release)\s*\(")
+    close_hint_re = re.compile(
+        r"\.(?:close|disconnect|shutdown|shutdownNow|unlock|release|delete|deleteIfExists)\s*\("
+    )
 
     methods: Dict[str, Dict[str, object]] = {}
     for file_path, source in code_in_files.items():

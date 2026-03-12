@@ -66,6 +66,15 @@ class JavaResourceOwnershipValidator:
         "warn",
         "error",
         "trace",
+        "submit",
+        "execute",
+        "schedule",
+        "scheduleatfixedrate",
+        "schedulewithfixeddelay",
+        "invokeall",
+        "invokeany",
+        "awaittermination",
+        "trylock",
     }
     OWNERSHIP_TRANSFER_METHODS = {
         "put",
@@ -80,6 +89,11 @@ class JavaResourceOwnershipValidator:
         "save",
         "setresource",
         "setstream",
+        "setlock",
+        "setexecutor",
+        "setsemaphore",
+        "attach",
+        "bind",
     }
     RESOURCE_LIKE_SUFFIXES = (
         "Stream",
@@ -92,6 +106,11 @@ class JavaResourceOwnershipValidator:
         "ResultSet",
         "Scanner",
         "FileSystem",
+        "Lock",
+        "Semaphore",
+        "Selector",
+        "Executor",
+        "ThreadPool",
     )
 
     def __init__(self, ts_analyzer: TSAnalyzer) -> None:
