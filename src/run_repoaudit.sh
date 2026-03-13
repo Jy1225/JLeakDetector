@@ -3,7 +3,10 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # --- Defaults ---
-LANGUAGE="${LANGUAGE:-Java}"
+# NOTE: Do NOT use env var LANGUAGE directly (it is commonly set by OS locale,
+# e.g. "en_US:en"), which can break RepoAudit --language parsing.
+# Use REPOAUDIT_LANGUAGE for overriding scan language.
+ANALYSIS_LANGUAGE="${REPOAUDIT_LANGUAGE:-Java}"
 MODEL="${MODEL:-deepseek-chat}"
 DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-toy}"
 DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
@@ -25,8 +28,8 @@ Z3_SHADOW_MODE="${Z3_SHADOW_MODE:-true}"        # true/false
 Z3_TIMEOUT_MS="${Z3_TIMEOUT_MS:-200}"            # per-path timeout in ms
 Z3_MIN_PARSED_CONSTRAINTS="${Z3_MIN_PARSED_CONSTRAINTS:-2}"  # conservative UNSAT skip threshold
 
-# Construct the default project *path* from LANGUAGE + DEFAULT_PROJECT_NAME
-DEFAULT_PROJECT_PATH="../benchmark/${LANGUAGE}/${DEFAULT_PROJECT_NAME}"
+# Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
+DEFAULT_PROJECT_PATH="../benchmark/${ANALYSIS_LANGUAGE}/${DEFAULT_PROJECT_NAME}"
 
 show_usage() {
   cat <<'EOF'
@@ -164,7 +167,7 @@ Z3_FLAGS+=(--z3-timeout-ms "$Z3_TIMEOUT_MS")
 Z3_FLAGS+=(--z3-min-parsed-constraints "$Z3_MIN_PARSED_CONSTRAINTS")
 
 python3 repoaudit.py \
-  --language "$LANGUAGE" \
+  --language "$ANALYSIS_LANGUAGE" \
   --model-name "$MODEL" \
   --project-path "$PROJECT_PATH_ABS" \
   --bug-type "$BUG_TYPE" \
