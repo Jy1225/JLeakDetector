@@ -177,6 +177,9 @@ class DFBScanAgent(Agent):
         )
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
+        self.java_mlk_report_signatures: Set[
+            Tuple[str, Tuple[str, ...]]
+        ] = set()
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.state = DFBScanState(self.src_values, self.sink_values)
@@ -225,6 +228,19 @@ class DFBScanAgent(Agent):
 
         for value in output.reachable_values[path_index]:
             if value.label == ValueLabel.ARG:
+                if (
+                    self.language == "Java"
+                    and self.bug_type == "MLK"
+                    and self.java_mlk_validator is not None
+                    and self.java_mlk_validator.is_non_ownership_argument(
+                        value, function
+                    )
+                ):
+                    # Prune helper-style non-ownership argument propagation
+                    # (e.g., tempFile.toString() -> IO.writeLine(value))
+                    # to avoid exploding no-sink leaf paths in utility methods.
+                    continue
+
                 callee_functions = self.ts_analyzer.get_all_callee_functions(function)
                 for callee_function in callee_functions:
                     is_called = False
@@ -958,6 +974,10 @@ class DFBScanAgent(Agent):
                             )
                             if function is not None:
                                 relevant_functions[function.function_id] = function
+                        if not self.__register_java_mlk_report_signature(
+                            src_value, relevant_functions
+                        ):
+                            continue
 
                         bug_report = BugReport(
                             self.bug_type,
@@ -1260,6 +1280,10 @@ class DFBScanAgent(Agent):
                     function = self.ts_analyzer.get_function_from_localvalue(value)
                     if function is not None:
                         relevant_functions[function.function_id] = function
+                if not self.__register_java_mlk_report_signature(
+                    src_value, relevant_functions
+                ):
+                    continue
 
                 bug_report = BugReport(
                     self.bug_type,
@@ -2056,6 +2080,67 @@ class DFBScanAgent(Agent):
         )
         with open(stats_path, "w") as stats_file:
             json.dump(payload, stats_file, indent=4)
+
+    def __is_java_mlk_helper_function_for_dedup(self, function: Function) -> bool:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return False
+        file_path = function.file_path.replace("\\", "/").lower()
+        function_name = function.function_name.lower()
+        if file_path.endswith("/io.java"):
+            return True
+        if function_name in {
+            "writeline",
+            "writestring",
+            "print",
+            "println",
+            "printf",
+            "format",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "trace",
+            "log",
+        } and ("/support/" in file_path or "/util/" in file_path):
+            return True
+        return False
+
+    def __build_java_mlk_report_signature(
+        self, src_value: Value, relevant_functions: Dict[int, Function]
+    ) -> Tuple[str, Tuple[str, ...]]:
+        core_function_keys: List[str] = []
+        fallback_keys: List[str] = []
+        for function in relevant_functions.values():
+            if function.function_uid != "":
+                function_key = function.function_uid
+            else:
+                normalized_path = function.file_path.replace("\\", "/").lower()
+                function_key = (
+                    f"{normalized_path}:{function.function_name}:{function.start_line_number}"
+                )
+            fallback_keys.append(function_key)
+            if self.__is_java_mlk_helper_function_for_dedup(function):
+                continue
+            core_function_keys.append(function_key)
+
+        if len(core_function_keys) == 0:
+            core_function_keys = fallback_keys
+        normalized_core_keys = tuple(sorted(set(core_function_keys)))
+        return (str(src_value), normalized_core_keys)
+
+    def __register_java_mlk_report_signature(
+        self, src_value: Value, relevant_functions: Dict[int, Function]
+    ) -> bool:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return True
+        signature = self.__build_java_mlk_report_signature(
+            src_value, relevant_functions
+        )
+        with self.lock:
+            if signature in self.java_mlk_report_signatures:
+                return False
+            self.java_mlk_report_signatures.add(signature)
+        return True
 
     def __post_validate_java_mlk_with_objid(
         self,

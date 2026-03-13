@@ -234,49 +234,19 @@ class JavaSootPrefilter:
         if method_facts is None:
             return False, "method_unmapped"
 
-        if self._safe_bool(method_facts.get("all_sources_hard_closed")):
-            proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
-            if proof_kind in {"", "hard"}:
-                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
-                    return False, "method_hard_safe_downgraded_delete_on_exit"
-                return True, "method_all_sources_hard_closed"
+        # Strict source-gate policy:
+        # only allow hard-safe skip when the whole method is proven hard-safe
+        # for all source allocations, to avoid blocking bad() methods that mix
+        # safe and unsafe branches in one function.
+        if not self._safe_bool(method_facts.get("all_sources_hard_closed")):
+            return False, "method_not_all_sources_hard_closed"
+
+        proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
+        if proof_kind not in {"", "hard"}:
             return False, "method_proof_not_hard"
-
-        source_line_candidates: Set[int] = {src_value.line_number}
-        relative_line = src_function.file_line2function_line(src_value.line_number)
-        if relative_line > 0:
-            source_line_candidates.add(relative_line)
-
-        source_guarantee_obj = method_facts.get("source_close_guarantee", {})
-        reason_obj = method_facts.get("must_close_reason", {})
-        proof_obj = method_facts.get("source_proof_kind", {})
-        if not isinstance(source_guarantee_obj, dict):
-            return False, "source_close_guarantee_missing"
-
-        for src_line in source_line_candidates:
-            guaranteed = self._safe_bool(
-                source_guarantee_obj.get(str(src_line), source_guarantee_obj.get(src_line))
-            )
-            if not guaranteed:
-                continue
-            line_reason = ""
-            if isinstance(reason_obj, dict):
-                line_reason = str(
-                    reason_obj.get(str(src_line), reason_obj.get(src_line, ""))
-                ).strip()
-            line_proof = ""
-            if isinstance(proof_obj, dict):
-                line_proof = str(
-                    proof_obj.get(str(src_line), proof_obj.get(src_line, ""))
-                ).strip()
-            is_hard = line_proof.lower() == "hard" and line_reason == "all_exit_paths_closed_for_alias"
-            if is_hard:
-                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
-                    return False, f"line_{src_line}_downgraded_delete_on_exit"
-                return True, f"line_{src_line}_all_exit_paths_closed_for_alias"
-            return False, f"line_{src_line}_not_strict_hard"
-
-        return False, "source_line_not_hard_safe"
+        if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+            return False, "method_hard_safe_downgraded_delete_on_exit"
+        return True, "method_all_sources_hard_closed"
 
     def _load_facts(self) -> None:
         facts_path = self.config.facts_path.strip()

@@ -725,7 +725,7 @@ class Java_TSAnalyzer(TSAnalyzer):
                 == self._normalize_type(receiver_type)
             ]
             if len(exact_owner) > 0:
-                return exact_owner
+                return self._select_single_candidate_deterministically(exact_owner)
 
         same_owner = [
             candidate_id
@@ -733,7 +733,7 @@ class Java_TSAnalyzer(TSAnalyzer):
             if self.function_env[candidate_id].owner_class == current_function.owner_class
         ]
         if len(same_owner) > 0:
-            return same_owner
+            return self._select_single_candidate_deterministically(same_owner)
 
         current_package = self.file_package_map.get(current_function.file_path, "")
         imports = self.file_import_map.get(current_function.file_path, set())
@@ -741,6 +741,11 @@ class Java_TSAnalyzer(TSAnalyzer):
             import_item.split(".")[-1]
             for import_item in imports
             if not import_item.endswith(".*")
+        }
+        wildcard_import_packages = {
+            import_item[:-2].strip()
+            for import_item in imports
+            if import_item.endswith(".*")
         }
 
         imported_matches = [
@@ -750,7 +755,17 @@ class Java_TSAnalyzer(TSAnalyzer):
             in imported_classes
         ]
         if len(imported_matches) > 0:
-            return imported_matches
+            return self._select_single_candidate_deterministically(imported_matches)
+
+        wildcard_matches = [
+            candidate_id
+            for candidate_id in candidate_ids
+            if self._is_candidate_in_wildcard_import_packages(
+                self.function_env[candidate_id], wildcard_import_packages
+            )
+        ]
+        if len(wildcard_matches) > 0:
+            return self._select_single_candidate_deterministically(wildcard_matches)
 
         same_package = [
             candidate_id
@@ -758,9 +773,9 @@ class Java_TSAnalyzer(TSAnalyzer):
             if self.function_env[candidate_id].package_name == current_package
         ]
         if len(same_package) > 0:
-            return same_package
+            return self._select_single_candidate_deterministically(same_package)
 
-        return candidate_ids
+        return self._select_single_candidate_deterministically(candidate_ids)
 
     def _owner_matches_receiver(self, owner_class: str, receiver_type: str) -> bool:
         normalized_owner = self._normalize_type(owner_class)
@@ -768,6 +783,31 @@ class Java_TSAnalyzer(TSAnalyzer):
         if normalized_owner == "" or normalized_receiver == "":
             return False
         return normalized_owner == normalized_receiver
+
+    def _is_candidate_in_wildcard_import_packages(
+        self, candidate: Function, wildcard_import_packages: Set[str]
+    ) -> bool:
+        if len(wildcard_import_packages) == 0:
+            return False
+        candidate_package = candidate.package_name.strip()
+        if candidate_package == "":
+            return False
+        for wildcard_pkg in wildcard_import_packages:
+            if wildcard_pkg == "":
+                continue
+            if candidate_package == wildcard_pkg or candidate_package.startswith(
+                wildcard_pkg + "."
+            ):
+                return True
+        return False
+
+    def _select_single_candidate_deterministically(
+        self, candidate_ids: List[int]
+    ) -> List[int]:
+        if len(candidate_ids) <= 1:
+            return candidate_ids
+        normalized = sorted(set(candidate_ids))
+        return [normalized[0]]
 
     def _extract_declared_type(self, node: tree_sitter.Node, source_code: str) -> str:
         type_node = node.child_by_field_name("type")
