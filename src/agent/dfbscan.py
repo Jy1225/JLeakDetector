@@ -177,9 +177,7 @@ class DFBScanAgent(Agent):
         )
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
-        self.java_mlk_report_signatures: Set[
-            Tuple[str, Tuple[str, ...]]
-        ] = set()
+        self.java_mlk_report_signatures: Set[Tuple[str, str]] = set()
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.state = DFBScanState(self.src_values, self.sink_values)
@@ -2105,28 +2103,55 @@ class DFBScanAgent(Agent):
             return True
         return False
 
+    def __build_java_mlk_function_signature_key(self, function: Function) -> str:
+        if function.function_uid != "":
+            return function.function_uid
+        normalized_path = function.file_path.replace("\\", "/").lower()
+        return f"{normalized_path}:{function.function_name}:{function.start_line_number}"
+
     def __build_java_mlk_report_signature(
         self, src_value: Value, relevant_functions: Dict[int, Function]
-    ) -> Tuple[str, Tuple[str, ...]]:
-        core_function_keys: List[str] = []
+    ) -> Tuple[str, str]:
+        """
+        Build a stable signature for dedup.
+        Use source anchor function (the function that contains src_value) as
+        primary key to collapse duplicated variants of the same source across
+        slightly different interprocedural tails.
+        """
+        src_signature = str(src_value)
+        normalized_src_file = src_value.file.replace("\\", "/").lower()
+
+        source_anchor_key = ""
+        non_helper_keys: List[str] = []
         fallback_keys: List[str] = []
+
         for function in relevant_functions.values():
-            if function.function_uid != "":
-                function_key = function.function_uid
-            else:
-                normalized_path = function.file_path.replace("\\", "/").lower()
-                function_key = (
-                    f"{normalized_path}:{function.function_name}:{function.start_line_number}"
-                )
+            function_key = self.__build_java_mlk_function_signature_key(function)
             fallback_keys.append(function_key)
+
             if self.__is_java_mlk_helper_function_for_dedup(function):
                 continue
-            core_function_keys.append(function_key)
+            non_helper_keys.append(function_key)
 
-        if len(core_function_keys) == 0:
-            core_function_keys = fallback_keys
-        normalized_core_keys = tuple(sorted(set(core_function_keys)))
-        return (str(src_value), normalized_core_keys)
+            normalized_function_file = function.file_path.replace("\\", "/").lower()
+            if normalized_function_file != normalized_src_file:
+                continue
+            if (
+                function.start_line_number
+                <= src_value.line_number
+                <= function.end_line_number
+            ):
+                source_anchor_key = function_key
+
+        if source_anchor_key == "":
+            if len(non_helper_keys) > 0:
+                source_anchor_key = sorted(set(non_helper_keys))[0]
+            elif len(fallback_keys) > 0:
+                source_anchor_key = sorted(set(fallback_keys))[0]
+            else:
+                source_anchor_key = "UNKNOWN"
+
+        return (src_signature, source_anchor_key)
 
     def __register_java_mlk_report_signature(
         self, src_value: Value, relevant_functions: Dict[int, Function]
