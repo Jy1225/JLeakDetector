@@ -80,6 +80,16 @@ class JavaResourceOwnershipValidator:
         "invokeany",
         "awaittermination",
         "trylock",
+        "commit",
+        "rollback",
+        "begintransaction",
+        "starttransaction",
+        "gettransaction",
+        "opensession",
+        "getsession",
+        "createentitymanager",
+        "createentitymanagerfactory",
+        "waitfor",
     }
     OWNERSHIP_TRANSFER_METHODS = {
         "put",
@@ -99,6 +109,13 @@ class JavaResourceOwnershipValidator:
         "setsemaphore",
         "attach",
         "bind",
+        "addlistener",
+        "addobserver",
+        "subscribe",
+        "watch",
+        "registerlistener",
+        "setsubscription",
+        "settransaction",
     }
     RESOURCE_LIKE_SUFFIXES = (
         "Stream",
@@ -116,6 +133,19 @@ class JavaResourceOwnershipValidator:
         "Selector",
         "Executor",
         "ThreadPool",
+        "Transaction",
+        "EntityManager",
+        "SessionFactory",
+        "SqlSession",
+        "Subscription",
+        "Listener",
+        "Observer",
+        "Watcher",
+        "Registration",
+        "Process",
+        "Client",
+        "Consumer",
+        "Producer",
     )
 
     def __init__(self, ts_analyzer: TSAnalyzer) -> None:

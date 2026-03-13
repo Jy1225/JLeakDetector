@@ -14,11 +14,21 @@
 
 ## 1. 检测范围与目标
 
-当前 Java MLK 关注的是 **AutoCloseable 风格的资源泄露**：
+当前 Java MLK 关注的是 **显式生命周期资源泄露**（当前实现）：
 
 - 资源被创建/获取（`source`）
 - 资源应该被释放（`sink`）
 - 若存在可行路径使资源最终未关闭，则判定为漏洞候选
+
+目前覆盖的主要资源语义类型：
+
+- `autocloseable`：流/连接/通道等显式 close 语义资源
+- `lock`：`lock/acquire` 与 `unlock/release` 配对
+- `executor`：线程池生命周期（`shutdown/shutdownNow/close`）
+- `temp_resource`：临时文件/目录清理（`delete/deleteIfExists/deleteOnExit`）
+- `transaction`：事务/会话资源（`begin/getTransaction/openSession` 与 `commit/rollback/close`）
+- `subscription`：注册/订阅型资源（`register/subscribe/addListener` 与 `unregister/unsubscribe/removeListener`）
+- `process`：进程句柄资源（`exec/start/spawn` 与 `destroy/waitFor/close`）
 
 当前不覆盖：
 

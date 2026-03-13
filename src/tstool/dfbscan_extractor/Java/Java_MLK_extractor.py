@@ -28,6 +28,20 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "Selector",
         "Executor",
         "ThreadPool",
+        "Transaction",
+        "EntityManager",
+        "SessionFactory",
+        "SqlSession",
+        "Cursor",
+        "Subscription",
+        "Listener",
+        "Observer",
+        "Watcher",
+        "Registration",
+        "Process",
+        "Client",
+        "Consumer",
+        "Producer",
     )
 
     RESOURCE_TYPE_WHITELIST = {
@@ -94,6 +108,29 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "ScheduledExecutorService",
         "ThreadPoolExecutor",
         "ForkJoinPool",
+        "Future",
+        "CompletableFuture",
+        "EntityManager",
+        "EntityManagerFactory",
+        "SessionFactory",
+        "Session",
+        "Transaction",
+        "UserTransaction",
+        "SqlSession",
+        "SqlSessionManager",
+        "Cursor",
+        "WatchKey",
+        "Registration",
+        "Subscription",
+        "Disposable",
+        "KafkaConsumer",
+        "KafkaProducer",
+        "JMSContext",
+        "JMSConsumer",
+        "EventLoopGroup",
+        "ManagedChannel",
+        "Process",
+        "ProcessBuilder",
         "ReentrantLock",
         "ReadWriteLock",
         "ReentrantReadWriteLock",
@@ -153,12 +190,48 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "newThreadPerTaskExecutor",
         "createTempFile",
         "createTempDirectory",
+        "beginTransaction",
+        "startTransaction",
+        "getTransaction",
+        "openSession",
+        "getSession",
+        "createEntityManager",
+        "createEntityManagerFactory",
+        "openCursor",
+        "register",
+        "subscribe",
+        "addListener",
+        "addObserver",
+        "watch",
+        "exec",
+        "start",
+        "spawn",
     }
 
     TEMP_RESOURCE_FACTORY_METHOD_NAMES = {
         "createTempFile",
         "createTempDirectory",
     }
+
+    TYPE_OPTIONAL_FACTORY_METHOD_NAMES = (
+        TEMP_RESOURCE_FACTORY_METHOD_NAMES
+        | {
+            "beginTransaction",
+            "startTransaction",
+            "getTransaction",
+            "openSession",
+            "getSession",
+            "createEntityManager",
+            "createEntityManagerFactory",
+            "openCursor",
+            "register",
+            "subscribe",
+            "watch",
+            "exec",
+            "start",
+            "spawn",
+        }
+    )
 
     CLOSE_METHOD_NAMES = {
         "close",
@@ -173,6 +246,26 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "deleteIfExists",
         "deleteOnExit",
         "stop",
+        "destroy",
+        "destroyForcibly",
+        "waitFor",
+        "dispose",
+        "terminate",
+        "commit",
+        "rollback",
+        "end",
+        "endTransaction",
+        "cancel",
+        "unsubscribe",
+        "unregister",
+        "deregister",
+        "removeListener",
+        "removeObserver",
+        "stopWatching",
+        "detach",
+        "unbind",
+        "invalidate",
+        "purge",
     }
 
     ACQUIRE_METHOD_NAMES = {
@@ -181,7 +274,42 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "lockInterruptibly",
         "acquire",
         "acquireUninterruptibly",
+        "begin",
+        "beginTransaction",
+        "startTransaction",
+        "getTransaction",
+        "openSession",
+        "getSession",
+        "createEntityManager",
+        "createEntityManagerFactory",
+        "openCursor",
+        "register",
+        "addListener",
+        "addObserver",
+        "subscribe",
+        "watch",
+        "attach",
+        "bind",
+        "exec",
+        "start",
+        "spawn",
     }
+
+    ACQUIRE_FALLBACK_PATTERNS = (
+        ".lock(",
+        ".trylock(",
+        ".acquire(",
+        ".begintransaction(",
+        ".starttransaction(",
+        ".register(",
+        ".subscribe(",
+        ".addlistener(",
+        ".addobserver(",
+        ".watch(",
+        ".attach(",
+        ".bind(",
+        ".exec(",
+    )
 
     def extract_sources(self, function: Function) -> List[Value]:
         sources: List[Value] = []
@@ -455,7 +583,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
             return False
 
         method_name = self._get_invocation_name(invocation_node, source_code)
-        allow_without_type = method_name in self.TEMP_RESOURCE_FACTORY_METHOD_NAMES
+        allow_without_type = method_name in self.TYPE_OPTIONAL_FACTORY_METHOD_NAMES
 
         if parent.type == "variable_declarator":
             var_name = ""
@@ -502,9 +630,9 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if self._is_resource_type(receiver_type):
                 return True
 
-        # Fallback: keep lock/semaphore acquisition patterns even without local type.
+        # Fallback: keep acquisition patterns even without local type.
         lowered = invocation_text.lower()
-        if ".lock(" in lowered or ".trylock(" in lowered or ".acquire(" in lowered:
+        if any(pattern in lowered for pattern in self.ACQUIRE_FALLBACK_PATTERNS):
             return True
         return False
 

@@ -8,12 +8,18 @@ RESOURCE_KIND_AUTOCLOSEABLE = "autocloseable"
 RESOURCE_KIND_LOCK = "lock"
 RESOURCE_KIND_EXECUTOR = "executor"
 RESOURCE_KIND_TEMP_RESOURCE = "temp_resource"
+RESOURCE_KIND_TRANSACTION = "transaction"
+RESOURCE_KIND_SUBSCRIPTION = "subscription"
+RESOURCE_KIND_PROCESS = "process"
 
 KNOWN_RESOURCE_KINDS = {
     RESOURCE_KIND_AUTOCLOSEABLE,
     RESOURCE_KIND_LOCK,
     RESOURCE_KIND_EXECUTOR,
     RESOURCE_KIND_TEMP_RESOURCE,
+    RESOURCE_KIND_TRANSACTION,
+    RESOURCE_KIND_SUBSCRIPTION,
+    RESOURCE_KIND_PROCESS,
 }
 
 RELEASE_CONTEXT_FINALLY = "finally"
@@ -76,6 +82,48 @@ SEMANTICS_BY_KIND: Dict[str, JavaResourceSemantics] = {
         kind=RESOURCE_KIND_TEMP_RESOURCE,
         acquire_ops=("createTempFile", "createTempDirectory"),
         release_ops=("delete", "deleteIfExists", "deleteOnExit"),
+    ),
+    RESOURCE_KIND_TRANSACTION: JavaResourceSemantics(
+        kind=RESOURCE_KIND_TRANSACTION,
+        acquire_ops=(
+            "begin",
+            "beginTransaction",
+            "startTransaction",
+            "getTransaction",
+            "openSession",
+            "createEntityManager",
+            "createEntityManagerFactory",
+            "openCursor",
+        ),
+        release_ops=("commit", "rollback", "end", "endTransaction", "close"),
+    ),
+    RESOURCE_KIND_SUBSCRIPTION: JavaResourceSemantics(
+        kind=RESOURCE_KIND_SUBSCRIPTION,
+        acquire_ops=(
+            "register",
+            "addListener",
+            "addObserver",
+            "subscribe",
+            "watch",
+            "attach",
+            "bind",
+        ),
+        release_ops=(
+            "unregister",
+            "removeListener",
+            "removeObserver",
+            "unsubscribe",
+            "deregister",
+            "detach",
+            "unbind",
+            "stopWatching",
+            "close",
+        ),
+    ),
+    RESOURCE_KIND_PROCESS: JavaResourceSemantics(
+        kind=RESOURCE_KIND_PROCESS,
+        acquire_ops=("exec", "start", "spawn"),
+        release_ops=("destroy", "destroyForcibly", "waitFor", "close", "stop"),
     ),
 }
 
@@ -193,6 +241,58 @@ def classify_resource_kind(src_name: str, file_path: str = "") -> str:
     if "temp_file" in file_path.lower():
         return RESOURCE_KIND_TEMP_RESOURCE
 
+    if any(
+        token in lowered_no_space
+        for token in [
+            "begintransaction(",
+            "starttransaction(",
+            "gettransaction(",
+            "entitymanager",
+            "entitymanagerfactory",
+            "sqlsession",
+            "sessionfactory",
+            "transaction",
+            "commit(",
+            "rollback(",
+        ]
+    ):
+        return RESOURCE_KIND_TRANSACTION
+
+    if any(
+        token in lowered_no_space
+        for token in [
+            "subscribe(",
+            "unsubscribe(",
+            "addlistener(",
+            "removelistener(",
+            "addobserver(",
+            "removeobserver(",
+            "register(",
+            "unregister(",
+            "watch(",
+            "stopwatching(",
+            "listener",
+            "observer",
+            "subscription",
+            "watcher",
+            "registration",
+        ]
+    ):
+        return RESOURCE_KIND_SUBSCRIPTION
+
+    if any(
+        token in lowered_no_space
+        for token in [
+            "processbuilder(",
+            "runtime.getruntime().exec(",
+            ".destroy(",
+            ".destroyforcibly(",
+            ".waitfor(",
+            "process",
+        ]
+    ):
+        return RESOURCE_KIND_PROCESS
+
     return RESOURCE_KIND_AUTOCLOSEABLE
 
 
@@ -227,6 +327,24 @@ def build_intra_resource_rules(resource_kind: str, servlet_context: bool) -> Lis
                 "Do not infer a leak only from hypothetical exceptions before deleteOnExit() when no explicit throwing operation is shown."
             )
         return rules
+    if kind == RESOURCE_KIND_TRANSACTION:
+        return [
+            "Resource kind is transaction/session: track begin/getTransaction/openSession style acquire operations.",
+            "commit()/rollback()/close() can release transactional resources.",
+            "Release must be guaranteed on all exits; commit-only or rollback-only on normal flow is weak.",
+        ]
+    if kind == RESOURCE_KIND_SUBSCRIPTION:
+        return [
+            "Resource kind is subscription/listener registration: track register/subscribe/addListener acquire operations.",
+            "unregister/unsubscribe/removeListener/removeObserver are release operations.",
+            "If registration can happen without guaranteed deregistration on all exits, treat as potential leak.",
+        ]
+    if kind == RESOURCE_KIND_PROCESS:
+        return [
+            "Resource kind is process handle: track ProcessBuilder.start()/Runtime.exec() and similar acquire operations.",
+            "destroy()/destroyForcibly()/waitFor()/close() are release operations.",
+            "If process lifecycle cleanup is not guaranteed on all exits, treat as potential leak.",
+        ]
     return [
         "Resource kind is autocloseable: track close/disconnect/shutdown/release lifecycle.",
         "Explicit release in finally or try-with-resources is strong guarantee.",
@@ -262,6 +380,21 @@ def build_path_resource_rules(resource_kind: str, servlet_context: bool) -> List
                 "Avoid reporting leak solely due to speculative pre-deleteOnExit exception paths without explicit throw evidence."
             )
         return rules
+    if kind == RESOURCE_KIND_TRANSACTION:
+        return [
+            "For transaction/session resources, commit/rollback/close should be guaranteed on all exits.",
+            "A release only in normal path is insufficient when exceptions may bypass it.",
+        ]
+    if kind == RESOURCE_KIND_SUBSCRIPTION:
+        return [
+            "For subscription/listener resources, registration must be paired with guaranteed unsubscribe/unregister/removeListener.",
+            "If deregistration may be skipped, prefer Answer Yes.",
+        ]
+    if kind == RESOURCE_KIND_PROCESS:
+        return [
+            "For process resources, process handles should be destroyed/waited/closed on all exits.",
+            "If cleanup can be skipped, prefer Answer Yes.",
+        ]
     return [
         "For autocloseable resources, explicit close in finally/twr is strong guarantee.",
         "If release can be skipped by exception, prefer Answer Yes.",
