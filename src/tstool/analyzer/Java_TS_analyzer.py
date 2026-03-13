@@ -186,6 +186,12 @@ class Java_TSAnalyzer(TSAnalyzer):
             ]
             if by_receiver:
                 candidate_ids = by_receiver
+            else:
+                # Receiver type is known but does not match any project-defined
+                # method owner. This is very likely a library/framework call
+                # (e.g., properties.load(...)); do not force-map it to an
+                # unrelated user method just because name/arity matches.
+                return []
 
         arg_types = self._infer_argument_types(current_function, call_site_node)
         candidate_ids = self._filter_by_argument_types(candidate_ids, arg_types)

@@ -178,6 +178,9 @@ class DFBScanAgent(Agent):
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
         self.java_mlk_report_signatures: Set[Tuple[str, str]] = set()
+        self.java_mlk_max_paths_per_source = int(
+            os.environ.get("REPOAUDIT_JAVA_MLK_MAX_PATHS_PER_SOURCE", "200")
+        )
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.state = DFBScanState(self.src_values, self.sink_values)
@@ -892,7 +895,11 @@ class DFBScanAgent(Agent):
                 buggy_paths = self.__filter_redundant_java_mlk_paths(
                     src_value, self.state.potential_buggy_paths[src_value]
                 )
-                for buggy_path in buggy_paths:
+                seen_path_validator_signatures: Set[Tuple[object, ...]] = set()
+                for buggy_path_raw in buggy_paths:
+                    buggy_path = self.__compress_java_mlk_candidate_path(
+                        buggy_path_raw
+                    )
                     values_to_functions = {
                         value: self.ts_analyzer.get_function_from_localvalue(value)
                         for value in buggy_path
@@ -914,6 +921,17 @@ class DFBScanAgent(Agent):
                         path_guarantee_level,
                         path_servlet_context,
                     ) = self.__extract_java_mlk_path_semantics(src_value, buggy_path)
+                    if self.language == "Java" and self.bug_type == "MLK":
+                        pv_signature = self.__build_java_mlk_path_validator_signature(
+                            buggy_path,
+                            path_resource_kind,
+                            path_release_context,
+                            path_guarantee_level,
+                            path_servlet_context,
+                        )
+                        if pv_signature in seen_path_validator_signatures:
+                            continue
+                        seen_path_validator_signatures.add(pv_signature)
                     pv_input = PathValidatorInput(
                         self.bug_type,
                         buggy_path,
@@ -1203,7 +1221,15 @@ class DFBScanAgent(Agent):
         buggy_paths = self.__filter_redundant_java_mlk_paths(
             src_value, self.state.potential_buggy_paths[src_value]
         )
-        for buggy_path in buggy_paths:
+        seen_path_validator_signatures: Set[Tuple[object, ...]] = set()
+        if self.language == "Java" and self.bug_type == "MLK" and len(buggy_paths) > 50:
+            self.logger.print_log(
+                "High Java MLK candidate-path volume",
+                f"source={str(src_value)}",
+                f"paths={len(buggy_paths)}",
+            )
+        for buggy_path_raw in buggy_paths:
+            buggy_path = self.__compress_java_mlk_candidate_path(buggy_path_raw)
             values_to_functions = {
                 value: self.ts_analyzer.get_function_from_localvalue(value)
                 for value in buggy_path
@@ -1233,6 +1259,17 @@ class DFBScanAgent(Agent):
                 path_guarantee_level,
                 path_servlet_context,
             ) = self.__extract_java_mlk_path_semantics(src_value, buggy_path)
+            if self.language == "Java" and self.bug_type == "MLK":
+                pv_signature = self.__build_java_mlk_path_validator_signature(
+                    buggy_path,
+                    path_resource_kind,
+                    path_release_context,
+                    path_guarantee_level,
+                    path_servlet_context,
+                )
+                if pv_signature in seen_path_validator_signatures:
+                    continue
+                seen_path_validator_signatures.add(pv_signature)
             path_semantic_rules = self.__build_java_mlk_path_rules(
                 path_resource_kind, path_servlet_context
             )
@@ -2259,13 +2296,29 @@ class DFBScanAgent(Agent):
         if len(paths) <= 1:
             return paths
 
-        path_sets = [self.__normalize_java_mlk_path_for_dedup(path) for path in paths]
-        keep = [True for _ in paths]
+        # Step 1: exact semantic dedup (order-insensitive), keeping shorter path.
+        unique_by_signature: Dict[Tuple[object, ...], List[Value]] = {}
+        for path in paths:
+            normalized_set = self.__normalize_java_mlk_path_for_dedup(path)
+            signature = self.__build_java_mlk_path_signature(
+                path,
+                normalized_set=normalized_set,
+            )
+            prev = unique_by_signature.get(signature)
+            if prev is None or len(path) < len(prev):
+                unique_by_signature[signature] = path
+        dedup_paths = list(unique_by_signature.values())
 
-        for i in range(len(paths)):
+        # Step 2: subset pruning on normalized value sets.
+        path_sets = [
+            self.__normalize_java_mlk_path_for_dedup(path) for path in dedup_paths
+        ]
+        keep = [True for _ in dedup_paths]
+
+        for i in range(len(dedup_paths)):
             if not keep[i]:
                 continue
-            for j in range(len(paths)):
+            for j in range(len(dedup_paths)):
                 if i == j:
                     continue
                 if len(path_sets[i]) >= len(path_sets[j]):
@@ -2274,12 +2327,120 @@ class DFBScanAgent(Agent):
                     keep[i] = False
                     break
 
-        filtered_paths = [paths[i] for i in range(len(paths)) if keep[i]]
+        filtered_paths = [dedup_paths[i] for i in range(len(dedup_paths)) if keep[i]]
+        if (
+            self.java_mlk_max_paths_per_source > 0
+            and len(filtered_paths) > self.java_mlk_max_paths_per_source
+        ):
+            filtered_paths = sorted(filtered_paths, key=lambda item: len(item))[
+                : self.java_mlk_max_paths_per_source
+            ]
+            self.logger.print_log(
+                "Truncated Java MLK candidate paths by cap",
+                f"source={str(src_value)}",
+                f"cap={self.java_mlk_max_paths_per_source}",
+            )
         if len(filtered_paths) < len(paths):
             self.logger.print_log(
                 f"Pruned {len(paths) - len(filtered_paths)} short Java MLK candidate path(s) for source {str(src_value)}"
             )
         return filtered_paths
+
+    def __compress_java_mlk_candidate_path(self, path: List[Value]) -> List[Value]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return list(path)
+        compressed: List[Value] = []
+        seen_non_local_values: Set[str] = set()
+        for value in path:
+            if value.label == ValueLabel.LOCAL:
+                compressed.append(value)
+                continue
+            value_key = str(value)
+            if value_key in seen_non_local_values:
+                continue
+            seen_non_local_values.add(value_key)
+            compressed.append(value)
+        return compressed
+
+    def __build_java_mlk_path_validator_signature(
+        self,
+        path: List[Value],
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
+        servlet_context: bool,
+    ) -> Tuple[object, ...]:
+        ordered_values: List[str] = []
+        has_no_sink_marker = False
+        has_weak_release_marker = False
+        for value in path:
+            if value.label == ValueLabel.LOCAL:
+                marker_name = value.name.strip()
+                if marker_name.startswith("__NO_SINK_BRANCH_PATH_"):
+                    has_no_sink_marker = True
+                    continue
+                if marker_name.startswith("__WEAK_RELEASE_BRANCH_PATH_"):
+                    has_weak_release_marker = True
+                    continue
+                if marker_name.startswith("__RESOURCE_KIND_"):
+                    continue
+                if marker_name.startswith("__RELEASE_CONTEXT_"):
+                    continue
+                if marker_name.startswith("__GUARANTEE_LEVEL_"):
+                    continue
+            ordered_values.append(str(value))
+        return (
+            tuple(ordered_values),
+            has_no_sink_marker,
+            has_weak_release_marker,
+            normalize_resource_kind(resource_kind),
+            normalize_release_context(release_context),
+            normalize_guarantee_level(guarantee_level),
+            servlet_context,
+        )
+
+    def __build_java_mlk_path_signature(
+        self,
+        path: List[Value],
+        normalized_set: Optional[Set[str]] = None,
+    ) -> Tuple[object, ...]:
+        if normalized_set is None:
+            normalized_set = self.__normalize_java_mlk_path_for_dedup(path)
+        has_no_sink_marker = False
+        has_weak_release_marker = False
+        resource_kind = ""
+        release_context = ""
+        guarantee_level = ""
+        for value in path:
+            if value.label != ValueLabel.LOCAL:
+                continue
+            marker_name = value.name.strip()
+            if marker_name.startswith("__NO_SINK_BRANCH_PATH_"):
+                has_no_sink_marker = True
+                continue
+            if marker_name.startswith("__WEAK_RELEASE_BRANCH_PATH_"):
+                has_weak_release_marker = True
+                continue
+            decoded_kind = decode_resource_kind_marker(marker_name)
+            if decoded_kind != "":
+                resource_kind = decoded_kind
+                continue
+            decoded_release_context = decode_release_context_marker(marker_name)
+            if decoded_release_context != "":
+                release_context = decoded_release_context
+                continue
+            decoded_guarantee_level = decode_guarantee_level_marker(marker_name)
+            if decoded_guarantee_level != "":
+                guarantee_level = decoded_guarantee_level
+                continue
+        return (
+            frozenset(normalized_set),
+            has_no_sink_marker,
+            has_weak_release_marker,
+            resource_kind,
+            release_context,
+            guarantee_level,
+        )
 
     def __normalize_java_mlk_path_for_dedup(self, path: List[Value]) -> Set[str]:
         normalized: Set[str] = set()
