@@ -134,7 +134,7 @@ def _build_regex_fallback_facts(code_in_files: Dict[str, str]) -> Dict[str, obje
         r"\.(?:lock|tryLock|acquire)\s*\()"
     )
     close_hint_re = re.compile(
-        r"\.(?:close|disconnect|shutdown|shutdownNow|unlock|release|delete|deleteIfExists)\s*\("
+        r"\.(?:close|disconnect|shutdown|shutdownNow|unlock|release|delete|deleteIfExists|deleteOnExit)\s*\("
     )
 
     methods: Dict[str, Dict[str, object]] = {}

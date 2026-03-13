@@ -6,6 +6,11 @@ from typing import Dict, List, Optional, Set, Tuple
 from memory.syntactic.function import Function
 from memory.syntactic.value import Value, ValueLabel
 from tstool.analyzer.TS_analyzer import TSAnalyzer
+from tstool.validator.java_resource_semantics import (
+    GUARANTEE_NONE,
+    decode_guarantee_level_marker,
+    is_all_exit_guaranteed,
+)
 
 
 class ObjState(Enum):
@@ -128,6 +133,8 @@ class JavaResourceOwnershipValidator:
         points_to: Dict[str, Set[ObjID]] = {}
         obj_state: Dict[ObjID, ObjState] = {}
         alloc_counter: Dict[Tuple[str, str, int], int] = {}
+        candidate_guarantee_level = self._extract_guarantee_level_from_path(buggy_path)
+        allow_sink_close = is_all_exit_guaranteed(candidate_guarantee_level)
 
         src_objids: Set[ObjID] = set()
         ordered_values = list(buggy_path)
@@ -145,7 +152,13 @@ class JavaResourceOwnershipValidator:
                     points_to.setdefault(token, set()).add(objid)
                 continue
 
-            self._apply_event(value, function, points_to, obj_state)
+            self._apply_event(
+                value,
+                function,
+                points_to,
+                obj_state,
+                allow_sink_close=allow_sink_close,
+            )
 
         if len(src_objids) == 0:
             return False, "no source object id built"
@@ -174,6 +187,7 @@ class JavaResourceOwnershipValidator:
         function: Optional[Function],
         points_to: Dict[str, Set[ObjID]],
         obj_state: Dict[ObjID, ObjState],
+        allow_sink_close: bool,
     ) -> None:
         if self._is_assignment_expr(value.name):
             self._apply_assignment(value.name, points_to)
@@ -184,6 +198,8 @@ class JavaResourceOwnershipValidator:
             related_objids.update(points_to.get(token, set()))
 
         if value.label == ValueLabel.SINK:
+            if not allow_sink_close:
+                return
             for objid in related_objids:
                 if obj_state.get(objid) == ObjState.OPEN:
                     obj_state[objid] = ObjState.CLOSED
@@ -199,6 +215,19 @@ class JavaResourceOwnershipValidator:
             # agent-level termination classification to avoid premature false negatives.
             _ = self.is_non_ownership_argument(value, function)
             return
+
+    def _extract_guarantee_level_from_path(self, buggy_path: List[Value]) -> str:
+        fallback = GUARANTEE_NONE
+        for value in buggy_path:
+            if value.label != ValueLabel.LOCAL:
+                continue
+            decoded = decode_guarantee_level_marker(value.name)
+            if decoded == "":
+                continue
+            if is_all_exit_guaranteed(decoded):
+                return decoded
+            fallback = decoded
+        return fallback
 
     def _is_assignment_expr(self, expr: str) -> bool:
         cleaned = expr.replace("==", "").replace(">=", "").replace("<=", "").replace("!=", "")

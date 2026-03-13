@@ -1740,6 +1740,7 @@ public final class BridgeMain {
                 "release",
                 "delete",
                 "deleteifexists",
+                "deleteonexit",
                 "stop"
         );
         return set;

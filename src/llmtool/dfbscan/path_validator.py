@@ -1,11 +1,19 @@
 from os import path
 import json
-from typing import List, Dict
+from typing import List, Dict, Optional
 from llmtool.LLM_utils import *
 from llmtool.LLM_tool import *
 from memory.syntactic.function import *
 from memory.syntactic.value import *
 from memory.syntactic.api import *
+from tstool.validator.java_resource_semantics import (
+    RESOURCE_KIND_AUTOCLOSEABLE,
+    GUARANTEE_NONE,
+    RELEASE_CONTEXT_UNKNOWN,
+    normalize_guarantee_level,
+    normalize_release_context,
+    normalize_resource_kind,
+)
 
 BASE_PATH = Path(__file__).resolve().parent.parent.parent
 
@@ -17,11 +25,21 @@ class PathValidatorInput(LLMToolInput):
         values: List[Value],
         values_to_functions: Dict[Value, Optional[Function]],
         strict_branch_semantics: bool = False,
+        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
+        release_context: str = RELEASE_CONTEXT_UNKNOWN,
+        guarantee_level: str = GUARANTEE_NONE,
+        resource_semantic_rules: Optional[List[str]] = None,
+        servlet_context: bool = False,
     ) -> None:
         self.bug_type = bug_type
         self.values = values
         self.values_to_functions = values_to_functions
         self.strict_branch_semantics = strict_branch_semantics
+        self.resource_kind = normalize_resource_kind(resource_kind)
+        self.release_context = normalize_release_context(release_context)
+        self.guarantee_level = normalize_guarantee_level(guarantee_level)
+        self.resource_semantic_rules = list(resource_semantic_rules or [])
+        self.servlet_context = servlet_context
         return
 
     def __hash__(self) -> int:
@@ -30,6 +48,11 @@ class PathValidatorInput(LLMToolInput):
                 self.bug_type,
                 tuple(str(value) for value in self.values),
                 self.strict_branch_semantics,
+                self.resource_kind,
+                self.release_context,
+                self.guarantee_level,
+                tuple(self.resource_semantic_rules),
+                self.servlet_context,
             )
         )
 
@@ -90,6 +113,12 @@ class PathValidator(LLMTool):
 
         value_lines = []
         for value in input.values:
+            if value.label == ValueLabel.LOCAL and (
+                value.name.startswith("__RESOURCE_KIND_")
+                or value.name.startswith("__RELEASE_CONTEXT_")
+                or value.name.startswith("__GUARANTEE_LEVEL_")
+            ):
+                continue
             value_line = " - " + str(value)
             function = input.values_to_functions.get(value)
             if function is None:
@@ -111,6 +140,17 @@ class PathValidator(LLMTool):
             ]
         )
         prompt = prompt.replace("<PROGRAM>", program)
+
+        resource_semantic_lines = [
+            "Resource semantic context:",
+            f"- resource_kind: {input.resource_kind}",
+            f"- release_context(from intra): {input.release_context}",
+            f"- guarantee_level(from intra): {input.guarantee_level}",
+            f"- servlet_context: {'yes' if input.servlet_context else 'no'}",
+        ]
+        for rule in input.resource_semantic_rules:
+            resource_semantic_lines.append(f"- {rule}")
+        prompt += "\n\n" + "\n".join(resource_semantic_lines)
 
         marker_values = [
             value
@@ -139,6 +179,15 @@ class PathValidator(LLMTool):
                 marker_hint_lines.append(f"- {rule}")
 
             prompt += "\n\n" + "\n".join(marker_hint_lines)
+        elif input.strict_branch_semantics:
+            strict_hint_lines = [
+                "Strict re-check context:",
+                "- Strict mode enabled for weak-release path verification.",
+                f"- release_context={input.release_context}",
+                f"- guarantee_level={input.guarantee_level}",
+                "- Require all-exit release proof before answering No.",
+            ]
+            prompt += "\n\n" + "\n".join(strict_hint_lines)
         return prompt
 
     def _parse_response(

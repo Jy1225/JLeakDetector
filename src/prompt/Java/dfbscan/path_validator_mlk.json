@@ -4,20 +4,22 @@
   "system_role": "You are a Java static analysis engineer validating interprocedural resource-leak paths.",
   "task": "Given a propagation path for <BUG_TYPE>, decide whether this path is feasible. For MLK, decide whether the source resource can really stay unclosed on that path.",
   "analysis_rules": [
-    "For MLK, answer Yes only if the path can execute and the resource is not definitely closed before method exit.",
-    "If the path includes explicit close/disconnect/shutdown/release for the same resource alias, answer No.",
-    "If the resource is guaranteed to be closed by try-with-resources on this path, answer No.",
+    "For MLK, answer Yes only if the path can execute and the resource is not definitely released before method exit.",
+    "Do not treat a release as strong unless it is guaranteed on all exits.",
+    "For lock resources, unlock/release in finally or equivalent all-exit semantics is strong; normal-flow-only unlock is weak.",
+    "For executor resources, shutdown lifecycle must hold on all exits.",
+    "For temp resources, prefer delete/deleteIfExists as direct cleanup; deleteOnExit is scenario-dependent and may be weak.",
     "If the resource escapes by return/argument and ownership clearly transfers, explain it and prefer No.",
     "If branch conditions conflict across steps in the path, answer No."
   ],
   "branch_marker_rules": [
     "When a path contains __NO_SINK_BRANCH_PATH_* marker, it represents a specific branch where source is executed and no sink is reached on that branch.",
-    "Do not use close() statements from sibling branches to conclude this marker path is safe."
+    "Do not use release statements from sibling branches to conclude this marker path is safe."
   ],
   "strict_branch_marker_rules": [
-    "If marker branch has no sink, answer No only when the same resource alias is guaranteed to be closed by finally or try-with-resources on all continuations of that marked branch.",
-    "A close in another conditional branch, or a close that can be skipped by earlier exception, is not enough to answer No for the marked branch.",
-    "If the marker branch already executes the source allocation, treat a finally close on the same alias (including null-check guarded close) as guaranteed cleanup for that branch.",
+    "If marker branch has no sink, answer No only when the same resource alias is guaranteed to be released by finally or try-with-resources on all continuations of that marked branch.",
+    "A release in another conditional branch, or a release that can be skipped by earlier exception, is not enough to answer No for the marked branch.",
+    "If marker branch already executes the source allocation, treat finally-release on the same alias as guaranteed cleanup for that branch.",
     "Do not answer Yes only by hypothesizing an exception before source assignment when marker semantics already says source is executed."
   ],
   "question_template": [
@@ -29,10 +31,10 @@
   ],
   "analysis_examples": [
     "Example 1:",
-    "Explanation: Resource is created and closed in finally block on all paths.",
+    "Explanation: Resource is created and released in finally block on all paths.",
     "Answer: No",
     "Example 2:",
-    "Explanation: Resource is created and returned without close and caller does not close.",
+    "Explanation: Resource is created and release is only on normal path; exceptions can bypass release.",
     "Answer: Yes"
   ],
   "additional_fact": [],

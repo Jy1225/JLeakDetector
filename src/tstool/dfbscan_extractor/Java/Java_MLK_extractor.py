@@ -171,6 +171,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "release",
         "delete",
         "deleteIfExists",
+        "deleteOnExit",
         "stop",
     }
 

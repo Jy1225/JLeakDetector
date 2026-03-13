@@ -20,6 +20,10 @@ class DFBScanState(State):
         self._source_executed_per_path: Dict[Tuple[Value, CallContext], List[bool]] = {}
         # Relative line numbers for each intra-procedural path (aligned by path index)
         self._path_line_numbers_per_path: Dict[Tuple[Value, CallContext], List[List[int]]] = {}
+        # Release context for each intra-procedural path (aligned by path index)
+        self._release_context_per_path: Dict[Tuple[Value, CallContext], List[str]] = {}
+        # Guarantee level for each intra-procedural path (aligned by path index)
+        self._guarantee_level_per_path: Dict[Tuple[Value, CallContext], List[str]] = {}
 
         # Match parameter/return value with argument/output value
         self._external_value_match: Dict[
@@ -37,6 +41,8 @@ class DFBScanState(State):
         self._reachable_values_lock = threading.Lock()
         self._source_executed_lock = threading.Lock()
         self._path_line_numbers_lock = threading.Lock()
+        self._release_context_lock = threading.Lock()
+        self._guarantee_level_lock = threading.Lock()
         self._external_value_match_lock = threading.Lock()
         self._potential_buggy_paths_lock = threading.Lock()
         self._bug_reports_lock = threading.Lock()
@@ -68,6 +74,22 @@ class DFBScanState(State):
             if start not in self._path_line_numbers_per_path:
                 self._path_line_numbers_per_path[start] = []
             self._path_line_numbers_per_path[start].append(list(line_numbers))
+
+    def update_release_context_per_path(
+        self, start: Tuple[Value, CallContext], release_context: str
+    ) -> None:
+        with self._release_context_lock:
+            if start not in self._release_context_per_path:
+                self._release_context_per_path[start] = []
+            self._release_context_per_path[start].append(release_context)
+
+    def update_guarantee_level_per_path(
+        self, start: Tuple[Value, CallContext], guarantee_level: str
+    ) -> None:
+        with self._guarantee_level_lock:
+            if start not in self._guarantee_level_per_path:
+                self._guarantee_level_per_path[start] = []
+            self._guarantee_level_per_path[start].append(guarantee_level)
 
     def update_external_value_match(
         self,
@@ -138,6 +160,20 @@ class DFBScanState(State):
     ) -> Dict[Tuple[Value, CallContext], List[List[int]]]:
         with self._path_line_numbers_lock:
             return self._path_line_numbers_per_path.copy()
+
+    @property
+    def release_context_per_path(
+        self,
+    ) -> Dict[Tuple[Value, CallContext], List[str]]:
+        with self._release_context_lock:
+            return self._release_context_per_path.copy()
+
+    @property
+    def guarantee_level_per_path(
+        self,
+    ) -> Dict[Tuple[Value, CallContext], List[str]]:
+        with self._guarantee_level_lock:
+            return self._guarantee_level_per_path.copy()
 
     @property
     def potential_buggy_paths(self) -> Dict[Value, Dict[str, List[Value]]]:

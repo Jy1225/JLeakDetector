@@ -10,6 +10,34 @@ from agent.agent import *
 
 from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
 from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
+from tstool.validator.java_resource_semantics import (
+    RESOURCE_KIND_AUTOCLOSEABLE,
+    RESOURCE_KIND_LOCK,
+    RESOURCE_KIND_EXECUTOR,
+    RESOURCE_KIND_TEMP_RESOURCE,
+    GUARANTEE_NONE,
+    GUARANTEE_NORMAL_ONLY,
+    GUARANTEE_ALL_EXIT_PATHS,
+    RELEASE_CONTEXT_UNKNOWN,
+    RELEASE_CONTEXT_NORMAL,
+    RELEASE_CONTEXT_FINALLY,
+    RELEASE_CONTEXT_TWR,
+    build_intra_resource_rules,
+    build_path_resource_rules,
+    classify_resource_kind,
+    decode_guarantee_level_marker,
+    decode_release_context_marker,
+    decode_resource_kind_marker,
+    encode_guarantee_level_marker,
+    encode_release_context_marker,
+    encode_resource_kind_marker,
+    is_all_exit_guaranteed,
+    is_servlet_context,
+    normalize_guarantee_level,
+    normalize_release_context,
+    normalize_resource_kind,
+    should_trigger_strict_recheck,
+)
 from tstool.validator.java_soot_prefilter import (
     JavaSootPrefilter,
     SootPrefilterConfig,
@@ -400,6 +428,8 @@ class DFBScanAgent(Agent):
         """
         reachable_values_snapshot = self.state.reachable_values_per_path
         source_executed_snapshot = self.state.source_executed_per_path
+        release_context_snapshot = self.state.release_context_per_path
+        guarantee_level_snapshot = self.state.guarantee_level_per_path
         external_match_snapshot = self.state.external_value_match
 
         # If no propagation information exists for the current value, stop further processing.
@@ -425,10 +455,27 @@ class DFBScanAgent(Agent):
                 source_executed_paths = source_executed_snapshot.get(
                     current_value_with_context, []
                 )
+                release_context_paths = release_context_snapshot.get(
+                    current_value_with_context, []
+                )
+                guarantee_level_paths = guarantee_level_snapshot.get(
+                    current_value_with_context, []
+                )
+                src_resource_kind = self.__infer_java_mlk_resource_kind(src_value)
                 for path_index, path_set in enumerate(reachable_values_paths):
                     source_executed = True
                     if path_index < len(source_executed_paths):
                         source_executed = source_executed_paths[path_index]
+                    release_context = RELEASE_CONTEXT_UNKNOWN
+                    if path_index < len(release_context_paths):
+                        release_context = normalize_release_context(
+                            release_context_paths[path_index]
+                        )
+                    guarantee_level = GUARANTEE_NONE
+                    if path_index < len(guarantee_level_paths):
+                        guarantee_level = normalize_guarantee_level(
+                            guarantee_level_paths[path_index]
+                        )
                     if not path_set:
                         if not source_executed:
                             # This branch does not execute the source. Do not treat it
@@ -463,6 +510,9 @@ class DFBScanAgent(Agent):
                                         current_value_with_context,
                                         path_with_unknown_status,
                                         path_index,
+                                        src_resource_kind,
+                                        release_context,
+                                        guarantee_level,
                                     )
                                 )
                                 self.state.update_potential_buggy_paths(
@@ -502,6 +552,37 @@ class DFBScanAgent(Agent):
                     # 3) Terminal edges (Case 1 / Case 2).
                     # 4) Empty/no-propagation branch already handled by the empty path_set block.
                     if sink_edges and not self.is_reachable:
+                        refined_release_context, refined_guarantee_level = (
+                            self.__refine_java_mlk_release_semantics(
+                                src_value,
+                                src_resource_kind,
+                                sink_edges,
+                                release_context,
+                                guarantee_level,
+                            )
+                        )
+                        if is_all_exit_guaranteed(refined_guarantee_level):
+                            continue
+                        seen_sink_values = set()
+                        for sink_value, _ in sink_edges:
+                            sink_key = str(sink_value)
+                            if sink_key in seen_sink_values:
+                                continue
+                            seen_sink_values.add(sink_key)
+                            candidate_path = (
+                                self.__build_java_mlk_sink_branch_candidate_path(
+                                    src_value,
+                                    path_with_unknown_status,
+                                    sink_value,
+                                    path_index,
+                                    src_resource_kind,
+                                    refined_release_context,
+                                    refined_guarantee_level,
+                                )
+                            )
+                            self.state.update_potential_buggy_paths(
+                                src_value, candidate_path
+                            )
                         continue
 
                     if continue_edges:
@@ -539,6 +620,9 @@ class DFBScanAgent(Agent):
                                         path_with_unknown_status,
                                         terminal_value,
                                         path_index,
+                                        src_resource_kind,
+                                        release_context,
+                                        guarantee_level,
                                     )
                                 )
                                 self.state.update_potential_buggy_paths(
@@ -648,6 +732,7 @@ class DFBScanAgent(Agent):
                     continue
 
                 initial_context = CallContext(False)
+                root_resource_kind = self.__infer_java_mlk_resource_kind(src_value)
                 worklist.append((src_value, src_function, initial_context))
 
                 while len(worklist) > 0:
@@ -695,6 +780,10 @@ class DFBScanAgent(Agent):
                         sink_values,
                         call_statements,
                         ret_values,
+                        resource_kind=root_resource_kind,
+                        resource_rules=self.__build_java_mlk_intra_rules(
+                            root_resource_kind, src_value.file
+                        ),
                     )
 
                     # Invoke the intra-procedural data-flow analysis
@@ -724,6 +813,22 @@ class DFBScanAgent(Agent):
                             ]
                         self.state.update_path_line_numbers_per_path(
                             (start_value, call_context), path_line_numbers
+                        )
+                        release_context = RELEASE_CONTEXT_UNKNOWN
+                        if path_index < len(df_output.release_context_per_path):
+                            release_context = normalize_release_context(
+                                df_output.release_context_per_path[path_index]
+                            )
+                        guarantee_level = GUARANTEE_NONE
+                        if path_index < len(df_output.guarantee_level_per_path):
+                            guarantee_level = normalize_guarantee_level(
+                                df_output.guarantee_level_per_path[path_index]
+                            )
+                        self.state.update_release_context_per_path(
+                            (start_value, call_context), release_context
+                        )
+                        self.state.update_guarantee_level_per_path(
+                            (start_value, call_context), guarantee_level
                         )
 
                         delta_worklist = self.__update_worklist(
@@ -758,10 +863,23 @@ class DFBScanAgent(Agent):
                     ):
                         continue
 
+                    (
+                        path_resource_kind,
+                        path_release_context,
+                        path_guarantee_level,
+                        path_servlet_context,
+                    ) = self.__extract_java_mlk_path_semantics(src_value, buggy_path)
                     pv_input = PathValidatorInput(
                         self.bug_type,
                         buggy_path,
                         values_to_functions,
+                        resource_kind=path_resource_kind,
+                        release_context=path_release_context,
+                        guarantee_level=path_guarantee_level,
+                        resource_semantic_rules=self.__build_java_mlk_path_rules(
+                            path_resource_kind, path_servlet_context
+                        ),
+                        servlet_context=path_servlet_context,
                     )
                     pv_output = self.path_validator.invoke(
                         pv_input, PathValidatorOutput
@@ -769,6 +887,40 @@ class DFBScanAgent(Agent):
 
                     if pv_output is None:
                         continue
+
+                    should_strict_by_marker = (
+                        self.__has_java_mlk_no_sink_marker(buggy_path)
+                        and self.__is_java_mlk_close_biased_negative(
+                            pv_output.explanation_str
+                        )
+                    )
+                    should_strict_by_semantics = should_trigger_strict_recheck(
+                        path_release_context, path_guarantee_level
+                    )
+                    if (
+                        self.language == "Java"
+                        and self.bug_type == "MLK"
+                        and not pv_output.is_reachable
+                        and (should_strict_by_marker or should_strict_by_semantics)
+                    ):
+                        strict_pv_input = PathValidatorInput(
+                            self.bug_type,
+                            buggy_path,
+                            values_to_functions,
+                            strict_branch_semantics=True,
+                            resource_kind=path_resource_kind,
+                            release_context=path_release_context,
+                            guarantee_level=path_guarantee_level,
+                            resource_semantic_rules=self.__build_java_mlk_path_rules(
+                                path_resource_kind, path_servlet_context
+                            ),
+                            servlet_context=path_servlet_context,
+                        )
+                        strict_pv_output = self.path_validator.invoke(
+                            strict_pv_input, PathValidatorOutput
+                        )
+                        if strict_pv_output is not None:
+                            pv_output = strict_pv_output
 
                     if pv_output.is_reachable:
                         passed_post_validation, reason = (
@@ -885,6 +1037,7 @@ class DFBScanAgent(Agent):
         if self.__skip_source_by_java_soot_prefilter(src_value, src_function):
             return
         initial_context = CallContext(False)
+        root_resource_kind = self.__infer_java_mlk_resource_kind(src_value)
 
         worklist.append((src_value, src_function, initial_context))
         while len(worklist) > 0:
@@ -917,7 +1070,15 @@ class DFBScanAgent(Agent):
                 )
             ]
             df_input = IntraDataFlowAnalyzerInput(
-                start_function, start_value, sink_values, call_statements, ret_values
+                start_function,
+                start_value,
+                sink_values,
+                call_statements,
+                ret_values,
+                resource_kind=root_resource_kind,
+                resource_rules=self.__build_java_mlk_intra_rules(
+                    root_resource_kind, src_value.file
+                ),
             )
 
             # Invoke the intra-procedural data-flow analysis
@@ -944,6 +1105,22 @@ class DFBScanAgent(Agent):
                     path_line_numbers = df_output.path_line_numbers_per_path[path_index]
                 self.state.update_path_line_numbers_per_path(
                     (start_value, call_context), path_line_numbers
+                )
+                release_context = RELEASE_CONTEXT_UNKNOWN
+                if path_index < len(df_output.release_context_per_path):
+                    release_context = normalize_release_context(
+                        df_output.release_context_per_path[path_index]
+                    )
+                guarantee_level = GUARANTEE_NONE
+                if path_index < len(df_output.guarantee_level_per_path):
+                    guarantee_level = normalize_guarantee_level(
+                        df_output.guarantee_level_per_path[path_index]
+                    )
+                self.state.update_release_context_per_path(
+                    (start_value, call_context), release_context
+                )
+                self.state.update_guarantee_level_per_path(
+                    (start_value, call_context), guarantee_level
                 )
 
                 delta_worklist = self.__update_worklist(
@@ -986,33 +1163,64 @@ class DFBScanAgent(Agent):
             ):
                 continue
 
+            (
+                path_resource_kind,
+                path_release_context,
+                path_guarantee_level,
+                path_servlet_context,
+            ) = self.__extract_java_mlk_path_semantics(src_value, buggy_path)
+            path_semantic_rules = self.__build_java_mlk_path_rules(
+                path_resource_kind, path_servlet_context
+            )
             pv_input = PathValidatorInput(
                 self.bug_type,
                 buggy_path,
                 values_to_functions,
+                resource_kind=path_resource_kind,
+                release_context=path_release_context,
+                guarantee_level=path_guarantee_level,
+                resource_semantic_rules=path_semantic_rules,
+                servlet_context=path_servlet_context,
             )
             pv_output = self.path_validator.invoke(pv_input, PathValidatorOutput)
 
             if pv_output is None:
                 continue
 
+            should_strict_by_marker = (
+                self.__has_java_mlk_no_sink_marker(buggy_path)
+                and self.__is_java_mlk_close_biased_negative(pv_output.explanation_str)
+            )
+            should_strict_by_semantics = should_trigger_strict_recheck(
+                path_release_context, path_guarantee_level
+            )
             if (
                 self.language == "Java"
                 and self.bug_type == "MLK"
                 and not pv_output.is_reachable
-                and self.__has_java_mlk_no_sink_marker(buggy_path)
-                and self.__is_java_mlk_close_biased_negative(
-                    pv_output.explanation_str
-                )
+                and (should_strict_by_marker or should_strict_by_semantics)
             ):
+                strict_reason = (
+                    "marker-close-bias"
+                    if should_strict_by_marker
+                    else "weak-release-semantics"
+                )
                 self.logger.print_log(
-                    "Re-validating Java MLK marker-path with strict branch semantics."
+                    "Re-validating Java MLK path with strict branch semantics.",
+                    f"reason={strict_reason}",
+                    f"release_context={path_release_context}",
+                    f"guarantee_level={path_guarantee_level}",
                 )
                 strict_pv_input = PathValidatorInput(
                     self.bug_type,
                     buggy_path,
                     values_to_functions,
                     strict_branch_semantics=True,
+                    resource_kind=path_resource_kind,
+                    release_context=path_release_context,
+                    guarantee_level=path_guarantee_level,
+                    resource_semantic_rules=path_semantic_rules,
+                    servlet_context=path_servlet_context,
                 )
                 strict_pv_output = self.path_validator.invoke(
                     strict_pv_input, PathValidatorOutput
@@ -1083,12 +1291,110 @@ class DFBScanAgent(Agent):
 
         return ("ownership_transfer", "default ownership transfer")
 
+    def __infer_java_mlk_resource_kind(self, src_value: Value) -> str:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return RESOURCE_KIND_AUTOCLOSEABLE
+        return classify_resource_kind(src_value.name, src_value.file)
+
+    def __build_java_mlk_intra_rules(
+        self, resource_kind: str, source_file: str
+    ) -> List[str]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return []
+        return build_intra_resource_rules(
+            normalize_resource_kind(resource_kind),
+            is_servlet_context(source_file),
+        )
+
+    def __build_java_mlk_path_rules(
+        self, resource_kind: str, servlet_context: bool
+    ) -> List[str]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return []
+        return build_path_resource_rules(
+            normalize_resource_kind(resource_kind), servlet_context
+        )
+
+    def __extract_java_mlk_path_semantics(
+        self, src_value: Value, path: List[Value]
+    ) -> Tuple[str, str, str, bool]:
+        resource_kind = self.__infer_java_mlk_resource_kind(src_value)
+        release_context = RELEASE_CONTEXT_UNKNOWN
+        guarantee_level = GUARANTEE_NONE
+        for value in path:
+            if value.label != ValueLabel.LOCAL:
+                continue
+            marker_name = value.name.strip()
+            decoded_kind = decode_resource_kind_marker(marker_name)
+            if decoded_kind != "":
+                resource_kind = decoded_kind
+                continue
+            decoded_context = decode_release_context_marker(marker_name)
+            if decoded_context != "":
+                release_context = decoded_context
+                continue
+            decoded_guarantee = decode_guarantee_level_marker(marker_name)
+            if decoded_guarantee != "":
+                guarantee_level = decoded_guarantee
+                continue
+
+        resource_kind = normalize_resource_kind(resource_kind)
+        release_context = normalize_release_context(release_context)
+        guarantee_level = normalize_guarantee_level(guarantee_level)
+        servlet_context = is_servlet_context(src_value.file)
+        return resource_kind, release_context, guarantee_level, servlet_context
+
+    def __refine_java_mlk_release_semantics(
+        self,
+        src_value: Value,
+        resource_kind: str,
+        sink_edges: List[Tuple[Value, CallContext]],
+        release_context: str,
+        guarantee_level: str,
+    ) -> Tuple[str, str]:
+        refined_context = normalize_release_context(release_context)
+        refined_guarantee = normalize_guarantee_level(guarantee_level)
+        normalized_kind = normalize_resource_kind(resource_kind)
+
+        sink_names = [sink_value.name.lower() for sink_value, _ in sink_edges]
+        has_delete_on_exit = any("deleteonexit" in sink_name for sink_name in sink_names)
+        has_delete_if_exists = any(
+            "deleteifexists" in sink_name for sink_name in sink_names
+        )
+        has_direct_delete = any(
+            ("delete(" in sink_name) and ("deleteonexit" not in sink_name)
+            for sink_name in sink_names
+        )
+        has_unlock_like = any(
+            ("unlock(" in sink_name) or ("tryunlock(" in sink_name) or ("release(" in sink_name)
+            for sink_name in sink_names
+        )
+
+        if normalized_kind == RESOURCE_KIND_TEMP_RESOURCE:
+            if has_delete_on_exit and not (has_delete_if_exists or has_direct_delete):
+                if is_servlet_context(src_value.file):
+                    return RELEASE_CONTEXT_NORMAL, GUARANTEE_NONE
+                return RELEASE_CONTEXT_NORMAL, GUARANTEE_ALL_EXIT_PATHS
+
+        if normalized_kind == RESOURCE_KIND_LOCK:
+            if (
+                has_unlock_like
+                and refined_context not in {RELEASE_CONTEXT_FINALLY, RELEASE_CONTEXT_TWR}
+                and refined_guarantee == GUARANTEE_ALL_EXIT_PATHS
+            ):
+                refined_guarantee = GUARANTEE_NORMAL_ONLY
+
+        return refined_context, refined_guarantee
+
     def __build_java_mlk_empty_branch_candidate_path(
         self,
         src_value: Value,
         current_value_with_context: Tuple[Value, CallContext],
         path_with_unknown_status: List[Value],
         path_index: int,
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
     ) -> List[Value]:
         """
         Build a candidate path for empty path_set branches and attach a branch marker.
@@ -1103,6 +1409,13 @@ class DFBScanAgent(Agent):
         )
         candidate_path = list(path_with_unknown_status)
         candidate_path.append(marker)
+        self.__append_java_mlk_semantic_markers(
+            candidate_path,
+            marker,
+            resource_kind,
+            release_context,
+            guarantee_level,
+        )
         if src_value not in candidate_path:
             candidate_path = [src_value] + candidate_path
         return candidate_path
@@ -1113,6 +1426,9 @@ class DFBScanAgent(Agent):
         path_with_unknown_status: List[Value],
         terminal_value: Value,
         path_index: int,
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
     ) -> List[Value]:
         """
         Build a candidate path for non-empty terminal branches that still have no
@@ -1128,9 +1444,79 @@ class DFBScanAgent(Agent):
         candidate_path = list(path_with_unknown_status)
         candidate_path.append(terminal_value)
         candidate_path.append(marker)
+        self.__append_java_mlk_semantic_markers(
+            candidate_path,
+            marker,
+            resource_kind,
+            release_context,
+            guarantee_level,
+        )
         if src_value not in candidate_path:
             candidate_path = [src_value] + candidate_path
         return candidate_path
+
+    def __build_java_mlk_sink_branch_candidate_path(
+        self,
+        src_value: Value,
+        path_with_unknown_status: List[Value],
+        sink_value: Value,
+        path_index: int,
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
+    ) -> List[Value]:
+        marker = Value(
+            f"__WEAK_RELEASE_BRANCH_PATH_{path_index}__",
+            sink_value.line_number,
+            ValueLabel.LOCAL,
+            sink_value.file,
+        )
+        candidate_path = list(path_with_unknown_status)
+        candidate_path.append(sink_value)
+        candidate_path.append(marker)
+        self.__append_java_mlk_semantic_markers(
+            candidate_path,
+            marker,
+            resource_kind,
+            release_context,
+            guarantee_level,
+        )
+        if src_value not in candidate_path:
+            candidate_path = [src_value] + candidate_path
+        return candidate_path
+
+    def __append_java_mlk_semantic_markers(
+        self,
+        candidate_path: List[Value],
+        anchor_value: Value,
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
+    ) -> None:
+        candidate_path.append(
+            Value(
+                encode_resource_kind_marker(resource_kind),
+                anchor_value.line_number,
+                ValueLabel.LOCAL,
+                anchor_value.file,
+            )
+        )
+        candidate_path.append(
+            Value(
+                encode_release_context_marker(release_context),
+                anchor_value.line_number,
+                ValueLabel.LOCAL,
+                anchor_value.file,
+            )
+        )
+        candidate_path.append(
+            Value(
+                encode_guarantee_level_marker(guarantee_level),
+                anchor_value.line_number,
+                ValueLabel.LOCAL,
+                anchor_value.file,
+            )
+        )
 
     def __is_non_executed_return_branch(
         self,
@@ -1523,7 +1909,9 @@ class DFBScanAgent(Agent):
 
     def __extract_java_mlk_marker_path_indexes(self, path: List[Value]) -> List[int]:
         indexes: List[int] = []
-        marker_re = re.compile(r"^__NO_SINK_BRANCH_PATH_(\d+)__$")
+        marker_re = re.compile(
+            r"^__(?:NO_SINK_BRANCH_PATH|WEAK_RELEASE_BRANCH_PATH)_(\d+)__$"
+        )
         for value in path:
             if value.label != ValueLabel.LOCAL:
                 continue
@@ -1601,6 +1989,10 @@ class DFBScanAgent(Agent):
                 "finally",
                 "try-with-resources",
                 "sink",
+                "unlock",
+                "release",
+                "shutdown",
+                "delete",
             ]
         )
 
@@ -1638,10 +2030,17 @@ class DFBScanAgent(Agent):
     def __normalize_java_mlk_path_for_dedup(self, path: List[Value]) -> Set[str]:
         normalized: Set[str] = set()
         for value in path:
-            if value.label == ValueLabel.LOCAL and value.name.startswith(
-                "__NO_SINK_BRANCH_PATH_"
-            ):
-                continue
+            if value.label == ValueLabel.LOCAL:
+                if value.name.startswith("__NO_SINK_BRANCH_PATH_"):
+                    continue
+                if value.name.startswith("__WEAK_RELEASE_BRANCH_PATH_"):
+                    continue
+                if value.name.startswith("__RESOURCE_KIND_"):
+                    continue
+                if value.name.startswith("__RELEASE_CONTEXT_"):
+                    continue
+                if value.name.startswith("__GUARANTEE_LEVEL_"):
+                    continue
             normalized.add(str(value))
         return normalized
 
