@@ -14,6 +14,8 @@ class LLMToolInput(ABC):
         raise NotImplementedError
 
     def __eq__(self, value) -> bool:
+        if value is None or type(self) is not type(value):
+            return False
         return self.__hash__() == value.__hash__()
 
 
@@ -43,6 +45,7 @@ class LLMTool(ABC):
 
         self.model = LLM(model_name, self.logger, temperature)
         self.cache: Dict[LLMToolInput, LLMToolOutput] = {}
+        self._inflight_inputs: Dict[LLMToolInput, threading.Event] = {}
         self._cache_lock = threading.Lock()
 
         self.input_token_cost = 0
@@ -67,37 +70,57 @@ class LLMTool(ABC):
 
     def _invoke(self, input: LLMToolInput) -> Optional[LLMToolOutput]:
         class_name = type(self).__name__
-        self.logger.print_console(f"The LLM Tool {class_name} is invoked.")
-        with self._cache_lock:
-            cached_output = self.cache.get(input)
-        if cached_output is not None:
-            self.logger.print_log("Cache hit.")
-            return cached_output
+
+        inflight_event: Optional[threading.Event] = None
+        while True:
+            with self._cache_lock:
+                cached_output = self.cache.get(input)
+                if cached_output is not None:
+                    self.logger.print_log("Cache hit.")
+                    return cached_output
+
+                existing_event = self._inflight_inputs.get(input)
+                if existing_event is None:
+                    inflight_event = threading.Event()
+                    self._inflight_inputs[input] = inflight_event
+                    break
+
+            # Another worker is already computing the same input.
+            existing_event.wait()
+
+        self.logger.print_console(
+            f"The LLM Tool {class_name} is invoked (cache miss)."
+        )
 
         prompt = self._get_prompt(input)
         self.logger.print_log("Prompt:", "\n", prompt)
 
         single_query_num = 0
         output = None
-        while True:
-            if single_query_num > self.max_query_num:
-                break
-            single_query_num += 1
-            response, input_token_cost, output_token_cost = self.model.infer(
-                prompt, True
-            )
-            self.logger.print_log("Response:", "\n", response)
-            self.input_token_cost += input_token_cost
-            self.output_token_cost += output_token_cost
-            output = self._parse_response(response, input)
+        try:
+            while True:
+                if single_query_num > self.max_query_num:
+                    break
+                single_query_num += 1
+                response, input_token_cost, output_token_cost = self.model.infer(
+                    prompt, True
+                )
+                self.logger.print_log("Response:", "\n", response)
+                self.input_token_cost += input_token_cost
+                self.output_token_cost += output_token_cost
+                output = self._parse_response(response, input)
 
-            if output is not None:
-                break
-
-        self.total_query_num += single_query_num
-        if output is not None:
+                if output is not None:
+                    break
+        finally:
+            self.total_query_num += single_query_num
             with self._cache_lock:
-                self.cache[input] = output
+                if output is not None:
+                    self.cache[input] = output
+                event = self._inflight_inputs.pop(input, None)
+                if event is not None:
+                    event.set()
+
         return output
 
     @abstractmethod

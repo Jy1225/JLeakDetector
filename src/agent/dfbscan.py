@@ -423,7 +423,8 @@ class DFBScanAgent(Agent):
         self,
         src_value: Value,
         current_value_with_context: Tuple[Value, CallContext],
-        path_with_unknown_status: List[Value] = [],
+        path_with_unknown_status: Optional[List[Value]] = None,
+        visited_nodes: Optional[Set[Tuple[Value, CallContext]]] = None,
     ) -> None:
         """
         Recursively collect potential buggy paths based on the propagation details.
@@ -440,6 +441,17 @@ class DFBScanAgent(Agent):
             path_with_unknown_status (List[Value], optional):
                 The propagation path accumulated so far.
         """
+        if path_with_unknown_status is None:
+            path_with_unknown_status = []
+        if visited_nodes is None:
+            visited_nodes = set()
+        if current_value_with_context in visited_nodes:
+            # Guard recursive graph traversal from revisiting the same node in
+            # one DFS chain (mutual recursion / cyclic external edges).
+            return
+        next_visited_nodes = set(visited_nodes)
+        next_visited_nodes.add(current_value_with_context)
+
         reachable_values_snapshot = self.state.reachable_values_per_path
         source_executed_snapshot = self.state.source_executed_per_path
         release_context_snapshot = self.state.release_context_per_path
@@ -626,6 +638,7 @@ class DFBScanAgent(Agent):
                                     src_value,
                                     (value_next, ctx_next),
                                     path_with_unknown_status + [value, value_next],
+                                    next_visited_nodes,
                                 )
                         continue
 
@@ -715,6 +728,7 @@ class DFBScanAgent(Agent):
                                     src_value,
                                     (value_next, ctx_next),
                                     path_with_unknown_status + [value, value_next],
+                                    next_visited_nodes,
                                 )
                         continue
 
@@ -736,6 +750,7 @@ class DFBScanAgent(Agent):
                     src_value,
                     (value_next, ctx_next),
                     path_with_unknown_status + [value, value_next],
+                    next_visited_nodes,
                 )
         return
 
@@ -1074,9 +1089,15 @@ class DFBScanAgent(Agent):
         root_resource_kind = self.__infer_java_mlk_resource_kind(src_value)
 
         worklist.append((src_value, src_function, initial_context))
+        queued_state_keys = {(src_value, initial_context)}
+        processed_state_keys = set()
         while len(worklist) > 0:
             (start_value, start_function, call_context) = worklist.pop(0)
-            if len(call_context.context) > self.call_depth:
+            current_state_key = (start_value, call_context)
+            if current_state_key in processed_state_keys:
+                continue
+            processed_state_keys.add(current_state_key)
+            if len(call_context.context) >= self.call_depth:
                 continue
 
             # Construct the input for intra-procedural data-flow analysis
@@ -1160,7 +1181,16 @@ class DFBScanAgent(Agent):
                 delta_worklist = self.__update_worklist(
                     df_input, df_output, call_context, path_index
                 )
-                worklist.extend(delta_worklist)
+                for next_value, next_function, next_context in delta_worklist:
+                    if len(next_context.context) >= self.call_depth:
+                        continue
+                    next_state_key = (next_value, next_context)
+                    if next_state_key in processed_state_keys:
+                        continue
+                    if next_state_key in queued_state_keys:
+                        continue
+                    worklist.append((next_value, next_function, next_context))
+                    queued_state_keys.add(next_state_key)
 
         # Collect potential buggy paths
         self.__collect_potential_buggy_paths(src_value, (src_value, CallContext(False)))
@@ -2109,6 +2139,16 @@ class DFBScanAgent(Agent):
         normalized_path = function.file_path.replace("\\", "/").lower()
         return f"{normalized_path}:{function.function_name}:{function.start_line_number}"
 
+    def __normalize_java_mlk_source_name(self, source_name: str) -> str:
+        normalized = source_name.strip().rstrip(";")
+        assign_match = re.match(r"^[^=]+=\s*(.+)$", normalized)
+        if assign_match is not None and "==" not in normalized:
+            normalized = assign_match.group(1).strip()
+        if normalized.startswith("return "):
+            normalized = normalized[len("return ") :].strip()
+        normalized = re.sub(r"\s+", "", normalized)
+        return normalized
+
     def __build_java_mlk_report_signature(
         self, src_value: Value, relevant_functions: Dict[int, Function]
     ) -> Tuple[str, str]:
@@ -2118,8 +2158,9 @@ class DFBScanAgent(Agent):
         primary key to collapse duplicated variants of the same source across
         slightly different interprocedural tails.
         """
-        src_signature = str(src_value)
         normalized_src_file = src_value.file.replace("\\", "/").lower()
+        normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
+        src_signature = f"{normalized_src_file}:{normalized_src_name}"
 
         source_anchor_key = ""
         non_helper_keys: List[str] = []

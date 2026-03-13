@@ -109,11 +109,7 @@ class JavaResourceOwnershipValidator:
         "setsemaphore",
         "attach",
         "bind",
-        "addlistener",
-        "addobserver",
         "subscribe",
-        "watch",
-        "registerlistener",
         "setsubscription",
         "settransaction",
     }
@@ -138,14 +134,7 @@ class JavaResourceOwnershipValidator:
         "SessionFactory",
         "SqlSession",
         "Subscription",
-        "Listener",
-        "Observer",
-        "Watcher",
-        "Registration",
         "Process",
-        "Client",
-        "Consumer",
-        "Producer",
     )
 
     def __init__(self, ts_analyzer: TSAnalyzer) -> None:

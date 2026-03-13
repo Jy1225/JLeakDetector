@@ -34,14 +34,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "SqlSession",
         "Cursor",
         "Subscription",
-        "Listener",
-        "Observer",
-        "Watcher",
-        "Registration",
         "Process",
-        "Client",
-        "Consumer",
-        "Producer",
     )
 
     RESOURCE_TYPE_WHITELIST = {
@@ -120,7 +113,6 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "SqlSessionManager",
         "Cursor",
         "WatchKey",
-        "Registration",
         "Subscription",
         "Disposable",
         "KafkaConsumer",
@@ -198,11 +190,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "createEntityManager",
         "createEntityManagerFactory",
         "openCursor",
-        "register",
         "subscribe",
-        "addListener",
-        "addObserver",
-        "watch",
         "exec",
         "start",
         "spawn",
@@ -224,12 +212,6 @@ class Java_MLK_Extractor(DFBScanExtractor):
             "createEntityManager",
             "createEntityManagerFactory",
             "openCursor",
-            "register",
-            "subscribe",
-            "watch",
-            "exec",
-            "start",
-            "spawn",
         }
     )
 
@@ -258,12 +240,6 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "cancel",
         "unsubscribe",
         "unregister",
-        "deregister",
-        "removeListener",
-        "removeObserver",
-        "stopWatching",
-        "detach",
-        "unbind",
         "invalidate",
         "purge",
     }
@@ -283,13 +259,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "createEntityManager",
         "createEntityManagerFactory",
         "openCursor",
-        "register",
-        "addListener",
-        "addObserver",
         "subscribe",
-        "watch",
-        "attach",
-        "bind",
         "exec",
         "start",
         "spawn",
@@ -301,14 +271,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         ".acquire(",
         ".begintransaction(",
         ".starttransaction(",
-        ".register(",
-        ".subscribe(",
-        ".addlistener(",
-        ".addobserver(",
-        ".watch(",
-        ".attach(",
-        ".bind(",
-        ".exec(",
+        ".runtime.getruntime().exec(",
     )
 
     def extract_sources(self, function: Function) -> List[Value]:
@@ -317,7 +280,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         sources.extend(self._extract_factory_resource_sources(function))
         sources.extend(self._extract_acquire_sources(function))
         sources.extend(self._extract_twr_sources(function))
-        return self._dedup_values(sources)
+        return self._dedup_source_values(sources)
 
     def extract_sinks(self, function: Function) -> List[Value]:
         sinks: List[Value] = []
@@ -482,6 +445,36 @@ class Java_MLK_Extractor(DFBScanExtractor):
         for value in values:
             unique[str(value)] = value
         return list(unique.values())
+
+    def _dedup_source_values(self, values: List[Value]) -> List[Value]:
+        """
+        Semantic dedup for sources:
+        - Collapse syntactic variants on the same line, e.g.
+          `final OutputStream out = Files.newOutputStream(...)`
+          and `Files.newOutputStream(...)`.
+        - Keep the more informative textual form when collision happens.
+        """
+        unique: Dict[Tuple[str, int, str], Value] = {}
+        for value in values:
+            normalized_expr = self._normalize_source_expr(value.name)
+            key = (value.file, value.line_number, normalized_expr)
+            prev = unique.get(key)
+            if prev is None:
+                unique[key] = value
+                continue
+            if len(value.name) > len(prev.name):
+                unique[key] = value
+        return list(unique.values())
+
+    def _normalize_source_expr(self, expr: str) -> str:
+        normalized = expr.strip().rstrip(";")
+        assign_match = re.match(r"^[^=]+=\s*(.+)$", normalized)
+        if assign_match is not None and "==" not in normalized:
+            normalized = assign_match.group(1).strip()
+        if normalized.startswith("return "):
+            normalized = normalized[len("return ") :].strip()
+        normalized = re.sub(r"\s+", "", normalized)
+        return normalized
 
     def _line_of(self, node: Node, source_code: str) -> int:
         return source_code[: node.start_byte].count("\n") + 1

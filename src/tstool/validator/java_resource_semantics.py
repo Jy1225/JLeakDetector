@@ -100,23 +100,12 @@ SEMANTICS_BY_KIND: Dict[str, JavaResourceSemantics] = {
     RESOURCE_KIND_SUBSCRIPTION: JavaResourceSemantics(
         kind=RESOURCE_KIND_SUBSCRIPTION,
         acquire_ops=(
-            "register",
-            "addListener",
-            "addObserver",
             "subscribe",
-            "watch",
-            "attach",
-            "bind",
+            "register",
         ),
         release_ops=(
-            "unregister",
-            "removeListener",
-            "removeObserver",
             "unsubscribe",
-            "deregister",
-            "detach",
-            "unbind",
-            "stopWatching",
+            "unregister",
             "close",
         ),
     ),
@@ -263,19 +252,13 @@ def classify_resource_kind(src_name: str, file_path: str = "") -> str:
         for token in [
             "subscribe(",
             "unsubscribe(",
-            "addlistener(",
-            "removelistener(",
-            "addobserver(",
-            "removeobserver(",
-            "register(",
-            "unregister(",
-            "watch(",
-            "stopwatching(",
-            "listener",
-            "observer",
+            "registration.subscribe(",
             "subscription",
-            "watcher",
-            "registration",
+            "disposable",
+            "kafkaconsumer",
+            "kafkaproducer",
+            "jmsconsumer",
+            "managedchannel",
         ]
     ):
         return RESOURCE_KIND_SUBSCRIPTION
@@ -285,10 +268,8 @@ def classify_resource_kind(src_name: str, file_path: str = "") -> str:
         for token in [
             "processbuilder(",
             "runtime.getruntime().exec(",
-            ".destroy(",
-            ".destroyforcibly(",
-            ".waitfor(",
-            "process",
+            "newprocessbuilder(",
+            "processbuilder.start(",
         ]
     ):
         return RESOURCE_KIND_PROCESS
@@ -335,8 +316,8 @@ def build_intra_resource_rules(resource_kind: str, servlet_context: bool) -> Lis
         ]
     if kind == RESOURCE_KIND_SUBSCRIPTION:
         return [
-            "Resource kind is subscription/listener registration: track register/subscribe/addListener acquire operations.",
-            "unregister/unsubscribe/removeListener/removeObserver are release operations.",
+            "Resource kind is subscription registration: track subscribe/register acquire operations.",
+            "unsubscribe/unregister/close are release operations.",
             "If registration can happen without guaranteed deregistration on all exits, treat as potential leak.",
         ]
     if kind == RESOURCE_KIND_PROCESS:
@@ -387,7 +368,7 @@ def build_path_resource_rules(resource_kind: str, servlet_context: bool) -> List
         ]
     if kind == RESOURCE_KIND_SUBSCRIPTION:
         return [
-            "For subscription/listener resources, registration must be paired with guaranteed unsubscribe/unregister/removeListener.",
+            "For subscription resources, registration must be paired with guaranteed unsubscribe/unregister/close.",
             "If deregistration may be skipped, prefer Answer Yes.",
         ]
     if kind == RESOURCE_KIND_PROCESS:

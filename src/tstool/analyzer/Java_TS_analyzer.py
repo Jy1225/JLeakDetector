@@ -2,6 +2,7 @@ import re
 import sys
 from os import path
 from typing import Dict, List, Optional, Set, Tuple
+import threading
 import tree_sitter
 
 sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
@@ -28,6 +29,7 @@ class Java_TSAnalyzer(TSAnalyzer):
         self.file_package_map: Dict[str, str] = {}
         self.file_import_map: Dict[str, Set[str]] = {}
         self.local_type_env_cache: Dict[int, Dict[str, str]] = {}
+        self._function_register_lock = threading.Lock()
         super().__init__(code_in_files, language_name, max_symbolic_workers_num)
 
     def extract_function_info(
@@ -41,6 +43,12 @@ class Java_TSAnalyzer(TSAnalyzer):
         self.file_package_map[file_path] = package_name
         self.file_import_map[file_path] = imports
 
+        # Some benchmark snippets (e.g., JLeaks) concatenate multiple versions
+        # in one physical file, producing duplicated method bodies. We dedup
+        # methods in-file by (uid + normalized method code) to avoid exploding
+        # function/source duplicates.
+        seen_method_fingerprints: Set[Tuple[str, str]] = set()
+
         all_function_definition_nodes = find_nodes_by_type(
             tree.root_node, "method_declaration"
         )
@@ -53,35 +61,49 @@ class Java_TSAnalyzer(TSAnalyzer):
             function_uid = self._build_function_uid(
                 package_name, owner_class, function_name, param_types
             )
+            method_code = source_code[node.start_byte : node.end_byte]
+            method_body_fingerprint = self._normalize_method_code_for_dedup(
+                method_code
+            )
+            method_fingerprint_key = (function_uid, method_body_fingerprint)
+            if method_fingerprint_key in seen_method_fingerprints:
+                continue
+            seen_method_fingerprints.add(method_fingerprint_key)
 
             start_line_number = source_code[: node.start_byte].count("\n") + 1
             end_line_number = source_code[: node.end_byte].count("\n") + 1
-            function_id = len(self.functionRawDataDic) + 1
 
-            self.functionRawDataDic[function_id] = (
-                function_name,
-                start_line_number,
-                end_line_number,
-                node,
-            )
-            self.functionToFile[function_id] = file_path
+            with self._function_register_lock:
+                function_id = len(self.functionRawDataDic) + 1
+                self.functionRawDataDic[function_id] = (
+                    function_name,
+                    start_line_number,
+                    end_line_number,
+                    node,
+                )
+                self.functionToFile[function_id] = file_path
 
-            if function_name not in self.functionNameToId:
-                self.functionNameToId[function_name] = set()
-            self.functionNameToId[function_name].add(function_id)
+                if function_name not in self.functionNameToId:
+                    self.functionNameToId[function_name] = set()
+                self.functionNameToId[function_name].add(function_id)
 
-            sig_key = (function_name, len(param_types), owner_class)
-            if sig_key not in self.function_sig_to_id:
-                self.function_sig_to_id[sig_key] = set()
-            self.function_sig_to_id[sig_key].add(function_id)
+                sig_key = (function_name, len(param_types), owner_class)
+                if sig_key not in self.function_sig_to_id:
+                    self.function_sig_to_id[sig_key] = set()
+                self.function_sig_to_id[sig_key].add(function_id)
 
-            self.function_metadata[function_id] = {
-                "owner_class": owner_class,
-                "param_types": param_types,
-                "function_uid": function_uid,
-                "package_name": package_name,
-            }
+                self.function_metadata[function_id] = {
+                    "owner_class": owner_class,
+                    "param_types": param_types,
+                    "function_uid": function_uid,
+                    "package_name": package_name,
+                }
         return
+
+    def _normalize_method_code_for_dedup(self, method_code: str) -> str:
+        # Keep it lightweight and deterministic.
+        normalized = re.sub(r"\s+", "", method_code)
+        return normalized.strip()
 
     def extract_global_info(
         self, file_path: str, source_code: str, tree: tree_sitter.Tree

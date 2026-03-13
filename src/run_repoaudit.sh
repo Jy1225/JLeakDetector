@@ -11,6 +11,9 @@ MODEL="${MODEL:-deepseek-chat}"
 DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-toy}"
 DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="${SCAN_TYPE:-dfbscan}"
+REPOAUDIT_TEMPERATURE="${REPOAUDIT_TEMPERATURE:-0.0}"
+REPOAUDIT_CALL_DEPTH="${REPOAUDIT_CALL_DEPTH:-15}"
+REPOAUDIT_MAX_NEURAL_WORKERS="${REPOAUDIT_MAX_NEURAL_WORKERS:-16}"
 ENABLE_SOOT_PREFILTER="${ENABLE_SOOT_PREFILTER:-true}"  # true/false
 SOOT_SHADOW_MODE="${SOOT_SHADOW_MODE:-false}"        # true/false
 SOOT_FACTS_PATH="${SOOT_FACTS_PATH:-}"             # path to soot_facts.json
@@ -172,9 +175,9 @@ python3 repoaudit.py \
   --project-path "$PROJECT_PATH_ABS" \
   --bug-type "$BUG_TYPE" \
   "${REACHABILITY_FLAG[@]}" \
-  --temperature 0.0 \
+  --temperature "$REPOAUDIT_TEMPERATURE" \
   --scan-type "$SCAN_TYPE" \
-  --call-depth 15 \
-  --max-neural-workers 16 \
+  --call-depth "$REPOAUDIT_CALL_DEPTH" \
+  --max-neural-workers "$REPOAUDIT_MAX_NEURAL_WORKERS" \
   "${SOOT_FLAGS[@]}" \
   "${Z3_FLAGS[@]}"

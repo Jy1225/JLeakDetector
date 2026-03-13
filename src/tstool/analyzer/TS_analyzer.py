@@ -78,7 +78,10 @@ class CallContext:
         # Check the label combinations
         if top_label.parenthesis == label.parenthesis:
             self.simplified_context.append(label)
-        elif top_label == first_label and label == second_label:
+        elif (
+            top_label.parenthesis == first_label
+            and label.parenthesis == second_label
+        ):
             if (
                 top_label.file_name == label.file_name
                 and top_label.line_number == label.line_number
