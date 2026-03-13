@@ -237,6 +237,8 @@ class JavaSootPrefilter:
         if self._safe_bool(method_facts.get("all_sources_hard_closed")):
             proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
             if proof_kind in {"", "hard"}:
+                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+                    return False, "method_hard_safe_downgraded_delete_on_exit"
                 return True, "method_all_sources_hard_closed"
             return False, "method_proof_not_hard"
 
@@ -269,6 +271,8 @@ class JavaSootPrefilter:
                 ).strip()
             is_hard = line_proof.lower() == "hard" and line_reason == "all_exit_paths_closed_for_alias"
             if is_hard:
+                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+                    return False, f"line_{src_line}_downgraded_delete_on_exit"
                 return True, f"line_{src_line}_all_exit_paths_closed_for_alias"
             return False, f"line_{src_line}_not_strict_hard"
 
@@ -470,6 +474,8 @@ class JavaSootPrefilter:
                 )
                 if not is_hard:
                     continue
+                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+                    continue
                 details = []
                 if line_reason != "":
                     details.append(f"reason={line_reason}")
@@ -489,6 +495,8 @@ class JavaSootPrefilter:
         if self._safe_bool(method_facts.get("all_sources_hard_closed")):
             method_proof_kind = str(method_facts.get("method_proof_kind", "")).strip().lower()
             if method_proof_kind in {"", "hard"}:
+                if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+                    return None
                 return (
                     "all sources in this method are hard-guaranteed to close by Soot facts"
                 )
@@ -515,6 +523,9 @@ class JavaSootPrefilter:
                 return None
             if proof_kind.lower() != "hard":
                 return None
+
+        if self._should_downgrade_hard_safe_by_method_semantics(method_facts):
+            return None
 
         return "method-level hard guarantee: all source allocations are closed on all paths"
 
@@ -589,6 +600,39 @@ class JavaSootPrefilter:
         if isinstance(value, int):
             return value != 0
         return bool(value)
+
+    def _should_downgrade_hard_safe_by_method_semantics(
+        self, method_facts: Dict[str, Any]
+    ) -> bool:
+        """
+        Guardrail for source-gating:
+        deleteOnExit is delayed cleanup and should not be treated as strict
+        hard-safe evidence for skipping LLM analysis.
+        """
+        return self._has_only_delete_on_exit_close_sites(method_facts)
+
+    def _has_only_delete_on_exit_close_sites(self, method_facts: Dict[str, Any]) -> bool:
+        close_sites_obj = method_facts.get("close_sites")
+        if not isinstance(close_sites_obj, list) or len(close_sites_obj) == 0:
+            return False
+
+        has_delete_on_exit = False
+        has_non_delete_on_exit = False
+
+        for site in close_sites_obj:
+            if not isinstance(site, dict):
+                continue
+            invoke_text = str(site.get("invoke", "")).strip().lower()
+            if invoke_text == "":
+                # Facts without invoke signature are not reliable enough to downgrade.
+                has_non_delete_on_exit = True
+                continue
+            if "deleteonexit" in invoke_text:
+                has_delete_on_exit = True
+            else:
+                has_non_delete_on_exit = True
+
+        return has_delete_on_exit and not has_non_delete_on_exit
 
     def _normalize_path(self, file_path: str) -> str:
         return file_path.replace("\\", "/").strip().lower()

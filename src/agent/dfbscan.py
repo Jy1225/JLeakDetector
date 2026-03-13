@@ -481,6 +481,22 @@ class DFBScanAgent(Agent):
                             # This branch does not execute the source. Do not treat it
                             # as a leak/no-propagation terminal.
                             continue
+                        if self.__should_skip_java_temp_nonsrv_no_sink_branch(
+                            src_value=src_value,
+                            current_value_with_context=current_value_with_context,
+                            path_index=path_index,
+                            reachable_values_paths=reachable_values_paths,
+                            release_context_paths=release_context_paths,
+                            guarantee_level_paths=guarantee_level_paths,
+                            resource_kind=src_resource_kind,
+                        ):
+                            self.logger.print_log(
+                                "Skip Java MLK no-sink branch candidate",
+                                "reason=temp_non_servlet_sibling_deleteOnExit_profile",
+                                f"path_index={path_index}",
+                                f"source={str(src_value)}",
+                            )
+                            continue
                         if ignore_empty_non_executed_return_branch:
                             continue
                         if not self.is_reachable:
@@ -1385,6 +1401,93 @@ class DFBScanAgent(Agent):
                 refined_guarantee = GUARANTEE_NORMAL_ONLY
 
         return refined_context, refined_guarantee
+
+    def __is_delete_on_exit_only_sink_edges(
+        self, sink_edges: List[Tuple[Value, CallContext]]
+    ) -> bool:
+        if len(sink_edges) == 0:
+            return False
+        has_delete_on_exit = False
+        has_non_delete_on_exit = False
+        for sink_value, _ in sink_edges:
+            sink_name = sink_value.name.lower()
+            if "deleteonexit" in sink_name:
+                has_delete_on_exit = True
+            else:
+                has_non_delete_on_exit = True
+        return has_delete_on_exit and not has_non_delete_on_exit
+
+    def __should_skip_java_temp_nonsrv_no_sink_branch(
+        self,
+        src_value: Value,
+        current_value_with_context: Tuple[Value, CallContext],
+        path_index: int,
+        reachable_values_paths: List[Set[Tuple[Value, CallContext]]],
+        release_context_paths: List[str],
+        guarantee_level_paths: List[str],
+        resource_kind: str,
+    ) -> bool:
+        """
+        Suppress a noisy no-sink branch in non-servlet temp_resource profile
+        when a sibling branch already performs deleteOnExit-only cleanup under
+        the benchmark policy.
+        """
+        if normalize_resource_kind(resource_kind) != RESOURCE_KIND_TEMP_RESOURCE:
+            return False
+        if is_servlet_context(src_value.file):
+            return False
+
+        current_value, _ = current_value_with_context
+        if current_value != src_value:
+            return False
+
+        if path_index >= len(reachable_values_paths):
+            return False
+        if len(reachable_values_paths[path_index]) != 0:
+            return False
+
+        has_sibling_safe_delete_on_exit = False
+        for sibling_index, sibling_path_set in enumerate(reachable_values_paths):
+            if sibling_index == path_index:
+                continue
+            if len(sibling_path_set) == 0:
+                continue
+            sibling_sink_edges = [
+                (value, ctx)
+                for value, ctx in sibling_path_set
+                if value.label == ValueLabel.SINK
+            ]
+            if len(sibling_sink_edges) == 0:
+                continue
+            if not self.__is_delete_on_exit_only_sink_edges(sibling_sink_edges):
+                continue
+
+            sibling_release_context = RELEASE_CONTEXT_UNKNOWN
+            if sibling_index < len(release_context_paths):
+                sibling_release_context = normalize_release_context(
+                    release_context_paths[sibling_index]
+                )
+            sibling_guarantee = GUARANTEE_NONE
+            if sibling_index < len(guarantee_level_paths):
+                sibling_guarantee = normalize_guarantee_level(
+                    guarantee_level_paths[sibling_index]
+                )
+
+            _, refined_sibling_guarantee = self.__refine_java_mlk_release_semantics(
+                src_value=src_value,
+                resource_kind=resource_kind,
+                sink_edges=sibling_sink_edges,
+                release_context=sibling_release_context,
+                guarantee_level=sibling_guarantee,
+            )
+            if is_all_exit_guaranteed(refined_sibling_guarantee):
+                has_sibling_safe_delete_on_exit = True
+                break
+
+        if not has_sibling_safe_delete_on_exit:
+            return False
+
+        return True
 
     def __build_java_mlk_empty_branch_candidate_path(
         self,

@@ -223,6 +223,9 @@ def build_intra_resource_rules(resource_kind: str, servlet_context: bool) -> Lis
             rules.append(
                 "Non-servlet context: deleteOnExit() can be treated as acceptable cleanup for this benchmark profile."
             )
+            rules.append(
+                "Do not infer a leak only from hypothetical exceptions before deleteOnExit() when no explicit throwing operation is shown."
+            )
         return rules
     return [
         "Resource kind is autocloseable: track close/disconnect/shutdown/release lifecycle.",
@@ -254,6 +257,9 @@ def build_path_resource_rules(resource_kind: str, servlet_context: bool) -> List
         else:
             rules.append(
                 "Non-servlet context: deleteOnExit may be considered acceptable benchmark cleanup."
+            )
+            rules.append(
+                "Avoid reporting leak solely due to speculative pre-deleteOnExit exception paths without explicit throw evidence."
             )
         return rules
     return [
