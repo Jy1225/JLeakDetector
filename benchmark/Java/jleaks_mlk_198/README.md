@@ -18,3 +18,8 @@ Copied into `bug_files/`: 198
 Metadata:
 - `metadata/selected_ids.txt`
 - `metadata/manifest.csv`
+
+Run note:
+- This benchmark contains many standalone bug snippets that are not fully compilable as a project.
+- If you use `src/run_repoaudit.sh`, prefer `SOOT_FACTS_MODE=ts-fallback` (or disable soot prefilter).
+- The updated script auto-downgrades bridge mode to `ts-fallback` when path contains `jleaks`.

@@ -3,27 +3,27 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # --- Defaults ---
-LANGUAGE="Java"
-MODEL="deepseek-chat"
-DEFAULT_PROJECT_NAME="toy"
-DEFAULT_BUG_TYPE="MLK"     # allowed: MLK, NPD, UAF
-SCAN_TYPE="dfbscan"
-ENABLE_SOOT_PREFILTER="true"  # true/false
-SOOT_SHADOW_MODE="false"        # true/false
-SOOT_FACTS_PATH=""             # path to soot_facts.json
-SOOT_TIMEOUT_MS=200            # per-path timeout in ms
-AUTO_GENERATE_SOOT_FACTS="true"  # true/false
-SOOT_FACTS_MODE="bridge"            # auto/bridge/ts-fallback
-SOOT_BRIDGE_JAR="../tools/soot_bridge/target/soot-bridge-all.jar"                # path to soot bridge jar for bridge mode
-SOOT_BRIDGE_MAIN_CLASS="repoaudit.soot.BridgeMain"
-SOOT_CLASS_DIR=""                 # optional class output dir for bridge mode
-SOOT_COMPILE_BEFORE="true"       # true/false
-SOOT_CLASSPATH=""                 # optional compile/runtime classpath
-SOOT_TIMEOUT_SEC=300              # timeout for soot bridge generation
-ENABLE_Z3_PREFILTER="false"   # true/false
-Z3_SHADOW_MODE="true"        # true/false
-Z3_TIMEOUT_MS=200            # per-path timeout in ms
-Z3_MIN_PARSED_CONSTRAINTS=2  # conservative UNSAT skip threshold
+LANGUAGE="${LANGUAGE:-Java}"
+MODEL="${MODEL:-deepseek-chat}"
+DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-toy}"
+DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
+SCAN_TYPE="${SCAN_TYPE:-dfbscan}"
+ENABLE_SOOT_PREFILTER="${ENABLE_SOOT_PREFILTER:-true}"  # true/false
+SOOT_SHADOW_MODE="${SOOT_SHADOW_MODE:-false}"        # true/false
+SOOT_FACTS_PATH="${SOOT_FACTS_PATH:-}"             # path to soot_facts.json
+SOOT_TIMEOUT_MS="${SOOT_TIMEOUT_MS:-200}"            # per-path timeout in ms
+AUTO_GENERATE_SOOT_FACTS="${AUTO_GENERATE_SOOT_FACTS:-true}"  # true/false
+SOOT_FACTS_MODE="${SOOT_FACTS_MODE:-bridge}"            # auto/bridge/ts-fallback
+SOOT_BRIDGE_JAR="${SOOT_BRIDGE_JAR:-../tools/soot_bridge/target/soot-bridge-all.jar}"                # path to soot bridge jar for bridge mode
+SOOT_BRIDGE_MAIN_CLASS="${SOOT_BRIDGE_MAIN_CLASS:-repoaudit.soot.BridgeMain}"
+SOOT_CLASS_DIR="${SOOT_CLASS_DIR:-}"                 # optional class output dir for bridge mode
+SOOT_COMPILE_BEFORE="${SOOT_COMPILE_BEFORE:-true}"       # true/false
+SOOT_CLASSPATH="${SOOT_CLASSPATH:-}"                 # optional compile/runtime classpath
+SOOT_TIMEOUT_SEC="${SOOT_TIMEOUT_SEC:-300}"              # timeout for soot bridge generation
+ENABLE_Z3_PREFILTER="${ENABLE_Z3_PREFILTER:-false}"   # true/false
+Z3_SHADOW_MODE="${Z3_SHADOW_MODE:-true}"        # true/false
+Z3_TIMEOUT_MS="${Z3_TIMEOUT_MS:-200}"            # per-path timeout in ms
+Z3_MIN_PARSED_CONSTRAINTS="${Z3_MIN_PARSED_CONSTRAINTS:-2}"  # conservative UNSAT skip threshold
 
 # Construct the default project *path* from LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -83,6 +83,16 @@ if [[ ! -d "$PROJECT_PATH_ABS" ]]; then
   exit 1
 fi
 
+# JLeaks snippets are often non-compilable standalone Java units.
+# If user keeps bridge mode, downgrade to ts-fallback for compatibility.
+if [[ "$PROJECT_PATH_ABS" == *"/jleaks"* || "$PROJECT_PATH_ABS" == *"\\jleaks"* ]]; then
+  if [[ "$ENABLE_SOOT_PREFILTER" == "true" && "$SOOT_FACTS_MODE" == "bridge" ]]; then
+    echo "[Info] Detected JLeaks-like dataset path. Switch SOOT_FACTS_MODE=ts-fallback and SOOT_COMPILE_BEFORE=false."
+    SOOT_FACTS_MODE="ts-fallback"
+    SOOT_COMPILE_BEFORE="false"
+  fi
+fi
+
 if [[ "$ENABLE_SOOT_PREFILTER" == "true" && "$AUTO_GENERATE_SOOT_FACTS" == "true" ]]; then
   if [[ -z "$SOOT_FACTS_PATH" ]]; then
     SOOT_FACTS_PATH="$PROJECT_PATH_ABS/.repoaudit/soot_facts.json"
@@ -111,7 +121,18 @@ if [[ "$ENABLE_SOOT_PREFILTER" == "true" && "$AUTO_GENERATE_SOOT_FACTS" == "true
     SOOT_GEN_FLAGS+=(--compile-before)
   fi
 
-  python3 tstool/validator/generate_java_soot_facts.py "${SOOT_GEN_FLAGS[@]}"
+  if ! python3 tstool/validator/generate_java_soot_facts.py "${SOOT_GEN_FLAGS[@]}"; then
+    if [[ "$SOOT_FACTS_MODE" != "ts-fallback" ]]; then
+      echo "[Warn] Soot facts generation failed in mode=$SOOT_FACTS_MODE; retry with ts-fallback."
+      python3 tstool/validator/generate_java_soot_facts.py \
+        --project-path "$PROJECT_PATH_ABS" \
+        --output "$SOOT_FACTS_PATH" \
+        --mode "ts-fallback"
+    else
+      echo "[Error] Soot facts generation failed in ts-fallback mode." >&2
+      exit 1
+    fi
+  fi
 fi
 
 # --- Run ---
