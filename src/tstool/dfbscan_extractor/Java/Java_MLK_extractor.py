@@ -133,12 +133,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
 
     # In-memory wrappers are excluded from external-resource leak scope.
     RESOURCE_TYPE_EXCLUDELIST = {
-        # "ByteArrayInputStream",
-        # "ByteArrayOutputStream",
-        # "CharArrayReader",
-        # "CharArrayWriter",
-        # "StringReader",
-        # "StringWriter",
+        "ByteArrayInputStream",
+        "ByteArrayOutputStream",
+        "CharArrayReader",
+        "CharArrayWriter",
+        "StringReader",
+        "StringWriter",
     }
 
     FACTORY_METHOD_NAMES = {
@@ -217,6 +217,11 @@ class Java_MLK_Extractor(DFBScanExtractor):
 
     CLOSE_METHOD_NAMES = {
         "close",
+        "closeQuietly",
+        "closeSilently",
+        "closeIgnoringExceptions",
+        "closeWhileHandlingException",
+        "closeUnchecked",
         "abort",
         "disconnect",
         "shutdown",

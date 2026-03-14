@@ -202,6 +202,7 @@ class DFBScanAgent(Agent):
             "source",
             "method",
             "method_semantic",
+            "obligation",
         }:
             self.java_mlk_report_merge_mode = "source"
         # Hard dedup is obligation-based (root resource family in a function).
@@ -214,9 +215,6 @@ class DFBScanAgent(Agent):
         if self.java_mlk_hard_dedup_mode not in {"source", "obligation"}:
             self.java_mlk_hard_dedup_mode = "obligation"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
-        self.java_mlk_max_paths_per_source = int(
-            os.environ.get("REPOAUDIT_JAVA_MLK_MAX_PATHS_PER_SOURCE", "200")
-        )
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
@@ -2223,6 +2221,8 @@ class DFBScanAgent(Agent):
 
         result: Dict[str, str] = {}
         sources_by_function: Dict[int, List[Value]] = defaultdict(list)
+        source_local_key_by_src: Dict[str, str] = {}
+        function_source_context: Dict[int, Dict[str, object]] = {}
 
         for src_value in src_values:
             src_key = str(src_value)
@@ -2230,9 +2230,11 @@ class DFBScanAgent(Agent):
             if src_function is None:
                 normalized_file = src_value.file.replace("\\", "/").lower()
                 normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
-                result[src_key] = (
+                local_key = (
                     f"{normalized_file}:UNKNOWN:src:{normalized_src_name}:{src_value.line_number}"
                 )
+                result[src_key] = local_key
+                source_local_key_by_src[src_key] = local_key
                 continue
             sources_by_function[src_function.function_id].append(src_value)
 
@@ -2242,10 +2244,23 @@ class DFBScanAgent(Agent):
             function = self.ts_analyzer.function_env[function_id]
             normalized_file = function.file_path.replace("\\", "/").lower()
             function_key = self.__build_java_mlk_function_signature_key(function)
+            paras = (
+                function.paras
+                if function.paras is not None
+                else self.ts_analyzer.get_parameters_in_single_function(function)
+            )
+            para_name_to_index: Dict[str, int] = {
+                para.name: para.index for para in paras if para.index >= 0
+            }
 
             assignment_timeline = self.__build_java_mlk_assignment_timeline(function)
             source_var_by_src_key: Dict[str, str] = {}
             source_lines_by_var: Dict[str, List[int]] = defaultdict(list)
+            root_var_by_src_key: Dict[str, str] = {}
+            source_line_by_src_key: Dict[str, int] = {}
+            source_norm_expr_by_src_key: Dict[str, str] = {}
+            source_keys_by_norm_expr: Dict[str, List[Tuple[int, str]]] = defaultdict(list)
+            source_keys_by_line: Dict[int, List[str]] = defaultdict(list)
 
             for src_value in function_sources:
                 src_key = str(src_value)
@@ -2259,9 +2274,25 @@ class DFBScanAgent(Agent):
                 source_var_by_src_key[src_key] = source_var
                 if source_var != "":
                     source_lines_by_var[source_var].append(src_value.line_number)
+                source_line_by_src_key[src_key] = src_value.line_number
+                normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
+                source_norm_expr_by_src_key[src_key] = normalized_src_name
+                source_keys_by_norm_expr[normalized_src_name].append(
+                    (src_value.line_number, src_key)
+                )
+                source_keys_by_line[src_value.line_number].append(src_key)
 
             for var_name, line_numbers in source_lines_by_var.items():
                 source_lines_by_var[var_name] = sorted(set(line_numbers))
+            for normalized_expr in source_keys_by_norm_expr:
+                source_keys_by_norm_expr[normalized_expr] = sorted(
+                    source_keys_by_norm_expr[normalized_expr],
+                    key=lambda item: (item[0], item[1]),
+                )
+            for line_number in source_keys_by_line:
+                source_keys_by_line[line_number] = sorted(
+                    set(source_keys_by_line[line_number])
+                )
 
             for src_value in function_sources:
                 src_key = str(src_value)
@@ -2278,16 +2309,150 @@ class DFBScanAgent(Agent):
                         src_value.line_number,
                         source_lines_by_var,
                     )
-                    result[src_key] = (
+                    root_var_by_src_key[src_key] = root_var
+                    local_key = (
                         f"{normalized_file}:{function_key}:root:{root_var.lower()}:{root_source_line}"
                     )
                 else:
                     normalized_src_name = self.__normalize_java_mlk_source_name(
                         src_value.name
                     )
-                    result[src_key] = (
+                    root_var_by_src_key[src_key] = ""
+                    local_key = (
                         f"{normalized_file}:{function_key}:src:{normalized_src_name}:{src_value.line_number}"
                     )
+                result[src_key] = local_key
+                source_local_key_by_src[src_key] = local_key
+
+            function_source_context[function_id] = {
+                "function": function,
+                "function_sources": list(function_sources),
+                "assignment_timeline": assignment_timeline,
+                "source_lines_by_var": source_lines_by_var,
+                "source_var_by_src_key": source_var_by_src_key,
+                "root_var_by_src_key": root_var_by_src_key,
+                "source_line_by_src_key": source_line_by_src_key,
+                "source_norm_expr_by_src_key": source_norm_expr_by_src_key,
+                "source_keys_by_norm_expr": source_keys_by_norm_expr,
+                "source_keys_by_line": source_keys_by_line,
+                "para_name_to_index": para_name_to_index,
+            }
+
+        # Inter-procedural obligation linking:
+        # if a callee source is derived from parameter i and caller passes a source
+        # (or a source-derived variable) as argument i, merge them into one obligation.
+        parent: Dict[str, str] = {src_key: src_key for src_key in result}
+
+        def find_root(src_key: str) -> str:
+            current = src_key
+            while parent[current] != current:
+                parent[current] = parent[parent[current]]
+                current = parent[current]
+            return current
+
+        def union(src_a: str, src_b: str) -> bool:
+            root_a = find_root(src_a)
+            root_b = find_root(src_b)
+            if root_a == root_b:
+                return False
+            key_a = source_local_key_by_src.get(root_a, result.get(root_a, root_a))
+            key_b = source_local_key_by_src.get(root_b, result.get(root_b, root_b))
+            if key_a <= key_b:
+                parent[root_b] = root_a
+            else:
+                parent[root_a] = root_b
+            return True
+
+        callee_param_derived_sources: Dict[int, Dict[int, List[str]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
+        for function_id, context in function_source_context.items():
+            source_var_by_src_key = context["source_var_by_src_key"]
+            assignment_timeline = context["assignment_timeline"]
+            para_name_to_index = context["para_name_to_index"]
+            function_sources = context["function_sources"]
+
+            for src_value in function_sources:
+                src_key = str(src_value)
+                source_var = source_var_by_src_key.get(src_key, "")
+                param_indices = self.__infer_java_mlk_source_parameter_indices(
+                    src_value=src_value,
+                    source_var=source_var,
+                    para_name_to_index=para_name_to_index,
+                    assignment_timeline=assignment_timeline,
+                )
+                # Keep propagation conservative: only merge when the source is
+                # clearly derived from one parameter slot.
+                if len(param_indices) != 1:
+                    continue
+                param_index = next(iter(param_indices))
+                callee_param_derived_sources[function_id][param_index].append(src_key)
+
+        interproc_link_count = 0
+        for caller_function_id, caller_context in function_source_context.items():
+            caller_function = caller_context["function"]
+            callee_functions = self.ts_analyzer.get_all_callee_functions(caller_function)
+            if len(callee_functions) == 0:
+                continue
+
+            for callee_function in callee_functions:
+                callee_function_id = callee_function.function_id
+                if callee_function_id not in callee_param_derived_sources:
+                    continue
+                param_source_map = callee_param_derived_sources[callee_function_id]
+                if len(param_source_map) == 0:
+                    continue
+
+                call_sites = self.ts_analyzer.get_callsites_by_callee_function(
+                    caller_function, callee_function
+                )
+                if len(call_sites) == 0:
+                    continue
+
+                for call_site in call_sites:
+                    resolved_callee_ids = self.ts_analyzer.get_callee_function_ids_at_callsite(
+                        caller_function, call_site
+                    )
+                    if len(resolved_callee_ids) != 1:
+                        continue
+                    if resolved_callee_ids[0] != callee_function_id:
+                        continue
+
+                    call_arguments = self.ts_analyzer.get_arguments_at_callsite(
+                        caller_function, call_site
+                    )
+                    arg_by_index = {arg.index: arg for arg in call_arguments}
+                    for param_index, callee_src_keys in param_source_map.items():
+                        call_arg = arg_by_index.get(param_index)
+                        if call_arg is None:
+                            continue
+                        caller_src_key = self.__resolve_java_mlk_argument_source_key(
+                            call_arg, caller_context
+                        )
+                        if caller_src_key == "" or caller_src_key not in parent:
+                            continue
+                        for callee_src_key in callee_src_keys:
+                            if callee_src_key not in parent:
+                                continue
+                            if union(caller_src_key, callee_src_key):
+                                interproc_link_count += 1
+
+        group_members: Dict[str, List[str]] = defaultdict(list)
+        for src_key in result:
+            group_members[find_root(src_key)].append(src_key)
+        for member_keys in group_members.values():
+            canonical_key = min(
+                source_local_key_by_src.get(member_key, result[member_key])
+                for member_key in member_keys
+            )
+            for member_key in member_keys:
+                result[member_key] = canonical_key
+
+        if interproc_link_count > 0:
+            self.logger.print_log(
+                "Java MLK obligation inter-procedural links:",
+                f"linked={interproc_link_count}",
+            )
 
         return result
 
@@ -2497,6 +2662,172 @@ class DFBScanAgent(Agent):
         if len(prior_lines) > 0:
             return prior_lines[-1]
         return root_lines[0]
+
+    def __infer_java_mlk_source_parameter_indices(
+        self,
+        src_value: Value,
+        source_var: str,
+        para_name_to_index: Dict[str, int],
+        assignment_timeline: Dict[str, List[Tuple[int, List[str]]]],
+    ) -> Set[int]:
+        param_indices: Set[int] = set()
+        if len(para_name_to_index) == 0:
+            return param_indices
+
+        dependencies = self.__extract_java_expression_dependencies(src_value.name)
+        for dependency in dependencies:
+            if dependency in para_name_to_index:
+                param_indices.add(para_name_to_index[dependency])
+
+        receiver = self.__extract_java_receiver_identifier(src_value.name)
+        if receiver in para_name_to_index:
+            param_indices.add(para_name_to_index[receiver])
+
+        if source_var != "":
+            root_var = self.__resolve_java_root_variable_at_line(
+                source_var,
+                src_value.line_number,
+                assignment_timeline,
+                set(),
+            )
+            if root_var in para_name_to_index:
+                param_indices.add(para_name_to_index[root_var])
+        return param_indices
+
+    def __extract_java_expression_dependencies(self, expression: str) -> List[str]:
+        if expression == "":
+            return []
+        text = expression.strip()
+        if text == "":
+            return []
+
+        skip_tokens = self.JAVA_ASSIGNMENT_SKIP_KEYWORDS.union(
+            {
+                "int",
+                "long",
+                "double",
+                "float",
+                "short",
+                "byte",
+                "char",
+                "boolean",
+                "void",
+                "class",
+                "interface",
+                "enum",
+                "instanceof",
+                "throws",
+                "throw",
+            }
+        )
+
+        dependencies: List[str] = []
+        for match in self.JAVA_IDENTIFIER_RE.finditer(text):
+            token = match.group(0)
+            token_lower = token.lower()
+            if token_lower in skip_tokens:
+                continue
+            if token[0].isupper():
+                continue
+            suffix = text[match.end() :].lstrip()
+            if suffix.startswith("("):
+                # method/function name, not a variable dependency
+                continue
+            if token not in dependencies:
+                dependencies.append(token)
+        return dependencies
+
+    def __pick_java_mlk_source_key_near_line(
+        self,
+        candidates: List[Tuple[int, str]],
+        line_number: int,
+    ) -> str:
+        if len(candidates) == 0:
+            return ""
+
+        exact_candidates = [
+            (candidate_line, candidate_key)
+            for candidate_line, candidate_key in candidates
+            if candidate_line == line_number
+        ]
+        if len(exact_candidates) > 0:
+            exact_candidates.sort(key=lambda item: item[1])
+            return exact_candidates[0][1]
+
+        prior_candidates = [
+            (candidate_line, candidate_key)
+            for candidate_line, candidate_key in candidates
+            if candidate_line <= line_number
+        ]
+        if len(prior_candidates) > 0:
+            prior_candidates.sort(key=lambda item: (-item[0], item[1]))
+            return prior_candidates[0][1]
+
+        post_candidates = sorted(candidates, key=lambda item: (item[0], item[1]))
+        return post_candidates[0][1]
+
+    def __resolve_java_mlk_argument_source_key(
+        self,
+        call_arg: Value,
+        caller_context: Dict[str, object],
+    ) -> str:
+        normalized_arg_expr = self.__normalize_java_mlk_source_name(call_arg.name)
+        source_keys_by_norm_expr = caller_context["source_keys_by_norm_expr"]
+        source_norm_expr_by_src_key = caller_context["source_norm_expr_by_src_key"]
+        source_keys_by_line = caller_context["source_keys_by_line"]
+        assignment_timeline = caller_context["assignment_timeline"]
+        source_lines_by_var = caller_context["source_lines_by_var"]
+        source_var_by_src_key = caller_context["source_var_by_src_key"]
+        root_var_by_src_key = caller_context["root_var_by_src_key"]
+        source_line_by_src_key = caller_context["source_line_by_src_key"]
+
+        exact_candidates = source_keys_by_norm_expr.get(normalized_arg_expr, [])
+        matched_source_key = self.__pick_java_mlk_source_key_near_line(
+            exact_candidates,
+            call_arg.line_number,
+        )
+        if matched_source_key != "":
+            return matched_source_key
+
+        # Same-line wrapper/cast variation matching.
+        line_candidates = source_keys_by_line.get(call_arg.line_number, [])
+        for candidate_key in line_candidates:
+            candidate_norm = source_norm_expr_by_src_key.get(candidate_key, "")
+            if candidate_norm == "":
+                continue
+            if candidate_norm in normalized_arg_expr or normalized_arg_expr in candidate_norm:
+                return candidate_key
+
+        dependency_tokens = self.__extract_java_expression_dependencies(call_arg.name)
+        for dependency in dependency_tokens:
+            root_var = self.__resolve_java_root_variable_at_line(
+                dependency,
+                call_arg.line_number,
+                assignment_timeline,
+                set(),
+            )
+            matched_line = self.__pick_java_root_source_line(
+                root_var,
+                call_arg.line_number,
+                source_lines_by_var,
+            )
+            candidate_pairs: List[Tuple[int, str]] = []
+            for src_key, src_line in source_line_by_src_key.items():
+                src_var = source_var_by_src_key.get(src_key, "")
+                src_root_var = root_var_by_src_key.get(src_key, "")
+                if src_var != root_var and src_root_var != root_var:
+                    continue
+                if src_line != matched_line:
+                    continue
+                candidate_pairs.append((src_line, src_key))
+            candidate_key = self.__pick_java_mlk_source_key_near_line(
+                candidate_pairs,
+                call_arg.line_number,
+            )
+            if candidate_key != "":
+                return candidate_key
+
+        return ""
 
     def __get_java_mlk_source_obligation_key(self, src_value: Value) -> str:
         if self.language != "Java" or self.bug_type != "MLK":
@@ -2714,7 +3045,6 @@ class DFBScanAgent(Agent):
         if effective_merge_mode == "obligation":
             return (
                 obligation_signature,
-                source_anchor_key,
                 normalize_resource_kind(resource_kind),
             )
         if effective_merge_mode == "method":
@@ -2859,18 +3189,6 @@ class DFBScanAgent(Agent):
                     break
 
         filtered_paths = [dedup_paths[i] for i in range(len(dedup_paths)) if keep[i]]
-        if (
-            self.java_mlk_max_paths_per_source > 0
-            and len(filtered_paths) > self.java_mlk_max_paths_per_source
-        ):
-            filtered_paths = sorted(filtered_paths, key=lambda item: len(item))[
-                : self.java_mlk_max_paths_per_source
-            ]
-            self.logger.print_log(
-                "Truncated Java MLK candidate paths by cap",
-                f"source={str(src_value)}",
-                f"cap={self.java_mlk_max_paths_per_source}",
-            )
         if len(filtered_paths) < len(paths):
             self.logger.print_log(
                 f"Pruned {len(paths) - len(filtered_paths)} short Java MLK candidate path(s) for source {str(src_value)}"

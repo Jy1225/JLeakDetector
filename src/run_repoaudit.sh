@@ -30,6 +30,8 @@ ENABLE_Z3_PREFILTER="${ENABLE_Z3_PREFILTER:-false}"   # true/false
 Z3_SHADOW_MODE="${Z3_SHADOW_MODE:-true}"        # true/false
 Z3_TIMEOUT_MS="${Z3_TIMEOUT_MS:-200}"            # per-path timeout in ms
 Z3_MIN_PARSED_CONSTRAINTS="${Z3_MIN_PARSED_CONSTRAINTS:-2}"  # conservative UNSAT skip threshold
+REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="${REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE:-method_semantic}"  # source/method/method_semantic/obligation
+REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="${REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE:-obligation}"             # source/obligation
 
 # Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${ANALYSIS_LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -169,6 +171,8 @@ fi
 Z3_FLAGS+=(--z3-timeout-ms "$Z3_TIMEOUT_MS")
 Z3_FLAGS+=(--z3-min-parsed-constraints "$Z3_MIN_PARSED_CONSTRAINTS")
 
+REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="$REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE" \
+REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="$REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE" \
 python3 repoaudit.py \
   --language "$ANALYSIS_LANGUAGE" \
   --model-name "$MODEL" \
