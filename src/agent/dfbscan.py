@@ -177,7 +177,16 @@ class DFBScanAgent(Agent):
         )
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
-        self.java_mlk_report_signatures: Set[Tuple[str, str]] = set()
+        self.java_mlk_report_merge_mode = os.environ.get(
+            "REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE", "source"
+        ).strip().lower()
+        if self.java_mlk_report_merge_mode not in {
+            "source",
+            "method",
+            "method_semantic",
+        }:
+            self.java_mlk_report_merge_mode = "source"
+        self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_max_paths_per_source = int(
             os.environ.get("REPOAUDIT_JAVA_MLK_MAX_PATHS_PER_SOURCE", "200")
         )
@@ -760,6 +769,10 @@ class DFBScanAgent(Agent):
     # TOBE deprecated
     def start_scan_sequential(self) -> None:
         self.logger.print_console("Start data-flow bug scanning...")
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.logger.print_console(
+                f"Java MLK report merge mode: {self.java_mlk_report_merge_mode}"
+            )
 
         # Total number of source values
         total_src_values = len(self.src_values)
@@ -1006,7 +1019,12 @@ class DFBScanAgent(Agent):
                             if function is not None:
                                 relevant_functions[function.function_id] = function
                         if not self.__register_java_mlk_report_signature(
-                            src_value, relevant_functions
+                            src_value,
+                            relevant_functions,
+                            resource_kind=path_resource_kind,
+                            release_context=path_release_context,
+                            guarantee_level=path_guarantee_level,
+                            buggy_path=buggy_path,
                         ):
                             continue
 
@@ -1054,6 +1072,10 @@ class DFBScanAgent(Agent):
     def start_scan(self) -> None:
         self.logger.print_console("Start data-flow bug scanning in parallel...")
         self.logger.print_console(f"Max number of workers: {self.max_neural_workers}")
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.logger.print_console(
+                f"Java MLK report merge mode: {self.java_mlk_report_merge_mode}"
+            )
 
         # Total number of source values
         total_src_values = len(self.src_values)
@@ -1346,7 +1368,12 @@ class DFBScanAgent(Agent):
                     if function is not None:
                         relevant_functions[function.function_id] = function
                 if not self.__register_java_mlk_report_signature(
-                    src_value, relevant_functions
+                    src_value,
+                    relevant_functions,
+                    resource_kind=path_resource_kind,
+                    release_context=path_release_context,
+                    guarantee_level=path_guarantee_level,
+                    buggy_path=buggy_path,
                 ):
                     continue
 
@@ -2187,8 +2214,14 @@ class DFBScanAgent(Agent):
         return normalized
 
     def __build_java_mlk_report_signature(
-        self, src_value: Value, relevant_functions: Dict[int, Function]
-    ) -> Tuple[str, str]:
+        self,
+        src_value: Value,
+        relevant_functions: Dict[int, Function],
+        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
+        release_context: str = RELEASE_CONTEXT_UNKNOWN,
+        guarantee_level: str = GUARANTEE_NONE,
+        buggy_path: Optional[List[Value]] = None,
+    ) -> Tuple[object, ...]:
         """
         Build a stable signature for dedup.
         Use source anchor function (the function that contains src_value) as
@@ -2229,15 +2262,49 @@ class DFBScanAgent(Agent):
             else:
                 source_anchor_key = "UNKNOWN"
 
+        merge_mode = self.java_mlk_report_merge_mode
+        if merge_mode == "method":
+            return (normalized_src_file, source_anchor_key)
+        if merge_mode == "method_semantic":
+            has_no_sink_marker = (
+                self.__has_java_mlk_no_sink_marker(buggy_path)
+                if buggy_path is not None
+                else False
+            )
+            has_weak_release_marker = (
+                self.__has_java_mlk_weak_release_marker(buggy_path)
+                if buggy_path is not None
+                else False
+            )
+            return (
+                normalized_src_file,
+                source_anchor_key,
+                normalize_resource_kind(resource_kind),
+                normalize_release_context(release_context),
+                normalize_guarantee_level(guarantee_level),
+                has_no_sink_marker,
+                has_weak_release_marker,
+            )
         return (src_signature, source_anchor_key)
 
     def __register_java_mlk_report_signature(
-        self, src_value: Value, relevant_functions: Dict[int, Function]
+        self,
+        src_value: Value,
+        relevant_functions: Dict[int, Function],
+        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
+        release_context: str = RELEASE_CONTEXT_UNKNOWN,
+        guarantee_level: str = GUARANTEE_NONE,
+        buggy_path: Optional[List[Value]] = None,
     ) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":
             return True
         signature = self.__build_java_mlk_report_signature(
-            src_value, relevant_functions
+            src_value,
+            relevant_functions,
+            resource_kind=resource_kind,
+            release_context=release_context,
+            guarantee_level=guarantee_level,
+            buggy_path=buggy_path,
         )
         with self.lock:
             if signature in self.java_mlk_report_signatures:
@@ -2264,6 +2331,15 @@ class DFBScanAgent(Agent):
             if (
                 value.label == ValueLabel.LOCAL
                 and value.name.startswith("__NO_SINK_BRANCH_PATH_")
+            ):
+                return True
+        return False
+
+    def __has_java_mlk_weak_release_marker(self, path: List[Value]) -> bool:
+        for value in path:
+            if (
+                value.label == ValueLabel.LOCAL
+                and value.name.startswith("__WEAK_RELEASE_BRANCH_PATH_")
             ):
                 return True
         return False
