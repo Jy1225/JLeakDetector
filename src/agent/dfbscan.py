@@ -2,6 +2,7 @@ import json
 import os
 import re
 import threading
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from tqdm import tqdm
@@ -68,6 +69,23 @@ BASE_PATH = Path(__file__).resolve().parents[2]
 
 
 class DFBScanAgent(Agent):
+    JAVA_IDENTIFIER_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+    JAVA_ASSIGNMENT_SKIP_KEYWORDS = {
+        "if",
+        "for",
+        "while",
+        "switch",
+        "case",
+        "catch",
+        "return",
+        "new",
+        "this",
+        "super",
+        "null",
+        "true",
+        "false",
+    }
+
     def __init__(
         self,
         bug_type: str,
@@ -186,15 +204,30 @@ class DFBScanAgent(Agent):
             "method_semantic",
         }:
             self.java_mlk_report_merge_mode = "source"
-        # Keep hard dedup conservative at source-level to avoid recall loss.
-        # REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE is used for output-side grouped view.
-        self.java_mlk_hard_dedup_mode = "source"
+        # Hard dedup is obligation-based (root resource family in a function).
+        # This reduces duplicated reports generated from derived resource sources
+        # (e.g., wrapper/factory chains) while still allowing multiple bugs in one
+        # file when obligations differ.
+        self.java_mlk_hard_dedup_mode = os.environ.get(
+            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "obligation"
+        ).strip().lower()
+        if self.java_mlk_hard_dedup_mode not in {"source", "obligation"}:
+            self.java_mlk_hard_dedup_mode = "obligation"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_max_paths_per_source = int(
             os.environ.get("REPOAUDIT_JAVA_MLK_MAX_PATHS_PER_SOURCE", "200")
         )
 
         self.src_values, self.sink_values = self.extractor.extract_all()
+        self.java_mlk_source_obligation_keys: Dict[str, str] = {}
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.java_mlk_source_obligation_keys = (
+                self.__build_java_mlk_source_obligation_index(self.src_values)
+            )
+            obligation_count = len(set(self.java_mlk_source_obligation_keys.values()))
+            self.logger.print_console(
+                f"Java MLK obligations inferred: {obligation_count} from {len(self.src_values)} source(s)."
+            )
         self.state = DFBScanState(self.src_values, self.sink_values)
         return
 
@@ -2177,6 +2210,316 @@ class DFBScanAgent(Agent):
         with open(stats_path, "w") as stats_file:
             json.dump(payload, stats_file, indent=4)
 
+    def __build_java_mlk_source_obligation_index(
+        self, src_values: List[Value]
+    ) -> Dict[str, str]:
+        """
+        Build obligation keys for Java MLK sources.
+        Multiple derived sources in the same resource family (e.g., wrapper/factory chain)
+        should map to one obligation key, while independent sources remain separated.
+        """
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        result: Dict[str, str] = {}
+        sources_by_function: Dict[int, List[Value]] = defaultdict(list)
+
+        for src_value in src_values:
+            src_key = str(src_value)
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            if src_function is None:
+                normalized_file = src_value.file.replace("\\", "/").lower()
+                normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
+                result[src_key] = (
+                    f"{normalized_file}:UNKNOWN:src:{normalized_src_name}:{src_value.line_number}"
+                )
+                continue
+            sources_by_function[src_function.function_id].append(src_value)
+
+        for function_id, function_sources in sources_by_function.items():
+            if function_id not in self.ts_analyzer.function_env:
+                continue
+            function = self.ts_analyzer.function_env[function_id]
+            normalized_file = function.file_path.replace("\\", "/").lower()
+            function_key = self.__build_java_mlk_function_signature_key(function)
+
+            assignment_timeline = self.__build_java_mlk_assignment_timeline(function)
+            source_var_by_src_key: Dict[str, str] = {}
+            source_lines_by_var: Dict[str, List[int]] = defaultdict(list)
+
+            for src_value in function_sources:
+                src_key = str(src_value)
+                line_text = self.ts_analyzer.get_content_by_line_number(
+                    src_value.line_number, src_value.file
+                )
+                assigned_var, _ = self.__parse_java_assignment_line(line_text)
+                source_var = assigned_var
+                if source_var == "":
+                    source_var = self.__extract_java_receiver_identifier(src_value.name)
+                source_var_by_src_key[src_key] = source_var
+                if source_var != "":
+                    source_lines_by_var[source_var].append(src_value.line_number)
+
+            for var_name, line_numbers in source_lines_by_var.items():
+                source_lines_by_var[var_name] = sorted(set(line_numbers))
+
+            for src_value in function_sources:
+                src_key = str(src_value)
+                source_var = source_var_by_src_key.get(src_key, "")
+                if source_var != "":
+                    root_var = self.__resolve_java_root_variable_at_line(
+                        source_var,
+                        src_value.line_number,
+                        assignment_timeline,
+                        set(),
+                    )
+                    root_source_line = self.__pick_java_root_source_line(
+                        root_var,
+                        src_value.line_number,
+                        source_lines_by_var,
+                    )
+                    result[src_key] = (
+                        f"{normalized_file}:{function_key}:root:{root_var.lower()}:{root_source_line}"
+                    )
+                else:
+                    normalized_src_name = self.__normalize_java_mlk_source_name(
+                        src_value.name
+                    )
+                    result[src_key] = (
+                        f"{normalized_file}:{function_key}:src:{normalized_src_name}:{src_value.line_number}"
+                    )
+
+        return result
+
+    def __build_java_mlk_assignment_timeline(
+        self, function: Function
+    ) -> Dict[str, List[Tuple[int, List[str]]]]:
+        timeline: Dict[str, List[Tuple[int, List[str]]]] = defaultdict(list)
+        for line_number in range(
+            function.start_line_number, function.end_line_number + 1
+        ):
+            line_text = self.ts_analyzer.get_content_by_line_number(
+                line_number, function.file_path
+            )
+            lhs, rhs_tokens = self.__parse_java_assignment_line(line_text)
+            if lhs == "":
+                continue
+            timeline[lhs].append((line_number, rhs_tokens))
+        for lhs in timeline:
+            timeline[lhs].sort(key=lambda item: item[0])
+        return timeline
+
+    def __parse_java_assignment_line(self, line_text: str) -> Tuple[str, List[str]]:
+        if line_text == "":
+            return "", []
+        stripped = line_text.split("//", 1)[0].strip()
+        if stripped == "":
+            return "", []
+
+        assign_idx = -1
+        depth = 0
+        in_single_quote = False
+        in_double_quote = False
+        escaped = False
+        for idx, ch in enumerate(stripped):
+            if escaped:
+                escaped = False
+                continue
+            if ch == "\\":
+                escaped = True
+                continue
+            if ch == "'" and not in_double_quote:
+                in_single_quote = not in_single_quote
+                continue
+            if ch == '"' and not in_single_quote:
+                in_double_quote = not in_double_quote
+                continue
+            if in_single_quote or in_double_quote:
+                continue
+
+            if ch in "([{":
+                depth += 1
+                continue
+            if ch in ")]}":
+                depth = max(0, depth - 1)
+                continue
+
+            if ch != "=" or depth != 0:
+                continue
+            prev_ch = stripped[idx - 1] if idx > 0 else ""
+            next_ch = stripped[idx + 1] if idx + 1 < len(stripped) else ""
+            if prev_ch in {"=", "!", "<", ">"} or next_ch == "=":
+                continue
+            assign_idx = idx
+            break
+
+        if assign_idx < 0:
+            return "", []
+
+        left = stripped[:assign_idx].strip()
+        right = stripped[assign_idx + 1 :].strip().rstrip(";")
+        lhs_var = self.__extract_java_assigned_variable(left)
+        if lhs_var == "":
+            return "", []
+        rhs_tokens = self.__extract_java_assignment_rhs_dependencies(right)
+        return lhs_var, rhs_tokens
+
+    def __extract_java_assigned_variable(self, left_expr: str) -> str:
+        identifiers = self.JAVA_IDENTIFIER_RE.findall(left_expr)
+        if len(identifiers) == 0:
+            return ""
+        for token in reversed(identifiers):
+            token_lower = token.lower()
+            if token_lower in self.JAVA_ASSIGNMENT_SKIP_KEYWORDS:
+                continue
+            if token_lower in {"final", "volatile", "transient", "var"}:
+                continue
+            return token
+        return ""
+
+    def __extract_java_assignment_rhs_dependencies(self, right_expr: str) -> List[str]:
+        if right_expr == "":
+            return []
+        right_stripped = right_expr.strip()
+        right_lower = right_stripped.lower()
+        if right_lower.startswith("new "):
+            return []
+
+        this_receiver_match = re.search(
+            r"\bthis\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)\s*\.",
+            right_stripped,
+        )
+        if this_receiver_match is not None:
+            return [this_receiver_match.group(1)]
+
+        receiver_match = re.search(
+            r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*[A-Za-z_][A-Za-z0-9_]*\s*\(",
+            right_stripped,
+        )
+        if receiver_match is not None:
+            receiver = receiver_match.group(1)
+            if receiver != "" and not receiver[0].isupper():
+                token_lower = receiver.lower()
+                if token_lower not in self.JAVA_ASSIGNMENT_SKIP_KEYWORDS:
+                    return [receiver]
+
+        tokens: List[str] = []
+        for match in self.JAVA_IDENTIFIER_RE.finditer(right_stripped):
+            token = match.group(0)
+            token_lower = token.lower()
+            if token_lower in self.JAVA_ASSIGNMENT_SKIP_KEYWORDS:
+                continue
+            if token[0].isupper():
+                continue
+            suffix = right_stripped[match.end() :].lstrip()
+            if suffix.startswith("("):
+                # Invoked method name, not variable dependency.
+                continue
+            if token not in tokens:
+                tokens.append(token)
+        return tokens
+
+    def __extract_java_receiver_identifier(self, expr: str) -> str:
+        if expr == "":
+            return ""
+        text = expr.strip()
+        this_receiver_match = re.match(
+            r"^this\s*\.\s*([A-Za-z_][A-Za-z0-9_]*)\s*\.",
+            text,
+        )
+        if this_receiver_match is not None:
+            return this_receiver_match.group(1)
+
+        receiver_match = re.match(r"^([A-Za-z_][A-Za-z0-9_]*)\s*\.", text)
+        if receiver_match is None:
+            return ""
+        receiver = receiver_match.group(1)
+        if receiver == "" or receiver[0].isupper():
+            return ""
+        token_lower = receiver.lower()
+        if token_lower in self.JAVA_ASSIGNMENT_SKIP_KEYWORDS:
+            return ""
+        return receiver
+
+    def __resolve_java_root_variable_at_line(
+        self,
+        variable_name: str,
+        line_number: int,
+        timeline: Dict[str, List[Tuple[int, List[str]]]],
+        visited: Set[str],
+    ) -> str:
+        if variable_name == "":
+            return ""
+        if variable_name in visited:
+            return variable_name
+        visited.add(variable_name)
+
+        assignments = timeline.get(variable_name, [])
+        rhs_tokens: List[str] = []
+        for assign_line, assign_rhs_tokens in assignments:
+            if assign_line <= line_number:
+                rhs_tokens = assign_rhs_tokens
+            else:
+                break
+
+        if len(rhs_tokens) == 0:
+            return variable_name
+
+        next_var = ""
+        for token in rhs_tokens:
+            if token == variable_name:
+                continue
+            token_lower = token.lower()
+            if token_lower in self.JAVA_ASSIGNMENT_SKIP_KEYWORDS:
+                continue
+            next_var = token
+            break
+
+        if next_var == "":
+            return variable_name
+        return self.__resolve_java_root_variable_at_line(
+            next_var,
+            line_number,
+            timeline,
+            visited,
+        )
+
+    def __pick_java_root_source_line(
+        self,
+        root_var: str,
+        current_line: int,
+        source_lines_by_var: Dict[str, List[int]],
+    ) -> int:
+        root_lines = source_lines_by_var.get(root_var, [])
+        if len(root_lines) == 0:
+            return current_line
+        prior_lines = [line for line in root_lines if line <= current_line]
+        if len(prior_lines) > 0:
+            return prior_lines[-1]
+        return root_lines[0]
+
+    def __get_java_mlk_source_obligation_key(self, src_value: Value) -> str:
+        if self.language != "Java" or self.bug_type != "MLK":
+            normalized_file = src_value.file.replace("\\", "/").lower()
+            normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
+            return (
+                f"{normalized_file}:UNKNOWN:src:{normalized_src_name}:{src_value.line_number}"
+            )
+
+        key = self.java_mlk_source_obligation_keys.get(str(src_value), "")
+        if key != "":
+            return key
+
+        src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+        function_key = (
+            self.__build_java_mlk_function_signature_key(src_function)
+            if src_function is not None
+            else "UNKNOWN"
+        )
+        normalized_file = src_value.file.replace("\\", "/").lower()
+        normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
+        return f"{normalized_file}:{function_key}:src:{normalized_src_name}:{src_value.line_number}"
+
     def __build_detect_info_payload(
         self, bug_reports: Dict[int, "BugReport"]
     ) -> Dict[int, dict]:
@@ -2324,6 +2667,7 @@ class DFBScanAgent(Agent):
         normalized_src_file = src_value.file.replace("\\", "/").lower()
         normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
         src_signature = f"{normalized_src_file}:{normalized_src_name}"
+        obligation_signature = self.__get_java_mlk_source_obligation_key(src_value)
 
         source_anchor_key = ""
         non_helper_keys: List[str] = []
@@ -2356,10 +2700,23 @@ class DFBScanAgent(Agent):
                 source_anchor_key = "UNKNOWN"
 
         effective_merge_mode = (
-            merge_mode.strip().lower() if merge_mode is not None else self.java_mlk_report_merge_mode
+            merge_mode.strip().lower()
+            if merge_mode is not None
+            else self.java_mlk_report_merge_mode
         )
-        if effective_merge_mode not in {"source", "method", "method_semantic"}:
+        if effective_merge_mode not in {
+            "source",
+            "method",
+            "method_semantic",
+            "obligation",
+        }:
             effective_merge_mode = "source"
+        if effective_merge_mode == "obligation":
+            return (
+                obligation_signature,
+                source_anchor_key,
+                normalize_resource_kind(resource_kind),
+            )
         if effective_merge_mode == "method":
             return (normalized_src_file, source_anchor_key)
         if effective_merge_mode == "method_semantic":
