@@ -186,6 +186,9 @@ class DFBScanAgent(Agent):
             "method_semantic",
         }:
             self.java_mlk_report_merge_mode = "source"
+        # Keep hard dedup conservative at source-level to avoid recall loss.
+        # REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE is used for output-side grouped view.
+        self.java_mlk_hard_dedup_mode = "source"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_max_paths_per_source = int(
             os.environ.get("REPOAUDIT_JAVA_MLK_MAX_PATHS_PER_SOURCE", "200")
@@ -771,7 +774,7 @@ class DFBScanAgent(Agent):
         self.logger.print_console("Start data-flow bug scanning...")
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
-                f"Java MLK report merge mode: {self.java_mlk_report_merge_mode}"
+                f"Java MLK report merge mode (output view): {self.java_mlk_report_merge_mode}; hard dedup: {self.java_mlk_hard_dedup_mode}"
             )
 
         # Total number of source values
@@ -1037,26 +1040,27 @@ class DFBScanAgent(Agent):
                         self.state.update_bug_report(bug_report)
 
                 # Dump bug reports
-                bug_report_dict = {
-                    bug_report_id: bug.to_dict()
-                    for bug_report_id, bug in self.state.bug_reports.items()
-                }
-                with open(
-                    self.res_dir_path + "/detect_info.json", "w"
-                ) as bug_info_file:
-                    json.dump(bug_report_dict, bug_info_file, indent=4)
+                self.__write_detect_outputs()
 
                 # Update the progress bar
                 pbar.update(1)
 
         # Final summary
-        total_bug_number = len(self.state.bug_reports.values())
+        raw_report_count, merged_report_count = self.__write_detect_outputs()
+        total_bug_number = raw_report_count
         self.logger.print_console(
             f"{total_bug_number} bug(s) was/were detected in total."
         )
         self.logger.print_console(
             f"The bug report(s) has/have been dumped to {self.res_dir_path}/detect_info.json"
         )
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.logger.print_console(
+                f"Java MLK merged report(s): {merged_report_count} (mode={self.java_mlk_report_merge_mode})"
+            )
+            self.logger.print_console(
+                f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
+            )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
@@ -1074,7 +1078,7 @@ class DFBScanAgent(Agent):
         self.logger.print_console(f"Max number of workers: {self.max_neural_workers}")
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
-                f"Java MLK report merge mode: {self.java_mlk_report_merge_mode}"
+                f"Java MLK report merge mode (output view): {self.java_mlk_report_merge_mode}; hard dedup: {self.java_mlk_hard_dedup_mode}"
             )
 
         # Total number of source values
@@ -1099,13 +1103,21 @@ class DFBScanAgent(Agent):
                         pbar.update(1)
 
         # Final summary
-        total_bug_number = len(self.state.bug_reports.values())
+        raw_report_count, merged_report_count = self.__write_detect_outputs()
+        total_bug_number = raw_report_count
         self.logger.print_console(
             f"{total_bug_number} bug(s) was/were detected in total."
         )
         self.logger.print_console(
             f"The bug report(s) has/have been dumped to {self.res_dir_path}/detect_info.json"
         )
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.logger.print_console(
+                f"Java MLK merged report(s): {merged_report_count} (mode={self.java_mlk_report_merge_mode})"
+            )
+            self.logger.print_console(
+                f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
+            )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
@@ -1384,15 +1396,7 @@ class DFBScanAgent(Agent):
                     pv_output.explanation_str,
                 )
                 self.state.update_bug_report(bug_report)
-                bug_report_dict = {
-                    bug_report_id: bug.to_dict()
-                    for bug_report_id, bug in self.state.bug_reports.items()
-                }
-
-                with open(
-                    self.res_dir_path + "/detect_info.json", "w"
-                ) as bug_info_file:
-                    json.dump(bug_report_dict, bug_info_file, indent=4)
+                self.__write_detect_outputs()
         return
 
     def __classify_java_mlk_external_termination(self, value: Value) -> Tuple[str, str]:
@@ -2173,6 +2177,94 @@ class DFBScanAgent(Agent):
         with open(stats_path, "w") as stats_file:
             json.dump(payload, stats_file, indent=4)
 
+    def __build_detect_info_payload(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Dict[int, dict]:
+        return {
+            bug_report_id: bug.to_dict()
+            for bug_report_id, bug in bug_reports.items()
+        }
+
+    def __build_java_mlk_merged_detect_payload(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
+        merge_mode = self.java_mlk_report_merge_mode
+        groups: Dict[Tuple[object, ...], List[int]] = {}
+
+        for bug_report_id in sorted(bug_reports.keys()):
+            bug_report = bug_reports[bug_report_id]
+            src_value = bug_report.buggy_value
+            relevant_functions = bug_report.relevant_functions
+            resource_kind = self.__infer_java_mlk_resource_kind(src_value)
+            signature = self.__build_java_mlk_report_signature(
+                src_value,
+                relevant_functions,
+                resource_kind=resource_kind,
+                release_context=RELEASE_CONTEXT_UNKNOWN,
+                guarantee_level=GUARANTEE_NONE,
+                buggy_path=None,
+                merge_mode=merge_mode,
+            )
+            if signature not in groups:
+                groups[signature] = []
+            groups[signature].append(bug_report_id)
+
+        merged_payload: Dict[int, dict] = {}
+        for merged_idx, (signature, member_ids) in enumerate(groups.items()):
+            representative_id = min(member_ids)
+            representative_bug_report = bug_reports[representative_id]
+            merged_entry = representative_bug_report.to_dict()
+            merged_entry["merged_member_ids"] = member_ids
+            merged_entry["merged_member_count"] = len(member_ids)
+            merged_entry["merge_mode"] = merge_mode
+            merged_entry["merge_signature"] = [str(part) for part in signature]
+            merged_payload[merged_idx] = merged_entry
+
+        raw_count = len(bug_reports)
+        merged_count = len(merged_payload)
+        stats_payload: Dict[str, object] = {
+            "merge_mode": merge_mode,
+            "raw_report_count": raw_count,
+            "merged_report_count": merged_count,
+            "reduced_report_count": raw_count - merged_count,
+            "reduction_ratio": (
+                float(raw_count - merged_count) / float(raw_count)
+                if raw_count > 0
+                else 0.0
+            ),
+        }
+        return merged_payload, stats_payload
+
+    def __write_detect_outputs(self) -> Tuple[int, int]:
+        bug_reports = self.state.bug_reports
+        detect_payload = self.__build_detect_info_payload(bug_reports)
+        raw_count = len(detect_payload)
+        merged_count = raw_count
+
+        merged_payload: Dict[int, dict] = {}
+        merged_stats: Dict[str, object] = {}
+        if self.language == "Java" and self.bug_type == "MLK":
+            merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
+                bug_reports
+            )
+            merged_count = len(merged_payload)
+
+        with self.lock:
+            with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
+                json.dump(detect_payload, bug_info_file, indent=4)
+
+            if self.language == "Java" and self.bug_type == "MLK":
+                with open(
+                    self.res_dir_path + "/detect_info_merged.json", "w"
+                ) as merged_info_file:
+                    json.dump(merged_payload, merged_info_file, indent=4)
+                with open(
+                    self.res_dir_path + "/detect_info_merge_stats.json", "w"
+                ) as merged_stats_file:
+                    json.dump(merged_stats, merged_stats_file, indent=4)
+
+        return raw_count, merged_count
+
     def __is_java_mlk_helper_function_for_dedup(self, function: Function) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":
             return False
@@ -2221,6 +2313,7 @@ class DFBScanAgent(Agent):
         release_context: str = RELEASE_CONTEXT_UNKNOWN,
         guarantee_level: str = GUARANTEE_NONE,
         buggy_path: Optional[List[Value]] = None,
+        merge_mode: Optional[str] = None,
     ) -> Tuple[object, ...]:
         """
         Build a stable signature for dedup.
@@ -2262,10 +2355,14 @@ class DFBScanAgent(Agent):
             else:
                 source_anchor_key = "UNKNOWN"
 
-        merge_mode = self.java_mlk_report_merge_mode
-        if merge_mode == "method":
+        effective_merge_mode = (
+            merge_mode.strip().lower() if merge_mode is not None else self.java_mlk_report_merge_mode
+        )
+        if effective_merge_mode not in {"source", "method", "method_semantic"}:
+            effective_merge_mode = "source"
+        if effective_merge_mode == "method":
             return (normalized_src_file, source_anchor_key)
-        if merge_mode == "method_semantic":
+        if effective_merge_mode == "method_semantic":
             has_no_sink_marker = (
                 self.__has_java_mlk_no_sink_marker(buggy_path)
                 if buggy_path is not None
@@ -2305,6 +2402,7 @@ class DFBScanAgent(Agent):
             release_context=release_context,
             guarantee_level=guarantee_level,
             buggy_path=buggy_path,
+            merge_mode=self.java_mlk_hard_dedup_mode,
         )
         with self.lock:
             if signature in self.java_mlk_report_signatures:
