@@ -2413,9 +2413,10 @@ class DFBScanAgent(Agent):
                     resolved_callee_ids = self.ts_analyzer.get_callee_function_ids_at_callsite(
                         caller_function, call_site
                     )
-                    if len(resolved_callee_ids) != 1:
-                        continue
-                    if resolved_callee_ids[0] != callee_function_id:
+                    # Keep ambiguous-overload callsites if the current callee is one
+                    # of the resolved targets. Requiring exactly one target misses
+                    # many forwarding/overload chains (e.g., readFile(String)->readFile(Reader)).
+                    if callee_function_id not in resolved_callee_ids:
                         continue
 
                     call_arguments = self.ts_analyzer.get_arguments_at_callsite(
