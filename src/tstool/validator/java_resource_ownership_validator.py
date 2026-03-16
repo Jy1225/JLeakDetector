@@ -302,9 +302,13 @@ class JavaResourceOwnershipValidator:
             return True
         if normalized_name in self.OWNERSHIP_TRANSFER_METHODS:
             return False
+        if self._looks_transfer_like_call(line_text):
+            return False
         if "logger." in line_text.lower() or ".log(" in line_text.lower():
             return True
-        return False
+        # Conservative default for unresolved helper/wrapper arguments:
+        # avoid assuming ownership transfer without explicit persistence hints.
+        return True
 
     def _is_non_transfer_receiver_call(self, value: Value, line_text: str) -> bool:
         """
@@ -338,6 +342,22 @@ class JavaResourceOwnershipValidator:
             if len(matches) > 0:
                 return matches[-1]
         return ""
+
+    def _looks_transfer_like_call(self, line_text: str) -> bool:
+        lowered = line_text.lower()
+        transfer_markers = [
+            ".put(",
+            ".add(",
+            ".set",
+            ".register(",
+            ".cache(",
+            ".store(",
+            ".save(",
+            ".attach(",
+            ".bind(",
+            ".subscribe(",
+        ]
+        return any(marker in lowered for marker in transfer_markers)
 
     def _is_resource_wrapping_constructor_argument(
         self, value: Value, line_text: str

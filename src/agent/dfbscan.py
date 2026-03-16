@@ -198,7 +198,7 @@ class DFBScanAgent(Agent):
             else None
         )
         self.z3_prefilter_stats = Z3PrefilterStats()
-        self.java_mlk_transfer_records: Dict[str, Dict[str, str]] = {}
+        self.java_mlk_transfer_records: Dict[str, List[Dict[str, object]]] = {}
         self.java_mlk_report_merge_mode = os.environ.get(
             "REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE", "source"
         ).strip().lower()
@@ -207,22 +207,28 @@ class DFBScanAgent(Agent):
             "method",
             "method_semantic",
             "obligation",
+            "issue",
         }:
             self.java_mlk_report_merge_mode = "source"
-        # Hard dedup is obligation-based (root resource family in a function).
-        # This reduces duplicated reports generated from derived resource sources
-        # (e.g., wrapper/factory chains) while still allowing multiple bugs in one
-        # file when obligations differ.
+        # Hard dedup mode is configurable:
+        # - source: keep original source-sink granularity (most conservative)
+        # - obligation: collapse derived source family inside one obligation
+        # - issue: collapse by obligation + primary method + weak/strong semantics
         self.java_mlk_hard_dedup_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "obligation"
+            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "source"
         ).strip().lower()
-        if self.java_mlk_hard_dedup_mode not in {"source", "obligation"}:
-            self.java_mlk_hard_dedup_mode = "obligation"
+        if self.java_mlk_hard_dedup_mode not in {"source", "obligation", "issue"}:
+            self.java_mlk_hard_dedup_mode = "source"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
+        self.java_mlk_source_coverage_stats: Dict[str, object] = {}
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
         self.java_mlk_obligation_kind_by_key: Dict[str, str] = {}
+        if self.language == "Java" and self.bug_type == "MLK":
+            self.java_mlk_source_coverage_stats = (
+                self.__build_java_mlk_source_coverage_stats(self.src_values)
+            )
         if self.language == "Java" and self.bug_type == "MLK":
             self.java_mlk_source_obligation_keys = (
                 self.__build_java_mlk_source_obligation_index(self.src_values)
@@ -236,6 +242,12 @@ class DFBScanAgent(Agent):
             self.logger.print_console(
                 f"Java MLK obligations inferred: {obligation_count} from {len(self.src_values)} source(s)."
             )
+            if len(self.java_mlk_source_coverage_stats) > 0:
+                self.logger.print_console(
+                    "Java MLK source coverage:",
+                    f"files_with_sources={self.java_mlk_source_coverage_stats.get('files_with_sources', 0)}",
+                    f"total_java_files={self.java_mlk_source_coverage_stats.get('total_java_files', 0)}",
+                )
         self.state = DFBScanState(self.src_values, self.sink_values)
         return
 
@@ -707,7 +719,7 @@ class DFBScanAgent(Agent):
                             if terminal_key in seen_terminals:
                                 continue
                             seen_terminals.add(terminal_key)
-                            transfer_kind, reason = (
+                            transfer_kind, reason, transfer_rule = (
                                 self.__classify_java_mlk_external_termination(
                                     terminal_value
                                 )
@@ -735,6 +747,8 @@ class DFBScanAgent(Agent):
                                     src_value,
                                     transfer_path,
                                     reason,
+                                    terminal_value=terminal_value,
+                                    rule_hit=transfer_rule,
                                 )
                         continue
             else:
@@ -1017,11 +1031,23 @@ class DFBScanAgent(Agent):
                     should_strict_by_semantics = should_trigger_strict_recheck(
                         path_release_context, path_guarantee_level
                     )
+                    should_strict_by_explanation = (
+                        self.__should_force_java_mlk_strict_recheck(
+                            buggy_path=buggy_path,
+                            pv_explanation=pv_output.explanation_str,
+                            release_context=path_release_context,
+                            guarantee_level=path_guarantee_level,
+                        )
+                    )
                     if (
                         self.language == "Java"
                         and self.bug_type == "MLK"
                         and not pv_output.is_reachable
-                        and (should_strict_by_marker or should_strict_by_semantics)
+                        and (
+                            should_strict_by_marker
+                            or should_strict_by_semantics
+                            or should_strict_by_explanation
+                        )
                     ):
                         strict_pv_input = PathValidatorInput(
                             self.bug_type,
@@ -1077,6 +1103,14 @@ class DFBScanAgent(Agent):
                             src_value,
                             relevant_functions,
                             pv_output.explanation_str,
+                            metadata=self.__build_java_mlk_report_metadata(
+                                src_value=src_value,
+                                buggy_path=buggy_path,
+                                relevant_functions=relevant_functions,
+                                resource_kind=path_resource_kind,
+                                release_context=path_release_context,
+                                guarantee_level=path_guarantee_level,
+                            ),
                         )
                         self.state.update_bug_report(bug_report)
 
@@ -1105,12 +1139,16 @@ class DFBScanAgent(Agent):
             self.logger.print_console(
                 f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
             )
+            self.logger.print_console(
+                f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
+            )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.logger.print_console(
             f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
         )
+        self.__dump_java_mlk_source_coverage_stats()
         self.__dump_java_mlk_transfer_records()
         self.__dump_soot_source_gate_events()
         self.__dump_soot_prefilter_stats()
@@ -1165,12 +1203,16 @@ class DFBScanAgent(Agent):
             self.logger.print_console(
                 f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
             )
+            self.logger.print_console(
+                f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
+            )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
         self.logger.print_console(
             f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
         )
+        self.__dump_java_mlk_source_coverage_stats()
         self.__dump_java_mlk_transfer_records()
         self.__dump_soot_source_gate_events()
         self.__dump_soot_prefilter_stats()
@@ -1376,17 +1418,27 @@ class DFBScanAgent(Agent):
             should_strict_by_semantics = should_trigger_strict_recheck(
                 path_release_context, path_guarantee_level
             )
+            should_strict_by_explanation = self.__should_force_java_mlk_strict_recheck(
+                buggy_path=buggy_path,
+                pv_explanation=pv_output.explanation_str,
+                release_context=path_release_context,
+                guarantee_level=path_guarantee_level,
+            )
             if (
                 self.language == "Java"
                 and self.bug_type == "MLK"
                 and not pv_output.is_reachable
-                and (should_strict_by_marker or should_strict_by_semantics)
-            ):
-                strict_reason = (
-                    "marker-close-bias"
-                    if should_strict_by_marker
-                    else "weak-release-semantics"
+                and (
+                    should_strict_by_marker
+                    or should_strict_by_semantics
+                    or should_strict_by_explanation
                 )
+            ):
+                strict_reason = "weak-release-semantics"
+                if should_strict_by_marker:
+                    strict_reason = "marker-close-bias"
+                elif should_strict_by_explanation:
+                    strict_reason = "transfer-or-close-bias-explanation"
                 self.logger.print_log(
                     "Re-validating Java MLK path with strict branch semantics.",
                     f"reason={strict_reason}",
@@ -1441,38 +1493,109 @@ class DFBScanAgent(Agent):
                     src_value,
                     relevant_functions,
                     pv_output.explanation_str,
+                    metadata=self.__build_java_mlk_report_metadata(
+                        src_value=src_value,
+                        buggy_path=buggy_path,
+                        relevant_functions=relevant_functions,
+                        resource_kind=path_resource_kind,
+                        release_context=path_release_context,
+                        guarantee_level=path_guarantee_level,
+                    ),
                 )
                 self.state.update_bug_report(bug_report)
                 self.__write_detect_outputs()
         return
 
-    def __classify_java_mlk_external_termination(self, value: Value) -> Tuple[str, str]:
+    def __classify_java_mlk_external_termination(
+        self, value: Value
+    ) -> Tuple[str, str, str]:
         """
         Classify terminal external-style values for Java MLK when no external match exists.
         Return:
-          - ("no_real_transfer", reason): should be treated as leak candidate
-          - ("ownership_transfer", reason): ownership transfer and stop reporting
+          - ("no_real_transfer", reason, rule_hit): should be treated as leak candidate
+          - ("ownership_transfer", reason, rule_hit): ownership transfer and stop reporting
         """
         function = self.ts_analyzer.get_function_from_localvalue(value)
+        line_text = self.ts_analyzer.get_content_by_line_number(
+            value.line_number, value.file
+        )
+        method_name = function.function_name.lower() if function is not None else ""
 
         if value.label == ValueLabel.ARG and self.java_mlk_validator is not None:
             if self.java_mlk_validator.is_non_ownership_argument(value, function):
                 return (
                     "no_real_transfer",
                     "argument does not imply ownership transfer (e.g., println/logging)",
+                    "arg_non_ownership",
                 )
             return (
                 "ownership_transfer",
                 "argument likely transfers ownership but inter-procedural chain is missing",
+                "arg_transfer_method",
             )
 
         if value.label in {ValueLabel.RET, ValueLabel.OUT, ValueLabel.PARA}:
+            transfer_name_hints = {
+                "put",
+                "add",
+                "set",
+                "register",
+                "cache",
+                "store",
+                "save",
+                "attach",
+                "bind",
+                "subscribe",
+            }
+            return_transfer_hints = {
+                "create",
+                "open",
+                "build",
+                "new",
+                "factory",
+                "provider",
+                "get",
+            }
+            if any(hint in method_name for hint in transfer_name_hints):
+                return (
+                    "ownership_transfer",
+                    "terminal value appears in explicit transfer-style method",
+                    "method_name_transfer_hint",
+                )
+            if value.label == ValueLabel.RET and any(
+                hint in method_name for hint in return_transfer_hints
+            ):
+                return (
+                    "ownership_transfer",
+                    "return from factory/provider style method likely transfers ownership",
+                    "method_name_return_factory_hint",
+                )
+            if value.label == ValueLabel.RET and "return " in line_text:
+                # Keep return as possible transfer only when direct factory call appears.
+                if re.search(r"\b(?:new|open|get|create)[A-Za-z0-9_]*\s*\(", line_text):
+                    return (
+                        "ownership_transfer",
+                        "return statement directly returns factory-created resource",
+                        "return_line_factory_hint",
+                    )
             return (
-                "ownership_transfer",
-                "resource escapes function boundary and ownership is treated as transferred",
+                "no_real_transfer",
+                "terminal boundary event has no explicit ownership-transfer evidence",
+                "terminal_no_explicit_transfer",
             )
 
-        return ("ownership_transfer", "default ownership transfer")
+        if value.label == ValueLabel.ARG:
+            return (
+                "no_real_transfer",
+                "argument termination without transfer evidence is treated conservatively",
+                "arg_no_transfer_evidence",
+            )
+
+        return (
+            "ownership_transfer",
+            "default ownership transfer",
+            "default_transfer",
+        )
 
     def __infer_java_mlk_resource_kind(self, src_value: Value) -> str:
         if self.language != "Java" or self.bug_type != "MLK":
@@ -1526,6 +1649,50 @@ class DFBScanAgent(Agent):
         guarantee_level = normalize_guarantee_level(guarantee_level)
         servlet_context = is_servlet_context(src_value.file)
         return resource_kind, release_context, guarantee_level, servlet_context
+
+    def __build_java_mlk_report_metadata(
+        self,
+        src_value: Value,
+        buggy_path: List[Value],
+        relevant_functions: Dict[int, Function],
+        resource_kind: str,
+        release_context: str,
+        guarantee_level: str,
+    ) -> Dict[str, object]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+        src_method_uid = ""
+        src_method_name = "UNKNOWN_METHOD"
+        if src_function is not None:
+            src_method_uid = (
+                src_function.function_uid
+                if src_function.function_uid != ""
+                else self.__build_java_mlk_function_signature_key(src_function)
+            )
+            src_method_name = src_function.function_name
+        obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
+        has_no_sink_marker = self.__has_java_mlk_no_sink_marker(buggy_path)
+        has_weak_release_marker = self.__has_java_mlk_weak_release_marker(buggy_path)
+        metadata: Dict[str, object] = {
+            "resource_kind": normalize_resource_kind(resource_kind),
+            "release_context": normalize_release_context(release_context),
+            "guarantee_level": normalize_guarantee_level(guarantee_level),
+            "obligation_key": obligation_key,
+            "source_line": src_value.line_number,
+            "source_file": src_value.file,
+            "source_method_uid": src_method_uid,
+            "source_method_name": src_method_name,
+            "has_no_sink_marker": has_no_sink_marker,
+            "has_weak_release_marker": has_weak_release_marker,
+            "path_length": len(buggy_path),
+            "relevant_method_uids": sorted(
+                self.__build_java_mlk_function_signature_key(function)
+                for function in relevant_functions.values()
+            ),
+        }
+        return metadata
 
     def __refine_java_mlk_release_semantics(
         self,
@@ -1897,18 +2064,39 @@ class DFBScanAgent(Agent):
         return False
 
     def __record_java_mlk_transfer(
-        self, src_value: Value, path: List[Value], reason: str
+        self,
+        src_value: Value,
+        path: List[Value],
+        reason: str,
+        terminal_value: Optional[Value] = None,
+        rule_hit: str = "",
     ) -> None:
         if self.language != "Java" or self.bug_type != "MLK":
             return
         src_key = str(src_value)
         path_key = str(path)
+        event = {
+            "src_value": src_key,
+            "reason": reason,
+            "rule_hit": rule_hit,
+            "path_key": path_key,
+            "path_length": len(path),
+            "terminal_label": (
+                terminal_value.label.name if terminal_value is not None else "UNKNOWN"
+            ),
+            "terminal_value": str(terminal_value) if terminal_value is not None else "",
+            "terminal_line": terminal_value.line_number if terminal_value is not None else -1,
+            "terminal_file": terminal_value.file if terminal_value is not None else "",
+        }
         with self.lock:
             if src_key not in self.java_mlk_transfer_records:
-                self.java_mlk_transfer_records[src_key] = {}
-            self.java_mlk_transfer_records[src_key][path_key] = reason
+                self.java_mlk_transfer_records[src_key] = []
+            self.java_mlk_transfer_records[src_key].append(event)
         self.logger.print_log(
-            "Classified as Java MLK responsibility transfer:", src_key, reason
+            "Classified as Java MLK responsibility transfer:",
+            src_key,
+            reason,
+            f"rule={rule_hit}",
         )
 
     def __dump_java_mlk_transfer_records(self) -> None:
@@ -2080,6 +2268,62 @@ class DFBScanAgent(Agent):
                 "[Soot source gate] Warning:",
                 f"blocked {bad_blocked} source(s) in bad* methods. Consider turning on shadow mode for source gate.",
             )
+
+    def __build_java_mlk_source_coverage_stats(
+        self, src_values: List[Value]
+    ) -> Dict[str, object]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        java_files = sorted(
+            file_path.replace("\\", "/")
+            for file_path in self.ts_analyzer.code_in_files.keys()
+            if file_path.lower().endswith(".java")
+        )
+        source_count_by_file: Dict[str, int] = {file_path: 0 for file_path in java_files}
+        source_lines_by_file: Dict[str, Set[int]] = {file_path: set() for file_path in java_files}
+
+        for src_value in src_values:
+            normalized_file = src_value.file.replace("\\", "/")
+            if normalized_file not in source_count_by_file:
+                source_count_by_file[normalized_file] = 0
+                source_lines_by_file[normalized_file] = set()
+            source_count_by_file[normalized_file] += 1
+            source_lines_by_file[normalized_file].add(src_value.line_number)
+
+        files_with_sources = sum(
+            1 for source_count in source_count_by_file.values() if source_count > 0
+        )
+        total_files = len(source_count_by_file)
+        zero_source_files = sorted(
+            file_path
+            for file_path, source_count in source_count_by_file.items()
+            if source_count == 0
+        )
+        coverage_ratio = (
+            float(files_with_sources) / float(total_files) if total_files > 0 else 0.0
+        )
+
+        return {
+            "total_java_files": total_files,
+            "files_with_sources": files_with_sources,
+            "files_without_sources": total_files - files_with_sources,
+            "coverage_ratio": coverage_ratio,
+            "total_sources": len(src_values),
+            "zero_source_files": zero_source_files,
+            "source_count_by_file": source_count_by_file,
+            "source_lines_by_file": {
+                file_path: sorted(lines)
+                for file_path, lines in source_lines_by_file.items()
+            },
+        }
+
+    def __dump_java_mlk_source_coverage_stats(self) -> None:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return
+        stats_path = self.res_dir_path + "/source_coverage_stats.json"
+        with open(stats_path, "w") as stats_file:
+            json.dump(self.java_mlk_source_coverage_stats, stats_file, indent=4)
 
     def __skip_by_java_z3_prefilter(
         self,
@@ -2449,6 +2693,74 @@ class DFBScanAgent(Agent):
                         if caller_src_key == "" or caller_src_key not in parent:
                             continue
                         for callee_src_key in callee_src_keys:
+                            if callee_src_key not in parent:
+                                continue
+                            if union(caller_src_key, callee_src_key):
+                                interproc_link_count += 1
+
+        # Extra inter-procedural linking for wrapper/forwarding styles:
+        # caller source is a direct callee invocation result on the same line.
+        for caller_context in function_source_context.values():
+            caller_function = cast(Function, caller_context["function"])
+            source_line_by_src_key = cast(Dict[str, int], caller_context["source_line_by_src_key"])
+            source_norm_expr_by_src_key = cast(
+                Dict[str, str], caller_context["source_norm_expr_by_src_key"]
+            )
+            source_code = self.ts_analyzer.code_in_files.get(caller_function.file_path, "")
+            if source_code == "":
+                continue
+
+            callee_functions = self.ts_analyzer.get_all_callee_functions(caller_function)
+            if len(callee_functions) == 0:
+                continue
+
+            for callee_function in callee_functions:
+                callee_context = function_source_context.get(callee_function.function_id)
+                if callee_context is None:
+                    continue
+                callee_sources = cast(List[Value], callee_context["function_sources"])
+                if len(callee_sources) == 0:
+                    continue
+
+                call_sites = self.ts_analyzer.get_callsites_by_callee_function(
+                    caller_function, callee_function
+                )
+                if len(call_sites) == 0:
+                    continue
+
+                for call_site in call_sites:
+                    resolved_callee_ids = self.ts_analyzer.get_callee_function_ids_at_callsite(
+                        caller_function, call_site
+                    )
+                    if callee_function.function_id not in resolved_callee_ids:
+                        continue
+
+                    callsite_line = source_code[: call_site.start_byte].count("\n") + 1
+                    call_expr_text = source_code[call_site.start_byte : call_site.end_byte]
+                    if callee_function.function_name not in call_expr_text:
+                        continue
+
+                    caller_candidates: List[str] = []
+                    for src_key, src_line in source_line_by_src_key.items():
+                        if src_line != callsite_line:
+                            continue
+                        normalized_expr = source_norm_expr_by_src_key.get(src_key, "")
+                        if normalized_expr == "":
+                            continue
+                        if (
+                            f"{callee_function.function_name}(" in normalized_expr
+                            or normalized_expr.endswith(callee_function.function_name)
+                        ):
+                            caller_candidates.append(src_key)
+
+                    if len(caller_candidates) == 0:
+                        continue
+
+                    for caller_src_key in caller_candidates:
+                        if caller_src_key not in parent:
+                            continue
+                        for callee_src in callee_sources:
+                            callee_src_key = str(callee_src)
                             if callee_src_key not in parent:
                                 continue
                             if union(caller_src_key, callee_src_key):
@@ -2954,6 +3266,7 @@ class DFBScanAgent(Agent):
                 method_name = src_function.function_name
                 method_start_line = src_function.start_line_number
                 method_end_line = src_function.end_line_number
+                helper_like = self.__is_java_mlk_helper_function_for_dedup(src_function)
             else:
                 method_uid = (
                     f"{normalized_file}:UNKNOWN_METHOD:{src_value.line_number}"
@@ -2961,6 +3274,7 @@ class DFBScanAgent(Agent):
                 method_name = "UNKNOWN_METHOD"
                 method_start_line = -1
                 method_end_line = -1
+                helper_like = False
 
             method_buckets = cast(Dict[str, Dict[str, object]], file_entry["method_buckets"])
             if method_uid not in method_buckets:
@@ -2972,20 +3286,49 @@ class DFBScanAgent(Agent):
                     "source_lines": set(),
                     "report_ids": [],
                     "report_count": 0,
+                    "helper_like": helper_like,
+                    "weak_evidence_count": 0,
+                    "no_sink_marker_count": 0,
+                    "weak_release_marker_count": 0,
+                    "explanation_hit_count": 0,
                 }
 
             method_entry = method_buckets[method_uid]
             cast(Set[int], method_entry["source_lines"]).add(src_value.line_number)
             cast(List[int], method_entry["report_ids"]).append(bug_report_id)
             method_entry["report_count"] = int(method_entry["report_count"]) + 1
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            guarantee_level = normalize_guarantee_level(
+                str(metadata.get("guarantee_level", GUARANTEE_NONE))
+            )
+            if not is_all_exit_guaranteed(guarantee_level):
+                method_entry["weak_evidence_count"] = int(
+                    method_entry["weak_evidence_count"]
+                ) + 1
+            if bool(metadata.get("has_no_sink_marker", False)):
+                method_entry["no_sink_marker_count"] = int(
+                    method_entry["no_sink_marker_count"]
+                ) + 1
+            if bool(metadata.get("has_weak_release_marker", False)):
+                method_entry["weak_release_marker_count"] = int(
+                    method_entry["weak_release_marker_count"]
+                ) + 1
+            explanation_lower = bug_report.explanation.lower()
+            if method_name != "UNKNOWN_METHOD" and method_name.lower() in explanation_lower:
+                method_entry["explanation_hit_count"] = int(
+                    method_entry["explanation_hit_count"]
+                ) + 1
 
         payload: Dict[str, dict] = {}
         for file_key in sorted(grouped.keys()):
             file_entry = grouped[file_key]
             method_buckets = cast(Dict[str, Dict[str, object]], file_entry["method_buckets"])
             leaking_methods: List[Dict[str, object]] = []
+            method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
             for method_key in sorted(method_buckets.keys()):
                 method_entry = method_buckets[method_key]
+                method_score = self.__score_java_mlk_method_bucket(method_entry)
+                method_candidates.append((method_key, method_score, method_entry))
                 leaking_methods.append(
                     {
                         "method_name": str(method_entry["method_name"]),
@@ -2995,6 +3338,49 @@ class DFBScanAgent(Agent):
                         "source_lines": sorted(cast(Set[int], method_entry["source_lines"])),
                         "report_ids": sorted(cast(List[int], method_entry["report_ids"])),
                         "report_count": int(method_entry["report_count"]),
+                        "helper_like": bool(method_entry["helper_like"]),
+                        "weak_evidence_count": int(method_entry["weak_evidence_count"]),
+                        "no_sink_marker_count": int(method_entry["no_sink_marker_count"]),
+                        "weak_release_marker_count": int(
+                            method_entry["weak_release_marker_count"]
+                        ),
+                        "explanation_hit_count": int(method_entry["explanation_hit_count"]),
+                        "method_score": method_score,
+                    }
+                )
+
+            primary_method_name = "UNKNOWN_METHOD"
+            primary_method_uid = ""
+            primary_confidence = 0.0
+            supporting_methods: List[str] = []
+            if len(method_candidates) > 0:
+                method_candidates.sort(
+                    key=lambda item: (
+                        -item[1],
+                        int(item[2]["method_start_line"]),
+                        str(item[2]["method_name"]),
+                    )
+                )
+                top_key, top_score, top_entry = method_candidates[0]
+                _ = top_key
+                primary_method_name = str(top_entry["method_name"])
+                primary_method_uid = str(top_entry["method_uid"])
+                if len(method_candidates) == 1:
+                    primary_confidence = 1.0
+                else:
+                    second_score = method_candidates[1][1]
+                    normalized_gap = (
+                        (top_score - second_score) / max(1.0, abs(top_score))
+                    )
+                    primary_confidence = max(
+                        0.0,
+                        min(1.0, 0.5 + 0.5 * normalized_gap),
+                    )
+                supporting_methods = sorted(
+                    {
+                        str(entry["method_name"])
+                        for _, _, entry in method_candidates[1:]
+                        if str(entry["method_name"]) != ""
                     }
                 )
 
@@ -3004,13 +3390,39 @@ class DFBScanAgent(Agent):
                 "report_count": int(file_entry["report_count"]),
                 "report_ids": sorted(cast(List[int], file_entry["report_ids"])),
                 "method_count": len(leaking_methods),
+                "primary_defect_method": primary_method_name,
+                "primary_defect_method_uid": primary_method_uid,
+                "primary_confidence": primary_confidence,
                 "leaking_methods": leaking_methods,
+                "supporting_methods": supporting_methods,
                 "related_methods": sorted(
                     cast(Set[str], file_entry["relevant_method_names"])
                 ),
             }
 
         return payload
+
+    def __score_java_mlk_method_bucket(self, method_entry: Dict[str, object]) -> float:
+        report_count = float(int(method_entry.get("report_count", 0)))
+        weak_evidence_count = float(int(method_entry.get("weak_evidence_count", 0)))
+        no_sink_marker_count = float(int(method_entry.get("no_sink_marker_count", 0)))
+        weak_release_marker_count = float(
+            int(method_entry.get("weak_release_marker_count", 0))
+        )
+        explanation_hit_count = float(int(method_entry.get("explanation_hit_count", 0)))
+        helper_like = bool(method_entry.get("helper_like", False))
+        method_name = str(method_entry.get("method_name", ""))
+
+        score = 10.0 * report_count
+        score += 6.0 * weak_evidence_count
+        score += 4.0 * no_sink_marker_count
+        score += 3.0 * weak_release_marker_count
+        score += 2.0 * explanation_hit_count
+        if helper_like:
+            score -= 8.0
+        if method_name == "UNKNOWN_METHOD":
+            score -= 5.0
+        return score
 
     def __build_java_mlk_merged_detect_payload(
         self, bug_reports: Dict[int, "BugReport"]
@@ -3022,13 +3434,20 @@ class DFBScanAgent(Agent):
             bug_report = bug_reports[bug_report_id]
             src_value = bug_report.buggy_value
             relevant_functions = bug_report.relevant_functions
-            resource_kind = self.__infer_java_mlk_resource_kind(src_value)
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            resource_kind = str(
+                metadata.get("resource_kind", self.__infer_java_mlk_resource_kind(src_value))
+            )
+            release_context = str(
+                metadata.get("release_context", RELEASE_CONTEXT_UNKNOWN)
+            )
+            guarantee_level = str(metadata.get("guarantee_level", GUARANTEE_NONE))
             signature = self.__build_java_mlk_report_signature(
                 src_value,
                 relevant_functions,
                 resource_kind=resource_kind,
-                release_context=RELEASE_CONTEXT_UNKNOWN,
-                guarantee_level=GUARANTEE_NONE,
+                release_context=release_context,
+                guarantee_level=guarantee_level,
                 buggy_path=None,
                 merge_mode=merge_mode,
             )
@@ -3062,6 +3481,57 @@ class DFBScanAgent(Agent):
         }
         return merged_payload, stats_payload
 
+    def __build_java_mlk_issue_detect_payload(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
+        groups: Dict[Tuple[object, ...], List[int]] = {}
+        for bug_report_id in sorted(bug_reports.keys()):
+            bug_report = bug_reports[bug_report_id]
+            src_value = bug_report.buggy_value
+            relevant_functions = bug_report.relevant_functions
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            resource_kind = str(
+                metadata.get("resource_kind", self.__infer_java_mlk_resource_kind(src_value))
+            )
+            release_context = str(metadata.get("release_context", RELEASE_CONTEXT_UNKNOWN))
+            guarantee_level = str(metadata.get("guarantee_level", GUARANTEE_NONE))
+            signature = self.__build_java_mlk_report_signature(
+                src_value,
+                relevant_functions,
+                resource_kind=resource_kind,
+                release_context=release_context,
+                guarantee_level=guarantee_level,
+                buggy_path=None,
+                merge_mode="issue",
+            )
+            groups.setdefault(signature, []).append(bug_report_id)
+
+        issue_payload: Dict[int, dict] = {}
+        for issue_idx, (signature, member_ids) in enumerate(groups.items()):
+            representative_id = min(member_ids)
+            representative_bug_report = bug_reports[representative_id]
+            issue_entry = representative_bug_report.to_dict()
+            issue_entry["issue_member_ids"] = member_ids
+            issue_entry["issue_member_count"] = len(member_ids)
+            issue_entry["issue_mode"] = "issue"
+            issue_entry["issue_signature"] = [str(part) for part in signature]
+            issue_payload[issue_idx] = issue_entry
+
+        raw_count = len(bug_reports)
+        issue_count = len(issue_payload)
+        stats_payload: Dict[str, object] = {
+            "mode": "issue",
+            "raw_report_count": raw_count,
+            "issue_count": issue_count,
+            "reduced_report_count": raw_count - issue_count,
+            "reduction_ratio": (
+                float(raw_count - issue_count) / float(raw_count)
+                if raw_count > 0
+                else 0.0
+            ),
+        }
+        return issue_payload, stats_payload
+
     def __write_detect_outputs(self) -> Tuple[int, int]:
         bug_reports = self.state.bug_reports
         detect_payload = self.__build_detect_info_payload(bug_reports)
@@ -3071,11 +3541,16 @@ class DFBScanAgent(Agent):
 
         merged_payload: Dict[int, dict] = {}
         merged_stats: Dict[str, object] = {}
+        issue_payload: Dict[int, dict] = {}
+        issue_stats: Dict[str, object] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
                 bug_reports
             )
             merged_count = len(merged_payload)
+            issue_payload, issue_stats = self.__build_java_mlk_issue_detect_payload(
+                bug_reports
+            )
 
         with self.lock:
             with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
@@ -3094,6 +3569,14 @@ class DFBScanAgent(Agent):
                     self.res_dir_path + "/detect_info_merge_stats.json", "w"
                 ) as merged_stats_file:
                     json.dump(merged_stats, merged_stats_file, indent=4)
+                with open(
+                    self.res_dir_path + "/detect_info_issue.json", "w"
+                ) as issue_info_file:
+                    json.dump(issue_payload, issue_info_file, indent=4)
+                with open(
+                    self.res_dir_path + "/detect_info_issue_stats.json", "w"
+                ) as issue_stats_file:
+                    json.dump(issue_stats, issue_stats_file, indent=4)
 
         return raw_count, merged_count
 
@@ -3198,8 +3681,22 @@ class DFBScanAgent(Agent):
             "method",
             "method_semantic",
             "obligation",
+            "issue",
         }:
             effective_merge_mode = "source"
+        if effective_merge_mode == "issue":
+            guarantee_class = (
+                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+            )
+            source_line_bucket = int(src_value.line_number / 5) * 5
+            return (
+                normalized_src_file,
+                obligation_signature,
+                source_anchor_key,
+                source_line_bucket,
+                normalize_resource_kind(resource_kind),
+                guarantee_class,
+            )
         if effective_merge_mode == "obligation":
             obligation_kind = self.java_mlk_obligation_kind_by_key.get(
                 obligation_signature,
@@ -3309,6 +3806,36 @@ class DFBScanAgent(Agent):
                 "delete",
             ]
         )
+
+    def __should_force_java_mlk_strict_recheck(
+        self,
+        buggy_path: List[Value],
+        pv_explanation: str,
+        release_context: str,
+        guarantee_level: str,
+    ) -> bool:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return False
+        weak_semantics = should_trigger_strict_recheck(release_context, guarantee_level)
+        if not weak_semantics:
+            return False
+
+        has_marker_hint = self.__has_java_mlk_no_sink_marker(
+            buggy_path
+        ) or self.__has_java_mlk_weak_release_marker(buggy_path)
+        lowered = pv_explanation.lower()
+        transfer_hint = any(
+            keyword in lowered
+            for keyword in [
+                "ownership",
+                "transfer",
+                "escape",
+                "returned",
+                "caller",
+            ]
+        )
+        close_biased_no = self.__is_java_mlk_close_biased_negative(pv_explanation)
+        return has_marker_hint or transfer_hint or close_biased_no
 
     def __filter_redundant_java_mlk_paths(
         self, src_value: Value, buggy_paths: Dict[str, List[Value]]

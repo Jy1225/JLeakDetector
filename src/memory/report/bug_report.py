@@ -1,6 +1,6 @@
 from memory.syntactic.function import *
 from memory.syntactic.value import *
-from typing import Dict
+from typing import Dict, Optional
 
 
 class BugReport:
@@ -10,6 +10,7 @@ class BugReport:
         buggy_value: Value,
         relevant_functions: Dict[int, Function],
         explanation: str,
+        metadata: Optional[Dict[str, object]] = None,
         is_human_confirmed_true: bool = False,
     ) -> None:
         """
@@ -22,6 +23,7 @@ class BugReport:
         self.buggy_value = buggy_value
         self.relevant_functions = relevant_functions
         self.explanation = explanation
+        self.metadata = metadata if metadata is not None else {}
         self.is_human_confirmed_true = is_human_confirmed_true
         return
 
@@ -44,6 +46,7 @@ class BugReport:
                 ],
             ],
             "explanation": self.explanation,
+            "metadata": self.metadata,
             "is_human_confirmed_true": (
                 str(self.is_human_confirmed_true)
                 if self.is_human_confirmed_true is not None

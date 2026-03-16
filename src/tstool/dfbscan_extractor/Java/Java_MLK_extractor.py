@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List, Set
+from typing import Dict, List, Optional, Set
 
 from tstool.analyzer.Java_TS_analyzer import *
 from tstool.analyzer.TS_analyzer import *
@@ -147,6 +147,7 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "getInputStream",
         "getErrorStream",
         "getOutputStream",
+        "getWriter",
         "getChannel",
         "newChannel",
         "newInputStream",
@@ -171,7 +172,10 @@ class Java_MLK_Extractor(DFBScanExtractor):
         "createSocket",
         "accept",
         "getResourceAsStream",
+        "getRandomAccessFile",
         "openConnection",
+        "writeAttribute",
+        "encode",
         "newFixedThreadPool",
         "newCachedThreadPool",
         "newSingleThreadExecutor",
@@ -212,8 +216,50 @@ class Java_MLK_Extractor(DFBScanExtractor):
             "createEntityManager",
             "createEntityManagerFactory",
             "openCursor",
+            # High-confidence resource factory APIs frequently assigned to fields
+            # or wrapped immediately where local variable type is unavailable.
+            "newInputStream",
+            "newOutputStream",
+            "newBufferedReader",
+            "newBufferedWriter",
+            "getInputStream",
+            "getOutputStream",
+            "getWriter",
+            "getResourceAsStream",
+            "getRandomAccessFile",
+            "writeAttribute",
+            "encode",
         }
     )
+
+    HIGH_CONFIDENCE_FACTORY_METHOD_NAMES = {
+        "open",
+        "openStream",
+        "getInputStream",
+        "getOutputStream",
+        "getWriter",
+        "newInputStream",
+        "newOutputStream",
+        "newBufferedReader",
+        "newBufferedWriter",
+        "getResourceAsStream",
+        "getRandomAccessFile",
+        "writeAttribute",
+        "encode",
+    }
+
+    ARG_CONTEXT_RESOURCE_CONSUMER_METHOD_NAMES = {
+        "load",
+        "read",
+        "parse",
+        "copy",
+        "transferTo",
+        "consume",
+        "decode",
+        "encode",
+        "setEntity",
+        "setContent",
+    }
 
     CLOSE_METHOD_NAMES = {
         "close",
@@ -283,6 +329,8 @@ class Java_MLK_Extractor(DFBScanExtractor):
         sources: List[Value] = []
         sources.extend(self._extract_new_resource_sources(function))
         sources.extend(self._extract_factory_resource_sources(function))
+        sources.extend(self._extract_return_context_factory_sources(function))
+        sources.extend(self._extract_argument_context_factory_sources(function))
         sources.extend(self._extract_acquire_sources(function))
         sources.extend(self._extract_twr_sources(function))
         return self._dedup_source_values(sources)
@@ -328,6 +376,60 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if not self._is_resource_factory_return(node, source_code, local_type_map):
                 continue
 
+            sources.append(
+                Value(
+                    source_code[node.start_byte : node.end_byte],
+                    self._line_of(node, source_code),
+                    ValueLabel.SRC,
+                    function.file_path,
+                )
+            )
+        return sources
+
+    def _extract_return_context_factory_sources(self, function: Function) -> List[Value]:
+        """
+        Fallback source extraction for return-context factories:
+          return Files.newOutputStream(path);
+          return loader.getResourceAsStream(name);
+        """
+        source_code = self.ts_analyzer.code_in_files[function.file_path]
+        sources: List[Value] = []
+        invocations = find_nodes_by_type(function.parse_tree_root_node, "method_invocation")
+        for node in invocations:
+            method_name = self._get_invocation_name(node, source_code)
+            if method_name not in self.FACTORY_METHOD_NAMES:
+                continue
+            if not self._is_high_confidence_factory_method(method_name):
+                continue
+            if not self._is_factory_in_return_context(node, function, source_code):
+                continue
+            sources.append(
+                Value(
+                    source_code[node.start_byte : node.end_byte],
+                    self._line_of(node, source_code),
+                    ValueLabel.SRC,
+                    function.file_path,
+                )
+            )
+        return sources
+
+    def _extract_argument_context_factory_sources(self, function: Function) -> List[Value]:
+        """
+        Fallback source extraction for argument-context factories:
+          load(Files.newInputStream(path));
+          new BufferedReader(loader.getResourceAsStream(...));
+        """
+        source_code = self.ts_analyzer.code_in_files[function.file_path]
+        sources: List[Value] = []
+        invocations = find_nodes_by_type(function.parse_tree_root_node, "method_invocation")
+        for node in invocations:
+            method_name = self._get_invocation_name(node, source_code)
+            if method_name not in self.FACTORY_METHOD_NAMES:
+                continue
+            if not self._is_high_confidence_factory_method(method_name):
+                continue
+            if not self._is_factory_in_argument_context(node, source_code):
+                continue
             sources.append(
                 Value(
                     source_code[node.start_byte : node.end_byte],
@@ -602,7 +704,27 @@ class Java_MLK_Extractor(DFBScanExtractor):
             left_name = source_code[left.start_byte : left.end_byte].strip()
             if allow_without_type:
                 return left_name != ""
-            return self._is_resource_type(local_type_map.get(left_name, ""))
+            left_type = local_type_map.get(left_name, "")
+            if self._is_resource_type(left_type):
+                return True
+            base_name = left_name.split(".", 1)[0].strip()
+            if self._is_resource_type(local_type_map.get(base_name, "")):
+                return True
+            if left_name.startswith("this."):
+                field_name = left_name.split(".", 1)[1].strip()
+                field_type = self._lookup_field_type(invocation_node, field_name, source_code)
+                if self._is_resource_type(field_type):
+                    return True
+            return False
+
+        if parent.type == "return_statement":
+            if allow_without_type:
+                return True
+            return self._method_returns_resource_like(invocation_node, source_code)
+
+        if parent.type == "argument_list":
+            if self._is_factory_in_argument_context(invocation_node, source_code):
+                return True
 
         return False
 
@@ -644,3 +766,87 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if has_resource:
                 results.append(node)
         return results
+
+    def _is_high_confidence_factory_method(self, method_name: str) -> bool:
+        return method_name in self.HIGH_CONFIDENCE_FACTORY_METHOD_NAMES
+
+    def _unwrap_parent_expr(self, node: Optional[Node]) -> Optional[Node]:
+        current = node
+        while current is not None and current.type in {
+            "parenthesized_expression",
+            "cast_expression",
+            "type_cast_expression",
+        }:
+            current = current.parent
+        return current
+
+    def _is_factory_in_return_context(
+        self, invocation_node: Node, function: Function, source_code: str
+    ) -> bool:
+        parent = self._unwrap_parent_expr(invocation_node.parent)
+        if parent is None or parent.type != "return_statement":
+            return False
+        # Constructors do not have return type; for methods we prefer explicit
+        # resource return type, but still keep high-confidence factories.
+        method_name = self._get_invocation_name(invocation_node, source_code)
+        return self._method_returns_resource_like(invocation_node, source_code) or (
+            method_name in self.HIGH_CONFIDENCE_FACTORY_METHOD_NAMES
+        )
+
+    def _is_factory_in_argument_context(self, invocation_node: Node, source_code: str) -> bool:
+        parent = self._unwrap_parent_expr(invocation_node.parent)
+        if parent is None or parent.type != "argument_list":
+            return False
+
+        container = parent.parent
+        if container is None:
+            return False
+
+        if container.type == "object_creation_expression":
+            created_type = self._extract_creation_type_name(container, source_code)
+            return self._is_resource_type(created_type)
+
+        if container.type == "method_invocation":
+            container_name = self._get_invocation_name(container, source_code)
+            if container_name in self.ARG_CONTEXT_RESOURCE_CONSUMER_METHOD_NAMES:
+                return True
+        return False
+
+    def _method_returns_resource_like(self, invocation_node: Node, source_code: str) -> bool:
+        function_node = invocation_node
+        while function_node is not None and function_node.type not in {
+            "method_declaration",
+            "constructor_declaration",
+        }:
+            function_node = function_node.parent
+
+        if function_node is None:
+            return False
+        if function_node.type == "constructor_declaration":
+            return False
+        type_node = function_node.child_by_field_name("type")
+        if type_node is None:
+            return False
+        return_type = self._normalize_type(source_code[type_node.start_byte : type_node.end_byte])
+        return self._is_resource_type(return_type)
+
+    def _lookup_field_type(
+        self, invocation_node: Node, field_name: str, source_code: str
+    ) -> str:
+        # Root node does not carry path; use best-effort cache by source hash.
+        file_cache: Dict[str, Dict[str, str]] = self.__dict__.setdefault(
+            "_field_type_cache", {}
+        )
+        cache_key = str(hash(source_code))
+        if cache_key not in file_cache:
+            field_map: Dict[str, str] = {}
+            pattern = re.compile(
+                r"\b([A-Za-z_][A-Za-z0-9_$.<>\\[\\]]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:=|;|,)"
+            )
+            for match in pattern.finditer(source_code):
+                type_name = self._normalize_type(match.group(1))
+                name = match.group(2)
+                if name not in field_map:
+                    field_map[name] = type_name
+            file_cache[cache_key] = field_map
+        return file_cache[cache_key].get(field_name, "")

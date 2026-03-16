@@ -30,8 +30,9 @@ ENABLE_Z3_PREFILTER="${ENABLE_Z3_PREFILTER:-false}"   # true/false
 Z3_SHADOW_MODE="${Z3_SHADOW_MODE:-true}"        # true/false
 Z3_TIMEOUT_MS="${Z3_TIMEOUT_MS:-200}"            # per-path timeout in ms
 Z3_MIN_PARSED_CONSTRAINTS="${Z3_MIN_PARSED_CONSTRAINTS:-2}"  # conservative UNSAT skip threshold
-REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="${REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE:-method_semantic}"  # source/method/method_semantic/obligation
-REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="${REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE:-obligation}"             # source/obligation
+REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="${REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE:-method_semantic}"  # source/method/method_semantic/obligation/issue
+REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="${REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE:-source}"                # source/obligation/issue
+REPOAUDIT_AUTO_EVAL_JLEAKS_MLK="${REPOAUDIT_AUTO_EVAL_JLEAKS_MLK:-false}"                         # true/false
 
 # Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${ANALYSIS_LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -171,7 +172,7 @@ fi
 Z3_FLAGS+=(--z3-timeout-ms "$Z3_TIMEOUT_MS")
 Z3_FLAGS+=(--z3-min-parsed-constraints "$Z3_MIN_PARSED_CONSTRAINTS")
 
-REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="$REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE" \
+if ! REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="$REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE" \
 REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="$REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE" \
 python3 repoaudit.py \
   --language "$ANALYSIS_LANGUAGE" \
@@ -184,4 +185,21 @@ python3 repoaudit.py \
   --call-depth "$REPOAUDIT_CALL_DEPTH" \
   --max-neural-workers "$REPOAUDIT_MAX_NEURAL_WORKERS" \
   "${SOOT_FLAGS[@]}" \
-  "${Z3_FLAGS[@]}"
+  "${Z3_FLAGS[@]}"; then
+  exit 1
+fi
+
+if [[ "$REPOAUDIT_AUTO_EVAL_JLEAKS_MLK" == "true" \
+   && "$ANALYSIS_LANGUAGE" == "Java" \
+   && "$BUG_TYPE" == "MLK" \
+   && "$PROJECT_PATH_ABS" == *"jleaks_mlk_"* ]]; then
+  RESULT_ROOT="../result/dfbscan/${MODEL}/${BUG_TYPE}/${ANALYSIS_LANGUAGE}/$(basename -- "$PROJECT_PATH_ABS")"
+  LATEST_RESULT_DIR="$(ls -1dt "$RESULT_ROOT"/* 2>/dev/null | head -n 1 || true)"
+  if [[ -n "$LATEST_RESULT_DIR" && -f "../tools/eval/eval_jleaks_mlk.py" ]]; then
+    echo "[Info] Auto-evaluating latest run: $LATEST_RESULT_DIR"
+    python3 ../tools/eval/eval_jleaks_mlk.py \
+      --result-dir "$LATEST_RESULT_DIR" \
+      --benchmark-dir "$PROJECT_PATH_ABS" \
+      --output-dir "$LATEST_RESULT_DIR" || true
+  fi
+fi
