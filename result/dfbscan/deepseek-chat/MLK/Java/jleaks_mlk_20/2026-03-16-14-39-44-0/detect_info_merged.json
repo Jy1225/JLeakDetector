@@ -1,0 +1,622 @@
+{
+    "0": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java, 16, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java"
+            ],
+            [
+                "readBytes"
+            ],
+            [
+                "public static byte[] readBytes(File file) throws IOException {\n        byte[] bytes = new byte[(int) file.length()];\n        FileInputStream fileInputStream = new FileInputStream(file);\n        fileInputStream.read(bytes);\n        fileInputStream.close();\n        return bytes;\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 3 and released at line 5, but the release is on the normal path only. If an exception occurs during fileInputStream.read(bytes) at line 4, the close() at line 5 will be skipped, leaving the resource unclosed. Since the release is not guaranteed on all exits (no finally block or try-with-resources), the path is feasible and the resource can stay unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            0
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+            "org.web3j.utils.Files.readBytes(File)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "1": {
+        "bug_type": "MLK",
+        "buggy_value": "((new PrintWriter(new BufferedWriter(new FileWriter(f))), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java, 43, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java"
+            ],
+            [
+                "writeTestFile"
+            ],
+            [
+                "public static File writeTestFile(String fullFile) throws IOException {\n    File f = new File(\"Test.java\");\n    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f)));\n    out.println(fullFile);\n    out.close();\n    return f;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (PrintWriter) is created at line 3 and explicitly closed at line 5, but the close occurs on the normal execution path without a try-finally block. If an exception occurs between creation and close (e.g., during out.println at line 4), the close will be skipped, leaving the resource unclosed. The path indicates a weak release (normal-only guarantee), so the resource is not definitely released on all exits.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            1
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "PersistUtil.writeTestFile(String)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "2": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileWriter(new File(outputDir, filename)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java, 25, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java"
+            ],
+            [
+                "writeHTML"
+            ],
+            [
+                "public void writeHTML(SortedSet objects) throws IOException {\n        FileWriter fileWriter = new FileWriter(new File(outputDir, filename));\n\n        fileWriter.append(\"<HTML>\\n\" + \"<HEAD>\\n\" + \"<TITLE>\\n\");\n        fileWriter.append(title);\n        fileWriter.append(\"\\n\" + \"</TITLE>\\n\" + \"<LINK REL =\\\"stylesheet\\\" TYPE=\\\"text/css\\\" HREF=\\\"stylesheet.css\\\" TITLE=\\\"Style\\\">\\n\" + \"</HEAD>\\n\" + \"<BODY BGCOLOR=\\\"white\\\">\\n\" + \"<FONT size=\\\"+1\\\" CLASS=\\\"FrameHeadingFont\\\">\\n\" + \"<B>\");\n        fileWriter.append(title);\n        fileWriter.append(\"</B></FONT>\\n\" + \"<BR>\\n\" + \"<TABLE BORDER=\\\"0\\\" WIDTH=\\\"100%\\\" SUMMARY=\\\"\\\">\" + \"<TR>\\n\" + \"<TD NOWRAP><FONT CLASS=\\\"FrameItemFont\\\">\");\n\n\n        for (Object object : objects) {\n            fileWriter.append(\"<A HREF=\\\"\");\n            fileWriter.append(directory);\n            fileWriter.append(\"/\");\n            fileWriter.append(object.toString().toLowerCase());\n            fileWriter.append(getTargetExtension());\n            fileWriter.append(\"\\\" target=\\\"objectFrame\\\">\");\n            fileWriter.append(object.toString());\n            fileWriter.append(\"</A><BR>\\n\");\n        }\n\n        fileWriter.append(\"</FONT></TD>\\n\" +\n                \"</TR>\\n\" +\n                \"</TABLE>\\n\" +\n                \"\\n\" +\n                \"</BODY>\\n\" +\n                \"</HTML>\");\n\n        fileWriter.close();\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The FileWriter is created and closed only on the normal execution path (line 29). If an IOException occurs during the append operations inside the loop or before the close, the close() call will be skipped, leaving the resource open. Since the release is not guaranteed on all exits (no finally block or try-with-resources), the path is feasible and the resource may leak.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            2
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+            "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "3": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileOutputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java, 47, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java"
+            ],
+            [
+                "createConfigFor"
+            ],
+            [
+                "private void createConfigFor(String filePath) throws IOException {\n        File file = new File(filePath);\n\n        if (!file.exists()) {\n            if (!file.createNewFile()) {\n                throw new RuntimeException(\"Could not create file: \" + file.getAbsolutePath());\n            }\n            FileOutputStream fos = new FileOutputStream(file);\n\n            StringWriter writer = new StringWriter();\n            IOUtils.copy(getClass().getResourceAsStream(\"/config-template.conf\"), writer, \"UTF-8\");\n            IOUtils.write(writer.toString(), fos, \"UTF-8\");\n            fos.flush();\n            fos.close();\n            outStream.println(\"Created config file: \" + file.getAbsolutePath());\n        } else {\n            errStream.println(\"Config file already exists\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileOutputStream fos` is created at line 8 inside a conditional branch (when the file does not exist). The release `fos.close()` at line 14 occurs only on the normal execution path within that branch. If an exception is thrown between lines 8 and 14 (e.g., during `IOUtils.copy` or `IOUtils.write`), the close will be skipped, leaving the resource unclosed. The release is not in a finally block or try-with-resources, so it is not guaranteed on all exits from the scope where the resource is alive. Therefore, the path is feasible and the resource may leak.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            3
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+            "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "4": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(propertiesFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java, 72, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java"
+            ],
+            [
+                "loadProperties"
+            ],
+            [
+                "public static Properties loadProperties(File propertiesFile) {\n    FileInputStream propertiesStream = null;\n    Properties properties = new Properties();\n    try {\n      propertiesStream = new FileInputStream(propertiesFile);\n    } catch (FileNotFoundException e) {\n      try {\n        LOG.info(String.format(\"No configuration file found (%s)\", propertiesFile.getCanonicalPath()));\n      } catch (IOException ioe) {\n        LOG.info(String.format(\"No configuration file found (%s)\", propertiesFile));\n      }\n    }\n\n    if (propertiesStream != null) {\n      try {\n        properties.load(propertiesStream);\n        propertiesStream.close();\n      } catch (IOException e) {\n        LOG.log(Level.WARNING, String.format(\"Error reading configuration: %s\", e.getMessage()));\n      }\n    }\n\n    return properties;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 5 inside a try-catch block, but the close at line 17 is only executed if propertiesStream != null and no IOException occurs during properties.load(). If an IOException is thrown at line 16, the close at line 17 is skipped, and the resource is not released. The release is not guaranteed on all exits (e.g., exception path), so it is weak.  \nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            4
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+            "fitnesse.ConfigurationParameter.loadProperties(File)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "5": {
+        "bug_type": "MLK",
+        "buggy_value": "((outputStreamContainer.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java, 94, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java"
+            ],
+            [
+                "executeUpgradeInfos"
+            ],
+            [
+                "public void executeUpgradeInfos(\n\t\tString bundleSymbolicName, List<UpgradeInfo> upgradeInfos) {\n\n\t\tOutputStreamContainerFactory outputStreamContainerFactory =\n\t\t\t_outputStreamContainerFactoryTracker.\n\t\t\t\tgetOutputStreamContainerFactory();\n\n\t\tOutputStreamContainer outputStreamContainer =\n\t\t\toutputStreamContainerFactory.create(\n\t\t\t\t\"upgrade-\" + bundleSymbolicName);\n\n\t\tOutputStream outputStream = outputStreamContainer.getOutputStream();\n\n\t\tRelease release = _releaseLocalService.fetchRelease(bundleSymbolicName);\n\n\t\tif (release != null) {\n\t\t\t_releasePublisher.publishInProgress(release);\n\t\t}\n\n\t\t_outputStreamContainerFactoryTracker.runWithSwappedLog(\n\t\t\tnew UpgradeInfosRunnable(\n\t\t\t\tbundleSymbolicName, upgradeInfos, outputStream),\n\t\t\toutputStreamContainer.getDescription(), outputStream);\n\n\t\ttry {\n\t\t\toutputStream.close();\n\t\t}\n\t\tcatch (IOException ioe) {\n\t\t\tthrow new RuntimeException(ioe);\n\t\t}\n\n\t\trelease = _releaseLocalService.fetchRelease(bundleSymbolicName);\n\n\t\tif (release != null) {\n\t\t\t_releasePublisher.publish(release);\n\t\t}\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `outputStream` is obtained at line 12 and closed at line 26 inside a try block, but the close is not in a finally block. If an exception occurs before line 25 (e.g., during `runWithSwappedLog` at line 20), the close will be skipped. The release is only guaranteed on the normal path, not on all exits, making it a weak release. Therefore, the resource may remain unclosed, indicating a real MLK bug.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            5
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "6": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java, 49, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java"
+            ],
+            [
+                "doPost"
+            ],
+            [
+                "@Override\n  protected void doPost(HttpServletRequest request,\n      HttpServletResponse response)\n      throws ServletException, IOException {\n    response.setContentType(\"text/html\");\n    response.setStatus(HttpServletResponse.SC_OK);\n\n    File file = (File) request.getAttribute(\"upload\");\n    file.deleteOnExit();\n\n    int length = (int) file.length();\n    byte[] buffer = new byte[length];\n    InputStream in = new FileInputStream(file);\n    in.read(buffer, 0, length);\n    String content = new String(buffer, \"UTF-8\");\n    in.close();\n\n    // Slow down the upload so we can verify WebDriver waits.\n    try {\n      Thread.sleep(2500);\n    } catch (InterruptedException ignored) {\n    }\n    response.getWriter().write(content);\n    response.getWriter().write(\n        \"<script>window.top.window.onUploadDone();</script>\");\n    response.setStatus(HttpServletResponse.SC_OK);\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 13 and explicitly closed at line 16 (`in.close()`). However, the close occurs on the normal execution path without a try-finally or try-with-resources block. If an exception (e.g., `IOException` from `in.read` or `new String`, or `RuntimeException` from `Thread.sleep`) occurs before line 16, the close will be skipped, leaving the resource unclosed. The release is not guaranteed on all exits, so the resource may leak. The path indicates a potential MLK bug.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            6
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
+            "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "7": {
+        "bug_type": "MLK",
+        "buggy_value": "((new DataOutputStream(connection.getOutputStream()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java, 105, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java"
+            ],
+            [
+                "postBody"
+            ],
+            [
+                "public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {\n        HttpURLConnection connection = null;\n        BufferedReader bufferedReader = null;\n        try {\n            // connection\n            URL realUrl = new URL(url);\n            connection = (HttpURLConnection) realUrl.openConnection();\n\n            // trust-https\n            boolean useHttps = url.startsWith(\"https\");\n            if (useHttps) {\n                HttpsURLConnection https = (HttpsURLConnection) connection;\n                trustAllHosts(https);\n            }\n\n            // connection setting\n            connection.setRequestMethod(\"POST\");\n            connection.setDoOutput(true);\n            connection.setDoInput(true);\n            connection.setUseCaches(false);\n            connection.setReadTimeout(timeout * 1000);\n            connection.setConnectTimeout(timeout * 1000);\n            connection.setRequestProperty(\"connection\", \"Keep-Alive\");\n            connection.setRequestProperty(\"Content-Type\", \"application/json;charset=UTF-8\");\n            connection.setRequestProperty(\"Accept-Charset\", \"application/json;charset=UTF-8\");\n\n            if(accessToken!=null && accessToken.trim().length()>0){\n                connection.setRequestProperty(XXL_JOB_ACCESS_TOKEN, accessToken);\n            }\n\n            // do connection\n            connection.connect();\n\n            // write requestBody\n            if (requestObj != null) {\n                String requestBody = GsonTool.toJson(requestObj);\n\n                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());\n                dataOutputStream.write(requestBody.getBytes(\"UTF-8\"));\n                dataOutputStream.flush();\n                dataOutputStream.close();\n            }\n\n            /*byte[] requestBodyBytes = requestBody.getBytes(\"UTF-8\");\n            connection.setRequestProperty(\"Content-Length\", String.valueOf(requestBodyBytes.length));\n            OutputStream outwritestream = connection.getOutputStream();\n            outwritestream.write(requestBodyBytes);\n            outwritestream.flush();\n            outwritestream.close();*/\n\n            // valid StatusCode\n            int statusCode = connection.getResponseCode();\n            if (statusCode != 200) {\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting fail, StatusCode(\"+ statusCode +\") invalid. for url : \" + url);\n            }\n\n            // result\n            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), \"UTF-8\"));\n            StringBuilder result = new StringBuilder();\n            String line;\n            while ((line = bufferedReader.readLine()) != null) {\n                result.append(line);\n            }\n            String resultJson = result.toString();\n\n            // parse returnT\n            try {\n                ReturnT returnT = GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);\n                return returnT;\n            } catch (Exception e) {\n                logger.error(\"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\", e);\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\");\n            }\n\n        } catch (Exception e) {\n            logger.error(e.getMessage(), e);\n            return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting error(\"+ e.getMessage() +\"), for url : \" + url);\n        } finally {\n            try {\n                if (bufferedReader != null) {\n                    bufferedReader.close();\n                }\n                if (connection != null) {\n                    connection.disconnect();\n                }\n            } catch (Exception e2) {\n                logger.error(e2.getMessage(), e2);\n            }\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `DataOutputStream` is created at line 38 and closed at line 41, but the close occurs only on the normal execution path inside the try block. If an exception occurs after creation but before the close (e.g., during writing, flushing, or earlier), the close may be skipped. The finally block only closes `bufferedReader` and `connection`, not the `DataOutputStream`. Since the release is not guaranteed on all exits, the resource may leak.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            7
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "8": {
+        "bug_type": "MLK",
+        "buggy_value": "((new ObjectOutputStream(new FileOutputStream(file)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java, 93, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java"
+            ],
+            [
+                "save"
+            ],
+            [
+                "protected void save() {\n        try {\n            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));\n            Map<byte[], byte[]> raw = new HashMap<>();\n            for (Map.Entry<ByteBuffer, ByteBuffer> mapEntry : data.entrySet()) {\n                byte[] key = (mapEntry.getKey() != null) ? mapEntry.getKey().array() : null;\n                byte[] value = (mapEntry.getValue() != null) ? mapEntry.getValue().array() : null;\n                raw.put(key, value);\n            }\n            os.writeObject(raw);\n            os.close();\n        } catch (IOException e) {\n            throw new ConnectException(e);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 3 and closed at line 11, but the close occurs only on the normal execution path inside the try block. If an IOException occurs during os.writeObject(raw) (line 10) or earlier, the close at line 11 will be skipped, and the exception handler at lines 12-14 will throw a ConnectException without closing the resource. Since the release is not guaranteed on all exits (exceptions bypass it), the resource may leak.  \nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            8
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "9": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(sourceFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java, 115, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java"
+            ],
+            [
+                "read"
+            ],
+            [
+                "public BufferedImage read() throws IOException {\n\t\ttry {\n\t\t\tFileInputStream fis = new FileInputStream(sourceFile);\n\t\t\timageSource = new InputStreamImageSource(fis);\n\t\t\timageSource.setThumbnailParameter(param);\n\t\t\tBufferedImage img = imageSource.read();\n\t\t\tfis.close();\n\t\t\treturn img;\n\n\t\t} catch (FileNotFoundException e) {\n\t\t\tthrow new FileNotFoundException(\n\t\t\t\t\t\"Could not find file: \" + sourceFile.getAbsolutePath()\n\t\t\t);\n\n\t\t} catch (UnsupportedFormatException e) {\n\t\t\tString sourcePath = sourceFile.getAbsolutePath();\n\t\t\tthrow new UnsupportedFormatException(\n\t\t\t\t\tUnsupportedFormatException.UNKNOWN,\n\t\t\t\t\t\"No suitable ImageReader found for \" + sourcePath + \".\"\n\t\t\t);\n\t\t}\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The FileInputStream is created at line 3 and closed at line 7, but the close occurs only on the normal execution path. If an exception is thrown between lines 3 and 7 (e.g., during imageSource.read()), the close will be skipped, and the resource may leak. The catch blocks only handle specific exceptions and do not ensure the stream is closed. Since the release is not guaranteed on all exits, the resource is not definitely released before method exit.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            9
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "10": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(configFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java, 78, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java"
+            ],
+            [
+                "initInternal"
+            ],
+            [
+                "@SuppressWarnings(\"rawtypes\")\n\tprivate static void initInternal(File configFile, String outputPath, boolean stdOut) throws IOException\n\t{\n\t\tList<Appender> appenders = new ArrayList<Appender>();\n\n\t\t// Retrieve all existing appenders\n\t\tEnumeration apps = LogManager.getRootLogger().getAllAppenders();\n\t\twhile(apps.hasMoreElements()) {\n\t\t\tAppender appender = (Appender)apps.nextElement();\n\t\t\tif (!(appender instanceof ConsoleAppender || appender instanceof FileAppender)) \n\t\t\t\tappenders.add( appender );\n\t\t}\n\n\t\tProperties lprops = new Properties();\n\t\tFileInputStream in = new FileInputStream(configFile);\n\t\tlprops.load(in);\n\t\tin.close();\n\t\tLogManager.resetConfiguration();\n\t\t\n\t\tif (lprops.getProperty(\"log4j.appender.orslogfile.File\") == null)\n\t\t\tlprops.put(\"log4j.appender.orslogfile.File\", outputPath);\n\t\t\n\t\tPropertyConfigurator.configure(lprops);\n\n\t\tif (!stdOut) {\n            apps = org.apache.log4j.Logger.getRootLogger().getAllAppenders();\n            while (apps.hasMoreElements()) {\n            \tAppender appender = (Appender)apps.nextElement();\n                if (appender instanceof org.apache.log4j.ConsoleAppender) {\n                    org.apache.log4j.Logger.getRootLogger().removeAppender(appender);\n                }\n            }\n\t\t} \n\n\t\tfor (Appender appender : appenders ) \n\t\t\tLogManager.getRootLogger().addAppender( appender );\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 15 and explicitly closed at line 17 on the normal execution path. However, the close occurs only on the normal path; if an exception is thrown between line 15 and line 17 (e.g., during `lprops.load(in)` at line 16), the close will be skipped, leaving the resource unclosed. The release is not in a finally block or try-with-resources, so it does not guarantee closure on all exits. The path indicates a weak release (normal-only), so the resource can stay unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            10
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+            "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "11": {
+        "bug_type": "MLK",
+        "buggy_value": "((url.openConnection().getInputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java, 77, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java"
+            ],
+            [
+                "getCalleeTarget"
+            ],
+            [
+                "@Override\n  public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {\n    IMethod target = base.getCalleeTarget(caller, site, receiver);\n    if (target != null && target.getReference().equals(loadFileFunRef)) {\n\n      Set<String> names = new HashSet<String>();\n      SSAInstruction call = caller.getIR().getInstructions()[caller.getIR().getCallInstructionIndices(site).intIterator().next()];\n      if (call.getNumberOfUses() > 1) {\n        LocalPointerKey fileNameV = new LocalPointerKey(caller, call.getUse(1));\n        OrdinalSet<InstanceKey> ptrs = builder.getPointerAnalysis().getPointsToSet(fileNameV);\n        for(InstanceKey k : ptrs) {\n          if (k instanceof ConstantKey) {\n            Object v = ((ConstantKey)k).getValue();\n            if (v instanceof String) {\n              names.add((String)v);\n            }\n          }\n        }\n\n        if (names.size() == 1) {\n          String str = names.iterator().next();\n          try {\n            JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);\n            URL url = new URL(builder.getBaseURL(), str);\n            if(!loadedFiles.contains(url)) {\n              // try to open the input stream for the URL.  if it fails, we'll get an IOException and fall through to default case\n              InputStream inputStream = url.openConnection().getInputStream();\n              inputStream.close();\n              JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, url);\n              loadedFiles.add(url);\n              IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), \"L\" + url.getFile()));\n              return script.getMethod(JavaScriptMethods.fnSelector);\n            }\n          } catch (MalformedURLException e1) {\n            // do nothing, fall through and return 'target'\n          } catch (IOException e) {\n            // do nothing, fall through and return 'target'\n          } catch (RuntimeException e) {\n            // do nothing, fall through and return 'target'\n          }\n        }\n      }\n    }\n\n    return target;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `InputStream` is created at line 27 and closed at line 28, but the close is not in a finally block or try-with-resources. The path includes a `__WEAK_RELEASE_BRANCH_PATH_0__` label, indicating the release is conditional or may be bypassed. Exceptions (e.g., from `loadAdditionalFile` at line 29) can skip the close, and the catch blocks do not rethrow, but they also do not close the stream. Since the release is not guaranteed on all exits (only on normal flow), the resource may remain unclosed.  \nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            11
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java",
+            "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "12": {
+        "bug_type": "MLK",
+        "buggy_value": "((new OutputStreamWriter(new BufferedOutputStream(new ByteBufOutputStream(buffer))), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java, 54, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java"
+            ],
+            [
+                "render"
+            ],
+            [
+                "@SuppressWarnings(\"ThrowableResultOfMethodCallIgnored\")\n  @Override\n  public void render(Context ctx, HealthCheckResults healthCheckResults) throws Exception {\n    ByteBuf buffer = byteBufAllocator.buffer();\n    boolean first = true;\n    boolean unhealthy = false;\n\n    try {\n      Writer writer = new OutputStreamWriter(new BufferedOutputStream(new ByteBufOutputStream(buffer)));\n      for (Map.Entry<String, HealthCheck.Result> entry : healthCheckResults.getResults().entrySet()) {\n        if (first) {\n          first = false;\n        } else {\n          writer.write(\"\\n\");\n        }\n        String name = entry.getKey();\n        HealthCheck.Result result = entry.getValue();\n        writer.append(name).append(\" : \").append(result.isHealthy() ? \"HEALTHY\" : \"UNHEALTHY\");\n        if (!result.isHealthy()) {\n          unhealthy = true;\n          writer.append(\" [\").append(result.getMessage()).append(\"]\");\n          if (result.getError() != null) {\n            writer.append(\" [\").append(result.getError().toString()).append(\"]\");\n          }\n        }\n      }\n      writer.close();\n    } catch (Exception e) {\n      buffer.release();\n      throw e;\n    }\n\n    ctx.getResponse()\n      .contentTypeIfNotSet(HttpHeaderConstants.PLAIN_TEXT_UTF8)\n      .status(unhealthy ? 503 : 200)\n      .send(buffer);\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `writer` is created at line 9 and closed at line 27, but the close occurs inside a try block without a finally. If an exception occurs before line 27, the close is skipped, and the underlying `ByteBufOutputStream` and `ByteBuf` buffer may not be properly released. Although `buffer.release()` is called in the catch block for exceptions, that only handles exceptions thrown in the try block, not the scenario where `writer.close()` itself might throw or if an exception occurs during writing. The release at line 27 is only on the normal path, making it a weak release. Therefore, the resource may remain unclosed on some exception paths.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            12
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java",
+            "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "13": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileWriter(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java, 31, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java"
+            ],
+            [
+                "write"
+            ],
+            [
+                "public void write(Migration migration, File file) {\n\n    try {\n\n      FileWriter writer = new FileWriter(file);\n      writer.write(\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"yes\\\"?>\\n\");\n      writer.write(\"<!DOCTYPE xml>\\n\");\n      if (comment != null) {\n        writer.write(\"<!-- \");\n        writer.write(comment);\n        writer.write(\" -->\\n\");\n      }\n\n      JAXBContext jaxbContext = JAXBContext.newInstance(Migration.class);\n      Marshaller marshaller = jaxbContext.createMarshaller();\n      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);\n      marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);\n\n      marshaller.marshal(migration, writer);\n\n      writer.close();\n\n    } catch (IOException | JAXBException e) {\n      throw new RuntimeException(e);\n    }\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The FileWriter is created and closed only on the normal execution path inside the try block. If an IOException or JAXBException occurs before line 21, the close() call is skipped, and the resource may leak. The release is not in a finally block and lacks all-exit semantics, so it is weak.\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            13
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
+            "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "14": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(keyFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java, 56, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java"
+            ],
+            [
+                "parseValue"
+            ],
+            [
+                "@Override\n    public PrivateKey parseValue(String value) throws GuacamoleServerException {\n\n        if (value == null || value.isEmpty())\n            return null;\n\n        try {\n\n            // Open and read the file specified in the configuration.\n            File keyFile = new File(value);\n            FileInputStream keyStreamIn = new FileInputStream(keyFile);\n            ByteArrayOutputStream keyStreamOut = new ByteArrayOutputStream();\n            byte[] keyBuffer = new byte[1024];\n\n            for (int readBytes; (readBytes = keyStreamIn.read(keyBuffer)) != -1;)\n                keyStreamOut.write(keyBuffer, 0, readBytes);\n\n            keyStreamIn.close();\n            final byte[] keyBytes = keyStreamOut.toByteArray();\n\n            // Set up decryption infrastructure\n            KeyFactory keyFactory = KeyFactory.getInstance(\"RSA\");\n            KeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);\n            return keyFactory.generatePrivate(keySpec);\n\n        }\n        catch (FileNotFoundException e) {\n            throw new GuacamoleServerException(\"Could not find the specified key file.\", e);\n        }\n        catch (IOException e) {\n            throw new GuacamoleServerException(\"Could not read in the specified key file.\", e);\n        }\n        catch (NoSuchAlgorithmException e) {\n            throw new GuacamoleServerException(\"RSA algorithm is not available.\", e);\n        }\n        catch (InvalidKeySpecException e) {\n            throw new GuacamoleServerException(\"Key is not in expected PKCS8 encoding.\", e);\n        }\n\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 11 and explicitly closed at line 18, but the close occurs only on the normal execution path inside the try block. If an exception (e.g., `IOException` during reading, `NoSuchAlgorithmException`, `InvalidKeySpecException`) is thrown before line 18, the close will be skipped. The release is not in a finally block or try-with-resources, so it is not guaranteed on all exits. Therefore, the resource can remain unclosed on exceptional paths.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            14
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
+            "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "15": {
+        "bug_type": "MLK",
+        "buggy_value": "((PropertiesLoader.class.getClassLoader().getResourceAsStream(resourceName), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java, 9, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java"
+            ],
+            [
+                "loadProps"
+            ],
+            [
+                "public static Properties loadProps(String resourceName) {\n\t\tInputStream in = PropertiesLoader.class.getClassLoader().getResourceAsStream(resourceName);\n\t\tProperties props = new Properties();\n\t\tif (in != null) {\n\t\t\ttry {\n\t\t\t\tprops.load(in);\n\t\t\t\tin.close();\n\t\t\t} catch (IOException e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t}\n\t\treturn props;\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `in` is closed only in the normal execution path inside the try block (line 7). If an IOException occurs during `props.load(in)`, the close is skipped, and the catch block only prints the stack trace without closing the resource. Since the release is not guaranteed on all exits (exceptions bypass it), the resource may leak.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            15
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java",
+            "jplagUtils.PropertiesLoader.loadProps(String)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "16": {
+        "bug_type": "MLK",
+        "buggy_value": "((new DataOutputStream(this.connection.getOutputStream()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java, 76, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java"
+            ],
+            [
+                "request"
+            ],
+            [
+                "public  String request(String method, String url, String req,\n\t\t\tint userTimeout) throws Exception {\n\t\tString result = \"\";\n\t\tBufferedReader in = null;\n\t\ttry{\n            if (this.url != url)\n                this.newHttpConnection(url);\n\n            this.connection.setConnectTimeout(timeout+userTimeout);\n            this.connection.setReadTimeout(timeout+userTimeout);\n\t\n\t\t\tif (method.equals(\"POST\")) {\n\t\t\t\t((HttpURLConnection)this.connection).setRequestMethod(\"POST\");\n\t\n\t\t\t\tthis.connection.setDoOutput(true);\n\t\t\t\tthis.connection.setDoInput(true);\n\t\t\t\tDataOutputStream out = new DataOutputStream(this.connection.getOutputStream());\n\t\t\t\tout.writeBytes(req);\n\t\t\t\tout.flush();\n\t\t\t\tout.close();\n\t\t\t}\n\n\t\t\tthis.connection.connect();\n\t\t\tint status = ((HttpURLConnection)this.connection).getResponseCode();\n\t\t\tif(status != 200)\n\t\t\t\tthrow new CMQServerException(status);\n\t\n\t\t\tin = new BufferedReader(new InputStreamReader(connection.getInputStream(),\"utf-8\"));\n\t\n\t\t\tString line;\n\t\t\twhile ((line = in.readLine()) != null) {\n\t\t\t\tresult += line;\n\t\t\t}\n\t\t}catch(Exception e){\n\t\t\tthrow e;\n\t\t}finally{\n\t\t\ttry {\n\t\t\t\tif (in != null) \n\t\t\t\t\tin.close();\n\t\t\t} catch (Exception e2) {\n\t\t\t\tthrow e2;\n\t\t\t}\n\t\t}\n\t\t\n\t\treturn result;\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `DataOutputStream out` is created at line 17 and closed at line 20, but the close occurs only on the normal execution path inside the `if (method.equals(\"POST\"))` block. If an exception is thrown between lines 17 and 20 (e.g., during `out.writeBytes(req)` or `out.flush()`), or if the `if` condition is false (method is not \"POST\"), the resource is not closed. The `finally` block only closes `in`, not `out`. Since the release is not guaranteed on all exits, the resource can remain unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            16
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+            "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "17": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileOutputStream(dummy), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java, 159, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java"
+            ],
+            [
+                "testEmail"
+            ],
+            [
+                "private void testEmail() {\n    final ProgressWindow progressWindow = GameRunner.newProgressWindow(\"Sending test email...\");\n    progressWindow.setVisible(true);\n    final Runnable runnable = () -> {\n      // initialize variables to error state, override if successful\n      String message = \"An unknown occurred, report this as a bug on the TripleA dev forum\";\n      int messageType = JOptionPane.ERROR_MESSAGE;\n      try {\n        final String html = \"<html><body><h1>Success</h1><p>This was a test email sent by TripleA<p></body></html>\";\n        final File dummy = new File(ClientFileSystemHelper.getUserRootFolder(), \"dummySave.txt\");\n        dummy.deleteOnExit();\n        final FileOutputStream fout = new FileOutputStream(dummy);\n        fout.write(\"This file would normally be a save game\".getBytes());\n        fout.close();\n        ((IEmailSender) getBean()).sendEmail(\"TripleA Test\", html, dummy, \"dummy.txt\");\n        // email was sent, or an exception would have been thrown\n        message = \"Email sent, it should arrive shortly, otherwise check your spam folder\";\n        messageType = JOptionPane.INFORMATION_MESSAGE;\n      } catch (final IOException ioe) {\n        message = \"Unable to send email: \" + ioe.getMessage();\n      } finally {\n        // now that we have a result, marshall it back unto the swing thread\n        final String finalMessage = message;\n        final int finalMessageType = messageType;\n        SwingUtilities.invokeLater(() -> {\n          try {\n            GameRunner.showMessageDialog(\n                finalMessage,\n                GameRunner.Title.of(\"Email Test\"),\n                finalMessageType);\n          } catch (final HeadlessException e) {\n            // should never happen in a GUI app\n          }\n        });\n        progressWindow.setVisible(false);\n      }\n    };\n    // start a background thread\n    final Thread t = new Thread(runnable);\n    t.start();\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileOutputStream` is created at line 12 and closed at line 14, but the close occurs inside a try block without a surrounding finally or try-with-resources. If an exception occurs between line 12 and line 14 (e.g., during the write at line 13), the close at line 14 will be skipped. Additionally, the path includes a weak release branch label, indicating the release is not guaranteed on all exits. Since the release is only on the normal path and exceptions can bypass it, the resource may remain unclosed.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            17
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "18": {
+        "bug_type": "MLK",
+        "buggy_value": "((ConfigLoader.class.getResourceAsStream(resourcePath), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java, 42, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java"
+            ],
+            [
+                "loadNode"
+            ],
+            [
+                "public static JsonNode loadNode(final String resourcePath) {\n        try {\n            final InputStream resourceStream = ConfigLoader.class.getResourceAsStream(resourcePath);\n            final JsonNode node = OBJECT_MAPPER.readTree(resourceStream);\n            // Ensure the resource stream is not null before closing it\n            if (resourceStream == null) {\n                throw new ConfigLoaderLoadingException(\"Resource not found: \" + resourcePath);\n            }\n            resourceStream.close();\n            return node;\n        } catch (final IOException e) {\n            throw new ConfigLoaderLoadingException(\"An error has occurred while reading or parsing the resource\", e);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is closed only on the normal execution path (line 9). If an exception occurs during `OBJECT_MAPPER.readTree(resourceStream)` (line 4) or earlier, the close call is skipped, and the resource may leak. The release is not in a finally block or try-with-resources, so it lacks all-exit guarantees.  \nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            18
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+            "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    },
+    "19": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileOutputStream(outFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java, 95, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java"
+            ],
+            [
+                "saveToFile"
+            ],
+            [
+                "private void saveToFile(ResContainer rc, File outFile) {\n\t\tCodeWriter cw = rc.getContent();\n\t\tif (cw != null) {\n\t\t\tcw.save(outFile);\n\t\t\treturn;\n\t\t}\n\t\tInputStream binary = rc.getBinary();\n\t\tif(binary != null) {\n\t\t\ttry {\n\t\t\t\toutFile.getParentFile().mkdirs();\n\t\t\t\tFileOutputStream binaryFileStream = new FileOutputStream(outFile);\n\t\t\t\tIOUtils.copy(binary, binaryFileStream);\n\t\t\t\tbinaryFileStream.close();\n\t\t\t\tbinary.close();\n\t\t\t}\n\t\t\tcatch(IOException e) {\n\t\t\t\tLOG.warn(\"Resource '{}' not saved, got exception {}\", rc.getName(), e);\n\t\t\t}\n\t\t\treturn;\n\t\t}\n\t\tLOG.warn(\"Resource '{}' not saved, unknown type\", rc.getName());\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileOutputStream binaryFileStream` is created at line 11 inside a try block, and its close at line 13 is also inside the same try block. The close is not in a finally block, so if an exception occurs during `IOUtils.copy` (line 12) or earlier, the close will be skipped. Additionally, the catch block only logs the exception and does not ensure closure. Since the release is only on the normal path and exceptions can bypass it, the resource is not guaranteed to be closed on all exits.\n\nAnswer: Yes",
+        "is_human_confirmed_true": "False",
+        "merged_member_ids": [
+            19
+        ],
+        "merged_member_count": 1,
+        "merge_mode": "method_semantic",
+        "merge_signature": [
+            "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java",
+            "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+            "autocloseable",
+            "unknown",
+            "none",
+            "False",
+            "False"
+        ]
+    }
+}
