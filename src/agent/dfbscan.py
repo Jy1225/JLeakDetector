@@ -5,6 +5,7 @@ import threading
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from typing import cast
 from tqdm import tqdm
 
 from agent.agent import *
@@ -1094,6 +1095,9 @@ class DFBScanAgent(Agent):
         self.logger.print_console(
             f"The bug report(s) has/have been dumped to {self.res_dir_path}/detect_info.json"
         )
+        self.logger.print_console(
+            f"File-level merged view has been dumped to {self.res_dir_path}/detect_info_by_file.json"
+        )
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
                 f"Java MLK merged report(s): {merged_report_count} (mode={self.java_mlk_report_merge_mode})"
@@ -1150,6 +1154,9 @@ class DFBScanAgent(Agent):
         )
         self.logger.print_console(
             f"The bug report(s) has/have been dumped to {self.res_dir_path}/detect_info.json"
+        )
+        self.logger.print_console(
+            f"File-level merged view has been dumped to {self.res_dir_path}/detect_info_by_file.json"
         )
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
@@ -2907,6 +2914,104 @@ class DFBScanAgent(Agent):
             for bug_report_id, bug in bug_reports.items()
         }
 
+    def __build_detect_info_by_file_payload(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Dict[str, dict]:
+        grouped: Dict[str, Dict[str, object]] = {}
+
+        for bug_report_id in sorted(bug_reports.keys()):
+            bug_report = bug_reports[bug_report_id]
+            src_value = bug_report.buggy_value
+            normalized_file = src_value.file.replace("\\", "/")
+
+            if normalized_file not in grouped:
+                grouped[normalized_file] = {
+                    "file": normalized_file,
+                    "file_name": os.path.basename(normalized_file),
+                    "report_count": 0,
+                    "report_ids": [],
+                    "method_buckets": {},
+                    "relevant_method_names": set(),
+                }
+
+            file_entry = grouped[normalized_file]
+            file_entry["report_count"] = int(file_entry["report_count"]) + 1
+            report_ids = cast(List[int], file_entry["report_ids"])
+            report_ids.append(bug_report_id)
+
+            for function in bug_report.relevant_functions.values():
+                cast(Set[str], file_entry["relevant_method_names"]).add(
+                    function.function_name
+                )
+
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            if src_function is not None:
+                method_uid = (
+                    src_function.function_uid
+                    if src_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(src_function)
+                )
+                method_name = src_function.function_name
+                method_start_line = src_function.start_line_number
+                method_end_line = src_function.end_line_number
+            else:
+                method_uid = (
+                    f"{normalized_file}:UNKNOWN_METHOD:{src_value.line_number}"
+                )
+                method_name = "UNKNOWN_METHOD"
+                method_start_line = -1
+                method_end_line = -1
+
+            method_buckets = cast(Dict[str, Dict[str, object]], file_entry["method_buckets"])
+            if method_uid not in method_buckets:
+                method_buckets[method_uid] = {
+                    "method_name": method_name,
+                    "method_uid": method_uid,
+                    "method_start_line": method_start_line,
+                    "method_end_line": method_end_line,
+                    "source_lines": set(),
+                    "report_ids": [],
+                    "report_count": 0,
+                }
+
+            method_entry = method_buckets[method_uid]
+            cast(Set[int], method_entry["source_lines"]).add(src_value.line_number)
+            cast(List[int], method_entry["report_ids"]).append(bug_report_id)
+            method_entry["report_count"] = int(method_entry["report_count"]) + 1
+
+        payload: Dict[str, dict] = {}
+        for file_key in sorted(grouped.keys()):
+            file_entry = grouped[file_key]
+            method_buckets = cast(Dict[str, Dict[str, object]], file_entry["method_buckets"])
+            leaking_methods: List[Dict[str, object]] = []
+            for method_key in sorted(method_buckets.keys()):
+                method_entry = method_buckets[method_key]
+                leaking_methods.append(
+                    {
+                        "method_name": str(method_entry["method_name"]),
+                        "method_uid": str(method_entry["method_uid"]),
+                        "method_start_line": int(method_entry["method_start_line"]),
+                        "method_end_line": int(method_entry["method_end_line"]),
+                        "source_lines": sorted(cast(Set[int], method_entry["source_lines"])),
+                        "report_ids": sorted(cast(List[int], method_entry["report_ids"])),
+                        "report_count": int(method_entry["report_count"]),
+                    }
+                )
+
+            payload[file_key] = {
+                "file": str(file_entry["file"]),
+                "file_name": str(file_entry["file_name"]),
+                "report_count": int(file_entry["report_count"]),
+                "report_ids": sorted(cast(List[int], file_entry["report_ids"])),
+                "method_count": len(leaking_methods),
+                "leaking_methods": leaking_methods,
+                "related_methods": sorted(
+                    cast(Set[str], file_entry["relevant_method_names"])
+                ),
+            }
+
+        return payload
+
     def __build_java_mlk_merged_detect_payload(
         self, bug_reports: Dict[int, "BugReport"]
     ) -> Tuple[Dict[int, dict], Dict[str, object]]:
@@ -2960,6 +3065,7 @@ class DFBScanAgent(Agent):
     def __write_detect_outputs(self) -> Tuple[int, int]:
         bug_reports = self.state.bug_reports
         detect_payload = self.__build_detect_info_payload(bug_reports)
+        detect_by_file_payload = self.__build_detect_info_by_file_payload(bug_reports)
         raw_count = len(detect_payload)
         merged_count = raw_count
 
@@ -2974,6 +3080,10 @@ class DFBScanAgent(Agent):
         with self.lock:
             with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
                 json.dump(detect_payload, bug_info_file, indent=4)
+            with open(
+                self.res_dir_path + "/detect_info_by_file.json", "w"
+            ) as by_file_info_file:
+                json.dump(detect_by_file_payload, by_file_info_file, indent=4)
 
             if self.language == "Java" and self.bug_type == "MLK":
                 with open(
