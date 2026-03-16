@@ -1,6 +1,6 @@
 {
   "generator": "soot-bridge",
-  "generated_at": 1773477041178,
+  "generated_at": 1773485715663,
   "line_mode": "absolute",
   "methods": {
     "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
