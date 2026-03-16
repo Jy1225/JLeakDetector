@@ -16,6 +16,9 @@ from tstool.validator.java_resource_semantics import (
     RESOURCE_KIND_LOCK,
     RESOURCE_KIND_EXECUTOR,
     RESOURCE_KIND_TEMP_RESOURCE,
+    RESOURCE_KIND_TRANSACTION,
+    RESOURCE_KIND_SUBSCRIPTION,
+    RESOURCE_KIND_PROCESS,
     GUARANTEE_NONE,
     GUARANTEE_NORMAL_ONLY,
     GUARANTEE_ALL_EXIT_PATHS,
@@ -218,9 +221,15 @@ class DFBScanAgent(Agent):
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
+        self.java_mlk_obligation_kind_by_key: Dict[str, str] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             self.java_mlk_source_obligation_keys = (
                 self.__build_java_mlk_source_obligation_index(self.src_values)
+            )
+            self.java_mlk_obligation_kind_by_key = (
+                self.__build_java_mlk_obligation_kind_index(
+                    self.src_values, self.java_mlk_source_obligation_keys
+                )
             )
             obligation_count = len(set(self.java_mlk_source_obligation_keys.values()))
             self.logger.print_console(
@@ -2457,6 +2466,44 @@ class DFBScanAgent(Agent):
 
         return result
 
+    def __build_java_mlk_obligation_kind_index(
+        self,
+        src_values: List[Value],
+        source_obligation_keys: Dict[str, str],
+    ) -> Dict[str, str]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        kind_candidates: Dict[str, Set[str]] = defaultdict(set)
+        for src_value in src_values:
+            src_key = str(src_value)
+            obligation_key = source_obligation_keys.get(src_key, "")
+            if obligation_key == "":
+                continue
+            kind_candidates[obligation_key].add(
+                normalize_resource_kind(classify_resource_kind(src_value.name, src_value.file))
+            )
+
+        kind_priority = [
+            RESOURCE_KIND_PROCESS,
+            RESOURCE_KIND_LOCK,
+            RESOURCE_KIND_EXECUTOR,
+            RESOURCE_KIND_TEMP_RESOURCE,
+            RESOURCE_KIND_TRANSACTION,
+            RESOURCE_KIND_SUBSCRIPTION,
+            RESOURCE_KIND_AUTOCLOSEABLE,
+        ]
+
+        result: Dict[str, str] = {}
+        for obligation_key, kinds in kind_candidates.items():
+            chosen = RESOURCE_KIND_AUTOCLOSEABLE
+            for kind in kind_priority:
+                if kind in kinds:
+                    chosen = kind
+                    break
+            result[obligation_key] = chosen
+        return result
+
     def __build_java_mlk_assignment_timeline(
         self, function: Function
     ) -> Dict[str, List[Tuple[int, List[str]]]]:
@@ -3044,9 +3091,13 @@ class DFBScanAgent(Agent):
         }:
             effective_merge_mode = "source"
         if effective_merge_mode == "obligation":
-            return (
+            obligation_kind = self.java_mlk_obligation_kind_by_key.get(
                 obligation_signature,
                 normalize_resource_kind(resource_kind),
+            )
+            return (
+                obligation_signature,
+                obligation_kind,
             )
         if effective_merge_mode == "method":
             return (normalized_src_file, source_anchor_key)
