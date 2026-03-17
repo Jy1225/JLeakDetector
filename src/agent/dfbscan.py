@@ -4125,7 +4125,63 @@ class DFBScanAgent(Agent):
                 "reduction_ratio": 0.0,
             }
 
+        def _coarse_family_anchor(family_key: str) -> str:
+            if ":family:" not in family_key:
+                return family_key
+            suffix = family_key.split(":family:", 1)[1]
+            parts = [part for part in suffix.split(":") if part != ""]
+            if len(parts) >= 3:
+                return ":".join(parts[:3])
+            if len(parts) >= 2:
+                return ":".join(parts[:2])
+            return suffix
+
+        # Step 1: build base groups and downgrade low-confidence sources by
+        # attaching them to high/medium-confidence family in same method/file/semantics.
+        high_family_by_method: Dict[Tuple[str, str, str, str], str] = {}
+        for bug_report_id in sorted(bug_reports.keys()):
+            bug_report = bug_reports[bug_report_id]
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            source_file = str(metadata.get("source_file", bug_report.buggy_value.file)).replace(
+                "\\", "/"
+            ).lower()
+            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+            if source_method_uid == "":
+                continue
+            resource_kind = normalize_resource_kind(
+                str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
+            )
+            guarantee_level = normalize_guarantee_level(
+                str(metadata.get("guarantee_level", GUARANTEE_NONE))
+            )
+            guarantee_class = (
+                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+            )
+            confidence = self.__normalize_java_mlk_source_confidence(
+                str(metadata.get("source_confidence", "medium"))
+            )
+            if confidence == "low":
+                continue
+            obligation_family_key = str(
+                metadata.get(
+                    "obligation_family_key",
+                    self.__get_java_mlk_source_obligation_family_key(
+                        bug_report.buggy_value
+                    ),
+                )
+            )
+            method_key = (
+                source_file,
+                source_method_uid,
+                resource_kind,
+                guarantee_class,
+            )
+            previous_family = high_family_by_method.get(method_key, "")
+            if previous_family == "" or obligation_family_key < previous_family:
+                high_family_by_method[method_key] = obligation_family_key
+
         groups: Dict[Tuple[str, str, str, str], List[int]] = defaultdict(list)
+        low_conf_attached_reports = 0
         for bug_report_id in sorted(bug_reports.keys()):
             bug_report = bug_reports[bug_report_id]
             metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
@@ -4149,12 +4205,156 @@ class DFBScanAgent(Agent):
             guarantee_class = (
                 "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
             )
-            groups[(source_file, obligation_family_key, resource_kind, guarantee_class)].append(
-                bug_report_id
+            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+            confidence = self.__normalize_java_mlk_source_confidence(
+                str(metadata.get("source_confidence", "medium"))
             )
+            if confidence == "low" and source_method_uid != "":
+                attach_key = (
+                    source_file,
+                    source_method_uid,
+                    resource_kind,
+                    guarantee_class,
+                )
+                attach_family = high_family_by_method.get(attach_key, "")
+                if attach_family != "" and attach_family != obligation_family_key:
+                    obligation_family_key = attach_family
+                    low_conf_attached_reports += 1
+
+            signature = (
+                source_file,
+                obligation_family_key,
+                resource_kind,
+                guarantee_class,
+            )
+            groups[signature].append(bug_report_id)
+
+        pre_cluster_group_count = len(groups)
+
+        # Step 2: semantic second-pass clustering inside same file/semantics.
+        signatures = sorted(groups.keys())
+        cluster_features: Dict[Tuple[str, str, str, str], Dict[str, object]] = {}
+        for signature in signatures:
+            member_ids = sorted(set(groups[signature]))
+            method_uids: Set[str] = set()
+            source_lines: Set[int] = set()
+            source_symbols: Set[str] = set()
+            non_low_conf_count = 0
+            for member_id in member_ids:
+                bug_report = bug_reports[member_id]
+                metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+                source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+                if source_method_uid != "":
+                    method_uids.add(source_method_uid)
+                relevant_uids = metadata.get("relevant_method_uids", [])
+                if isinstance(relevant_uids, list):
+                    for relevant_uid in relevant_uids:
+                        relevant_uid_str = str(relevant_uid).strip()
+                        if relevant_uid_str != "":
+                            method_uids.add(relevant_uid_str)
+                source_lines.add(int(metadata.get("source_line", -1)))
+                source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+                confidence = self.__normalize_java_mlk_source_confidence(
+                    str(metadata.get("source_confidence", "medium"))
+                )
+                if confidence != "low":
+                    non_low_conf_count += 1
+
+            cluster_features[signature] = {
+                "method_uids": method_uids,
+                "source_lines": source_lines,
+                "source_symbols": source_symbols,
+                "non_low_conf_count": non_low_conf_count,
+                "coarse_family_anchor": _coarse_family_anchor(signature[1]),
+            }
+
+        parent: Dict[int, int] = {idx: idx for idx in range(len(signatures))}
+
+        def _find_root(idx: int) -> int:
+            current = idx
+            while parent[current] != current:
+                parent[current] = parent[parent[current]]
+                current = parent[current]
+            return current
+
+        def _union(idx_a: int, idx_b: int) -> bool:
+            root_a = _find_root(idx_a)
+            root_b = _find_root(idx_b)
+            if root_a == root_b:
+                return False
+            if signatures[root_a] <= signatures[root_b]:
+                parent[root_b] = root_a
+            else:
+                parent[root_a] = root_b
+            return True
+
+        second_pass_merge_count = 0
+        if self.java_mlk_family_link_mode == "aggressive":
+            for idx_a in range(len(signatures)):
+                signature_a = signatures[idx_a]
+                feature_a = cluster_features[signature_a]
+                for idx_b in range(idx_a + 1, len(signatures)):
+                    signature_b = signatures[idx_b]
+                    # Same file/resource/guarantee class only.
+                    if (
+                        signature_a[0] != signature_b[0]
+                        or signature_a[2] != signature_b[2]
+                        or signature_a[3] != signature_b[3]
+                    ):
+                        continue
+                    feature_b = cluster_features[signature_b]
+
+                    should_merge = False
+                    method_intersection = cast(
+                        Set[str], feature_a["method_uids"]
+                    ) & cast(Set[str], feature_b["method_uids"])
+                    if len(method_intersection) > 0:
+                        should_merge = True
+                    elif feature_a["coarse_family_anchor"] == feature_b["coarse_family_anchor"]:
+                        should_merge = True
+                    else:
+                        lines_a = cast(Set[int], feature_a["source_lines"])
+                        lines_b = cast(Set[int], feature_b["source_lines"])
+                        if len(lines_a & lines_b) > 0:
+                            should_merge = True
+                        elif (
+                            int(feature_a["non_low_conf_count"]) == 0
+                            or int(feature_b["non_low_conf_count"]) == 0
+                        ):
+                            symbol_intersection = cast(
+                                Set[str], feature_a["source_symbols"]
+                            ) & cast(Set[str], feature_b["source_symbols"])
+                            if len(symbol_intersection) > 0:
+                                filtered_a = [line for line in lines_a if line >= 0]
+                                filtered_b = [line for line in lines_b if line >= 0]
+                                if len(filtered_a) > 0 and len(filtered_b) > 0:
+                                    min_gap = min(
+                                        abs(line_a - line_b)
+                                        for line_a in filtered_a
+                                        for line_b in filtered_b
+                                    )
+                                    if min_gap <= 3:
+                                        should_merge = True
+
+                    if should_merge and _union(idx_a, idx_b):
+                        second_pass_merge_count += 1
+
+        merged_groups: Dict[int, List[int]] = defaultdict(list)
+        merged_signatures: Dict[int, List[Tuple[str, str, str, str]]] = defaultdict(list)
+        for idx, signature in enumerate(signatures):
+            root_idx = _find_root(idx)
+            merged_groups[root_idx].extend(groups[signature])
+            merged_signatures[root_idx].append(signature)
 
         canonical_payload: Dict[int, dict] = {}
-        for issue_idx, (signature, member_ids_unsorted) in enumerate(groups.items()):
+        root_indices = sorted(
+            merged_groups.keys(),
+            key=lambda root_idx: min(merged_groups[root_idx]),
+        )
+        for issue_idx, root_idx in enumerate(root_indices):
+            member_ids_unsorted = merged_groups[root_idx]
+            signature_candidates = merged_signatures[root_idx]
+            signature = sorted(signature_candidates)[0]
             member_ids = sorted(member_ids_unsorted)
             method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
                 member_ids, bug_reports
@@ -4216,6 +4416,9 @@ class DFBScanAgent(Agent):
             canonical_entry = representative_bug_report.to_dict()
             canonical_entry["canonical_mode"] = "family"
             canonical_entry["canonical_signature"] = [str(part) for part in signature]
+            canonical_entry["canonical_pre_cluster_signatures"] = [
+                [str(part) for part in sig] for sig in sorted(signature_candidates)
+            ]
             canonical_entry["canonical_member_ids"] = member_ids
             canonical_entry["canonical_member_count"] = len(member_ids)
             canonical_entry["canonical_primary_defect_method"] = primary_method_name
@@ -4272,6 +4475,9 @@ class DFBScanAgent(Agent):
             "enabled": self.java_mlk_canonical_mode,
             "raw_report_count": raw_count,
             "canonical_issue_count": canonical_count,
+            "pre_cluster_issue_count": pre_cluster_group_count,
+            "second_pass_merge_count": second_pass_merge_count,
+            "low_conf_attached_reports": low_conf_attached_reports,
             "reduced_report_count": raw_count - canonical_count,
             "reduction_ratio": (
                 float(raw_count - canonical_count) / float(raw_count)
