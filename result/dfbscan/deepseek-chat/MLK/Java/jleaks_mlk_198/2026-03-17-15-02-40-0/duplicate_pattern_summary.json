@@ -1,0 +1,21 @@
+{
+    "by_pattern": {
+        "A_same_source_line_repeat": {
+            "file_count": 16,
+            "extra_reports": 71
+        },
+        "B_multi_source_single_method": {
+            "file_count": 24,
+            "extra_reports": 36
+        },
+        "C_cross_method_chain_contains_gt": {
+            "file_count": 69,
+            "extra_reports": 240
+        },
+        "D_cross_method_gt_missing": {
+            "file_count": 13,
+            "extra_reports": 37
+        }
+    },
+    "total_extra_reports": 384
+}
