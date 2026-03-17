@@ -265,6 +265,7 @@ class DFBScanAgent(Agent):
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
         self.java_mlk_source_obligation_family_keys: Dict[str, str] = {}
+        self.java_mlk_source_obligation_component_keys: Dict[str, str] = {}
         self.java_mlk_obligation_kind_by_key: Dict[str, str] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             self.java_mlk_source_coverage_stats = (
@@ -280,6 +281,12 @@ class DFBScanAgent(Agent):
                     self.java_mlk_source_obligation_keys,
                 )
             )
+            self.java_mlk_source_obligation_component_keys = (
+                self.__build_java_mlk_source_obligation_component_index(
+                    self.src_values,
+                    self.java_mlk_source_obligation_keys,
+                )
+            )
             self.java_mlk_obligation_kind_by_key = (
                 self.__build_java_mlk_obligation_kind_index(
                     self.src_values, self.java_mlk_source_obligation_keys
@@ -289,11 +296,17 @@ class DFBScanAgent(Agent):
             obligation_family_count = len(
                 set(self.java_mlk_source_obligation_family_keys.values())
             )
+            obligation_component_count = len(
+                set(self.java_mlk_source_obligation_component_keys.values())
+            )
             self.logger.print_console(
                 f"Java MLK obligations inferred: {obligation_count} from {len(self.src_values)} source(s)."
             )
             self.logger.print_console(
                 f"Java MLK obligation families inferred: {obligation_family_count}"
+            )
+            self.logger.print_console(
+                f"Java MLK obligation components inferred: {obligation_component_count}"
             )
             if len(self.java_mlk_source_coverage_stats) > 0:
                 self.logger.print_console(
@@ -1809,6 +1822,107 @@ class DFBScanAgent(Agent):
         servlet_context = is_servlet_context(src_value.file)
         return resource_kind, release_context, guarantee_level, servlet_context
 
+    def __infer_java_mlk_report_leak_root_method(
+        self,
+        src_value: Value,
+        relevant_functions: Dict[int, Function],
+    ) -> Tuple[str, str]:
+        """
+        Pick a leak-root method for one report.
+        Prefer deepest reachable callee in the relevant subgraph from source method,
+        so wrapper/forwarding methods do not dominate issue identity.
+        """
+        if self.language != "Java" or self.bug_type != "MLK":
+            return "", "UNKNOWN_METHOD"
+
+        src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+        src_uid = ""
+        src_fid = -1
+        if src_function is not None:
+            src_uid = (
+                src_function.function_uid
+                if src_function.function_uid != ""
+                else self.__build_java_mlk_function_signature_key(src_function)
+            )
+            src_fid = src_function.function_id
+
+        if len(relevant_functions) == 0:
+            if src_uid != "":
+                src_name = src_function.function_name if src_function is not None else "UNKNOWN_METHOD"
+                return src_uid, src_name
+            return "", "UNKNOWN_METHOD"
+
+        uid_by_fid: Dict[int, str] = {}
+        for function in relevant_functions.values():
+            function_uid = (
+                function.function_uid
+                if function.function_uid != ""
+                else self.__build_java_mlk_function_signature_key(function)
+            )
+            uid_by_fid[function.function_id] = function_uid
+
+        relevant_fids = set(uid_by_fid.keys())
+        if src_fid in relevant_fids and src_fid >= 0:
+            call_out = self.ts_analyzer.function_caller_callee_map
+            dist: Dict[int, int] = {src_fid: 0}
+            queue: deque[int] = deque([src_fid])
+            while len(queue) > 0:
+                current = queue.popleft()
+                current_dist = dist[current]
+                for next_fid in call_out.get(current, set()):
+                    if next_fid not in relevant_fids:
+                        continue
+                    if next_fid in dist:
+                        continue
+                    dist[next_fid] = current_dist + 1
+                    queue.append(next_fid)
+
+            # Prefer farthest reachable methods; if tie, prefer non-helper methods.
+            ranked_candidates: List[Tuple[int, int, str, int]] = []
+            for candidate_fid, depth in dist.items():
+                candidate_function = relevant_functions.get(candidate_fid)
+                candidate_uid = uid_by_fid.get(candidate_fid, "")
+                if candidate_function is None or candidate_uid == "":
+                    continue
+                helper_penalty = (
+                    1 if self.__is_java_mlk_helper_function_for_dedup(candidate_function) else 0
+                )
+                # (-depth) for max depth, helper_penalty for non-helper preference.
+                ranked_candidates.append(
+                    (
+                        -depth,
+                        helper_penalty,
+                        candidate_uid,
+                        candidate_function.start_line_number,
+                    )
+                )
+            if len(ranked_candidates) > 0:
+                ranked_candidates.sort()
+                chosen_uid = ranked_candidates[0][2]
+                chosen_fid = next(
+                    (fid for fid, uid in uid_by_fid.items() if uid == chosen_uid),
+                    src_fid,
+                )
+                chosen_function = relevant_functions.get(chosen_fid, src_function)
+                chosen_name = (
+                    chosen_function.function_name
+                    if chosen_function is not None
+                    else "UNKNOWN_METHOD"
+                )
+                return chosen_uid, chosen_name
+
+        # Fallback: source method first, then deterministic relevant method.
+        if src_uid != "":
+            src_name = src_function.function_name if src_function is not None else "UNKNOWN_METHOD"
+            return src_uid, src_name
+        sorted_fids = sorted(relevant_fids)
+        if len(sorted_fids) == 0:
+            return "", "UNKNOWN_METHOD"
+        fallback_fid = sorted_fids[0]
+        fallback_uid = uid_by_fid.get(fallback_fid, "")
+        fallback_name = relevant_functions[fallback_fid].function_name
+        return fallback_uid, fallback_name
+
     def __build_java_mlk_report_metadata(
         self,
         src_value: Value,
@@ -1835,6 +1949,15 @@ class DFBScanAgent(Agent):
         obligation_family_key = self.__get_java_mlk_source_obligation_family_key(
             src_value
         )
+        obligation_component_key = self.__get_java_mlk_source_obligation_component_key(
+            src_value
+        )
+        leak_root_method_uid, leak_root_method_name = (
+            self.__infer_java_mlk_report_leak_root_method(
+                src_value,
+                relevant_functions,
+            )
+        )
         source_origin = self.__infer_java_mlk_source_origin(src_value)
         source_confidence = self.__infer_java_mlk_source_confidence(src_value)
         source_symbol = self.__infer_java_mlk_source_symbol(src_value)
@@ -1846,10 +1969,13 @@ class DFBScanAgent(Agent):
             "guarantee_level": normalize_guarantee_level(guarantee_level),
             "obligation_key": obligation_key,
             "obligation_family_key": obligation_family_key,
+            "obligation_component_key": obligation_component_key,
             "source_line": src_value.line_number,
             "source_file": src_value.file,
             "source_method_uid": src_method_uid,
             "source_method_name": src_method_name,
+            "leak_root_method_uid": leak_root_method_uid,
+            "leak_root_method_name": leak_root_method_name,
             "source_origin": source_origin,
             "source_confidence": source_confidence,
             "source_symbol": source_symbol,
@@ -3105,6 +3231,190 @@ class DFBScanAgent(Agent):
 
         return source_family_keys
 
+    def __build_java_mlk_source_obligation_component_index(
+        self,
+        src_values: List[Value],
+        source_obligation_keys: Dict[str, str],
+    ) -> Dict[str, str]:
+        """
+        Build a coarser component-level obligation id for dedup.
+        Goal: collapse wrapper/callee chain variants into one obligation component,
+        while keeping independent resources in the same file separated.
+        """
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        source_attrs: Dict[str, Dict[str, object]] = {}
+        parent: Dict[str, str] = {}
+        for src_value in src_values:
+            src_key = str(src_value)
+            obligation_key = source_obligation_keys.get(src_key, "")
+            if obligation_key == "":
+                obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            source_method_uid = ""
+            if src_function is not None:
+                source_method_uid = (
+                    src_function.function_uid
+                    if src_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(src_function)
+                )
+            source_attrs[src_key] = {
+                "file": src_value.file.replace("\\", "/").lower(),
+                "resource_kind": normalize_resource_kind(
+                    classify_resource_kind(src_value.name, src_value.file)
+                ),
+                "source_symbol": self.__infer_java_mlk_source_symbol(src_value),
+                "source_method_uid": source_method_uid,
+                "obligation_key": obligation_key,
+            }
+            parent[src_key] = src_key
+
+        def _find_root(src_key: str) -> str:
+            current = src_key
+            while parent[current] != current:
+                parent[current] = parent[parent[current]]
+                current = parent[current]
+            return current
+
+        def _union(src_a: str, src_b: str) -> bool:
+            root_a = _find_root(src_a)
+            root_b = _find_root(src_b)
+            if root_a == root_b:
+                return False
+            key_a = str(source_attrs[root_a].get("obligation_key", ""))
+            key_b = str(source_attrs[root_b].get("obligation_key", ""))
+            if key_a <= key_b:
+                parent[root_b] = root_a
+            else:
+                parent[root_a] = root_b
+            return True
+
+        # Baseline: same exact obligation key always belongs to one component.
+        obligation_members: Dict[str, List[str]] = defaultdict(list)
+        for src_key, attrs in source_attrs.items():
+            obligation_members[str(attrs.get("obligation_key", ""))].append(src_key)
+        for member_keys in obligation_members.values():
+            if len(member_keys) <= 1:
+                continue
+            head = member_keys[0]
+            for member_key in member_keys[1:]:
+                _union(head, member_key)
+
+        if self.java_mlk_family_link_mode == "aggressive":
+            uid_to_function_id: Dict[str, int] = {}
+            for function in self.ts_analyzer.function_env.values():
+                function_uid = (
+                    function.function_uid
+                    if function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(function)
+                )
+                uid_to_function_id[function_uid] = function.function_id
+
+            call_out = self.ts_analyzer.function_caller_callee_map
+            call_in = self.ts_analyzer.function_callee_caller_map
+
+            method_hop_cache: Dict[Tuple[str, str], bool] = {}
+
+            def _method_related_by_hops(method_uid_a: str, method_uid_b: str) -> bool:
+                if method_uid_a == "" or method_uid_b == "":
+                    return False
+                if method_uid_a == method_uid_b:
+                    return True
+                cache_key = (
+                    method_uid_a
+                    if method_uid_a <= method_uid_b
+                    else method_uid_b,
+                    method_uid_b
+                    if method_uid_a <= method_uid_b
+                    else method_uid_a,
+                )
+                if cache_key in method_hop_cache:
+                    return method_hop_cache[cache_key]
+                fid_a = uid_to_function_id.get(method_uid_a)
+                fid_b = uid_to_function_id.get(method_uid_b)
+                if fid_a is None or fid_b is None:
+                    method_hop_cache[cache_key] = False
+                    return False
+                queue: deque[Tuple[int, int]] = deque([(fid_a, 0)])
+                visited: Set[int] = {fid_a}
+                found = False
+                while len(queue) > 0:
+                    current_id, hop = queue.popleft()
+                    if hop >= self.java_mlk_canonical_merge_hops:
+                        continue
+                    neighbors = set(call_out.get(current_id, set()))
+                    neighbors.update(call_in.get(current_id, set()))
+                    for next_id in neighbors:
+                        if next_id == fid_b:
+                            found = True
+                            queue.clear()
+                            break
+                        if next_id in visited:
+                            continue
+                        visited.add(next_id)
+                        queue.append((next_id, hop + 1))
+                method_hop_cache[cache_key] = found
+                return found
+
+            bucket_by_semantics: Dict[Tuple[str, str, str], List[str]] = defaultdict(list)
+            for src_key, attrs in source_attrs.items():
+                semantic_key = (
+                    str(attrs.get("file", "")),
+                    str(attrs.get("resource_kind", "")),
+                    str(attrs.get("source_symbol", "")),
+                )
+                bucket_by_semantics[semantic_key].append(src_key)
+
+            for member_keys in bucket_by_semantics.values():
+                if len(member_keys) <= 1:
+                    continue
+                # Build per-method representatives for cheaper pair checks.
+                representatives_by_method: Dict[str, str] = {}
+                for src_key in member_keys:
+                    method_uid = str(source_attrs[src_key].get("source_method_uid", ""))
+                    if method_uid == "":
+                        continue
+                    if method_uid not in representatives_by_method:
+                        representatives_by_method[method_uid] = src_key
+                    else:
+                        _union(representatives_by_method[method_uid], src_key)
+
+                method_uids = sorted(representatives_by_method.keys())
+                for idx_a in range(len(method_uids)):
+                    uid_a = method_uids[idx_a]
+                    for idx_b in range(idx_a + 1, len(method_uids)):
+                        uid_b = method_uids[idx_b]
+                        if not _method_related_by_hops(uid_a, uid_b):
+                            continue
+                        _union(
+                            representatives_by_method[uid_a],
+                            representatives_by_method[uid_b],
+                        )
+
+        grouped_members: Dict[str, List[str]] = defaultdict(list)
+        for src_key in source_attrs.keys():
+            grouped_members[_find_root(src_key)].append(src_key)
+
+        source_component_keys: Dict[str, str] = {}
+        for member_keys in grouped_members.values():
+            sample_key = member_keys[0]
+            sample_attrs = source_attrs[sample_key]
+            normalized_file = str(sample_attrs.get("file", ""))
+            resource_kind = str(sample_attrs.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
+            source_symbol = str(sample_attrs.get("source_symbol", "unknown"))
+            anchor_key = min(
+                str(source_attrs[member_key].get("obligation_key", member_key))
+                for member_key in member_keys
+            )
+            component_key = (
+                f"{normalized_file}:component:{resource_kind}:{source_symbol}:{anchor_key}"
+            )
+            for member_key in member_keys:
+                source_component_keys[member_key] = component_key
+
+        return source_component_keys
+
     def __build_java_mlk_obligation_kind_index(
         self,
         src_values: List[Value],
@@ -3550,6 +3860,16 @@ class DFBScanAgent(Agent):
         obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
         return self.__derive_java_mlk_obligation_family_key(src_value, obligation_key)
 
+    def __get_java_mlk_source_obligation_component_key(self, src_value: Value) -> str:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return self.__get_java_mlk_source_obligation_family_key(src_value)
+        src_key = str(src_value)
+        component_key = self.java_mlk_source_obligation_component_keys.get(src_key, "")
+        if component_key != "":
+            return component_key
+        # Conservative fallback: family-level key.
+        return self.__get_java_mlk_source_obligation_family_key(src_value)
+
     def __build_detect_info_payload(
         self, bug_reports: Dict[int, "BugReport"]
     ) -> Dict[int, dict]:
@@ -3624,6 +3944,7 @@ class DFBScanAgent(Agent):
                     "weak_release_marker_count": 0,
                     "explanation_hit_count": 0,
                     "chain_support_count": 0,
+                    "leak_root_hit_count": 0,
                     "source_high_confidence_count": 0,
                     "source_medium_confidence_count": 0,
                     "source_low_confidence_count": 0,
@@ -3669,6 +3990,11 @@ class DFBScanAgent(Agent):
                 method_entry["explanation_hit_count"] = int(
                     method_entry["explanation_hit_count"]
                 ) + 1
+            leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
+            if leak_root_uid != "" and leak_root_uid == method_uid:
+                method_entry["leak_root_hit_count"] = int(
+                    method_entry["leak_root_hit_count"]
+                ) + 1
 
             # Add supporting methods from inter-procedural chain so primary
             # defect method can be chosen from relevant non-source methods too.
@@ -3695,6 +4021,7 @@ class DFBScanAgent(Agent):
                         "weak_release_marker_count": 0,
                         "explanation_hit_count": 0,
                         "chain_support_count": 0,
+                        "leak_root_hit_count": 0,
                         "source_high_confidence_count": 0,
                         "source_medium_confidence_count": 0,
                         "source_low_confidence_count": 0,
@@ -3705,6 +4032,10 @@ class DFBScanAgent(Agent):
                 relevant_entry["chain_support_count"] = int(
                     relevant_entry["chain_support_count"]
                 ) + 1
+                if leak_root_uid != "" and leak_root_uid == relevant_method_uid:
+                    relevant_entry["leak_root_hit_count"] = int(
+                        relevant_entry["leak_root_hit_count"]
+                    ) + 1
                 if (
                     relevant_function.function_name != "UNKNOWN_METHOD"
                     and relevant_function.function_name.lower() in explanation_lower
@@ -3749,6 +4080,10 @@ class DFBScanAgent(Agent):
                         ),
                         "explanation_hit_count": int(method_entry["explanation_hit_count"]),
                         "chain_support_count": int(method_entry["chain_support_count"]),
+                        "leak_root_hit_count": int(method_entry["leak_root_hit_count"]),
+                        "forwarding_suspect": self.__is_java_mlk_forwarding_method_entry(
+                            method_entry
+                        ),
                         "method_score": method_score,
                     }
                 )
@@ -3758,32 +4093,18 @@ class DFBScanAgent(Agent):
             primary_confidence = 0.0
             supporting_methods: List[str] = []
             if len(method_candidates) > 0:
-                method_candidates.sort(
-                    key=lambda item: (
-                        -item[1],
-                        int(item[2]["method_start_line"]),
-                        str(item[2]["method_name"]),
-                    )
+                (
+                    primary_method_uid,
+                    primary_method_name,
+                    primary_confidence,
+                ) = self.__select_java_mlk_primary_method_from_candidates(
+                    method_candidates
                 )
-                top_key, top_score, top_entry = method_candidates[0]
-                _ = top_key
-                primary_method_name = str(top_entry["method_name"])
-                primary_method_uid = str(top_entry["method_uid"])
-                if len(method_candidates) == 1:
-                    primary_confidence = 1.0
-                else:
-                    second_score = method_candidates[1][1]
-                    normalized_gap = (
-                        (top_score - second_score) / max(1.0, abs(top_score))
-                    )
-                    primary_confidence = max(
-                        0.0,
-                        min(1.0, 0.5 + 0.5 * normalized_gap),
-                    )
                 supporting_methods = sorted(
                     {
                         str(entry["method_name"])
-                        for _, _, entry in method_candidates[1:]
+                        for uid, _, entry in method_candidates
+                        if str(uid) != primary_method_uid
                         if str(entry["method_name"]) != ""
                     }
                 )
@@ -3824,6 +4145,7 @@ class DFBScanAgent(Agent):
         )
         explanation_hit_count = float(int(method_entry.get("explanation_hit_count", 0)))
         chain_support_count = float(int(method_entry.get("chain_support_count", 0)))
+        leak_root_hit_count = float(int(method_entry.get("leak_root_hit_count", 0)))
         helper_like = bool(method_entry.get("helper_like", False))
         method_name = str(method_entry.get("method_name", ""))
         source_line_count = float(len(cast(Set[int], method_entry.get("source_lines", set()))))
@@ -3840,6 +4162,7 @@ class DFBScanAgent(Agent):
         score -= 1.0 * source_low_confidence_count
         score += 2.5 * explanation_hit_count
         score += 1.0 * chain_support_count
+        score += 6.0 * leak_root_hit_count
         score += 1.0 * source_line_count
         if local_evidence_count == 0 and chain_support_count > 0:
             # Supporting-only methods (no direct source evidence) should rarely
@@ -3864,7 +4187,91 @@ class DFBScanAgent(Agent):
         }
         if method_name.lower() in generic_method_names:
             score -= 3.0
+        if self.__is_java_mlk_forwarding_method_entry(method_entry):
+            score -= 6.0
         return score
+
+    def __is_java_mlk_forwarding_method_entry(
+        self, method_entry: Dict[str, object]
+    ) -> bool:
+        """
+        Heuristic: local source method that mainly forwards resource to downstream
+        methods and lacks direct leak evidence in explanation/markers.
+        """
+        report_count = int(method_entry.get("report_count", 0))
+        chain_support_count = int(method_entry.get("chain_support_count", 0))
+        weak_evidence_count = int(method_entry.get("weak_evidence_count", 0))
+        no_sink_marker_count = int(method_entry.get("no_sink_marker_count", 0))
+        weak_release_marker_count = int(method_entry.get("weak_release_marker_count", 0))
+        explanation_hit_count = int(method_entry.get("explanation_hit_count", 0))
+        leak_root_hit_count = int(method_entry.get("leak_root_hit_count", 0))
+        method_name = str(method_entry.get("method_name", "")).strip().lower()
+        if report_count <= 0:
+            return False
+        if chain_support_count <= 0:
+            return False
+        if no_sink_marker_count > 0 or weak_release_marker_count > 0:
+            return False
+        if explanation_hit_count > 0:
+            return False
+        if leak_root_hit_count > 0:
+            return False
+
+        forwardish_names = {
+            "get",
+            "open",
+            "create",
+            "build",
+            "load",
+            "readfile",
+            "writefile",
+            "copy",
+            "parse",
+        }
+        if method_name in forwardish_names:
+            return True
+
+        # If weak evidence only comes from upstream semantics while method itself
+        # mostly serves as chain entry, treat as forwarding-like.
+        return weak_evidence_count <= report_count
+
+    def __select_java_mlk_primary_method_from_candidates(
+        self,
+        method_candidates: List[Tuple[str, float, Dict[str, object]]],
+    ) -> Tuple[str, str, float]:
+        if len(method_candidates) == 0:
+            return "", "UNKNOWN_METHOD", 0.0
+
+        method_candidates.sort(
+            key=lambda item: (
+                -item[1],
+                int(item[2].get("method_start_line", -1)),
+                str(item[2].get("method_name", "")),
+            )
+        )
+
+        eligible_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+        for method_uid, method_score, method_entry in method_candidates:
+            if bool(method_entry.get("helper_like", False)):
+                continue
+            if self.__is_java_mlk_forwarding_method_entry(method_entry):
+                continue
+            eligible_candidates.append((method_uid, method_score, method_entry))
+
+        ranked_candidates = (
+            eligible_candidates if len(eligible_candidates) > 0 else method_candidates
+        )
+        primary_uid, primary_score, primary_entry = ranked_candidates[0]
+        primary_name = str(primary_entry.get("method_name", "UNKNOWN_METHOD"))
+
+        if len(ranked_candidates) == 1:
+            primary_confidence = 1.0
+        else:
+            second_score = ranked_candidates[1][1]
+            normalized_gap = (primary_score - second_score) / max(1.0, abs(primary_score))
+            primary_confidence = max(0.0, min(1.0, 0.5 + 0.5 * normalized_gap))
+
+        return str(primary_uid), primary_name, primary_confidence
 
     def __build_java_mlk_merged_detect_payload(
         self, bug_reports: Dict[int, "BugReport"]
@@ -3976,6 +4383,12 @@ class DFBScanAgent(Agent):
             issue_entry["issue_family_key"] = (
                 str(signature[1]) if len(signature) > 1 else ""
             )
+            issue_entry["issue_component_key"] = (
+                str(signature[1]) if len(signature) > 1 else ""
+            )
+            issue_entry["issue_leak_root_method_uid"] = (
+                str(signature[4]) if len(signature) > 4 else ""
+            )
             issue_payload[issue_idx] = issue_entry
 
         raw_count = len(bug_reports)
@@ -4044,6 +4457,7 @@ class DFBScanAgent(Agent):
                     "weak_release_marker_count": 0,
                     "explanation_hit_count": 0,
                     "chain_support_count": 0,
+                    "leak_root_hit_count": 0,
                     "source_high_confidence_count": 0,
                     "source_medium_confidence_count": 0,
                     "source_low_confidence_count": 0,
@@ -4091,6 +4505,11 @@ class DFBScanAgent(Agent):
                 source_entry["explanation_hit_count"] = int(
                     source_entry["explanation_hit_count"]
                 ) + 1
+            leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
+            if leak_root_uid != "" and leak_root_uid == source_method_uid:
+                source_entry["leak_root_hit_count"] = int(
+                    source_entry["leak_root_hit_count"]
+                ) + 1
 
             relevant_method_uids = metadata.get("relevant_method_uids", [])
             if isinstance(relevant_method_uids, list):
@@ -4114,6 +4533,7 @@ class DFBScanAgent(Agent):
                             "weak_release_marker_count": 0,
                             "explanation_hit_count": 0,
                             "chain_support_count": 0,
+                            "leak_root_hit_count": 0,
                             "source_high_confidence_count": 0,
                             "source_medium_confidence_count": 0,
                             "source_low_confidence_count": 0,
@@ -4122,6 +4542,10 @@ class DFBScanAgent(Agent):
                     relevant_entry["chain_support_count"] = int(
                         relevant_entry["chain_support_count"]
                     ) + 1
+                    if leak_root_uid != "" and leak_root_uid == relevant_uid:
+                        relevant_entry["leak_root_hit_count"] = int(
+                            relevant_entry["leak_root_hit_count"]
+                        ) + 1
                     relevant_name = str(relevant_entry["method_name"])
                     if (
                         relevant_name != "UNKNOWN_METHOD"
@@ -4146,10 +4570,13 @@ class DFBScanAgent(Agent):
                 "reduction_ratio": 0.0,
             }
 
-        def _coarse_family_anchor(family_key: str) -> str:
-            if ":family:" not in family_key:
-                return family_key
-            suffix = family_key.split(":family:", 1)[1]
+        def _coarse_family_anchor(component_key: str) -> str:
+            if ":component:" in component_key:
+                suffix = component_key.split(":component:", 1)[1]
+            elif ":family:" in component_key:
+                suffix = component_key.split(":family:", 1)[1]
+            else:
+                return component_key
             parts = [part for part in suffix.split(":") if part != ""]
             if len(parts) >= 3:
                 return ":".join(parts[:3])
@@ -4183,10 +4610,10 @@ class DFBScanAgent(Agent):
             )
             if confidence == "low":
                 continue
-            obligation_family_key = str(
+            obligation_component_key = str(
                 metadata.get(
-                    "obligation_family_key",
-                    self.__get_java_mlk_source_obligation_family_key(
+                    "obligation_component_key",
+                    self.__get_java_mlk_source_obligation_component_key(
                         bug_report.buggy_value
                     ),
                 )
@@ -4198,8 +4625,8 @@ class DFBScanAgent(Agent):
                 guarantee_class,
             )
             previous_family = high_family_by_method.get(method_key, "")
-            if previous_family == "" or obligation_family_key < previous_family:
-                high_family_by_method[method_key] = obligation_family_key
+            if previous_family == "" or obligation_component_key < previous_family:
+                high_family_by_method[method_key] = obligation_component_key
 
         groups: Dict[Tuple[str, str, str, str], List[int]] = defaultdict(list)
         low_conf_attached_reports = 0
@@ -4209,10 +4636,10 @@ class DFBScanAgent(Agent):
             source_file = str(metadata.get("source_file", bug_report.buggy_value.file)).replace(
                 "\\", "/"
             ).lower()
-            obligation_family_key = str(
+            obligation_component_key = str(
                 metadata.get(
-                    "obligation_family_key",
-                    self.__get_java_mlk_source_obligation_family_key(
+                    "obligation_component_key",
+                    self.__get_java_mlk_source_obligation_component_key(
                         bug_report.buggy_value
                     ),
                 )
@@ -4238,13 +4665,13 @@ class DFBScanAgent(Agent):
                     guarantee_class,
                 )
                 attach_family = high_family_by_method.get(attach_key, "")
-                if attach_family != "" and attach_family != obligation_family_key:
-                    obligation_family_key = attach_family
+                if attach_family != "" and attach_family != obligation_component_key:
+                    obligation_component_key = attach_family
                     low_conf_attached_reports += 1
 
             signature = (
                 source_file,
-                obligation_family_key,
+                obligation_component_key,
                 resource_kind,
                 guarantee_class,
             )
@@ -4260,6 +4687,7 @@ class DFBScanAgent(Agent):
             method_uids: Set[str] = set()
             source_lines: Set[int] = set()
             source_symbols: Set[str] = set()
+            leak_root_uids: Set[str] = set()
             non_low_conf_count = 0
             for member_id in member_ids:
                 bug_report = bug_reports[member_id]
@@ -4275,6 +4703,9 @@ class DFBScanAgent(Agent):
                             method_uids.add(relevant_uid_str)
                 source_lines.add(int(metadata.get("source_line", -1)))
                 source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+                leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
+                if leak_root_uid != "":
+                    leak_root_uids.add(leak_root_uid)
                 confidence = self.__normalize_java_mlk_source_confidence(
                     str(metadata.get("source_confidence", "medium"))
                 )
@@ -4285,6 +4716,7 @@ class DFBScanAgent(Agent):
                 "method_uids": method_uids,
                 "source_lines": source_lines,
                 "source_symbols": source_symbols,
+                "leak_root_uids": leak_root_uids,
                 "non_low_conf_count": non_low_conf_count,
                 "coarse_family_anchor": _coarse_family_anchor(signature[1]),
             }
@@ -4331,9 +4763,18 @@ class DFBScanAgent(Agent):
                     ) & cast(Set[str], feature_b["method_uids"])
                     if len(method_intersection) > 0:
                         should_merge = True
-                    elif feature_a["coarse_family_anchor"] == feature_b["coarse_family_anchor"]:
-                        should_merge = True
                     else:
+                        root_intersection = cast(
+                            Set[str], feature_a["leak_root_uids"]
+                        ) & cast(Set[str], feature_b["leak_root_uids"])
+                        if len(root_intersection) > 0:
+                            should_merge = True
+                    if (
+                        not should_merge
+                        and feature_a["coarse_family_anchor"] == feature_b["coarse_family_anchor"]
+                    ):
+                        should_merge = True
+                    if not should_merge:
                         lines_a = cast(Set[int], feature_a["source_lines"])
                         lines_b = cast(Set[int], feature_b["source_lines"])
                         if len(lines_a & lines_b) > 0:
@@ -4496,15 +4937,12 @@ class DFBScanAgent(Agent):
                 for method_uid, method_entry in method_buckets.items():
                     method_score = self.__score_java_mlk_method_bucket(method_entry)
                     method_candidates.append((method_uid, method_score, method_entry))
-                method_candidates.sort(
-                    key=lambda item: (
-                        -item[1],
-                        int(item[2].get("method_start_line", -1)),
-                        str(item[2].get("method_name", "")),
-                    )
-                )
-                primary_method_uid = (
-                    str(method_candidates[0][0]) if len(method_candidates) > 0 else ""
+                (
+                    primary_method_uid,
+                    _primary_method_name,
+                    _primary_method_confidence,
+                ) = self.__select_java_mlk_primary_method_from_candidates(
+                    method_candidates
                 )
                 method_uids = {
                     str(method_uid)
@@ -4512,9 +4950,13 @@ class DFBScanAgent(Agent):
                     if str(method_uid).strip() != ""
                 }
                 source_symbols: Set[str] = set()
+                leak_root_uids: Set[str] = set()
                 for member_id in member_ids:
                     metadata = cast(Dict[str, object], bug_reports[member_id].metadata)
                     source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+                    leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
+                    if leak_root_uid != "":
+                        leak_root_uids.add(leak_root_uid)
 
                 representative_signature = sorted(merged_signatures[root_id])[0]
                 group_profile[root_id] = {
@@ -4523,6 +4965,7 @@ class DFBScanAgent(Agent):
                     "method_uids": method_uids,
                     "primary_method_uid": primary_method_uid,
                     "source_symbols": source_symbols,
+                    "leak_root_uids": leak_root_uids,
                 }
 
             for idx_a, root_a in enumerate(merged_root_ids):
@@ -4544,9 +4987,13 @@ class DFBScanAgent(Agent):
                     method_uids_b = cast(Set[str], profile_b["method_uids"])
                     symbols_a = cast(Set[str], profile_a["source_symbols"])
                     symbols_b = cast(Set[str], profile_b["source_symbols"])
+                    leak_roots_a = cast(Set[str], profile_a["leak_root_uids"])
+                    leak_roots_b = cast(Set[str], profile_b["leak_root_uids"])
 
                     should_merge = False
                     if len(method_uids_a & method_uids_b) > 0:
+                        should_merge = True
+                    elif len(leak_roots_a & leak_roots_b) > 0:
                         should_merge = True
 
                     primary_a = str(profile_a["primary_method_uid"]).strip()
@@ -4621,27 +5068,11 @@ class DFBScanAgent(Agent):
             for method_uid, method_entry in method_buckets.items():
                 method_score = self.__score_java_mlk_method_bucket(method_entry)
                 method_candidates.append((method_uid, method_score, method_entry))
-            method_candidates.sort(
-                key=lambda item: (
-                    -item[1],
-                    int(item[2].get("method_start_line", -1)),
-                    str(item[2].get("method_name", "")),
-                )
-            )
-
-            primary_method_uid = ""
-            primary_method_name = "UNKNOWN_METHOD"
-            primary_method_confidence = 0.0
-            if len(method_candidates) > 0:
-                primary_method_uid = str(method_candidates[0][0])
-                primary_method_name = str(method_candidates[0][2].get("method_name", ""))
-                if len(method_candidates) == 1:
-                    primary_method_confidence = 1.0
-                else:
-                    top_score = method_candidates[0][1]
-                    second_score = method_candidates[1][1]
-                    normalized_gap = (top_score - second_score) / max(1.0, abs(top_score))
-                    primary_method_confidence = max(0.0, min(1.0, 0.5 + 0.5 * normalized_gap))
+            (
+                primary_method_uid,
+                primary_method_name,
+                primary_method_confidence,
+            ) = self.__select_java_mlk_primary_method_from_candidates(method_candidates)
 
             representative_id = member_ids[0]
             best_rep_score = -10**9
@@ -4656,7 +5087,10 @@ class DFBScanAgent(Agent):
                     str(candidate_metadata.get("source_confidence", "medium"))
                 )
                 candidate_method_uid = str(
-                    candidate_metadata.get("source_method_uid", "")
+                    candidate_metadata.get(
+                        "leak_root_method_uid",
+                        candidate_metadata.get("source_method_uid", ""),
+                    )
                 ).strip()
                 marker_bonus = int(
                     bool(candidate_metadata.get("has_no_sink_marker", False))
@@ -4678,6 +5112,54 @@ class DFBScanAgent(Agent):
             ]
             canonical_entry["canonical_member_ids"] = member_ids
             canonical_entry["canonical_member_count"] = len(member_ids)
+            canonical_entry["canonical_component_keys"] = sorted(
+                {
+                    str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "obligation_component_key", ""
+                        )
+                    )
+                    for member_id in member_ids
+                    if str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "obligation_component_key", ""
+                        )
+                    )
+                    != ""
+                }
+            )
+            canonical_entry["canonical_leak_root_method_uids"] = sorted(
+                {
+                    str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "leak_root_method_uid", ""
+                        )
+                    )
+                    for member_id in member_ids
+                    if str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "leak_root_method_uid", ""
+                        )
+                    )
+                    != ""
+                }
+            )
+            canonical_entry["canonical_leak_root_methods"] = sorted(
+                {
+                    str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "leak_root_method_name", ""
+                        )
+                    )
+                    for member_id in member_ids
+                    if str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "leak_root_method_name", ""
+                        )
+                    )
+                    != ""
+                }
+            )
             canonical_entry["canonical_primary_defect_method"] = primary_method_name
             canonical_entry["canonical_primary_defect_method_uid"] = primary_method_uid
             canonical_entry["canonical_primary_confidence"] = primary_method_confidence
@@ -4971,6 +5453,13 @@ class DFBScanAgent(Agent):
         obligation_family_signature = self.__get_java_mlk_source_obligation_family_key(
             src_value
         )
+        obligation_component_signature = (
+            self.__get_java_mlk_source_obligation_component_key(src_value)
+        )
+        leak_root_method_uid, _ = self.__infer_java_mlk_report_leak_root_method(
+            src_value,
+            relevant_functions,
+        )
 
         source_anchor_key = ""
         non_helper_keys: List[str] = []
@@ -5021,9 +5510,10 @@ class DFBScanAgent(Agent):
             )
             return (
                 normalized_src_file,
-                obligation_family_signature,
+                obligation_component_signature,
                 normalize_resource_kind(resource_kind),
                 guarantee_class,
+                leak_root_method_uid if leak_root_method_uid != "" else source_anchor_key,
             )
         if effective_merge_mode == "obligation":
             obligation_kind = self.java_mlk_obligation_kind_by_key.get(
