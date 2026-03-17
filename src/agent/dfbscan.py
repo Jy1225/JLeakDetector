@@ -2,7 +2,7 @@ import json
 import os
 import re
 import threading
-from collections import defaultdict
+from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import cast
@@ -242,6 +242,23 @@ class DFBScanAgent(Agent):
         ).strip().lower()
         if self.java_mlk_source_confidence_min not in {"low", "medium", "high"}:
             self.java_mlk_source_confidence_min = "low"
+        self.java_mlk_canonical_structural_merge = (
+            os.environ.get(
+                "REPOAUDIT_JAVA_MLK_CANONICAL_STRUCTURAL_MERGE", "true"
+            )
+            .strip()
+            .lower()
+            == "true"
+        )
+        try:
+            self.java_mlk_canonical_merge_hops = int(
+                os.environ.get("REPOAUDIT_JAVA_MLK_CANONICAL_MERGE_HOPS", "2")
+            )
+        except ValueError:
+            self.java_mlk_canonical_merge_hops = 2
+        self.java_mlk_canonical_merge_hops = max(
+            1, min(4, self.java_mlk_canonical_merge_hops)
+        )
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_source_coverage_stats: Dict[str, object] = {}
 
@@ -872,6 +889,8 @@ class DFBScanAgent(Agent):
                 f"output_view={self.java_mlk_output_view}",
                 f"family_link={self.java_mlk_family_link_mode}",
                 f"source_conf_min={self.java_mlk_source_confidence_min}",
+                f"structural_merge={self.java_mlk_canonical_structural_merge}",
+                f"merge_hops={self.java_mlk_canonical_merge_hops}",
             )
 
         # Total number of source values
@@ -1254,6 +1273,8 @@ class DFBScanAgent(Agent):
                 f"output_view={self.java_mlk_output_view}",
                 f"family_link={self.java_mlk_family_link_mode}",
                 f"source_conf_min={self.java_mlk_source_confidence_min}",
+                f"structural_merge={self.java_mlk_canonical_structural_merge}",
+                f"merge_hops={self.java_mlk_canonical_merge_hops}",
             )
 
         # Total number of source values
@@ -4346,14 +4367,250 @@ class DFBScanAgent(Agent):
             merged_groups[root_idx].extend(groups[signature])
             merged_signatures[root_idx].append(signature)
 
+        # Step 3: structural merge by call-graph relation between primary methods.
+        third_pass_merge_count = 0
+        final_groups: Dict[int, List[int]] = dict(merged_groups)
+        final_signatures: Dict[int, List[Tuple[str, str, str, str]]] = dict(
+            merged_signatures
+        )
+        if (
+            self.java_mlk_family_link_mode == "aggressive"
+            and self.java_mlk_canonical_structural_merge
+        ):
+            uid_to_function_id: Dict[str, int] = {}
+            for function in self.ts_analyzer.function_env.values():
+                function_uid = (
+                    function.function_uid
+                    if function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(function)
+                )
+                uid_to_function_id[function_uid] = function.function_id
+
+            call_out = self.ts_analyzer.function_caller_callee_map
+            call_in = self.ts_analyzer.function_callee_caller_map
+            graph_nodes: Set[int] = set(self.ts_analyzer.function_env.keys())
+            for caller_id, callee_ids in call_out.items():
+                graph_nodes.add(caller_id)
+                graph_nodes.update(callee_ids)
+            for callee_id, caller_ids in call_in.items():
+                graph_nodes.add(callee_id)
+                graph_nodes.update(caller_ids)
+
+            index_counter = 0
+            dfn: Dict[int, int] = {}
+            low: Dict[int, int] = {}
+            stack: List[int] = []
+            in_stack: Set[int] = set()
+            scc_id_by_node: Dict[int, int] = {}
+            scc_counter = 0
+
+            def _tarjan(node_id: int) -> None:
+                nonlocal index_counter, scc_counter
+                dfn[node_id] = index_counter
+                low[node_id] = index_counter
+                index_counter += 1
+                stack.append(node_id)
+                in_stack.add(node_id)
+
+                for next_id in call_out.get(node_id, set()):
+                    if next_id not in dfn:
+                        _tarjan(next_id)
+                        low[node_id] = min(low[node_id], low[next_id])
+                    elif next_id in in_stack:
+                        low[node_id] = min(low[node_id], dfn[next_id])
+
+                if low[node_id] == dfn[node_id]:
+                    while stack:
+                        top = stack.pop()
+                        in_stack.remove(top)
+                        scc_id_by_node[top] = scc_counter
+                        if top == node_id:
+                            break
+                    scc_counter += 1
+
+            for node_id in sorted(graph_nodes):
+                if node_id not in dfn:
+                    _tarjan(node_id)
+
+            def _short_hop_related(fid_a: int, fid_b: int, max_hops: int) -> bool:
+                if fid_a == fid_b:
+                    return True
+                queue: deque[Tuple[int, int]] = deque([(fid_a, 0)])
+                visited: Set[int] = {fid_a}
+                while len(queue) > 0:
+                    current_id, hop = queue.popleft()
+                    if hop >= max_hops:
+                        continue
+                    neighbors = set(call_out.get(current_id, set()))
+                    neighbors.update(call_in.get(current_id, set()))
+                    for next_id in neighbors:
+                        if next_id == fid_b:
+                            return True
+                        if next_id in visited:
+                            continue
+                        visited.add(next_id)
+                        queue.append((next_id, hop + 1))
+                return False
+
+            def _extract_method_name(method_uid: str) -> str:
+                method_uid = method_uid.strip()
+                if method_uid in uid_to_function_id:
+                    function_id = uid_to_function_id[method_uid]
+                    if function_id in self.ts_analyzer.function_env:
+                        return self.ts_analyzer.function_env[function_id].function_name.lower()
+                # Fallback parsing for noisy uid text.
+                tail = method_uid.rsplit(".", 1)[-1]
+                name = tail.split("(", 1)[0].strip().lower()
+                return name
+
+            merged_root_ids = sorted(merged_groups.keys())
+            root_parent: Dict[int, int] = {root_id: root_id for root_id in merged_root_ids}
+
+            def _find_root_group(root_id: int) -> int:
+                current = root_id
+                while root_parent[current] != current:
+                    root_parent[current] = root_parent[root_parent[current]]
+                    current = root_parent[current]
+                return current
+
+            def _union_root_group(root_a: int, root_b: int) -> bool:
+                group_a = _find_root_group(root_a)
+                group_b = _find_root_group(root_b)
+                if group_a == group_b:
+                    return False
+                signature_a = sorted(merged_signatures.get(group_a, [signatures[group_a]]))[0]
+                signature_b = sorted(merged_signatures.get(group_b, [signatures[group_b]]))[0]
+                if signature_a <= signature_b:
+                    root_parent[group_b] = group_a
+                else:
+                    root_parent[group_a] = group_b
+                return True
+
+            group_profile: Dict[int, Dict[str, object]] = {}
+            for root_id in merged_root_ids:
+                member_ids = sorted(set(merged_groups[root_id]))
+                method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
+                    member_ids, bug_reports
+                )
+                method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+                for method_uid, method_entry in method_buckets.items():
+                    method_score = self.__score_java_mlk_method_bucket(method_entry)
+                    method_candidates.append((method_uid, method_score, method_entry))
+                method_candidates.sort(
+                    key=lambda item: (
+                        -item[1],
+                        int(item[2].get("method_start_line", -1)),
+                        str(item[2].get("method_name", "")),
+                    )
+                )
+                primary_method_uid = (
+                    str(method_candidates[0][0]) if len(method_candidates) > 0 else ""
+                )
+                method_uids = {
+                    str(method_uid)
+                    for method_uid, _, _ in method_candidates
+                    if str(method_uid).strip() != ""
+                }
+                source_symbols: Set[str] = set()
+                for member_id in member_ids:
+                    metadata = cast(Dict[str, object], bug_reports[member_id].metadata)
+                    source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+
+                representative_signature = sorted(merged_signatures[root_id])[0]
+                group_profile[root_id] = {
+                    "signature": representative_signature,
+                    "member_ids": member_ids,
+                    "method_uids": method_uids,
+                    "primary_method_uid": primary_method_uid,
+                    "source_symbols": source_symbols,
+                }
+
+            for idx_a, root_a in enumerate(merged_root_ids):
+                profile_a = group_profile[root_a]
+                signature_a = cast(Tuple[str, str, str, str], profile_a["signature"])
+                for idx_b in range(idx_a + 1, len(merged_root_ids)):
+                    root_b = merged_root_ids[idx_b]
+                    profile_b = group_profile[root_b]
+                    signature_b = cast(Tuple[str, str, str, str], profile_b["signature"])
+                    # Same file/resource/guarantee class only.
+                    if (
+                        signature_a[0] != signature_b[0]
+                        or signature_a[2] != signature_b[2]
+                        or signature_a[3] != signature_b[3]
+                    ):
+                        continue
+
+                    method_uids_a = cast(Set[str], profile_a["method_uids"])
+                    method_uids_b = cast(Set[str], profile_b["method_uids"])
+                    symbols_a = cast(Set[str], profile_a["source_symbols"])
+                    symbols_b = cast(Set[str], profile_b["source_symbols"])
+
+                    should_merge = False
+                    if len(method_uids_a & method_uids_b) > 0:
+                        should_merge = True
+
+                    primary_a = str(profile_a["primary_method_uid"]).strip()
+                    primary_b = str(profile_b["primary_method_uid"]).strip()
+                    if not should_merge and primary_a != "" and primary_b != "":
+                        if primary_a == primary_b:
+                            should_merge = True
+                        else:
+                            name_a = _extract_method_name(primary_a)
+                            name_b = _extract_method_name(primary_b)
+                            if name_a != "" and name_a == name_b and len(symbols_a & symbols_b) > 0:
+                                should_merge = True
+
+                            fid_a = uid_to_function_id.get(primary_a)
+                            fid_b = uid_to_function_id.get(primary_b)
+                            if (
+                                not should_merge
+                                and fid_a is not None
+                                and fid_b is not None
+                            ):
+                                if scc_id_by_node.get(fid_a, -1) == scc_id_by_node.get(
+                                    fid_b, -2
+                                ):
+                                    should_merge = True
+                                elif (
+                                    len(symbols_a & symbols_b) > 0
+                                    and _short_hop_related(
+                                        fid_a, fid_b, self.java_mlk_canonical_merge_hops
+                                    )
+                                ):
+                                    should_merge = True
+
+                    if should_merge and _union_root_group(root_a, root_b):
+                        third_pass_merge_count += 1
+
+            regrouped_groups: Dict[int, List[int]] = defaultdict(list)
+            regrouped_signatures: Dict[int, List[Tuple[str, str, str, str]]] = defaultdict(list)
+            for root_id in merged_root_ids:
+                final_root = _find_root_group(root_id)
+                regrouped_groups[final_root].extend(merged_groups[root_id])
+                regrouped_signatures[final_root].extend(merged_signatures[root_id])
+
+            final_groups = {
+                root_id: sorted(set(member_ids))
+                for root_id, member_ids in regrouped_groups.items()
+            }
+            final_signatures = {
+                root_id: sorted(
+                    {
+                        signature
+                        for signature in signature_candidates
+                    }
+                )
+                for root_id, signature_candidates in regrouped_signatures.items()
+            }
+
         canonical_payload: Dict[int, dict] = {}
         root_indices = sorted(
-            merged_groups.keys(),
-            key=lambda root_idx: min(merged_groups[root_idx]),
+            final_groups.keys(),
+            key=lambda root_idx: min(final_groups[root_idx]),
         )
         for issue_idx, root_idx in enumerate(root_indices):
-            member_ids_unsorted = merged_groups[root_idx]
-            signature_candidates = merged_signatures[root_idx]
+            member_ids_unsorted = final_groups[root_idx]
+            signature_candidates = final_signatures[root_idx]
             signature = sorted(signature_candidates)[0]
             member_ids = sorted(member_ids_unsorted)
             method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
@@ -4477,7 +4734,10 @@ class DFBScanAgent(Agent):
             "canonical_issue_count": canonical_count,
             "pre_cluster_issue_count": pre_cluster_group_count,
             "second_pass_merge_count": second_pass_merge_count,
+            "third_pass_merge_count": third_pass_merge_count,
             "low_conf_attached_reports": low_conf_attached_reports,
+            "structural_merge_enabled": self.java_mlk_canonical_structural_merge,
+            "structural_merge_hops": self.java_mlk_canonical_merge_hops,
             "reduced_report_count": raw_count - canonical_count,
             "reduction_ratio": (
                 float(raw_count - canonical_count) / float(raw_count)
@@ -4678,12 +4938,14 @@ class DFBScanAgent(Agent):
                 # In aggressive mode, drop method granularity and keep file-level
                 # semantic anchors so wrapper/callee chain variants can collapse.
                 return (
-                    f"{normalized_file}:family:{anchor_kind}:{anchor_token}:{source_symbol}:{source_origin}"
+                    f"{normalized_file}:family:{anchor_kind}:{anchor_token}:{source_symbol}"
                 )
             prefix = obligation_key[: match.start()]
             return f"{prefix}:family:{anchor_kind}:{anchor_token}:{source_symbol}:{source_confidence}"
 
         # Fallback for malformed keys.
+        if self.java_mlk_family_link_mode == "aggressive":
+            return f"{normalized_file}:family:src:{source_symbol}"
         return f"{normalized_file}:family:src:{source_symbol}:{source_origin}:{source_confidence}"
 
     def __build_java_mlk_report_signature(
