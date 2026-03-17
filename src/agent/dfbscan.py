@@ -3333,6 +3333,7 @@ class DFBScanAgent(Agent):
                     "no_sink_marker_count": 0,
                     "weak_release_marker_count": 0,
                     "explanation_hit_count": 0,
+                    "chain_support_count": 0,
                 }
 
             method_entry = method_buckets[method_uid]
@@ -3361,6 +3362,46 @@ class DFBScanAgent(Agent):
                     method_entry["explanation_hit_count"]
                 ) + 1
 
+            # Add supporting methods from inter-procedural chain so primary
+            # defect method can be chosen from relevant non-source methods too.
+            for relevant_function in bug_report.relevant_functions.values():
+                relevant_method_uid = (
+                    relevant_function.function_uid
+                    if relevant_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(relevant_function)
+                )
+                if relevant_method_uid not in method_buckets:
+                    method_buckets[relevant_method_uid] = {
+                        "method_name": relevant_function.function_name,
+                        "method_uid": relevant_method_uid,
+                        "method_start_line": relevant_function.start_line_number,
+                        "method_end_line": relevant_function.end_line_number,
+                        "source_lines": set(),
+                        "report_ids": [],
+                        "report_count": 0,
+                        "helper_like": self.__is_java_mlk_helper_function_for_dedup(
+                            relevant_function
+                        ),
+                        "weak_evidence_count": 0,
+                        "no_sink_marker_count": 0,
+                        "weak_release_marker_count": 0,
+                        "explanation_hit_count": 0,
+                        "chain_support_count": 0,
+                    }
+                if relevant_method_uid == method_uid:
+                    continue
+                relevant_entry = method_buckets[relevant_method_uid]
+                relevant_entry["chain_support_count"] = int(
+                    relevant_entry["chain_support_count"]
+                ) + 1
+                if (
+                    relevant_function.function_name != "UNKNOWN_METHOD"
+                    and relevant_function.function_name.lower() in explanation_lower
+                ):
+                    relevant_entry["explanation_hit_count"] = int(
+                        relevant_entry["explanation_hit_count"]
+                    ) + 1
+
         payload: Dict[str, dict] = {}
         for file_key in sorted(grouped.keys()):
             file_entry = grouped[file_key]
@@ -3387,6 +3428,7 @@ class DFBScanAgent(Agent):
                             method_entry["weak_release_marker_count"]
                         ),
                         "explanation_hit_count": int(method_entry["explanation_hit_count"]),
+                        "chain_support_count": int(method_entry["chain_support_count"]),
                         "method_score": method_score,
                     }
                 )
@@ -3452,18 +3494,37 @@ class DFBScanAgent(Agent):
             int(method_entry.get("weak_release_marker_count", 0))
         )
         explanation_hit_count = float(int(method_entry.get("explanation_hit_count", 0)))
+        chain_support_count = float(int(method_entry.get("chain_support_count", 0)))
         helper_like = bool(method_entry.get("helper_like", False))
         method_name = str(method_entry.get("method_name", ""))
+        source_line_count = float(len(cast(Set[int], method_entry.get("source_lines", set()))))
 
-        score = 10.0 * report_count
-        score += 6.0 * weak_evidence_count
-        score += 4.0 * no_sink_marker_count
-        score += 3.0 * weak_release_marker_count
-        score += 2.0 * explanation_hit_count
+        score = 4.0 * report_count
+        score += 7.0 * weak_evidence_count
+        score += 10.0 * no_sink_marker_count
+        score += 8.0 * weak_release_marker_count
+        score += 2.5 * explanation_hit_count
+        score += 1.5 * chain_support_count
+        score += 1.0 * source_line_count
         if helper_like:
             score -= 8.0
         if method_name == "UNKNOWN_METHOD":
             score -= 5.0
+        if self.JAVA_IDENTIFIER_RE.fullmatch(method_name) is None:
+            # Decompiled or parser-noisy names are rarely reliable defect methods.
+            score -= 10.0
+        generic_method_names = {
+            "run",
+            "main",
+            "call",
+            "execute",
+            "process",
+            "load",
+            "write",
+            "read",
+        }
+        if method_name.lower() in generic_method_names:
+            score -= 1.5
         return score
 
     def __build_java_mlk_merged_detect_payload(
@@ -3733,7 +3794,6 @@ class DFBScanAgent(Agent):
             return (
                 normalized_src_file,
                 obligation_signature,
-                source_anchor_key,
                 normalize_resource_kind(resource_kind),
                 guarantee_class,
             )
