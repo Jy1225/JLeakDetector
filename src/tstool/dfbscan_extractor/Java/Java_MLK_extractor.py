@@ -333,6 +333,11 @@ class Java_MLK_Extractor(DFBScanExtractor):
         sources.extend(self._extract_argument_context_factory_sources(function))
         sources.extend(self._extract_acquire_sources(function))
         sources.extend(self._extract_twr_sources(function))
+        if len(sources) == 0:
+            # Fallback for parser/call-graph miss cases on snippets:
+            # do lightweight line-level pattern mining only when AST-based
+            # extraction yields no source in this function.
+            sources.extend(self._extract_line_pattern_sources(function))
         return self._dedup_source_values(sources)
 
     def extract_sinks(self, function: Function) -> List[Value]:
@@ -766,6 +771,94 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if has_resource:
                 results.append(node)
         return results
+
+    def _extract_line_pattern_sources(self, function: Function) -> List[Value]:
+        source_code = self.ts_analyzer.code_in_files[function.file_path]
+        sources: List[Value] = []
+
+        factory_name_pattern = "|".join(
+            sorted(
+                set(
+                    list(self.HIGH_CONFIDENCE_FACTORY_METHOD_NAMES)
+                    + [
+                        "newInputStream",
+                        "newOutputStream",
+                        "newBufferedReader",
+                        "newBufferedWriter",
+                        "getInputStream",
+                        "getOutputStream",
+                        "getWriter",
+                        "getResourceAsStream",
+                        "getRandomAccessFile",
+                        "writeAttribute",
+                        "encode",
+                    ]
+                ),
+                key=lambda item: (len(item), item),
+                reverse=True,
+            )
+        )
+        factory_regex = re.compile(
+            rf"\.\s*(?:{factory_name_pattern})\s*\(",
+            re.IGNORECASE,
+        )
+        new_regex = re.compile(
+            r"\bnew\s+([A-Za-z_][A-Za-z0-9_$.<>]*)\s*\(",
+        )
+
+        for line_number in range(
+            function.start_line_number, function.end_line_number + 1
+        ):
+            line_text = self.ts_analyzer.get_content_by_line_number(
+                line_number, function.file_path
+            )
+            if line_text == "":
+                continue
+            code_part = line_text.split("//", 1)[0].strip()
+            if code_part == "":
+                continue
+
+            matched = False
+            for match in new_regex.finditer(code_part):
+                raw_type = match.group(1)
+                normalized_type = self._normalize_type(raw_type)
+                if not self._is_resource_type(normalized_type):
+                    continue
+                matched = True
+                sources.append(
+                    Value(
+                        code_part,
+                        line_number,
+                        ValueLabel.SRC,
+                        function.file_path,
+                    )
+                )
+                break
+
+            if matched:
+                continue
+
+            if factory_regex.search(code_part) is None:
+                continue
+
+            # Keep factory fallback conservative: require dataflow-ish context.
+            if (
+                "=" not in code_part
+                and not code_part.strip().startswith("return ")
+                and not re.search(r"\w+\s*\(.*\.\s*[A-Za-z_][A-Za-z0-9_]*\s*\(", code_part)
+            ):
+                continue
+
+            sources.append(
+                Value(
+                    code_part,
+                    line_number,
+                    ValueLabel.SRC,
+                    function.file_path,
+                )
+            )
+
+        return sources
 
     def _is_high_confidence_factory_method(self, method_name: str) -> bool:
         return method_name in self.HIGH_CONFIDENCE_FACTORY_METHOD_NAMES

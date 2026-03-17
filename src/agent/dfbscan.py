@@ -215,10 +215,10 @@ class DFBScanAgent(Agent):
         # - obligation: collapse derived source family inside one obligation
         # - issue: collapse by obligation + primary method + weak/strong semantics
         self.java_mlk_hard_dedup_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "source"
+            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "issue"
         ).strip().lower()
         if self.java_mlk_hard_dedup_mode not in {"source", "obligation", "issue"}:
-            self.java_mlk_hard_dedup_mode = "source"
+            self.java_mlk_hard_dedup_mode = "issue"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_source_coverage_stats: Dict[str, object] = {}
 
@@ -1068,6 +1068,27 @@ class DFBScanAgent(Agent):
                         if strict_pv_output is not None:
                             pv_output = strict_pv_output
 
+                    if (
+                        self.language == "Java"
+                        and self.bug_type == "MLK"
+                        and not pv_output.is_reachable
+                        and self.__should_accept_java_mlk_no_sink_fallback(
+                            buggy_path=buggy_path,
+                            pv_explanation=pv_output.explanation_str,
+                            guarantee_level=path_guarantee_level,
+                        )
+                    ):
+                        self.logger.print_log(
+                            "Accept Java MLK candidate by no-sink fallback.",
+                            f"source={str(src_value)}",
+                            f"guarantee_level={path_guarantee_level}",
+                        )
+                        pv_output = PathValidatorOutput(
+                            True,
+                            pv_output.explanation_str
+                            + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable.",
+                        )
+
                     if pv_output.is_reachable:
                         passed_post_validation, reason = (
                             self.__post_validate_java_mlk_with_objid(
@@ -1461,6 +1482,27 @@ class DFBScanAgent(Agent):
                 )
                 if strict_pv_output is not None:
                     pv_output = strict_pv_output
+
+            if (
+                self.language == "Java"
+                and self.bug_type == "MLK"
+                and not pv_output.is_reachable
+                and self.__should_accept_java_mlk_no_sink_fallback(
+                    buggy_path=buggy_path,
+                    pv_explanation=pv_output.explanation_str,
+                    guarantee_level=path_guarantee_level,
+                )
+            ):
+                self.logger.print_log(
+                    "Accept Java MLK candidate by no-sink fallback.",
+                    f"source={str(src_value)}",
+                    f"guarantee_level={path_guarantee_level}",
+                )
+                pv_output = PathValidatorOutput(
+                    True,
+                    pv_output.explanation_str
+                    + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable.",
+                )
 
             if pv_output.is_reachable:
                 passed_post_validation, reason = (
@@ -3688,12 +3730,10 @@ class DFBScanAgent(Agent):
             guarantee_class = (
                 "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
             )
-            source_line_bucket = int(src_value.line_number / 5) * 5
             return (
                 normalized_src_file,
                 obligation_signature,
                 source_anchor_key,
-                source_line_bucket,
                 normalize_resource_kind(resource_kind),
                 guarantee_class,
             )
@@ -3837,6 +3877,53 @@ class DFBScanAgent(Agent):
         close_biased_no = self.__is_java_mlk_close_biased_negative(pv_explanation)
         return has_marker_hint or transfer_hint or close_biased_no
 
+    def __should_accept_java_mlk_no_sink_fallback(
+        self,
+        buggy_path: List[Value],
+        pv_explanation: str,
+        guarantee_level: str,
+    ) -> bool:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return False
+        has_no_sink_like = self.__has_java_mlk_no_sink_marker(
+            buggy_path
+        ) or self.__has_java_mlk_weak_release_marker(buggy_path)
+        if not has_no_sink_like:
+            return False
+        if is_all_exit_guaranteed(guarantee_level):
+            return False
+
+        lowered = pv_explanation.lower()
+        if "answer: no" not in lowered:
+            return False
+        # Respect explicit infeasibility/conflict reasoning.
+        if any(
+            keyword in lowered
+            for keyword in [
+                "branch conditions conflict",
+                "infeasible",
+                "contradict",
+                "unreachable",
+                "cannot execute",
+            ]
+        ):
+            return False
+        if self.__is_java_mlk_close_biased_negative(pv_explanation):
+            return True
+        if any(
+            keyword in lowered
+            for keyword in [
+                "ownership",
+                "transfer",
+                "escaped",
+                "escape",
+                "returned",
+                "caller",
+            ]
+        ):
+            return True
+        return False
+
     def __filter_redundant_java_mlk_paths(
         self, src_value: Value, buggy_paths: Dict[str, List[Value]]
     ) -> List[List[Value]]:
@@ -3863,10 +3950,18 @@ class DFBScanAgent(Agent):
         path_sets = [
             self.__normalize_java_mlk_path_for_dedup(path) for path in dedup_paths
         ]
+        has_no_sink_flags = [
+            self.__has_java_mlk_no_sink_marker(path) for path in dedup_paths
+        ]
         keep = [True for _ in dedup_paths]
 
         for i in range(len(dedup_paths)):
             if not keep[i]:
+                continue
+            # Keep explicit no-sink branch candidates; they are high-value for
+            # weak-release/no-close leakage and should not be removed only by
+            # set-subset relation.
+            if has_no_sink_flags[i]:
                 continue
             for j in range(len(dedup_paths)):
                 if i == j:

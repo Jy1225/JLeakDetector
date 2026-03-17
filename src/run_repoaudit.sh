@@ -31,7 +31,7 @@ Z3_SHADOW_MODE="${Z3_SHADOW_MODE:-true}"        # true/false
 Z3_TIMEOUT_MS="${Z3_TIMEOUT_MS:-200}"            # per-path timeout in ms
 Z3_MIN_PARSED_CONSTRAINTS="${Z3_MIN_PARSED_CONSTRAINTS:-2}"  # conservative UNSAT skip threshold
 REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE="${REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE:-method_semantic}"  # source/method/method_semantic/obligation/issue
-REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="${REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE:-source}"                # source/obligation/issue
+REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE="${REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE:-issue}"                 # source/obligation/issue
 REPOAUDIT_AUTO_EVAL_JLEAKS_MLK="${REPOAUDIT_AUTO_EVAL_JLEAKS_MLK:-false}"                         # true/false
 
 # Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
