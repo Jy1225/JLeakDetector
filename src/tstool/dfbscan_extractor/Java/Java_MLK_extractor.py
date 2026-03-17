@@ -325,6 +325,10 @@ class Java_MLK_Extractor(DFBScanExtractor):
         ".runtime.getruntime().exec(",
     )
 
+    SOURCE_CONFIDENCE_HIGH = "high"
+    SOURCE_CONFIDENCE_MEDIUM = "medium"
+    SOURCE_CONFIDENCE_LOW = "low"
+
     def extract_sources(self, function: Function) -> List[Value]:
         sources: List[Value] = []
         sources.extend(self._extract_new_resource_sources(function))
@@ -359,11 +363,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if self._is_wrapped_inner_creation(node, source_code):
                 continue
             sources.append(
-                Value(
+                self._make_source_value(
                     source_code[node.start_byte : node.end_byte],
                     self._line_of(node, source_code),
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="new",
+                    confidence=self.SOURCE_CONFIDENCE_HIGH,
                 )
             )
         return sources
@@ -381,12 +386,18 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if not self._is_resource_factory_return(node, source_code, local_type_map):
                 continue
 
+            confidence = (
+                self.SOURCE_CONFIDENCE_HIGH
+                if self._is_high_confidence_factory_method(method_name)
+                else self.SOURCE_CONFIDENCE_MEDIUM
+            )
             sources.append(
-                Value(
+                self._make_source_value(
                     source_code[node.start_byte : node.end_byte],
                     self._line_of(node, source_code),
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="factory",
+                    confidence=confidence,
                 )
             )
         return sources
@@ -409,11 +420,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if not self._is_factory_in_return_context(node, function, source_code):
                 continue
             sources.append(
-                Value(
+                self._make_source_value(
                     source_code[node.start_byte : node.end_byte],
                     self._line_of(node, source_code),
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="factory_return_ctx",
+                    confidence=self.SOURCE_CONFIDENCE_MEDIUM,
                 )
             )
         return sources
@@ -436,11 +448,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if not self._is_factory_in_argument_context(node, source_code):
                 continue
             sources.append(
-                Value(
+                self._make_source_value(
                     source_code[node.start_byte : node.end_byte],
                     self._line_of(node, source_code),
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="factory_arg_ctx",
+                    confidence=self.SOURCE_CONFIDENCE_MEDIUM,
                 )
             )
         return sources
@@ -456,11 +469,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
                 if not self._is_resource_type(declared_type):
                     continue
                 sources.append(
-                    Value(
+                    self._make_source_value(
                         source_code[decl.start_byte : decl.end_byte],
                         self._line_of(decl, source_code),
-                        ValueLabel.SRC,
                         function.file_path,
+                        origin="twr_decl",
+                        confidence=self.SOURCE_CONFIDENCE_HIGH,
                     )
                 )
         return sources
@@ -482,11 +496,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
             if not self._is_acquire_on_resource_receiver(node, source_code, local_type_map):
                 continue
             sources.append(
-                Value(
+                self._make_source_value(
                     source_code[node.start_byte : node.end_byte],
                     self._line_of(node, source_code),
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="acquire",
+                    confidence=self.SOURCE_CONFIDENCE_HIGH,
                 )
             )
         return sources
@@ -576,7 +591,33 @@ class Java_MLK_Extractor(DFBScanExtractor):
                 continue
             if len(value.name) > len(prev.name):
                 unique[key] = value
+                continue
+            if self._source_confidence_rank(value) > self._source_confidence_rank(prev):
+                unique[key] = value
         return list(unique.values())
+
+    def _make_source_value(
+        self,
+        expr: str,
+        line_number: int,
+        file_path: str,
+        origin: str,
+        confidence: str,
+    ) -> Value:
+        value = Value(expr, line_number, ValueLabel.SRC, file_path)
+        value.java_mlk_source_origin = origin
+        value.java_mlk_source_confidence = confidence
+        return value
+
+    def _source_confidence_rank(self, value: Value) -> int:
+        confidence = getattr(
+            value, "java_mlk_source_confidence", self.SOURCE_CONFIDENCE_MEDIUM
+        )
+        if confidence == self.SOURCE_CONFIDENCE_HIGH:
+            return 3
+        if confidence == self.SOURCE_CONFIDENCE_MEDIUM:
+            return 2
+        return 1
 
     def _normalize_source_expr(self, expr: str) -> str:
         normalized = expr.strip().rstrip(";")
@@ -826,11 +867,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
                     continue
                 matched = True
                 sources.append(
-                    Value(
+                    self._make_source_value(
                         code_part,
                         line_number,
-                        ValueLabel.SRC,
                         function.file_path,
+                        origin="line_pattern",
+                        confidence=self.SOURCE_CONFIDENCE_LOW,
                     )
                 )
                 break
@@ -850,11 +892,12 @@ class Java_MLK_Extractor(DFBScanExtractor):
                 continue
 
             sources.append(
-                Value(
+                self._make_source_value(
                     code_part,
                     line_number,
-                    ValueLabel.SRC,
                     function.file_path,
+                    origin="line_pattern",
+                    confidence=self.SOURCE_CONFIDENCE_LOW,
                 )
             )
 

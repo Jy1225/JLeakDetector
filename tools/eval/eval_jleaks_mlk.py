@@ -69,6 +69,64 @@ def _extract_report_method_names(report_entry: Dict) -> List[str]:
     return [str(name) for name in relevant[1]]
 
 
+def _iter_payload_entries(payload: Dict) -> List[Dict]:
+    if isinstance(payload, dict):
+        return [item for item in payload.values() if isinstance(item, dict)]
+    if isinstance(payload, list):
+        return [item for item in payload if isinstance(item, dict)]
+    return []
+
+
+def _summarize_duplicate_patterns(
+    detect_info_payload: Dict,
+    gt: Dict[int, Dict[str, str]],
+) -> Dict[str, object]:
+    reports_by_bug: Dict[int, List[Dict]] = defaultdict(list)
+    for report_entry in _iter_payload_entries(detect_info_payload):
+        bug_id = _extract_report_bug_id(report_entry)
+        if bug_id <= 0:
+            continue
+        reports_by_bug[bug_id].append(report_entry)
+
+    pattern_summary: Dict[str, Dict[str, int]] = {
+        "A_same_source_line_repeat": {"file_count": 0, "extra_reports": 0},
+        "B_multi_source_single_method": {"file_count": 0, "extra_reports": 0},
+        "C_cross_method_chain_contains_gt": {"file_count": 0, "extra_reports": 0},
+        "D_cross_method_gt_missing": {"file_count": 0, "extra_reports": 0},
+    }
+
+    for bug_id, report_entries in reports_by_bug.items():
+        if len(report_entries) <= 1:
+            continue
+        extra_reports = len(report_entries) - 1
+        source_lines = set()
+        source_methods = set()
+        for report_entry in report_entries:
+            metadata = report_entry.get("metadata", {})
+            if not isinstance(metadata, dict):
+                metadata = {}
+            source_lines.add(int(metadata.get("source_line", -1)))
+            source_methods.add(str(metadata.get("source_method_name", "")))
+
+        defect_method = gt.get(bug_id, {}).get("defect_method", "")
+        if len(source_lines) < len(report_entries):
+            category = "A_same_source_line_repeat"
+        elif len(source_methods) == 1 and len(source_lines) > 1:
+            category = "B_multi_source_single_method"
+        elif len(source_methods) > 1 and defect_method in source_methods:
+            category = "C_cross_method_chain_contains_gt"
+        else:
+            category = "D_cross_method_gt_missing"
+        pattern_summary[category]["file_count"] += 1
+        pattern_summary[category]["extra_reports"] += extra_reports
+
+    total_extra = sum(item["extra_reports"] for item in pattern_summary.values())
+    return {
+        "by_pattern": pattern_summary,
+        "total_extra_reports": total_extra,
+    }
+
+
 def _collect_detected_bug_ids_from_by_file(by_file_payload: Dict) -> Set[int]:
     detected: Set[int] = set()
     for file_key in by_file_payload.keys():
@@ -149,6 +207,7 @@ def main() -> None:
 
     detect_info = _load_json(os.path.join(result_dir, "detect_info.json"))
     detect_by_file = _load_json(os.path.join(result_dir, "detect_info_by_file.json"))
+    detect_canonical = _load_json(os.path.join(result_dir, "detect_info_canonical.json"))
     source_coverage_stats = _load_json(
         os.path.join(result_dir, "source_coverage_stats.json")
     )
@@ -198,6 +257,29 @@ def main() -> None:
         if report_count > 1:
             duplicate_bug_count += 1
             duplicate_extra_reports += report_count - 1
+
+    canonical_reports_by_bug: Dict[int, List[Dict]] = defaultdict(list)
+    canonical_total_reports = 0
+    canonical_entries = _iter_payload_entries(detect_canonical)
+    if len(canonical_entries) == 0:
+        canonical_entries = _iter_payload_entries(detect_info)
+    for entry in canonical_entries:
+        bug_id = _extract_report_bug_id(entry)
+        if bug_id <= 0:
+            continue
+        canonical_total_reports += 1
+        canonical_reports_by_bug[bug_id].append(entry)
+    canonical_detected_bug_ids = set(canonical_reports_by_bug.keys())
+    canonical_recall = (
+        float(len(canonical_detected_bug_ids)) / float(gt_count) if gt_count > 0 else 0.0
+    )
+    canonical_duplicate_bug_count = 0
+    canonical_duplicate_extra_reports = 0
+    for bug_id in canonical_detected_bug_ids:
+        canonical_count = len(canonical_reports_by_bug.get(bug_id, []))
+        if canonical_count > 1:
+            canonical_duplicate_bug_count += 1
+            canonical_duplicate_extra_reports += canonical_count - 1
 
     file_method_hits = 0
     file_method_hits_loose = 0
@@ -259,6 +341,11 @@ def main() -> None:
         "total_reports": total_reports,
         "duplicate_bug_count": duplicate_bug_count,
         "duplicate_extra_reports": duplicate_extra_reports,
+        "canonical_total_reports": canonical_total_reports,
+        "canonical_detected_bug_count": len(canonical_detected_bug_ids),
+        "canonical_file_level_recall": canonical_recall,
+        "canonical_duplicate_bug_count": canonical_duplicate_bug_count,
+        "canonical_duplicate_extra_reports": canonical_duplicate_extra_reports,
         "report_level_defect_method_hit_ratio": (
             float(report_method_hits) / float(total_reports) if total_reports > 0 else 0.0
         ),
@@ -282,6 +369,13 @@ def main() -> None:
             "other": {"count": len(fn_other), "bug_ids": fn_other},
         },
     }
+
+    duplicate_pattern_summary = _summarize_duplicate_patterns(detect_info, gt)
+    duplicate_pattern_summary_path = os.path.join(
+        output_dir, "duplicate_pattern_summary.json"
+    )
+    with open(duplicate_pattern_summary_path, "w", encoding="utf-8") as f:
+        json.dump(duplicate_pattern_summary, f, indent=4)
 
     per_bug_rows: List[Dict[str, object]] = []
     duplicate_rows: List[Dict[str, object]] = []
@@ -371,11 +465,13 @@ def main() -> None:
     print(f"[eval] summary -> {summary_path}")
     print(f"[eval] per bug -> {per_bug_path}")
     print(f"[eval] duplicates -> {duplicate_path}")
+    print(f"[eval] duplicate pattern summary -> {duplicate_pattern_summary_path}")
     print(
-        "[eval] recall={:.4f}, precision={:.4f}, duplicate_extra_reports={}, primary_method_hit={:.4f}".format(
+        "[eval] recall={:.4f}, precision={:.4f}, raw_dup_extra={}, canonical_dup_extra={}, primary_method_hit={:.4f}".format(
             summary["file_level_recall"],
             summary["file_level_precision"],
             summary["duplicate_extra_reports"],
+            summary["canonical_duplicate_extra_reports"],
             summary["file_level_primary_defect_method_hit_ratio"],
         )
     )

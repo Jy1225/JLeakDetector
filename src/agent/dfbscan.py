@@ -200,7 +200,7 @@ class DFBScanAgent(Agent):
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, List[Dict[str, object]]] = {}
         self.java_mlk_report_merge_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE", "source"
+            "REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE", "method_semantic"
         ).strip().lower()
         if self.java_mlk_report_merge_mode not in {
             "source",
@@ -214,16 +214,40 @@ class DFBScanAgent(Agent):
         # - source: keep original source-sink granularity (most conservative)
         # - obligation: collapse derived source family inside one obligation
         # - issue: collapse by obligation + primary method + weak/strong semantics
+        # Default to source so scan-stage dedup never suppresses true positives;
+        # semantic compression is handled in canonical output views.
         self.java_mlk_hard_dedup_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "issue"
+            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "source"
         ).strip().lower()
         if self.java_mlk_hard_dedup_mode not in {"source", "obligation", "issue"}:
-            self.java_mlk_hard_dedup_mode = "issue"
+            self.java_mlk_hard_dedup_mode = "source"
+        self.java_mlk_canonical_mode = (
+            os.environ.get("REPOAUDIT_JAVA_MLK_CANONICAL_MODE", "true")
+            .strip()
+            .lower()
+            == "true"
+        )
+        self.java_mlk_output_view = os.environ.get(
+            "REPOAUDIT_JAVA_MLK_OUTPUT_VIEW", "both"
+        ).strip().lower()
+        if self.java_mlk_output_view not in {"raw", "canonical", "both"}:
+            self.java_mlk_output_view = "both"
+        self.java_mlk_family_link_mode = os.environ.get(
+            "REPOAUDIT_JAVA_MLK_FAMILY_LINK_MODE", "aggressive"
+        ).strip().lower()
+        if self.java_mlk_family_link_mode not in {"conservative", "aggressive"}:
+            self.java_mlk_family_link_mode = "conservative"
+        self.java_mlk_source_confidence_min = os.environ.get(
+            "REPOAUDIT_JAVA_MLK_SOURCE_CONFIDENCE_MIN", "low"
+        ).strip().lower()
+        if self.java_mlk_source_confidence_min not in {"low", "medium", "high"}:
+            self.java_mlk_source_confidence_min = "low"
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_source_coverage_stats: Dict[str, object] = {}
 
         self.src_values, self.sink_values = self.extractor.extract_all()
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
+        self.java_mlk_source_obligation_family_keys: Dict[str, str] = {}
         self.java_mlk_obligation_kind_by_key: Dict[str, str] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             self.java_mlk_source_coverage_stats = (
@@ -233,14 +257,26 @@ class DFBScanAgent(Agent):
             self.java_mlk_source_obligation_keys = (
                 self.__build_java_mlk_source_obligation_index(self.src_values)
             )
+            self.java_mlk_source_obligation_family_keys = (
+                self.__build_java_mlk_source_obligation_family_index(
+                    self.src_values,
+                    self.java_mlk_source_obligation_keys,
+                )
+            )
             self.java_mlk_obligation_kind_by_key = (
                 self.__build_java_mlk_obligation_kind_index(
                     self.src_values, self.java_mlk_source_obligation_keys
                 )
             )
             obligation_count = len(set(self.java_mlk_source_obligation_keys.values()))
+            obligation_family_count = len(
+                set(self.java_mlk_source_obligation_family_keys.values())
+            )
             self.logger.print_console(
                 f"Java MLK obligations inferred: {obligation_count} from {len(self.src_values)} source(s)."
+            )
+            self.logger.print_console(
+                f"Java MLK obligation families inferred: {obligation_family_count}"
             )
             if len(self.java_mlk_source_coverage_stats) > 0:
                 self.logger.print_console(
@@ -829,7 +865,13 @@ class DFBScanAgent(Agent):
         self.logger.print_console("Start data-flow bug scanning...")
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
-                f"Java MLK report merge mode (output view): {self.java_mlk_report_merge_mode}; hard dedup: {self.java_mlk_hard_dedup_mode}"
+                "Java MLK mode:",
+                f"merge_view={self.java_mlk_report_merge_mode}",
+                f"hard_dedup={self.java_mlk_hard_dedup_mode}",
+                f"canonical={self.java_mlk_canonical_mode}",
+                f"output_view={self.java_mlk_output_view}",
+                f"family_link={self.java_mlk_family_link_mode}",
+                f"source_conf_min={self.java_mlk_source_confidence_min}",
             )
 
         # Total number of source values
@@ -1109,6 +1151,16 @@ class DFBScanAgent(Agent):
                             )
                             if function is not None:
                                 relevant_functions[function.function_id] = function
+                        if not self.__should_keep_java_mlk_source_by_confidence(
+                            src_value, buggy_path
+                        ):
+                            self.logger.print_log(
+                                "Skip Java MLK candidate due to source confidence gate:",
+                                f"source={str(src_value)}",
+                                f"min={self.java_mlk_source_confidence_min}",
+                                f"actual={self.__infer_java_mlk_source_confidence(src_value)}",
+                            )
+                            continue
                         if not self.__register_java_mlk_report_signature(
                             src_value,
                             relevant_functions,
@@ -1142,8 +1194,16 @@ class DFBScanAgent(Agent):
                 pbar.update(1)
 
         # Final summary
-        raw_report_count, merged_report_count = self.__write_detect_outputs()
+        raw_report_count, merged_report_count, canonical_report_count = (
+            self.__write_detect_outputs()
+        )
         total_bug_number = raw_report_count
+        if (
+            self.language == "Java"
+            and self.bug_type == "MLK"
+            and self.java_mlk_output_view == "canonical"
+        ):
+            total_bug_number = canonical_report_count
         self.logger.print_console(
             f"{total_bug_number} bug(s) was/were detected in total."
         )
@@ -1163,6 +1223,12 @@ class DFBScanAgent(Agent):
             self.logger.print_console(
                 f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
             )
+            self.logger.print_console(
+                f"Canonical issue view: {canonical_report_count} (mode=family)"
+            )
+            self.logger.print_console(
+                f"Canonical view has been dumped to {self.res_dir_path}/detect_info_canonical.json"
+            )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
             self.logger.print_console(log_file)
@@ -1181,7 +1247,13 @@ class DFBScanAgent(Agent):
         self.logger.print_console(f"Max number of workers: {self.max_neural_workers}")
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
-                f"Java MLK report merge mode (output view): {self.java_mlk_report_merge_mode}; hard dedup: {self.java_mlk_hard_dedup_mode}"
+                "Java MLK mode:",
+                f"merge_view={self.java_mlk_report_merge_mode}",
+                f"hard_dedup={self.java_mlk_hard_dedup_mode}",
+                f"canonical={self.java_mlk_canonical_mode}",
+                f"output_view={self.java_mlk_output_view}",
+                f"family_link={self.java_mlk_family_link_mode}",
+                f"source_conf_min={self.java_mlk_source_confidence_min}",
             )
 
         # Total number of source values
@@ -1206,8 +1278,16 @@ class DFBScanAgent(Agent):
                         pbar.update(1)
 
         # Final summary
-        raw_report_count, merged_report_count = self.__write_detect_outputs()
+        raw_report_count, merged_report_count, canonical_report_count = (
+            self.__write_detect_outputs()
+        )
         total_bug_number = raw_report_count
+        if (
+            self.language == "Java"
+            and self.bug_type == "MLK"
+            and self.java_mlk_output_view == "canonical"
+        ):
+            total_bug_number = canonical_report_count
         self.logger.print_console(
             f"{total_bug_number} bug(s) was/were detected in total."
         )
@@ -1226,6 +1306,12 @@ class DFBScanAgent(Agent):
             )
             self.logger.print_console(
                 f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
+            )
+            self.logger.print_console(
+                f"Canonical issue view: {canonical_report_count} (mode=family)"
+            )
+            self.logger.print_console(
+                f"Canonical view has been dumped to {self.res_dir_path}/detect_info_canonical.json"
             )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
@@ -1520,6 +1606,16 @@ class DFBScanAgent(Agent):
                     function = self.ts_analyzer.get_function_from_localvalue(value)
                     if function is not None:
                         relevant_functions[function.function_id] = function
+                if not self.__should_keep_java_mlk_source_by_confidence(
+                    src_value, buggy_path
+                ):
+                    self.logger.print_log(
+                        "Skip Java MLK candidate due to source confidence gate:",
+                        f"source={str(src_value)}",
+                        f"min={self.java_mlk_source_confidence_min}",
+                        f"actual={self.__infer_java_mlk_source_confidence(src_value)}",
+                    )
+                    continue
                 if not self.__register_java_mlk_report_signature(
                     src_value,
                     relevant_functions,
@@ -1715,6 +1811,12 @@ class DFBScanAgent(Agent):
             )
             src_method_name = src_function.function_name
         obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
+        obligation_family_key = self.__get_java_mlk_source_obligation_family_key(
+            src_value
+        )
+        source_origin = self.__infer_java_mlk_source_origin(src_value)
+        source_confidence = self.__infer_java_mlk_source_confidence(src_value)
+        source_symbol = self.__infer_java_mlk_source_symbol(src_value)
         has_no_sink_marker = self.__has_java_mlk_no_sink_marker(buggy_path)
         has_weak_release_marker = self.__has_java_mlk_weak_release_marker(buggy_path)
         metadata: Dict[str, object] = {
@@ -1722,10 +1824,14 @@ class DFBScanAgent(Agent):
             "release_context": normalize_release_context(release_context),
             "guarantee_level": normalize_guarantee_level(guarantee_level),
             "obligation_key": obligation_key,
+            "obligation_family_key": obligation_family_key,
             "source_line": src_value.line_number,
             "source_file": src_value.file,
             "source_method_uid": src_method_uid,
             "source_method_name": src_method_name,
+            "source_origin": source_origin,
+            "source_confidence": source_confidence,
+            "source_symbol": source_symbol,
             "has_no_sink_marker": has_no_sink_marker,
             "has_weak_release_marker": has_weak_release_marker,
             "path_length": len(buggy_path),
@@ -1735,6 +1841,25 @@ class DFBScanAgent(Agent):
             ),
         }
         return metadata
+
+    def __should_keep_java_mlk_source_by_confidence(
+        self, src_value: Value, buggy_path: List[Value]
+    ) -> bool:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return True
+        minimum_rank = self.__java_mlk_source_confidence_rank(
+            self.java_mlk_source_confidence_min
+        )
+        source_rank = self.__java_mlk_source_confidence_rank(
+            self.__infer_java_mlk_source_confidence(src_value)
+        )
+        if source_rank >= minimum_rank:
+            return True
+        # Keep weak/no-sink branches even for lower-confidence sources;
+        # they are useful for recall/debug and canonical merging.
+        return self.__has_java_mlk_no_sink_marker(
+            buggy_path
+        ) or self.__has_java_mlk_weak_release_marker(buggy_path)
 
     def __refine_java_mlk_release_semantics(
         self,
@@ -2324,6 +2449,12 @@ class DFBScanAgent(Agent):
         )
         source_count_by_file: Dict[str, int] = {file_path: 0 for file_path in java_files}
         source_lines_by_file: Dict[str, Set[int]] = {file_path: set() for file_path in java_files}
+        source_count_by_confidence: Dict[str, int] = {
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+        }
+        source_count_by_origin: Dict[str, int] = {}
 
         for src_value in src_values:
             normalized_file = src_value.file.replace("\\", "/")
@@ -2332,6 +2463,12 @@ class DFBScanAgent(Agent):
                 source_lines_by_file[normalized_file] = set()
             source_count_by_file[normalized_file] += 1
             source_lines_by_file[normalized_file].add(src_value.line_number)
+            confidence = self.__infer_java_mlk_source_confidence(src_value)
+            source_count_by_confidence[confidence] = (
+                source_count_by_confidence.get(confidence, 0) + 1
+            )
+            origin = self.__infer_java_mlk_source_origin(src_value)
+            source_count_by_origin[origin] = source_count_by_origin.get(origin, 0) + 1
 
         files_with_sources = sum(
             1 for source_count in source_count_by_file.values() if source_count > 0
@@ -2352,6 +2489,8 @@ class DFBScanAgent(Agent):
             "files_without_sources": total_files - files_with_sources,
             "coverage_ratio": coverage_ratio,
             "total_sources": len(src_values),
+            "source_count_by_confidence": source_count_by_confidence,
+            "source_count_by_origin": source_count_by_origin,
             "zero_source_files": zero_source_files,
             "source_count_by_file": source_count_by_file,
             "source_lines_by_file": {
@@ -2524,10 +2663,12 @@ class DFBScanAgent(Agent):
         result: Dict[str, str] = {}
         sources_by_function: Dict[int, List[Value]] = defaultdict(list)
         source_local_key_by_src: Dict[str, str] = {}
+        source_value_by_src_key: Dict[str, Value] = {}
         function_source_context: Dict[int, Dict[str, object]] = {}
 
         for src_value in src_values:
             src_key = str(src_value)
+            source_value_by_src_key[src_key] = src_value
             src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
             if src_function is None:
                 normalized_file = src_value.file.replace("\\", "/").lower()
@@ -2812,10 +2953,18 @@ class DFBScanAgent(Agent):
         for src_key in result:
             group_members[find_root(src_key)].append(src_key)
         for member_keys in group_members.values():
-            canonical_key = min(
-                source_local_key_by_src.get(member_key, result[member_key])
-                for member_key in member_keys
-            )
+            ranked_candidates: List[Tuple[int, str]] = []
+            for member_key in member_keys:
+                member_value = source_value_by_src_key.get(member_key)
+                confidence_rank = 2
+                if member_value is not None:
+                    confidence_rank = self.__java_mlk_source_confidence_rank(
+                        self.__infer_java_mlk_source_confidence(member_value)
+                    )
+                local_key = source_local_key_by_src.get(member_key, result[member_key])
+                ranked_candidates.append((-confidence_rank, local_key))
+            ranked_candidates.sort()
+            canonical_key = ranked_candidates[0][1]
             for member_key in member_keys:
                 result[member_key] = canonical_key
 
@@ -2826,6 +2975,114 @@ class DFBScanAgent(Agent):
             )
 
         return result
+
+    def __build_java_mlk_source_obligation_family_index(
+        self,
+        src_values: List[Value],
+        source_obligation_keys: Dict[str, str],
+    ) -> Dict[str, str]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}
+
+        # Start from source-local family projection.
+        source_family_keys: Dict[str, str] = {}
+        families_by_file: Dict[str, List[Tuple[str, str, str]]] = defaultdict(list)
+        for src_value in src_values:
+            src_key = str(src_value)
+            obligation_key = source_obligation_keys.get(src_key, "")
+            if obligation_key == "":
+                obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
+            family_key = self.__derive_java_mlk_obligation_family_key(
+                src_value, obligation_key
+            )
+            source_family_keys[src_key] = family_key
+            source_file = src_value.file.replace("\\", "/").lower()
+            source_method_uid = ""
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            if src_function is not None:
+                source_method_uid = (
+                    src_function.function_uid
+                    if src_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(src_function)
+                )
+            families_by_file[source_file].append((src_key, family_key, source_method_uid))
+
+        if self.java_mlk_family_link_mode != "aggressive":
+            return source_family_keys
+
+        # Aggressive linking mode: union family keys when methods have caller-callee
+        # relation and symbols are compatible. This mainly targets wrapper overload
+        # duplication (e.g., readFile(String)->readFile(Reader)).
+        parent: Dict[str, str] = {}
+        for src_key, family_key in source_family_keys.items():
+            parent[src_key] = src_key
+
+        def find_root(src_key: str) -> str:
+            current = src_key
+            while parent[current] != current:
+                parent[current] = parent[parent[current]]
+                current = parent[current]
+            return current
+
+        def union(src_a: str, src_b: str) -> None:
+            root_a = find_root(src_a)
+            root_b = find_root(src_b)
+            if root_a == root_b:
+                return
+            key_a = source_family_keys.get(root_a, "")
+            key_b = source_family_keys.get(root_b, "")
+            if key_a <= key_b:
+                parent[root_b] = root_a
+            else:
+                parent[root_a] = root_b
+
+        function_id_to_sources: Dict[int, List[Value]] = defaultdict(list)
+        for src_value in src_values:
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            if src_function is None:
+                continue
+            function_id_to_sources[src_function.function_id].append(src_value)
+
+        for caller_function in self.ts_analyzer.function_env.values():
+            caller_sources = function_id_to_sources.get(caller_function.function_id, [])
+            if len(caller_sources) == 0:
+                continue
+            callee_functions = self.ts_analyzer.get_all_callee_functions(caller_function)
+            if len(callee_functions) == 0:
+                continue
+            caller_src_keys = {str(src_value) for src_value in caller_sources}
+            caller_symbol_set = {
+                self.__infer_java_mlk_source_symbol(src_value) for src_value in caller_sources
+            }
+            for callee_function in callee_functions:
+                callee_sources = function_id_to_sources.get(callee_function.function_id, [])
+                if len(callee_sources) == 0:
+                    continue
+                callee_symbol_set = {
+                    self.__infer_java_mlk_source_symbol(src_value)
+                    for src_value in callee_sources
+                }
+                if len(caller_symbol_set & callee_symbol_set) == 0:
+                    continue
+                for caller_src_key in caller_src_keys:
+                    if caller_src_key not in parent:
+                        continue
+                    for callee_src in callee_sources:
+                        callee_src_key = str(callee_src)
+                        if callee_src_key not in parent:
+                            continue
+                        union(caller_src_key, callee_src_key)
+
+        grouped_members: Dict[str, List[str]] = defaultdict(list)
+        for src_key in source_family_keys.keys():
+            grouped_members[find_root(src_key)].append(src_key)
+
+        for member_keys in grouped_members.values():
+            canonical_family = min(source_family_keys.get(member_key, "") for member_key in member_keys)
+            for member_key in member_keys:
+                source_family_keys[member_key] = canonical_family
+
+        return source_family_keys
 
     def __build_java_mlk_obligation_kind_index(
         self,
@@ -3260,6 +3517,18 @@ class DFBScanAgent(Agent):
         normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
         return f"{normalized_file}:{function_key}:src:{normalized_src_name}:{src_value.line_number}"
 
+    def __get_java_mlk_source_obligation_family_key(self, src_value: Value) -> str:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return self.__derive_java_mlk_obligation_family_key(
+                src_value, self.__get_java_mlk_source_obligation_key(src_value)
+            )
+        src_key = str(src_value)
+        family_key = self.java_mlk_source_obligation_family_keys.get(src_key, "")
+        if family_key != "":
+            return family_key
+        obligation_key = self.__get_java_mlk_source_obligation_key(src_value)
+        return self.__derive_java_mlk_obligation_family_key(src_value, obligation_key)
+
     def __build_detect_info_payload(
         self, bug_reports: Dict[int, "BugReport"]
     ) -> Dict[int, dict]:
@@ -3334,6 +3603,9 @@ class DFBScanAgent(Agent):
                     "weak_release_marker_count": 0,
                     "explanation_hit_count": 0,
                     "chain_support_count": 0,
+                    "source_high_confidence_count": 0,
+                    "source_medium_confidence_count": 0,
+                    "source_low_confidence_count": 0,
                 }
 
             method_entry = method_buckets[method_uid]
@@ -3355,6 +3627,21 @@ class DFBScanAgent(Agent):
             if bool(metadata.get("has_weak_release_marker", False)):
                 method_entry["weak_release_marker_count"] = int(
                     method_entry["weak_release_marker_count"]
+                ) + 1
+            confidence = self.__normalize_java_mlk_source_confidence(
+                str(metadata.get("source_confidence", "medium"))
+            )
+            if confidence == "high":
+                method_entry["source_high_confidence_count"] = int(
+                    method_entry["source_high_confidence_count"]
+                ) + 1
+            elif confidence == "medium":
+                method_entry["source_medium_confidence_count"] = int(
+                    method_entry["source_medium_confidence_count"]
+                ) + 1
+            else:
+                method_entry["source_low_confidence_count"] = int(
+                    method_entry["source_low_confidence_count"]
                 ) + 1
             explanation_lower = bug_report.explanation.lower()
             if method_name != "UNKNOWN_METHOD" and method_name.lower() in explanation_lower:
@@ -3387,6 +3674,9 @@ class DFBScanAgent(Agent):
                         "weak_release_marker_count": 0,
                         "explanation_hit_count": 0,
                         "chain_support_count": 0,
+                        "source_high_confidence_count": 0,
+                        "source_medium_confidence_count": 0,
+                        "source_low_confidence_count": 0,
                     }
                 if relevant_method_uid == method_uid:
                     continue
@@ -3426,6 +3716,15 @@ class DFBScanAgent(Agent):
                         "no_sink_marker_count": int(method_entry["no_sink_marker_count"]),
                         "weak_release_marker_count": int(
                             method_entry["weak_release_marker_count"]
+                        ),
+                        "source_high_confidence_count": int(
+                            method_entry["source_high_confidence_count"]
+                        ),
+                        "source_medium_confidence_count": int(
+                            method_entry["source_medium_confidence_count"]
+                        ),
+                        "source_low_confidence_count": int(
+                            method_entry["source_low_confidence_count"]
                         ),
                         "explanation_hit_count": int(method_entry["explanation_hit_count"]),
                         "chain_support_count": int(method_entry["chain_support_count"]),
@@ -3493,19 +3792,38 @@ class DFBScanAgent(Agent):
         weak_release_marker_count = float(
             int(method_entry.get("weak_release_marker_count", 0))
         )
+        source_high_confidence_count = float(
+            int(method_entry.get("source_high_confidence_count", 0))
+        )
+        source_medium_confidence_count = float(
+            int(method_entry.get("source_medium_confidence_count", 0))
+        )
+        source_low_confidence_count = float(
+            int(method_entry.get("source_low_confidence_count", 0))
+        )
         explanation_hit_count = float(int(method_entry.get("explanation_hit_count", 0)))
         chain_support_count = float(int(method_entry.get("chain_support_count", 0)))
         helper_like = bool(method_entry.get("helper_like", False))
         method_name = str(method_entry.get("method_name", ""))
         source_line_count = float(len(cast(Set[int], method_entry.get("source_lines", set()))))
 
-        score = 4.0 * report_count
-        score += 7.0 * weak_evidence_count
+        local_evidence_count = (
+            weak_evidence_count + no_sink_marker_count + weak_release_marker_count
+        )
+        score = 3.0 * report_count
+        score += 7.5 * weak_evidence_count
         score += 10.0 * no_sink_marker_count
         score += 8.0 * weak_release_marker_count
+        score += 4.0 * source_high_confidence_count
+        score += 2.0 * source_medium_confidence_count
+        score -= 1.0 * source_low_confidence_count
         score += 2.5 * explanation_hit_count
-        score += 1.5 * chain_support_count
+        score += 1.0 * chain_support_count
         score += 1.0 * source_line_count
+        if local_evidence_count == 0 and chain_support_count > 0:
+            # Supporting-only methods (no direct source evidence) should rarely
+            # become primary defect method.
+            score -= 6.0
         if helper_like:
             score -= 8.0
         if method_name == "UNKNOWN_METHOD":
@@ -3524,7 +3842,7 @@ class DFBScanAgent(Agent):
             "read",
         }
         if method_name.lower() in generic_method_names:
-            score -= 1.5
+            score -= 3.0
         return score
 
     def __build_java_mlk_merged_detect_payload(
@@ -3612,12 +3930,31 @@ class DFBScanAgent(Agent):
         issue_payload: Dict[int, dict] = {}
         for issue_idx, (signature, member_ids) in enumerate(groups.items()):
             representative_id = min(member_ids)
+            best_rank = -1
+            for candidate_id in member_ids:
+                candidate_report = bug_reports[candidate_id]
+                candidate_metadata = (
+                    candidate_report.metadata
+                    if hasattr(candidate_report, "metadata")
+                    else {}
+                )
+                candidate_rank = self.__java_mlk_source_confidence_rank(
+                    str(candidate_metadata.get("source_confidence", "medium"))
+                )
+                if candidate_rank > best_rank:
+                    best_rank = candidate_rank
+                    representative_id = candidate_id
+                elif candidate_rank == best_rank and candidate_id < representative_id:
+                    representative_id = candidate_id
             representative_bug_report = bug_reports[representative_id]
             issue_entry = representative_bug_report.to_dict()
             issue_entry["issue_member_ids"] = member_ids
             issue_entry["issue_member_count"] = len(member_ids)
             issue_entry["issue_mode"] = "issue"
             issue_entry["issue_signature"] = [str(part) for part in signature]
+            issue_entry["issue_family_key"] = (
+                str(signature[1]) if len(signature) > 1 else ""
+            )
             issue_payload[issue_idx] = issue_entry
 
         raw_count = len(bug_reports)
@@ -3635,17 +3972,329 @@ class DFBScanAgent(Agent):
         }
         return issue_payload, stats_payload
 
-    def __write_detect_outputs(self) -> Tuple[int, int]:
+    def __build_java_mlk_method_buckets_for_member_reports(
+        self,
+        member_ids: List[int],
+        bug_reports: Dict[int, "BugReport"],
+    ) -> Dict[str, Dict[str, object]]:
+        method_buckets: Dict[str, Dict[str, object]] = {}
+        for member_id in member_ids:
+            bug_report = bug_reports[member_id]
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+            source_method_name = str(metadata.get("source_method_name", "")).strip()
+            source_line = int(metadata.get("source_line", -1))
+            if source_method_uid == "":
+                source_file_norm = bug_report.buggy_value.file.replace("\\", "/").lower()
+                source_method_uid = (
+                    f"{source_file_norm}:UNKNOWN_METHOD:{source_line}"
+                )
+            if source_method_name == "":
+                source_method_name = "UNKNOWN_METHOD"
+
+            method_start_line = -1
+            method_end_line = -1
+            helper_like = False
+            method_uid_to_name: Dict[str, str] = {}
+            for function in bug_report.relevant_functions.values():
+                function_uid = (
+                    function.function_uid
+                    if function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(function)
+                )
+                method_uid_to_name[function_uid] = function.function_name
+                if function_uid == source_method_uid:
+                    method_start_line = function.start_line_number
+                    method_end_line = function.end_line_number
+                    helper_like = self.__is_java_mlk_helper_function_for_dedup(function)
+
+            if source_method_uid not in method_buckets:
+                method_buckets[source_method_uid] = {
+                    "method_name": source_method_name,
+                    "method_uid": source_method_uid,
+                    "method_start_line": method_start_line,
+                    "method_end_line": method_end_line,
+                    "source_lines": set(),
+                    "report_ids": [],
+                    "report_count": 0,
+                    "helper_like": helper_like,
+                    "weak_evidence_count": 0,
+                    "no_sink_marker_count": 0,
+                    "weak_release_marker_count": 0,
+                    "explanation_hit_count": 0,
+                    "chain_support_count": 0,
+                    "source_high_confidence_count": 0,
+                    "source_medium_confidence_count": 0,
+                    "source_low_confidence_count": 0,
+                }
+
+            source_entry = method_buckets[source_method_uid]
+            cast(Set[int], source_entry["source_lines"]).add(source_line)
+            cast(List[int], source_entry["report_ids"]).append(member_id)
+            source_entry["report_count"] = int(source_entry["report_count"]) + 1
+
+            guarantee_level = normalize_guarantee_level(
+                str(metadata.get("guarantee_level", GUARANTEE_NONE))
+            )
+            if not is_all_exit_guaranteed(guarantee_level):
+                source_entry["weak_evidence_count"] = int(
+                    source_entry["weak_evidence_count"]
+                ) + 1
+            if bool(metadata.get("has_no_sink_marker", False)):
+                source_entry["no_sink_marker_count"] = int(
+                    source_entry["no_sink_marker_count"]
+                ) + 1
+            if bool(metadata.get("has_weak_release_marker", False)):
+                source_entry["weak_release_marker_count"] = int(
+                    source_entry["weak_release_marker_count"]
+                ) + 1
+
+            confidence = self.__normalize_java_mlk_source_confidence(
+                str(metadata.get("source_confidence", "medium"))
+            )
+            if confidence == "high":
+                source_entry["source_high_confidence_count"] = int(
+                    source_entry["source_high_confidence_count"]
+                ) + 1
+            elif confidence == "medium":
+                source_entry["source_medium_confidence_count"] = int(
+                    source_entry["source_medium_confidence_count"]
+                ) + 1
+            else:
+                source_entry["source_low_confidence_count"] = int(
+                    source_entry["source_low_confidence_count"]
+                ) + 1
+
+            explanation_lower = bug_report.explanation.lower()
+            if source_method_name != "UNKNOWN_METHOD" and source_method_name.lower() in explanation_lower:
+                source_entry["explanation_hit_count"] = int(
+                    source_entry["explanation_hit_count"]
+                ) + 1
+
+            relevant_method_uids = metadata.get("relevant_method_uids", [])
+            if isinstance(relevant_method_uids, list):
+                for relevant_uid_any in relevant_method_uids:
+                    relevant_uid = str(relevant_uid_any)
+                    if relevant_uid == "" or relevant_uid == source_method_uid:
+                        continue
+                    if relevant_uid not in method_buckets:
+                        relevant_name = method_uid_to_name.get(relevant_uid, "UNKNOWN_METHOD")
+                        method_buckets[relevant_uid] = {
+                            "method_name": relevant_name,
+                            "method_uid": relevant_uid,
+                            "method_start_line": -1,
+                            "method_end_line": -1,
+                            "source_lines": set(),
+                            "report_ids": [],
+                            "report_count": 0,
+                            "helper_like": False,
+                            "weak_evidence_count": 0,
+                            "no_sink_marker_count": 0,
+                            "weak_release_marker_count": 0,
+                            "explanation_hit_count": 0,
+                            "chain_support_count": 0,
+                            "source_high_confidence_count": 0,
+                            "source_medium_confidence_count": 0,
+                            "source_low_confidence_count": 0,
+                        }
+                    relevant_entry = method_buckets[relevant_uid]
+                    relevant_entry["chain_support_count"] = int(
+                        relevant_entry["chain_support_count"]
+                    ) + 1
+                    relevant_name = str(relevant_entry["method_name"])
+                    if (
+                        relevant_name != "UNKNOWN_METHOD"
+                        and relevant_name.lower() in explanation_lower
+                    ):
+                        relevant_entry["explanation_hit_count"] = int(
+                            relevant_entry["explanation_hit_count"]
+                        ) + 1
+
+        return method_buckets
+
+    def __build_java_mlk_canonical_detect_payload(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}, {
+                "mode": "canonical",
+                "enabled": False,
+                "raw_report_count": len(bug_reports),
+                "canonical_issue_count": len(bug_reports),
+                "reduced_report_count": 0,
+                "reduction_ratio": 0.0,
+            }
+
+        groups: Dict[Tuple[str, str, str, str], List[int]] = defaultdict(list)
+        for bug_report_id in sorted(bug_reports.keys()):
+            bug_report = bug_reports[bug_report_id]
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            source_file = str(metadata.get("source_file", bug_report.buggy_value.file)).replace(
+                "\\", "/"
+            ).lower()
+            obligation_family_key = str(
+                metadata.get(
+                    "obligation_family_key",
+                    self.__get_java_mlk_source_obligation_family_key(
+                        bug_report.buggy_value
+                    ),
+                )
+            )
+            resource_kind = normalize_resource_kind(
+                str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
+            )
+            guarantee_level = normalize_guarantee_level(
+                str(metadata.get("guarantee_level", GUARANTEE_NONE))
+            )
+            guarantee_class = (
+                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+            )
+            groups[(source_file, obligation_family_key, resource_kind, guarantee_class)].append(
+                bug_report_id
+            )
+
+        canonical_payload: Dict[int, dict] = {}
+        for issue_idx, (signature, member_ids_unsorted) in enumerate(groups.items()):
+            member_ids = sorted(member_ids_unsorted)
+            method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
+                member_ids, bug_reports
+            )
+
+            method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+            for method_uid, method_entry in method_buckets.items():
+                method_score = self.__score_java_mlk_method_bucket(method_entry)
+                method_candidates.append((method_uid, method_score, method_entry))
+            method_candidates.sort(
+                key=lambda item: (
+                    -item[1],
+                    int(item[2].get("method_start_line", -1)),
+                    str(item[2].get("method_name", "")),
+                )
+            )
+
+            primary_method_uid = ""
+            primary_method_name = "UNKNOWN_METHOD"
+            primary_method_confidence = 0.0
+            if len(method_candidates) > 0:
+                primary_method_uid = str(method_candidates[0][0])
+                primary_method_name = str(method_candidates[0][2].get("method_name", ""))
+                if len(method_candidates) == 1:
+                    primary_method_confidence = 1.0
+                else:
+                    top_score = method_candidates[0][1]
+                    second_score = method_candidates[1][1]
+                    normalized_gap = (top_score - second_score) / max(1.0, abs(top_score))
+                    primary_method_confidence = max(0.0, min(1.0, 0.5 + 0.5 * normalized_gap))
+
+            representative_id = member_ids[0]
+            best_rep_score = -10**9
+            for candidate_id in member_ids:
+                candidate_report = bug_reports[candidate_id]
+                candidate_metadata = (
+                    candidate_report.metadata
+                    if hasattr(candidate_report, "metadata")
+                    else {}
+                )
+                confidence_rank = self.__java_mlk_source_confidence_rank(
+                    str(candidate_metadata.get("source_confidence", "medium"))
+                )
+                candidate_method_uid = str(
+                    candidate_metadata.get("source_method_uid", "")
+                ).strip()
+                marker_bonus = int(
+                    bool(candidate_metadata.get("has_no_sink_marker", False))
+                ) + int(bool(candidate_metadata.get("has_weak_release_marker", False)))
+                method_match_bonus = 1 if candidate_method_uid == primary_method_uid else 0
+                candidate_score = confidence_rank * 100 + marker_bonus * 10 + method_match_bonus
+                if candidate_score > best_rep_score:
+                    best_rep_score = candidate_score
+                    representative_id = candidate_id
+                elif candidate_score == best_rep_score and candidate_id < representative_id:
+                    representative_id = candidate_id
+
+            representative_bug_report = bug_reports[representative_id]
+            canonical_entry = representative_bug_report.to_dict()
+            canonical_entry["canonical_mode"] = "family"
+            canonical_entry["canonical_signature"] = [str(part) for part in signature]
+            canonical_entry["canonical_member_ids"] = member_ids
+            canonical_entry["canonical_member_count"] = len(member_ids)
+            canonical_entry["canonical_primary_defect_method"] = primary_method_name
+            canonical_entry["canonical_primary_defect_method_uid"] = primary_method_uid
+            canonical_entry["canonical_primary_confidence"] = primary_method_confidence
+            canonical_entry["canonical_methods"] = sorted(
+                {
+                    str(method_entry.get("method_name", ""))
+                    for _, _, method_entry in method_candidates
+                    if str(method_entry.get("method_name", "")) != ""
+                }
+            )
+            canonical_entry["canonical_method_uids"] = sorted(
+                {
+                    str(method_entry.get("method_uid", ""))
+                    for _, _, method_entry in method_candidates
+                    if str(method_entry.get("method_uid", "")) != ""
+                }
+            )
+            canonical_entry["canonical_source_lines"] = sorted(
+                {
+                    int(cast(Dict[str, object], bug_reports[member_id].metadata).get("source_line", -1))
+                    for member_id in member_ids
+                }
+            )
+            canonical_entry["canonical_source_confidence_histogram"] = {
+                "high": 0,
+                "medium": 0,
+                "low": 0,
+            }
+            canonical_entry["canonical_source_origins"] = sorted(
+                {
+                    str(
+                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
+                            "source_origin", "unknown"
+                        )
+                    )
+                    for member_id in member_ids
+                }
+            )
+            for member_id in member_ids:
+                member_meta = cast(Dict[str, object], bug_reports[member_id].metadata)
+                member_conf = self.__normalize_java_mlk_source_confidence(
+                    str(member_meta.get("source_confidence", "medium"))
+                )
+                canonical_entry["canonical_source_confidence_histogram"][member_conf] += 1
+
+            canonical_payload[issue_idx] = canonical_entry
+
+        raw_count = len(bug_reports)
+        canonical_count = len(canonical_payload)
+        stats_payload: Dict[str, object] = {
+            "mode": "canonical",
+            "enabled": self.java_mlk_canonical_mode,
+            "raw_report_count": raw_count,
+            "canonical_issue_count": canonical_count,
+            "reduced_report_count": raw_count - canonical_count,
+            "reduction_ratio": (
+                float(raw_count - canonical_count) / float(raw_count)
+                if raw_count > 0
+                else 0.0
+            ),
+        }
+        return canonical_payload, stats_payload
+
+    def __write_detect_outputs(self) -> Tuple[int, int, int]:
         bug_reports = self.state.bug_reports
         detect_payload = self.__build_detect_info_payload(bug_reports)
         detect_by_file_payload = self.__build_detect_info_by_file_payload(bug_reports)
         raw_count = len(detect_payload)
         merged_count = raw_count
+        canonical_count = raw_count
 
         merged_payload: Dict[int, dict] = {}
         merged_stats: Dict[str, object] = {}
         issue_payload: Dict[int, dict] = {}
         issue_stats: Dict[str, object] = {}
+        canonical_payload: Dict[int, dict] = {}
+        canonical_stats: Dict[str, object] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
                 bug_reports
@@ -3654,6 +4303,21 @@ class DFBScanAgent(Agent):
             issue_payload, issue_stats = self.__build_java_mlk_issue_detect_payload(
                 bug_reports
             )
+            if self.java_mlk_canonical_mode:
+                canonical_payload, canonical_stats = (
+                    self.__build_java_mlk_canonical_detect_payload(bug_reports)
+                )
+            else:
+                canonical_payload = dict(detect_payload)
+                canonical_stats = {
+                    "mode": "canonical",
+                    "enabled": False,
+                    "raw_report_count": raw_count,
+                    "canonical_issue_count": raw_count,
+                    "reduced_report_count": 0,
+                    "reduction_ratio": 0.0,
+                }
+            canonical_count = len(canonical_payload)
 
         with self.lock:
             with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
@@ -3680,8 +4344,16 @@ class DFBScanAgent(Agent):
                     self.res_dir_path + "/detect_info_issue_stats.json", "w"
                 ) as issue_stats_file:
                     json.dump(issue_stats, issue_stats_file, indent=4)
+                with open(
+                    self.res_dir_path + "/detect_info_canonical.json", "w"
+                ) as canonical_info_file:
+                    json.dump(canonical_payload, canonical_info_file, indent=4)
+                with open(
+                    self.res_dir_path + "/detect_info_canonical_stats.json", "w"
+                ) as canonical_stats_file:
+                    json.dump(canonical_stats, canonical_stats_file, indent=4)
 
-        return raw_count, merged_count
+        return raw_count, merged_count, canonical_count
 
     def __is_java_mlk_helper_function_for_dedup(self, function: Function) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":
@@ -3723,6 +4395,91 @@ class DFBScanAgent(Agent):
         normalized = re.sub(r"\s+", "", normalized)
         return normalized
 
+    def __normalize_java_mlk_source_confidence(self, confidence: str) -> str:
+        normalized = confidence.strip().lower()
+        if normalized in {"high", "medium", "low"}:
+            return normalized
+        return "medium"
+
+    def __java_mlk_source_confidence_rank(self, confidence: str) -> int:
+        normalized = self.__normalize_java_mlk_source_confidence(confidence)
+        if normalized == "high":
+            return 3
+        if normalized == "medium":
+            return 2
+        return 1
+
+    def __infer_java_mlk_source_origin(self, src_value: Value) -> str:
+        origin = getattr(src_value, "java_mlk_source_origin", "")
+        if isinstance(origin, str) and origin.strip() != "":
+            return origin.strip().lower()
+        normalized_expr = self.__normalize_java_mlk_source_name(src_value.name)
+        if normalized_expr.startswith("new"):
+            return "new"
+        if "(" in normalized_expr and ")" in normalized_expr:
+            return "factory"
+        return "unknown"
+
+    def __infer_java_mlk_source_confidence(self, src_value: Value) -> str:
+        confidence = getattr(src_value, "java_mlk_source_confidence", "")
+        if isinstance(confidence, str) and confidence.strip() != "":
+            return self.__normalize_java_mlk_source_confidence(confidence)
+
+        origin = self.__infer_java_mlk_source_origin(src_value)
+        if origin in {"new", "twr_decl", "acquire"}:
+            return "high"
+        if origin in {"line_pattern", "unknown"}:
+            return "low"
+        return "medium"
+
+    def __infer_java_mlk_source_symbol(self, src_value: Value) -> str:
+        normalized_expr = self.__normalize_java_mlk_source_name(src_value.name)
+        creation_match = re.search(
+            r"\bnew([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+            normalized_expr,
+            re.IGNORECASE,
+        )
+        if creation_match is not None:
+            return creation_match.group(1).lower()
+        call_match = re.search(
+            r"\.([A-Za-z_][A-Za-z0-9_]*)\s*\(",
+            normalized_expr,
+            re.IGNORECASE,
+        )
+        if call_match is not None:
+            return call_match.group(1).lower()
+        token_match = re.search(r"([A-Za-z_][A-Za-z0-9_]*)", normalized_expr)
+        if token_match is not None:
+            return token_match.group(1).lower()
+        return "unknown"
+
+    def __derive_java_mlk_obligation_family_key(
+        self, src_value: Value, obligation_key: str
+    ) -> str:
+        normalized_file = src_value.file.replace("\\", "/").lower()
+        source_symbol = self.__infer_java_mlk_source_symbol(src_value)
+        source_origin = self.__infer_java_mlk_source_origin(src_value)
+        source_confidence = self.__infer_java_mlk_source_confidence(src_value)
+
+        # Typical key: <file>:<function_key>:root:<var>:<line> or ...:src:<expr>:<line>
+        match = re.search(r":(root|src):([^:]+):(-?\d+)$", obligation_key)
+        if match is not None:
+            anchor_kind = match.group(1)
+            anchor_token = match.group(2).lower()
+            if anchor_kind == "src":
+                anchor_token = source_symbol
+            if self.java_mlk_family_link_mode == "aggressive":
+                # In aggressive mode, drop method granularity and keep file-level
+                # semantic anchors so wrapper/callee chain variants can collapse.
+                return (
+                    f"{normalized_file}:family:{anchor_kind}:{anchor_token}:{source_symbol}:{source_origin}"
+                )
+            prefix = obligation_key[: match.start()]
+            return f"{prefix}:family:{anchor_kind}:{anchor_token}:{source_symbol}:{source_confidence}"
+
+        # Fallback for malformed keys.
+        return f"{normalized_file}:family:src:{source_symbol}:{source_origin}:{source_confidence}"
+
     def __build_java_mlk_report_signature(
         self,
         src_value: Value,
@@ -3743,6 +4500,9 @@ class DFBScanAgent(Agent):
         normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
         src_signature = f"{normalized_src_file}:{normalized_src_name}"
         obligation_signature = self.__get_java_mlk_source_obligation_key(src_value)
+        obligation_family_signature = self.__get_java_mlk_source_obligation_family_key(
+            src_value
+        )
 
         source_anchor_key = ""
         non_helper_keys: List[str] = []
@@ -3793,7 +4553,7 @@ class DFBScanAgent(Agent):
             )
             return (
                 normalized_src_file,
-                obligation_signature,
+                obligation_family_signature,
                 normalize_resource_kind(resource_kind),
                 guarantee_class,
             )
