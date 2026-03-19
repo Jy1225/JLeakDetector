@@ -86,7 +86,7 @@ run_one_benchmark() {
   local benchmark_name="$3"
 
   echo "==> [${label}] scanning: ${benchmark_dir}"
-  ./run_repoaudit.sh "${benchmark_dir}" MLK
+  bash ./run_repoaudit.sh "${benchmark_dir}" MLK
   local latest
   latest="$(latest_run_dir "${benchmark_name}")"
   if [[ -z "${latest}" ]]; then
