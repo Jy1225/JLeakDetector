@@ -1749,7 +1749,7 @@ class DFBScanAgent(Agent):
 
             if pv_output.is_reachable:
                 _reported, _issue_signature = _try_emit_reachable_candidate(
-                    buggy_path=buggy_path,
+                    candidate_path=buggy_path,
                     value_to_function=values_to_functions,
                     explanation=pv_output.explanation_str,
                     resource_kind=path_resource_kind,
