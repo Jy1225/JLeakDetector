@@ -1,0 +1,865 @@
+{
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+        "file_name": "jleaks-bug-1010.java",
+        "report_count": 1,
+        "report_ids": [
+            13
+        ],
+        "method_count": 1,
+        "primary_defect_method": "writeTestFile",
+        "primary_defect_method_uid": "PersistUtil.writeTestFile(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "writeTestFile",
+                "method_uid": "PersistUtil.writeTestFile(String)",
+                "method_start_line": 41,
+                "method_end_line": 47,
+                "source_lines": [
+                    43
+                ],
+                "report_ids": [
+                    13
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "writeTestFile"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+        "file_name": "jleaks-bug-1022.java",
+        "report_count": 1,
+        "report_ids": [
+            7
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadProperties",
+        "primary_defect_method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadProperties",
+                "method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+                "method_start_line": 68,
+                "method_end_line": 91,
+                "source_lines": [
+                    72
+                ],
+                "report_ids": [
+                    7
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadProperties"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java",
+        "file_name": "jleaks-bug-1061.java",
+        "report_count": 1,
+        "report_ids": [
+            20
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getCalleeTarget",
+        "primary_defect_method_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getCalleeTarget",
+                "method_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+                "method_start_line": 51,
+                "method_end_line": 96,
+                "source_lines": [
+                    77
+                ],
+                "report_ids": [
+                    20
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 24.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getCalleeTarget"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+        "file_name": "jleaks-bug-1068.java",
+        "report_count": 1,
+        "report_ids": [
+            0
+        ],
+        "method_count": 1,
+        "primary_defect_method": "readBytes",
+        "primary_defect_method_uid": "org.web3j.utils.Files.readBytes(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "readBytes",
+                "method_uid": "org.web3j.utils.Files.readBytes(File)",
+                "method_start_line": 14,
+                "method_end_line": 20,
+                "source_lines": [
+                    16
+                ],
+                "report_ids": [
+                    0
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "readBytes"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+        "file_name": "jleaks-bug-1120.java",
+        "report_count": 1,
+        "report_ids": [
+            17
+        ],
+        "method_count": 1,
+        "primary_defect_method": "save",
+        "primary_defect_method_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "save",
+                "method_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+                "method_start_line": 91,
+                "method_end_line": 105,
+                "source_lines": [
+                    93
+                ],
+                "report_ids": [
+                    17
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "save"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+        "file_name": "jleaks-bug-1188.java",
+        "report_count": 2,
+        "report_ids": [
+            3,
+            15
+        ],
+        "method_count": 1,
+        "primary_defect_method": "postBody",
+        "primary_defect_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "postBody",
+                "method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+                "method_start_line": 68,
+                "method_end_line": 157,
+                "source_lines": [
+                    105,
+                    125
+                ],
+                "report_ids": [
+                    3,
+                    15
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 61.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "postBody"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
+        "file_name": "jleaks-bug-1192.java",
+        "report_count": 1,
+        "report_ids": [
+            4
+        ],
+        "method_count": 1,
+        "primary_defect_method": "doPost",
+        "primary_defect_method_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "doPost",
+                "method_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 37,
+                "method_end_line": 63,
+                "source_lines": [
+                    49
+                ],
+                "report_ids": [
+                    4
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "doPost"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+        "file_name": "jleaks-bug-1336.java",
+        "report_count": 1,
+        "report_ids": [
+            11
+        ],
+        "method_count": 1,
+        "primary_defect_method": "read",
+        "primary_defect_method_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "read",
+                "method_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+                "method_start_line": 113,
+                "method_end_line": 134,
+                "source_lines": [
+                    115
+                ],
+                "report_ids": [
+                    11
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "read"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+        "file_name": "jleaks-bug-1497.java",
+        "report_count": 1,
+        "report_ids": [
+            8
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadNode",
+        "primary_defect_method_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadNode",
+                "method_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+                "method_start_line": 40,
+                "method_end_line": 53,
+                "source_lines": [
+                    42
+                ],
+                "report_ids": [
+                    8
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadNode"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
+        "file_name": "jleaks-bug-1532.java",
+        "report_count": 1,
+        "report_ids": [
+            12
+        ],
+        "method_count": 1,
+        "primary_defect_method": "parseValue",
+        "primary_defect_method_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "parseValue",
+                "method_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+                "method_start_line": 46,
+                "method_end_line": 85,
+                "source_lines": [
+                    56
+                ],
+                "report_ids": [
+                    12
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "parseValue"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
+        "file_name": "jleaks-bug-374.java",
+        "report_count": 1,
+        "report_ids": [
+            10
+        ],
+        "method_count": 1,
+        "primary_defect_method": "write",
+        "primary_defect_method_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "write",
+                "method_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+                "method_start_line": 27,
+                "method_end_line": 52,
+                "source_lines": [
+                    31
+                ],
+                "report_ids": [
+                    10
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "write"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+        "file_name": "jleaks-bug-439.java",
+        "report_count": 1,
+        "report_ids": [
+            5
+        ],
+        "method_count": 1,
+        "primary_defect_method": "createConfigFor",
+        "primary_defect_method_uid": "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "createConfigFor",
+                "method_uid": "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+                "method_start_line": 40,
+                "method_end_line": 58,
+                "source_lines": [
+                    47
+                ],
+                "report_ids": [
+                    5
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "createConfigFor"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+        "file_name": "jleaks-bug-449.java",
+        "report_count": 1,
+        "report_ids": [
+            1
+        ],
+        "method_count": 1,
+        "primary_defect_method": "initInternal",
+        "primary_defect_method_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "initInternal",
+                "method_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+                "method_start_line": 64,
+                "method_end_line": 100,
+                "source_lines": [
+                    78
+                ],
+                "report_ids": [
+                    1
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "initInternal"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java",
+        "file_name": "jleaks-bug-640.java",
+        "report_count": 1,
+        "report_ids": [
+            2
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadProps",
+        "primary_defect_method_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadProps",
+                "method_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
+                "method_start_line": 8,
+                "method_end_line": 20,
+                "source_lines": [
+                    9
+                ],
+                "report_ids": [
+                    2
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadProps"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+        "file_name": "jleaks-bug-655.java",
+        "report_count": 1,
+        "report_ids": [
+            6
+        ],
+        "method_count": 1,
+        "primary_defect_method": "request",
+        "primary_defect_method_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "request",
+                "method_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+                "method_start_line": 60,
+                "method_end_line": 105,
+                "source_lines": [
+                    76
+                ],
+                "report_ids": [
+                    6
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "request"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+        "file_name": "jleaks-bug-671.java",
+        "report_count": 1,
+        "report_ids": [
+            16
+        ],
+        "method_count": 1,
+        "primary_defect_method": "executeUpgradeInfos",
+        "primary_defect_method_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "executeUpgradeInfos",
+                "method_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+                "method_start_line": 83,
+                "method_end_line": 119,
+                "source_lines": [
+                    94
+                ],
+                "report_ids": [
+                    16
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "executeUpgradeInfos"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+        "file_name": "jleaks-bug-696.java",
+        "report_count": 1,
+        "report_ids": [
+            14
+        ],
+        "method_count": 1,
+        "primary_defect_method": "writeHTML",
+        "primary_defect_method_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "writeHTML",
+                "method_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+                "method_start_line": 24,
+                "method_end_line": 53,
+                "source_lines": [
+                    25
+                ],
+                "report_ids": [
+                    14
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "writeHTML"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java",
+        "file_name": "jleaks-bug-871.java",
+        "report_count": 1,
+        "report_ids": [
+            18
+        ],
+        "method_count": 1,
+        "primary_defect_method": "render",
+        "primary_defect_method_uid": "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "render",
+                "method_uid": "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+                "method_start_line": 46,
+                "method_end_line": 82,
+                "source_lines": [
+                    54
+                ],
+                "report_ids": [
+                    18
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "render"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java",
+        "file_name": "jleaks-bug-901.java",
+        "report_count": 1,
+        "report_ids": [
+            19
+        ],
+        "method_count": 1,
+        "primary_defect_method": "saveToFile",
+        "primary_defect_method_uid": "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "saveToFile",
+                "method_uid": "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+                "method_start_line": 85,
+                "method_end_line": 106,
+                "source_lines": [
+                    95
+                ],
+                "report_ids": [
+                    19
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "saveToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+        "file_name": "jleaks-bug-987.java",
+        "report_count": 1,
+        "report_ids": [
+            9
+        ],
+        "method_count": 1,
+        "primary_defect_method": "testEmail",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "testEmail",
+                "method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+                "method_start_line": 148,
+                "method_end_line": 188,
+                "source_lines": [
+                    159
+                ],
+                "report_ids": [
+                    9
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "testEmail"
+        ]
+    }
+}

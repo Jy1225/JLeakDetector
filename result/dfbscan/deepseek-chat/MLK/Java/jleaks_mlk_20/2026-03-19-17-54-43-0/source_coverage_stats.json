@@ -1,0 +1,107 @@
+{
+    "total_java_files": 20,
+    "files_with_sources": 20,
+    "files_without_sources": 0,
+    "coverage_ratio": 1.0,
+    "total_sources": 30,
+    "source_count_by_confidence": {
+        "high": 28,
+        "medium": 2,
+        "low": 0
+    },
+    "source_count_by_origin": {
+        "new": 19,
+        "factory": 11
+    },
+    "zero_source_files": [],
+    "source_count_by_file": {
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java": 1
+    },
+    "source_lines_by_file": {
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java": [
+            43,
+            76,
+            77
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java": [
+            72
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java": [
+            77
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java": [
+            16
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java": [
+            72,
+            93
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java": [
+            105,
+            125
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java": [
+            49
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java": [
+            115
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java": [
+            42
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java": [
+            56
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java": [
+            31
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java": [
+            47,
+            50
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java": [
+            78
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java": [
+            9
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java": [
+            76,
+            87
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java": [
+            94
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java": [
+            25
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java": [
+            54
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java": [
+            95
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java": [
+            159
+        ]
+    }
+}

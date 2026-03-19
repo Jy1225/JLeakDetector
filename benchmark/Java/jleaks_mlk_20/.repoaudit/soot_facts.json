@@ -1,76 +1,59 @@
 {
     "generator": "ts-fallback",
-    "generated_at": 1773905949,
+    "generated_at": 1773914079,
     "methods": {
-        "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)": {
-            "function_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
-            "method_name": "doPost",
-            "if_nodes": [],
+        "dev.emberline.core.config.ConfigLoader.loadNode(String)": {
+            "function_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+            "method_name": "loadNode",
+            "if_nodes": [
+                {
+                    "line": 6,
+                    "condition": "(resourceStream == null)",
+                    "true_scope": [
+                        7,
+                        7
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
             "close_sites": [
                 {
                     "line": 9
-                },
-                {
-                    "line": 16
                 }
             ],
             "must_close_source_lines": [],
             "source_lines": [
-                13
+                3
             ],
             "generator": "ts-fallback"
         },
-        "PersistUtil.wrap(String)": {
-            "function_uid": "PersistUtil.wrap(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
-            "method_name": "wrap",
-            "if_nodes": [
-                {
-                    "line": 20,
-                    "condition": "(isSnippet)",
-                    "true_scope": [
-                        21,
-                        21
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 26,
-                    "condition": "(isSnippet)",
-                    "true_scope": [
-                        27,
-                        28
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
+        "org.apache.kafka.connect.storage.FileOffsetBackingStore.start()": {
+            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.start()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "method_name": "start",
+            "if_nodes": [],
             "close_sites": [],
             "must_close_source_lines": [],
             "source_lines": [],
             "generator": "ts-fallback"
         },
-        "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)": {
-            "function_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
-            "method_name": "initInternal",
+        "com.qcloud.cmq.CMQHttp.request(String,String,String,int)": {
+            "function_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+            "method_name": "request",
             "if_nodes": [
                 {
-                    "line": 10,
-                    "condition": "(!(appender instanceof ConsoleAppender || appender instanceof FileAppender))",
+                    "line": 6,
+                    "condition": "(this.url != url)",
                     "true_scope": [
-                        11,
-                        11
+                        7,
+                        7
                     ],
                     "false_scope": [
                         -1,
@@ -80,11 +63,11 @@
                     "false_unreachable": false
                 },
                 {
-                    "line": 20,
-                    "condition": "(lprops.getProperty(\"log4j.appender.orslogfile.File\") == null)",
+                    "line": 12,
+                    "condition": "(method.equals(\"POST\"))",
                     "true_scope": [
-                        21,
-                        21
+                        13,
+                        20
                     ],
                     "false_scope": [
                         -1,
@@ -95,10 +78,10 @@
                 },
                 {
                     "line": 25,
-                    "condition": "(!stdOut)",
+                    "condition": "(status != 200)",
                     "true_scope": [
-                        26,
-                        32
+                        -1,
+                        -1
                     ],
                     "false_scope": [
                         -1,
@@ -108,11 +91,11 @@
                     "false_unreachable": false
                 },
                 {
-                    "line": 29,
-                    "condition": "(appender instanceof org.apache.log4j.ConsoleAppender)",
+                    "line": 38,
+                    "condition": "(in != null)",
                     "true_scope": [
-                        30,
-                        30
+                        39,
+                        39
                     ],
                     "false_scope": [
                         -1,
@@ -124,19 +107,79 @@
             ],
             "close_sites": [
                 {
-                    "line": 17
+                    "line": 20
+                },
+                {
+                    "line": 39
                 }
             ],
             "must_close_source_lines": [],
             "source_lines": [
-                15
+                17,
+                28
             ],
             "generator": "ts-fallback"
         },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.setThumbnailParameter(ThumbnailParameter)": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.setThumbnailParameter(ThumbnailParameter)",
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.getSource()": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.getSource()",
             "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "setThumbnailParameter",
+            "method_name": "getSource",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.apache.kafka.connect.storage.FileOffsetBackingStore.configure(WorkerConfig)": {
+            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.configure(WorkerConfig)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "method_name": "configure",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.xxl.job.core.util.XxlJobRemotingUtil.verify(String,SSLSession)": {
+            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.verify(String,SSLSession)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "method_name": "verify",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.web3j.utils.Files.readBytes(File)": {
+            "function_uid": "org.web3j.utils.Files.readBytes(File)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+            "method_name": "readBytes",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 5
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                3
+            ],
+            "generator": "ts-fallback"
+        },
+        "com.qcloud.cmq.CMQHttp.verify(String,SSLSession)": {
+            "function_uid": "com.qcloud.cmq.CMQHttp.verify(String,SSLSession)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+            "method_name": "verify",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.read()": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.read()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "method_name": "read",
             "if_nodes": [],
             "close_sites": [],
             "must_close_source_lines": [],
@@ -189,17 +232,43 @@
             ],
             "generator": "ts-fallback"
         },
-        "PersistUtil.compileTestFile(File,String)": {
-            "function_uid": "PersistUtil.compileTestFile(File,String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
-            "method_name": "compileTestFile",
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.read()": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "method_name": "read",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 7
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                3
+            ],
+            "generator": "ts-fallback"
+        },
+        "com.xxl.job.core.util.XxlJobRemotingUtil.trustAllHosts(HttpsURLConnection)": {
+            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.trustAllHosts(HttpsURLConnection)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "method_name": "trustAllHosts",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.qcloud.cmq.CMQHttp.newHttpConnection(String)": {
+            "function_uid": "com.qcloud.cmq.CMQHttp.newHttpConnection(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+            "method_name": "newHttpConnection",
             "if_nodes": [
                 {
-                    "line": 12,
-                    "condition": "(rc != 0)",
+                    "line": 3,
+                    "condition": "(this.url != url)",
                     "true_scope": [
-                        13,
-                        13
+                        5,
+                        24
                     ],
                     "false_scope": [
                         -1,
@@ -209,25 +278,25 @@
                     "false_unreachable": false
                 },
                 {
-                    "line": 16,
-                    "condition": "(f.getParent() != null)",
+                    "line": 6,
+                    "condition": "(url.toLowerCase().startsWith(\"https\"))",
                     "true_scope": [
-                        17,
-                        17
+                        7,
+                        13
                     ],
                     "false_scope": [
-                        19,
-                        19
+                        16,
+                        16
                     ],
                     "true_unreachable": false,
                     "false_unreachable": false
                 },
                 {
-                    "line": 25,
-                    "condition": "(false)",
+                    "line": 19,
+                    "condition": "(this.isKeepAlive)",
                     "true_scope": [
-                        26,
-                        37
+                        20,
+                        20
                     ],
                     "false_scope": [
                         -1,
@@ -239,10 +308,148 @@
             ],
             "close_sites": [],
             "must_close_source_lines": [],
-            "source_lines": [
-                28,
-                29
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "PersistUtil.wrap(String)": {
+            "function_uid": "PersistUtil.wrap(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "method_name": "wrap",
+            "if_nodes": [
+                {
+                    "line": 20,
+                    "condition": "(isSnippet)",
+                    "true_scope": [
+                        21,
+                        21
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 26,
+                    "condition": "(isSnippet)",
+                    "true_scope": [
+                        27,
+                        28
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
             ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.galenframework.actions.GalenActionConfig.execute()": {
+            "function_uid": "com.galenframework.actions.GalenActionConfig.execute()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+            "method_name": "execute",
+            "if_nodes": [
+                {
+                    "line": 3,
+                    "condition": "(configArguments.getGlobal())",
+                    "true_scope": [
+                        4,
+                        4
+                    ],
+                    "false_scope": [
+                        6,
+                        6
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "heigit.ors.logging.LoggingUtility.init(String)": {
+            "function_uid": "heigit.ors.logging.LoggingUtility.init(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+            "method_name": "init",
+            "if_nodes": [
+                {
+                    "line": 3,
+                    "condition": "(LoggingSettings.getEnabled())",
+                    "true_scope": [
+                        5,
+                        21
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 7,
+                    "condition": "(location != null)",
+                    "true_scope": [
+                        9,
+                        20
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 10,
+                    "condition": "(configFile.exists())",
+                    "true_scope": [
+                        12,
+                        17
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 14,
+                    "condition": "(!outputPath.isAbsolute())",
+                    "true_scope": [
+                        15,
+                        15
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.setThumbnailParameter(ThumbnailParameter)": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.setThumbnailParameter(ThumbnailParameter)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "method_name": "setThumbnailParameter",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
             "generator": "ts-fallback"
         },
         "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)": {
@@ -353,535 +560,6 @@
             ],
             "generator": "ts-fallback"
         },
-        "org.web3j.utils.Files.readBytes(File)": {
-            "function_uid": "org.web3j.utils.Files.readBytes(File)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
-            "method_name": "readBytes",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 5
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "heigit.ors.logging.LoggingUtility.init(String)": {
-            "function_uid": "heigit.ors.logging.LoggingUtility.init(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
-            "method_name": "init",
-            "if_nodes": [
-                {
-                    "line": 3,
-                    "condition": "(LoggingSettings.getEnabled())",
-                    "true_scope": [
-                        5,
-                        21
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 7,
-                    "condition": "(location != null)",
-                    "true_scope": [
-                        9,
-                        20
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 10,
-                    "condition": "(configFile.exists())",
-                    "true_scope": [
-                        12,
-                        17
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 14,
-                    "condition": "(!outputPath.isAbsolute())",
-                    "true_scope": [
-                        15,
-                        15
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.galenframework.actions.GalenActionConfig.execute()": {
-            "function_uid": "com.galenframework.actions.GalenActionConfig.execute()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
-            "method_name": "execute",
-            "if_nodes": [
-                {
-                    "line": 3,
-                    "condition": "(configArguments.getGlobal())",
-                    "true_scope": [
-                        4,
-                        4
-                    ],
-                    "false_scope": [
-                        6,
-                        6
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.qcloud.cmq.CMQHttp.newHttpConnection(String)": {
-            "function_uid": "com.qcloud.cmq.CMQHttp.newHttpConnection(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
-            "method_name": "newHttpConnection",
-            "if_nodes": [
-                {
-                    "line": 3,
-                    "condition": "(this.url != url)",
-                    "true_scope": [
-                        5,
-                        24
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 6,
-                    "condition": "(url.toLowerCase().startsWith(\"https\"))",
-                    "true_scope": [
-                        7,
-                        13
-                    ],
-                    "false_scope": [
-                        16,
-                        16
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 19,
-                    "condition": "(this.isKeepAlive)",
-                    "true_scope": [
-                        20,
-                        20
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "PersistUtil.writeTestFile(String)": {
-            "function_uid": "PersistUtil.writeTestFile(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
-            "method_name": "writeTestFile",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 5
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "com.xxl.job.core.util.XxlJobRemotingUtil.checkServerTrusted(X509Certificate,String)": {
-            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.checkServerTrusted(X509Certificate,String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
-            "method_name": "checkServerTrusted",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()": {
-            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
-            "method_name": "save",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 11
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.getInputFormatName()": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.getInputFormatName()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "getInputFormatName",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.xxl.job.core.util.XxlJobRemotingUtil.checkClientTrusted(X509Certificate,String)": {
-            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.checkClientTrusted(X509Certificate,String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
-            "method_name": "checkClientTrusted",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "dev.emberline.core.config.ConfigLoader.loadNode(String)": {
-            "function_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
-            "method_name": "loadNode",
-            "if_nodes": [
-                {
-                    "line": 6,
-                    "condition": "(resourceStream == null)",
-                    "true_scope": [
-                        7,
-                        7
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [
-                {
-                    "line": 9
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "PersistUtil.compileAndReturn(String,String)": {
-            "function_uid": "PersistUtil.compileAndReturn(String,String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
-            "method_name": "compileAndReturn",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.getSource()": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.getSource()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "getSource",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "org.apache.kafka.connect.storage.FileOffsetBackingStore.load()": {
-            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.load()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
-            "method_name": "load",
-            "if_nodes": [
-                {
-                    "line": 5,
-                    "condition": "(!(obj instanceof HashMap))",
-                    "true_scope": [
-                        -1,
-                        -1
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "liquibase.dbdoc.HTMLListWriter.getTargetExtension()": {
-            "function_uid": "liquibase.dbdoc.HTMLListWriter.getTargetExtension()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
-            "method_name": "getTargetExtension",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "PersistUtil.testClassOf(Method)": {
-            "function_uid": "PersistUtil.testClassOf(Method)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
-            "method_name": "testClassOf",
-            "if_nodes": [
-                {
-                    "line": 3,
-                    "condition": "(tc != null)",
-                    "true_scope": [
-                        4,
-                        4
-                    ],
-                    "false_scope": [
-                        6,
-                        6
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.read()": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "read",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 7
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                3
-            ],
-            "generator": "ts-fallback"
-        },
-        "org.apache.kafka.connect.storage.FileOffsetBackingStore.stop()": {
-            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.stop()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
-            "method_name": "stop",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 3
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.xxl.job.core.util.XxlJobRemotingUtil.verify(String,SSLSession)": {
-            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.verify(String,SSLSession)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
-            "method_name": "verify",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.getSource()": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.getSource()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "getSource",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.qcloud.cmq.CMQHttp.request(String,String,String,int)": {
-            "function_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
-            "method_name": "request",
-            "if_nodes": [
-                {
-                    "line": 6,
-                    "condition": "(this.url != url)",
-                    "true_scope": [
-                        7,
-                        7
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 12,
-                    "condition": "(method.equals(\"POST\"))",
-                    "true_scope": [
-                        13,
-                        20
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 25,
-                    "condition": "(status != 200)",
-                    "true_scope": [
-                        -1,
-                        -1
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 38,
-                    "condition": "(in != null)",
-                    "true_scope": [
-                        39,
-                        39
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [
-                {
-                    "line": 20
-                },
-                {
-                    "line": 39
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                17,
-                28
-            ],
-            "generator": "ts-fallback"
-        },
-        "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)": {
-            "function_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
-            "method_name": "writeHTML",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 29
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                2
-            ],
-            "generator": "ts-fallback"
-        },
-        "org.apache.kafka.connect.storage.FileOffsetBackingStore.start()": {
-            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.start()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
-            "method_name": "start",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.xxl.job.core.util.XxlJobRemotingUtil.trustAllHosts(HttpsURLConnection)": {
-            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.trustAllHosts(HttpsURLConnection)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
-            "method_name": "trustAllHosts",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "org.web3j.utils.Files.readString(File)": {
-            "function_uid": "org.web3j.utils.Files.readString(File)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
-            "method_name": "readString",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.qcloud.cmq.CMQHttp.verify(String,SSLSession)": {
-            "function_uid": "com.qcloud.cmq.CMQHttp.verify(String,SSLSession)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
-            "method_name": "verify",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.read()": {
-            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.UninitializedImageSource.read()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
-            "method_name": "read",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
         "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)": {
             "function_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
             "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java",
@@ -983,24 +661,92 @@
             ],
             "generator": "ts-fallback"
         },
-        "com.xxl.job.core.util.XxlJobRemotingUtil.getAcceptedIssuers()": {
-            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.getAcceptedIssuers()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
-            "method_name": "getAcceptedIssuers",
-            "if_nodes": [],
+        "PersistUtil.compileTestFile(File,String)": {
+            "function_uid": "PersistUtil.compileTestFile(File,String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "method_name": "compileTestFile",
+            "if_nodes": [
+                {
+                    "line": 12,
+                    "condition": "(rc != 0)",
+                    "true_scope": [
+                        13,
+                        13
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 16,
+                    "condition": "(f.getParent() != null)",
+                    "true_scope": [
+                        17,
+                        17
+                    ],
+                    "false_scope": [
+                        19,
+                        19
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 25,
+                    "condition": "(false)",
+                    "true_scope": [
+                        26,
+                        37
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
             "close_sites": [],
             "must_close_source_lines": [],
-            "source_lines": [],
+            "source_lines": [
+                28,
+                29
+            ],
             "generator": "ts-fallback"
         },
-        "org.apache.kafka.connect.storage.FileOffsetBackingStore.configure(WorkerConfig)": {
-            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.configure(WorkerConfig)",
+        "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()": {
+            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
             "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
-            "method_name": "configure",
+            "method_name": "save",
             "if_nodes": [],
-            "close_sites": [],
+            "close_sites": [
+                {
+                    "line": 11
+                }
+            ],
             "must_close_source_lines": [],
-            "source_lines": [],
+            "source_lines": [
+                3
+            ],
+            "generator": "ts-fallback"
+        },
+        "PersistUtil.writeTestFile(String)": {
+            "function_uid": "PersistUtil.writeTestFile(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "method_name": "writeTestFile",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 5
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                3
+            ],
             "generator": "ts-fallback"
         },
         "dev.emberline.core.config.ConfigLoader.loadConfig(JsonNode,Class)": {
@@ -1013,17 +759,178 @@
             "source_lines": [],
             "generator": "ts-fallback"
         },
-        "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)": {
-            "function_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
-            "method_name": "write",
+        "com.xxl.job.core.util.XxlJobRemotingUtil.checkClientTrusted(X509Certificate,String)": {
+            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.checkClientTrusted(X509Certificate,String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "method_name": "checkClientTrusted",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.getInputFormatName()": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.getInputFormatName()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "method_name": "getInputFormatName",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "PersistUtil.compileAndReturn(String,String)": {
+            "function_uid": "PersistUtil.compileAndReturn(String,String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "method_name": "compileAndReturn",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "dev.emberline.core.config.ConfigLoader.loadConfig(String,Class)": {
+            "function_uid": "dev.emberline.core.config.ConfigLoader.loadConfig(String,Class)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+            "method_name": "loadConfig",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "net.coobird.thumbnailator.tasks.io.FileImageSource.getSource()": {
+            "function_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.getSource()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "method_name": "getSource",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.xxl.job.core.util.XxlJobRemotingUtil.getAcceptedIssuers()": {
+            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.getAcceptedIssuers()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "method_name": "getAcceptedIssuers",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "PersistUtil.testClassOf(Method)": {
+            "function_uid": "PersistUtil.testClassOf(Method)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "method_name": "testClassOf",
             "if_nodes": [
                 {
-                    "line": 8,
-                    "condition": "(comment != null)",
+                    "line": 3,
+                    "condition": "(tc != null)",
                     "true_scope": [
-                        9,
+                        4,
+                        4
+                    ],
+                    "false_scope": [
+                        6,
+                        6
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.xxl.job.core.util.XxlJobRemotingUtil.checkServerTrusted(X509Certificate,String)": {
+            "function_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.checkServerTrusted(X509Certificate,String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "method_name": "checkServerTrusted",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.apache.kafka.connect.storage.FileOffsetBackingStore.stop()": {
+            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.stop()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "method_name": "stop",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 3
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.web3j.utils.Files.readString(File)": {
+            "function_uid": "org.web3j.utils.Files.readString(File)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+            "method_name": "readString",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)": {
+            "function_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+            "method_name": "initInternal",
+            "if_nodes": [
+                {
+                    "line": 10,
+                    "condition": "(!(appender instanceof ConsoleAppender || appender instanceof FileAppender))",
+                    "true_scope": [
+                        11,
                         11
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 20,
+                    "condition": "(lprops.getProperty(\"log4j.appender.orslogfile.File\") == null)",
+                    "true_scope": [
+                        21,
+                        21
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 25,
+                    "condition": "(!stdOut)",
+                    "true_scope": [
+                        26,
+                        32
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 29,
+                    "condition": "(appender instanceof org.apache.log4j.ConsoleAppender)",
+                    "true_scope": [
+                        30,
+                        30
                     ],
                     "false_scope": [
                         -1,
@@ -1035,12 +942,243 @@
             ],
             "close_sites": [
                 {
-                    "line": 21
+                    "line": 17
                 }
             ],
             "must_close_source_lines": [],
             "source_lines": [
-                5
+                15
+            ],
+            "generator": "ts-fallback"
+        },
+        "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)": {
+            "function_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+            "method_name": "writeHTML",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 29
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                2
+            ],
+            "generator": "ts-fallback"
+        },
+        "liquibase.dbdoc.HTMLListWriter.getTargetExtension()": {
+            "function_uid": "liquibase.dbdoc.HTMLListWriter.getTargetExtension()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+            "method_name": "getTargetExtension",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.setupListeners()": {
+            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.setupListeners()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "method_name": "setupListeners",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()": {
+            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "method_name": "testEmail",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 11
+                },
+                {
+                    "line": 14
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                12
+            ],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.execute(String,List)": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.execute(String,List)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "execute",
+            "if_nodes": [
+                {
+                    "line": 11,
+                    "condition": "((release != null) &&\n\t\t\tValidator.isNotNull(release.getSchemaVersion()))",
+                    "true_scope": [
+                        14,
+                        14
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 22,
+                    "condition": "(size > 1)",
+                    "true_scope": [
+                        23,
+                        26
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 29,
+                    "condition": "(size == 0)",
+                    "true_scope": [
+                        30,
+                        30
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "executeUpgradeInfos",
+            "if_nodes": [
+                {
+                    "line": 16,
+                    "condition": "(release != null)",
+                    "true_scope": [
+                        17,
+                        17
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 34,
+                    "condition": "(release != null)",
+                    "true_scope": [
+                        35,
+                        35
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [
+                {
+                    "line": 26
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                12
+            ],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.run()": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.run()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "run",
+            "if_nodes": [
+                {
+                    "line": 44,
+                    "condition": "(release != null)",
+                    "true_scope": [
+                        45,
+                        51
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                },
+                {
+                    "line": 45,
+                    "condition": "(buildNumber > 0)",
+                    "true_scope": [
+                        46,
+                        46
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getDBContext()": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getDBContext()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "getDBContext",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getOutputStream()": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getOutputStream()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "getOutputStream",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)": {
+            "function_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
+            "method_name": "doPost",
+            "if_nodes": [],
+            "close_sites": [
+                {
+                    "line": 9
+                },
+                {
+                    "line": 16
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                13
             ],
             "generator": "ts-fallback"
         },
@@ -1209,17 +1347,17 @@
             ],
             "generator": "ts-fallback"
         },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.execute(String,List)": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.execute(String,List)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "execute",
+        "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)": {
+            "function_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
+            "method_name": "write",
             "if_nodes": [
                 {
-                    "line": 11,
-                    "condition": "((release != null) &&\n\t\t\tValidator.isNotNull(release.getSchemaVersion()))",
+                    "line": 8,
+                    "condition": "(comment != null)",
                     "true_scope": [
-                        14,
-                        14
+                        9,
+                        11
                     ],
                     "false_scope": [
                         -1,
@@ -1227,27 +1365,50 @@
                     ],
                     "true_unreachable": false,
                     "false_unreachable": false
-                },
+                }
+            ],
+            "close_sites": [
                 {
-                    "line": 22,
-                    "condition": "(size > 1)",
-                    "true_scope": [
-                        23,
-                        26
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
+                    "line": 21
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                5
+            ],
+            "generator": "ts-fallback"
+        },
+        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.isBeanValid()": {
+            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.isBeanValid()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "method_name": "isBeanValid",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.getBean()": {
+            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.getBean()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "method_name": "getBean",
+            "if_nodes": [],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable._updateReleaseState(int)": {
+            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable._updateReleaseState(int)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "method_name": "_updateReleaseState",
+            "if_nodes": [
                 {
-                    "line": 29,
-                    "condition": "(size == 0)",
+                    "line": 5,
+                    "condition": "(release != null)",
                     "true_scope": [
-                        30,
-                        30
+                        6,
+                        8
                     ],
                     "false_scope": [
                         -1,
@@ -1260,6 +1421,64 @@
             "close_sites": [],
             "must_close_source_lines": [],
             "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)": {
+            "function_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
+            "method_name": "parseValue",
+            "if_nodes": [
+                {
+                    "line": 4,
+                    "condition": "(value == null || value.isEmpty())",
+                    "true_scope": [
+                        -1,
+                        -1
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [
+                {
+                    "line": 18
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                11
+            ],
+            "generator": "ts-fallback"
+        },
+        "org.apache.kafka.connect.storage.FileOffsetBackingStore.load()": {
+            "function_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.load()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "method_name": "load",
+            "if_nodes": [
+                {
+                    "line": 5,
+                    "condition": "(!(obj instanceof HashMap))",
+                    "true_scope": [
+                        -1,
+                        -1
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [],
+            "must_close_source_lines": [],
+            "source_lines": [
+                3
+            ],
             "generator": "ts-fallback"
         },
         "fitnesse.ConfigurationParameter.makeProperties(Object)": {
@@ -1287,134 +1506,11 @@
             "source_lines": [],
             "generator": "ts-fallback"
         },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.run()": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.run()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "run",
-            "if_nodes": [
-                {
-                    "line": 44,
-                    "condition": "(release != null)",
-                    "true_scope": [
-                        45,
-                        51
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 45,
-                    "condition": "(buildNumber > 0)",
-                    "true_scope": [
-                        46,
-                        46
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.setupListeners()": {
-            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.setupListeners()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
-            "method_name": "setupListeners",
+        "fitnesse.ConfigurationParameter.getKey()": {
+            "function_uid": "fitnesse.ConfigurationParameter.getKey()",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+            "method_name": "getKey",
             "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()": {
-            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
-            "method_name": "testEmail",
-            "if_nodes": [],
-            "close_sites": [
-                {
-                    "line": 11
-                },
-                {
-                    "line": 14
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                12
-            ],
-            "generator": "ts-fallback"
-        },
-        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.isBeanValid()": {
-            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.isBeanValid()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
-            "method_name": "isBeanValid",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.getBean()": {
-            "function_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.getBean()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
-            "method_name": "getBean",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getDBContext()": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getDBContext()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "getDBContext",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getOutputStream()": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable.getOutputStream()",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "getOutputStream",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable._updateReleaseState(int)": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.UpgradeInfosRunnable._updateReleaseState(int)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "_updateReleaseState",
-            "if_nodes": [
-                {
-                    "line": 5,
-                    "condition": "(release != null)",
-                    "true_scope": [
-                        6,
-                        8
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
             "close_sites": [],
             "must_close_source_lines": [],
             "source_lines": [],
@@ -1482,148 +1578,6 @@
             ],
             "generator": "ts-fallback"
         },
-        "dev.emberline.core.config.ConfigLoader.loadConfig(String,Class)": {
-            "function_uid": "dev.emberline.core.config.ConfigLoader.loadConfig(String,Class)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
-            "method_name": "loadConfig",
-            "if_nodes": [],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
-        "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)": {
-            "function_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
-            "method_name": "executeUpgradeInfos",
-            "if_nodes": [
-                {
-                    "line": 16,
-                    "condition": "(release != null)",
-                    "true_scope": [
-                        17,
-                        17
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                },
-                {
-                    "line": 34,
-                    "condition": "(release != null)",
-                    "true_scope": [
-                        35,
-                        35
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [
-                {
-                    "line": 26
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                12
-            ],
-            "generator": "ts-fallback"
-        },
-        "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)": {
-            "function_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
-            "method_name": "parseValue",
-            "if_nodes": [
-                {
-                    "line": 4,
-                    "condition": "(value == null || value.isEmpty())",
-                    "true_scope": [
-                        -1,
-                        -1
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [
-                {
-                    "line": 18
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                11
-            ],
-            "generator": "ts-fallback"
-        },
-        "fitnesse.ConfigurationParameter.loadProperties(File)": {
-            "function_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
-            "method_name": "loadProperties",
-            "if_nodes": [
-                {
-                    "line": 14,
-                    "condition": "(propertiesStream != null)",
-                    "true_scope": [
-                        15,
-                        20
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [
-                {
-                    "line": 17
-                }
-            ],
-            "must_close_source_lines": [],
-            "source_lines": [
-                5
-            ],
-            "generator": "ts-fallback"
-        },
-        "fitnesse.ConfigurationParameter.byKey(String)": {
-            "function_uid": "fitnesse.ConfigurationParameter.byKey(String)",
-            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
-            "method_name": "byKey",
-            "if_nodes": [
-                {
-                    "line": 3,
-                    "condition": "(parameter.getKey().equals(key))",
-                    "true_scope": [
-                        4,
-                        4
-                    ],
-                    "false_scope": [
-                        -1,
-                        -1
-                    ],
-                    "true_unreachable": false,
-                    "false_unreachable": false
-                }
-            ],
-            "close_sites": [],
-            "must_close_source_lines": [],
-            "source_lines": [],
-            "generator": "ts-fallback"
-        },
         "jplagUtils.PropertiesLoader.loadProps(String)": {
             "function_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
             "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java",
@@ -1655,14 +1609,60 @@
             ],
             "generator": "ts-fallback"
         },
-        "fitnesse.ConfigurationParameter.getKey()": {
-            "function_uid": "fitnesse.ConfigurationParameter.getKey()",
+        "fitnesse.ConfigurationParameter.byKey(String)": {
+            "function_uid": "fitnesse.ConfigurationParameter.byKey(String)",
             "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
-            "method_name": "getKey",
-            "if_nodes": [],
+            "method_name": "byKey",
+            "if_nodes": [
+                {
+                    "line": 3,
+                    "condition": "(parameter.getKey().equals(key))",
+                    "true_scope": [
+                        4,
+                        4
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
             "close_sites": [],
             "must_close_source_lines": [],
             "source_lines": [],
+            "generator": "ts-fallback"
+        },
+        "fitnesse.ConfigurationParameter.loadProperties(File)": {
+            "function_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+            "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+            "method_name": "loadProperties",
+            "if_nodes": [
+                {
+                    "line": 14,
+                    "condition": "(propertiesStream != null)",
+                    "true_scope": [
+                        15,
+                        20
+                    ],
+                    "false_scope": [
+                        -1,
+                        -1
+                    ],
+                    "true_unreachable": false,
+                    "false_unreachable": false
+                }
+            ],
+            "close_sites": [
+                {
+                    "line": 17
+                }
+            ],
+            "must_close_source_lines": [],
+            "source_lines": [
+                5
+            ],
             "generator": "ts-fallback"
         }
     }

@@ -1,0 +1,1588 @@
+{
+    "0": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java, 16, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java"
+            ],
+            [
+                "readBytes"
+            ],
+            [
+                "public static byte[] readBytes(File file) throws IOException {\n        byte[] bytes = new byte[(int) file.length()];\n        FileInputStream fileInputStream = new FileInputStream(file);\n        fileInputStream.read(bytes);\n        fileInputStream.close();\n        return bytes;\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 3 and released via close() at line 5, but the release is on the normal path only. If an exception occurs during fileInputStream.read(bytes) at line 4, the close() call will be skipped, leaving the resource open. Since the release is not guaranteed on all exits, the path is feasible and the resource may leak.  \nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java:org.web3j.utils.Files.readBytes(File):root:fileinputstream:16",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java:family:root:fileinputstream:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java:org.web3j.utils.Files.readBytes(File):root:fileinputstream:16",
+            "source_component_id": 9,
+            "source_line": 16,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+            "source_method_uid": "org.web3j.utils.Files.readBytes(File)",
+            "source_method_name": "readBytes",
+            "leak_root_method_uid": "org.web3j.utils.Files.readBytes(File)",
+            "leak_root_method_name": "readBytes",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "org.web3j.utils.Files.readBytes(File)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                0
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1068.java",
+                    "pre_component:9",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:9"
+            ],
+            "issue_source_lines": [
+                16
+            ],
+            "issue_source_method_uids": [
+                "org.web3j.utils.Files.readBytes(File)"
+            ],
+            "issue_source_methods": [
+                "readBytes"
+            ],
+            "issue_leak_root_method_uids": [
+                "org.web3j.utils.Files.readBytes(File)"
+            ],
+            "issue_leak_root_methods": [
+                "readBytes"
+            ],
+            "issue_primary_defect_method_uid": "org.web3j.utils.Files.readBytes(File)",
+            "issue_primary_defect_method": "readBytes",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "1": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(configFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java, 78, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java"
+            ],
+            [
+                "initInternal"
+            ],
+            [
+                "@SuppressWarnings(\"rawtypes\")\n\tprivate static void initInternal(File configFile, String outputPath, boolean stdOut) throws IOException\n\t{\n\t\tList<Appender> appenders = new ArrayList<Appender>();\n\n\t\t// Retrieve all existing appenders\n\t\tEnumeration apps = LogManager.getRootLogger().getAllAppenders();\n\t\twhile(apps.hasMoreElements()) {\n\t\t\tAppender appender = (Appender)apps.nextElement();\n\t\t\tif (!(appender instanceof ConsoleAppender || appender instanceof FileAppender)) \n\t\t\t\tappenders.add( appender );\n\t\t}\n\n\t\tProperties lprops = new Properties();\n\t\tFileInputStream in = new FileInputStream(configFile);\n\t\tlprops.load(in);\n\t\tin.close();\n\t\tLogManager.resetConfiguration();\n\t\t\n\t\tif (lprops.getProperty(\"log4j.appender.orslogfile.File\") == null)\n\t\t\tlprops.put(\"log4j.appender.orslogfile.File\", outputPath);\n\t\t\n\t\tPropertyConfigurator.configure(lprops);\n\n\t\tif (!stdOut) {\n            apps = org.apache.log4j.Logger.getRootLogger().getAllAppenders();\n            while (apps.hasMoreElements()) {\n            \tAppender appender = (Appender)apps.nextElement();\n                if (appender instanceof org.apache.log4j.ConsoleAppender) {\n                    org.apache.log4j.Logger.getRootLogger().removeAppender(appender);\n                }\n            }\n\t\t} \n\n\t\tfor (Appender appender : appenders ) \n\t\t\tLogManager.getRootLogger().addAppender( appender );\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 15 and explicitly closed at line 17 on the normal execution path. However, the close occurs only on the normal flow; if an exception is thrown between lines 15 and 17 (e.g., during `lprops.load(in)` at line 16), the close will be skipped, leaving the resource potentially unclosed. The release is not in a finally block or try-with-resources, so it lacks an all-exit guarantee. The path indicates a weak release that can be bypassed by exceptions.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java:heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean):root:in:78",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java:family:root:in:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java:heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean):root:in:78",
+            "source_component_id": 8,
+            "source_line": 78,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+            "source_method_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+            "source_method_name": "initInternal",
+            "leak_root_method_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+            "leak_root_method_name": "initInternal",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                1
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-449.java",
+                    "pre_component:8",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:8"
+            ],
+            "issue_source_lines": [
+                78
+            ],
+            "issue_source_method_uids": [
+                "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)"
+            ],
+            "issue_source_methods": [
+                "initInternal"
+            ],
+            "issue_leak_root_method_uids": [
+                "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)"
+            ],
+            "issue_leak_root_methods": [
+                "initInternal"
+            ],
+            "issue_primary_defect_method_uid": "heigit.ors.logging.LoggingUtility.initInternal(File,String,boolean)",
+            "issue_primary_defect_method": "initInternal",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "2": {
+        "bug_type": "MLK",
+        "buggy_value": "((PropertiesLoader.class.getClassLoader().getResourceAsStream(resourceName), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java, 9, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java"
+            ],
+            [
+                "loadProps"
+            ],
+            [
+                "public static Properties loadProps(String resourceName) {\n\t\tInputStream in = PropertiesLoader.class.getClassLoader().getResourceAsStream(resourceName);\n\t\tProperties props = new Properties();\n\t\tif (in != null) {\n\t\t\ttry {\n\t\t\t\tprops.load(in);\n\t\t\t\tin.close();\n\t\t\t} catch (IOException e) {\n\t\t\t\te.printStackTrace();\n\t\t\t}\n\t\t}\n\t\treturn props;\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The InputStream `in` is only closed inside the try block on the normal execution path (line 7). If an IOException occurs during `props.load(in)`, the close is skipped, and the catch block only logs the exception without closing the resource. Additionally, if `in` is null, no resource is acquired, but if it is non-null and an exception occurs, the close is bypassed. Since the release is not guaranteed on all exits (exceptions bypass it), the resource may leak.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "unknown",
+            "guarantee_level": "none",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java:jplagUtils.PropertiesLoader.loadProps(String):root:class:9",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java:family:root:class:getclassloader",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java:component:autocloseable:getclassloader:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java:jplagUtils.PropertiesLoader.loadProps(String):root:class:9",
+            "source_component_id": 2,
+            "source_line": 9,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-640.java",
+            "source_method_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
+            "source_method_name": "loadProps",
+            "leak_root_method_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
+            "leak_root_method_name": "loadProps",
+            "source_origin": "factory",
+            "source_confidence": "high",
+            "source_symbol": "getclassloader",
+            "has_no_sink_marker": true,
+            "has_weak_release_marker": false,
+            "path_length": 5,
+            "relevant_method_uids": [
+                "jplagUtils.PropertiesLoader.loadProps(String)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                2
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-640.java",
+                    "pre_component:2",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:2"
+            ],
+            "issue_source_lines": [
+                9
+            ],
+            "issue_source_method_uids": [
+                "jplagUtils.PropertiesLoader.loadProps(String)"
+            ],
+            "issue_source_methods": [
+                "loadProps"
+            ],
+            "issue_leak_root_method_uids": [
+                "jplagUtils.PropertiesLoader.loadProps(String)"
+            ],
+            "issue_leak_root_methods": [
+                "loadProps"
+            ],
+            "issue_primary_defect_method_uid": "jplagUtils.PropertiesLoader.loadProps(String)",
+            "issue_primary_defect_method": "loadProps",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "3": {
+        "bug_type": "MLK",
+        "buggy_value": "((new DataOutputStream(connection.getOutputStream()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java, 105, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java"
+            ],
+            [
+                "postBody"
+            ],
+            [
+                "public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {\n        HttpURLConnection connection = null;\n        BufferedReader bufferedReader = null;\n        try {\n            // connection\n            URL realUrl = new URL(url);\n            connection = (HttpURLConnection) realUrl.openConnection();\n\n            // trust-https\n            boolean useHttps = url.startsWith(\"https\");\n            if (useHttps) {\n                HttpsURLConnection https = (HttpsURLConnection) connection;\n                trustAllHosts(https);\n            }\n\n            // connection setting\n            connection.setRequestMethod(\"POST\");\n            connection.setDoOutput(true);\n            connection.setDoInput(true);\n            connection.setUseCaches(false);\n            connection.setReadTimeout(timeout * 1000);\n            connection.setConnectTimeout(timeout * 1000);\n            connection.setRequestProperty(\"connection\", \"Keep-Alive\");\n            connection.setRequestProperty(\"Content-Type\", \"application/json;charset=UTF-8\");\n            connection.setRequestProperty(\"Accept-Charset\", \"application/json;charset=UTF-8\");\n\n            if(accessToken!=null && accessToken.trim().length()>0){\n                connection.setRequestProperty(XXL_JOB_ACCESS_TOKEN, accessToken);\n            }\n\n            // do connection\n            connection.connect();\n\n            // write requestBody\n            if (requestObj != null) {\n                String requestBody = GsonTool.toJson(requestObj);\n\n                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());\n                dataOutputStream.write(requestBody.getBytes(\"UTF-8\"));\n                dataOutputStream.flush();\n                dataOutputStream.close();\n            }\n\n            /*byte[] requestBodyBytes = requestBody.getBytes(\"UTF-8\");\n            connection.setRequestProperty(\"Content-Length\", String.valueOf(requestBodyBytes.length));\n            OutputStream outwritestream = connection.getOutputStream();\n            outwritestream.write(requestBodyBytes);\n            outwritestream.flush();\n            outwritestream.close();*/\n\n            // valid StatusCode\n            int statusCode = connection.getResponseCode();\n            if (statusCode != 200) {\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting fail, StatusCode(\"+ statusCode +\") invalid. for url : \" + url);\n            }\n\n            // result\n            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), \"UTF-8\"));\n            StringBuilder result = new StringBuilder();\n            String line;\n            while ((line = bufferedReader.readLine()) != null) {\n                result.append(line);\n            }\n            String resultJson = result.toString();\n\n            // parse returnT\n            try {\n                ReturnT returnT = GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);\n                return returnT;\n            } catch (Exception e) {\n                logger.error(\"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\", e);\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\");\n            }\n\n        } catch (Exception e) {\n            logger.error(e.getMessage(), e);\n            return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting error(\"+ e.getMessage() +\"), for url : \" + url);\n        } finally {\n            try {\n                if (bufferedReader != null) {\n                    bufferedReader.close();\n                }\n                if (connection != null) {\n                    connection.disconnect();\n                }\n            } catch (Exception e2) {\n                logger.error(e2.getMessage(), e2);\n            }\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `DataOutputStream` is created at line 38 and closed at line 41, but the close occurs only on the normal execution path within the try block. If an exception occurs after line 38 but before line 41 (e.g., during `write` or `flush`), the close may be skipped. Additionally, the `finally` block only closes `bufferedReader` and `connection`, not the `DataOutputStream`. Since the release is not guaranteed on all exits (exceptions can bypass it), the resource may leak.\n\nAnswer: Yes\n\nIssue aggregation: merged 2 evidences into one issue component.",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class):root:dataoutputstream:105",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:family:root:dataoutputstream:dataoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:component:autocloseable:dataoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class):root:dataoutputstream:105",
+            "source_component_id": 5,
+            "source_line": 105,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "source_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "source_method_name": "postBody",
+            "leak_root_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "leak_root_method_name": "postBody",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "dataoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                3,
+                6
+            ],
+            "issue_member_count": 2,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+                    "pre_component:5",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:5"
+            ],
+            "issue_source_lines": [
+                105
+            ],
+            "issue_source_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_source_methods": [
+                "postBody"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_leak_root_methods": [
+                "postBody"
+            ],
+            "issue_primary_defect_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "issue_primary_defect_method": "postBody",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "4": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java, 49, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java"
+            ],
+            [
+                "doPost"
+            ],
+            [
+                "@Override\n  protected void doPost(HttpServletRequest request,\n      HttpServletResponse response)\n      throws ServletException, IOException {\n    response.setContentType(\"text/html\");\n    response.setStatus(HttpServletResponse.SC_OK);\n\n    File file = (File) request.getAttribute(\"upload\");\n    file.deleteOnExit();\n\n    int length = (int) file.length();\n    byte[] buffer = new byte[length];\n    InputStream in = new FileInputStream(file);\n    in.read(buffer, 0, length);\n    String content = new String(buffer, \"UTF-8\");\n    in.close();\n\n    // Slow down the upload so we can verify WebDriver waits.\n    try {\n      Thread.sleep(2500);\n    } catch (InterruptedException ignored) {\n    }\n    response.getWriter().write(content);\n    response.getWriter().write(\n        \"<script>window.top.window.onUploadDone();</script>\");\n    response.setStatus(HttpServletResponse.SC_OK);\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 13 and explicitly closed at line 16, but the close occurs only on the normal execution path. If an exception (e.g., `IOException` from `in.read` or `new String`, or `RuntimeException` from `Thread.sleep`) is thrown before line 16, the close will be skipped, leaving the resource potentially unclosed. The release is not in a finally block or try-with-resources, so it is not guaranteed on all exits. The path is feasible and the resource is not definitely released before method exit.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java:org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse):root:in:49",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java:family:root:in:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java:org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse):root:in:49",
+            "source_component_id": 10,
+            "source_line": 49,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
+            "source_method_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+            "source_method_name": "doPost",
+            "leak_root_method_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+            "leak_root_method_name": "doPost",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                4
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1192.java",
+                    "pre_component:10",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:10"
+            ],
+            "issue_source_lines": [
+                49
+            ],
+            "issue_source_method_uids": [
+                "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)"
+            ],
+            "issue_source_methods": [
+                "doPost"
+            ],
+            "issue_leak_root_method_uids": [
+                "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)"
+            ],
+            "issue_leak_root_methods": [
+                "doPost"
+            ],
+            "issue_primary_defect_method_uid": "org.openqa.selenium.environment.webserver.UploadServlet.doPost(HttpServletRequest,HttpServletResponse)",
+            "issue_primary_defect_method": "doPost",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "5": {
+        "bug_type": "MLK",
+        "buggy_value": "((getClass().getResourceAsStream(\"/config-template.conf\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java, 50, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java"
+            ],
+            [
+                "createConfigFor"
+            ],
+            [
+                "private void createConfigFor(String filePath) throws IOException {\n        File file = new File(filePath);\n\n        if (!file.exists()) {\n            if (!file.createNewFile()) {\n                throw new RuntimeException(\"Could not create file: \" + file.getAbsolutePath());\n            }\n            FileOutputStream fos = new FileOutputStream(file);\n\n            StringWriter writer = new StringWriter();\n            IOUtils.copy(getClass().getResourceAsStream(\"/config-template.conf\"), writer, \"UTF-8\");\n            IOUtils.write(writer.toString(), fos, \"UTF-8\");\n            fos.flush();\n            fos.close();\n            outStream.println(\"Created config file: \" + file.getAbsolutePath());\n        } else {\n            errStream.println(\"Config file already exists\");\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (InputStream from getResourceAsStream) is not explicitly closed in the code. It is passed to IOUtils.copy but not closed afterward, and there is no try-with-resources or finally block ensuring closure. Since the release_context is \"normal\" and guarantee_level is \"none\", an exception before line 13 could skip any cleanup. The resource does not escape via return/argument with ownership transfer.  \nAnswer: Yes\n\nIssue aggregation: merged 2 evidences into one issue component.",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "none",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java:com.galenframework.actions.GalenActionConfig.createConfigFor(String):src:getClass().getResourceAsStream(\"/config-template.conf\"):50",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java:family:src:getresourceasstream:getresourceasstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java:component:autocloseable:getresourceasstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java:com.galenframework.actions.GalenActionConfig.createConfigFor(String):src:getClass().getResourceAsStream(\"/config-template.conf\"):50",
+            "source_component_id": 6,
+            "source_line": 47,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+            "source_method_uid": "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+            "source_method_name": "createConfigFor",
+            "leak_root_method_uid": "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+            "leak_root_method_name": "createConfigFor",
+            "source_origin": "factory",
+            "source_confidence": "high",
+            "source_symbol": "getresourceasstream",
+            "has_no_sink_marker": true,
+            "has_weak_release_marker": false,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "com.galenframework.actions.GalenActionConfig.createConfigFor(String)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                5,
+                20
+            ],
+            "issue_member_count": 2,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+                    "pre_component:15",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ],
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-439.java",
+                    "pre_component:6",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:15",
+                "pre_component:6"
+            ],
+            "issue_source_lines": [
+                47,
+                50
+            ],
+            "issue_source_method_uids": [
+                "com.galenframework.actions.GalenActionConfig.createConfigFor(String)"
+            ],
+            "issue_source_methods": [
+                "createConfigFor"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.galenframework.actions.GalenActionConfig.createConfigFor(String)"
+            ],
+            "issue_leak_root_methods": [
+                "createConfigFor"
+            ],
+            "issue_primary_defect_method_uid": "com.galenframework.actions.GalenActionConfig.createConfigFor(String)",
+            "issue_primary_defect_method": "createConfigFor",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "6": {
+        "bug_type": "MLK",
+        "buggy_value": "((new DataOutputStream(this.connection.getOutputStream()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java, 76, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java"
+            ],
+            [
+                "request"
+            ],
+            [
+                "public  String request(String method, String url, String req,\n\t\t\tint userTimeout) throws Exception {\n\t\tString result = \"\";\n\t\tBufferedReader in = null;\n\t\ttry{\n            if (this.url != url)\n                this.newHttpConnection(url);\n\n            this.connection.setConnectTimeout(timeout+userTimeout);\n            this.connection.setReadTimeout(timeout+userTimeout);\n\t\n\t\t\tif (method.equals(\"POST\")) {\n\t\t\t\t((HttpURLConnection)this.connection).setRequestMethod(\"POST\");\n\t\n\t\t\t\tthis.connection.setDoOutput(true);\n\t\t\t\tthis.connection.setDoInput(true);\n\t\t\t\tDataOutputStream out = new DataOutputStream(this.connection.getOutputStream());\n\t\t\t\tout.writeBytes(req);\n\t\t\t\tout.flush();\n\t\t\t\tout.close();\n\t\t\t}\n\n\t\t\tthis.connection.connect();\n\t\t\tint status = ((HttpURLConnection)this.connection).getResponseCode();\n\t\t\tif(status != 200)\n\t\t\t\tthrow new CMQServerException(status);\n\t\n\t\t\tin = new BufferedReader(new InputStreamReader(connection.getInputStream(),\"utf-8\"));\n\t\n\t\t\tString line;\n\t\t\twhile ((line = in.readLine()) != null) {\n\t\t\t\tresult += line;\n\t\t\t}\n\t\t}catch(Exception e){\n\t\t\tthrow e;\n\t\t}finally{\n\t\t\ttry {\n\t\t\t\tif (in != null) \n\t\t\t\t\tin.close();\n\t\t\t} catch (Exception e2) {\n\t\t\t\tthrow e2;\n\t\t\t}\n\t\t}\n\t\t\n\t\treturn result;\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `DataOutputStream out` is created at line 17 and closed at line 20, but the close occurs only on the normal execution path inside the `if (method.equals(\"POST\"))` block. If an exception is thrown between lines 17 and 20 (e.g., during `out.writeBytes(req)` or `out.flush()`), or if the `if` condition is false and the block is skipped entirely, the close will not execute. The `finally` block only closes `in`, not `out`. Since the release is not guaranteed on all exits, the resource may remain unclosed.\n\nAnswer: Yes\n\nIssue aggregation: merged 2 evidences into one issue component.",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java:com.qcloud.cmq.CMQHttp.request(String,String,String,int):root:out:76",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java:family:root:out:dataoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java:component:autocloseable:dataoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java:com.qcloud.cmq.CMQHttp.request(String,String,String,int):root:out:76",
+            "source_component_id": 7,
+            "source_line": 76,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+            "source_method_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+            "source_method_name": "request",
+            "leak_root_method_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+            "leak_root_method_name": "request",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "dataoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "com.qcloud.cmq.CMQHttp.request(String,String,String,int)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                7,
+                8
+            ],
+            "issue_member_count": 2,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-655.java",
+                    "pre_component:7",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:7"
+            ],
+            "issue_source_lines": [
+                76
+            ],
+            "issue_source_method_uids": [
+                "com.qcloud.cmq.CMQHttp.request(String,String,String,int)"
+            ],
+            "issue_source_methods": [
+                "request"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.qcloud.cmq.CMQHttp.request(String,String,String,int)"
+            ],
+            "issue_leak_root_methods": [
+                "request"
+            ],
+            "issue_primary_defect_method_uid": "com.qcloud.cmq.CMQHttp.request(String,String,String,int)",
+            "issue_primary_defect_method": "request",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "7": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(propertiesFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java, 72, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java"
+            ],
+            [
+                "loadProperties"
+            ],
+            [
+                "public static Properties loadProperties(File propertiesFile) {\n    FileInputStream propertiesStream = null;\n    Properties properties = new Properties();\n    try {\n      propertiesStream = new FileInputStream(propertiesFile);\n    } catch (FileNotFoundException e) {\n      try {\n        LOG.info(String.format(\"No configuration file found (%s)\", propertiesFile.getCanonicalPath()));\n      } catch (IOException ioe) {\n        LOG.info(String.format(\"No configuration file found (%s)\", propertiesFile));\n      }\n    }\n\n    if (propertiesStream != null) {\n      try {\n        properties.load(propertiesStream);\n        propertiesStream.close();\n      } catch (IOException e) {\n        LOG.log(Level.WARNING, String.format(\"Error reading configuration: %s\", e.getMessage()));\n      }\n    }\n\n    return properties;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 5 but only closed at line 17 inside a try-catch block that is not in a finally or try-with-resources construct. If an exception occurs during properties.load() at line 16, the close() at line 17 is skipped. Additionally, if propertiesStream is null (due to FileNotFoundException), no close occurs. Since the close is not guaranteed on all exits, the resource may remain unclosed.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "unknown",
+            "guarantee_level": "none",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java:fitnesse.ConfigurationParameter.loadProperties(File):root:propertiesstream:72",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java:family:root:propertiesstream:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java:fitnesse.ConfigurationParameter.loadProperties(File):root:propertiesstream:72",
+            "source_component_id": 12,
+            "source_line": 72,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+            "source_method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+            "source_method_name": "loadProperties",
+            "leak_root_method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+            "leak_root_method_name": "loadProperties",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": true,
+            "has_weak_release_marker": false,
+            "path_length": 5,
+            "relevant_method_uids": [
+                "fitnesse.ConfigurationParameter.loadProperties(File)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                9
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1022.java",
+                    "pre_component:12",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:12"
+            ],
+            "issue_source_lines": [
+                72
+            ],
+            "issue_source_method_uids": [
+                "fitnesse.ConfigurationParameter.loadProperties(File)"
+            ],
+            "issue_source_methods": [
+                "loadProperties"
+            ],
+            "issue_leak_root_method_uids": [
+                "fitnesse.ConfigurationParameter.loadProperties(File)"
+            ],
+            "issue_leak_root_methods": [
+                "loadProperties"
+            ],
+            "issue_primary_defect_method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+            "issue_primary_defect_method": "loadProperties",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "8": {
+        "bug_type": "MLK",
+        "buggy_value": "((ConfigLoader.class.getResourceAsStream(resourcePath), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java, 42, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java"
+            ],
+            [
+                "loadNode"
+            ],
+            [
+                "public static JsonNode loadNode(final String resourcePath) {\n        try {\n            final InputStream resourceStream = ConfigLoader.class.getResourceAsStream(resourcePath);\n            final JsonNode node = OBJECT_MAPPER.readTree(resourceStream);\n            // Ensure the resource stream is not null before closing it\n            if (resourceStream == null) {\n                throw new ConfigLoaderLoadingException(\"Resource not found: \" + resourcePath);\n            }\n            resourceStream.close();\n            return node;\n        } catch (final IOException e) {\n            throw new ConfigLoaderLoadingException(\"An error has occurred while reading or parsing the resource\", e);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is closed only on the normal execution path (line 9). If an exception occurs during `OBJECT_MAPPER.readTree(resourceStream)` (line 4) or earlier, the close is bypassed. The release is not in a finally block and lacks all-exit guarantees, so the resource may leak on exceptional paths.  \nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java:dev.emberline.core.config.ConfigLoader.loadNode(String):root:class:42",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java:family:root:class:getresourceasstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java:component:autocloseable:getresourceasstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java:dev.emberline.core.config.ConfigLoader.loadNode(String):root:class:42",
+            "source_component_id": 0,
+            "source_line": 42,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+            "source_method_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+            "source_method_name": "loadNode",
+            "leak_root_method_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+            "leak_root_method_name": "loadNode",
+            "source_origin": "factory",
+            "source_confidence": "high",
+            "source_symbol": "getresourceasstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "dev.emberline.core.config.ConfigLoader.loadNode(String)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                10
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1497.java",
+                    "pre_component:0",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:0"
+            ],
+            "issue_source_lines": [
+                42
+            ],
+            "issue_source_method_uids": [
+                "dev.emberline.core.config.ConfigLoader.loadNode(String)"
+            ],
+            "issue_source_methods": [
+                "loadNode"
+            ],
+            "issue_leak_root_method_uids": [
+                "dev.emberline.core.config.ConfigLoader.loadNode(String)"
+            ],
+            "issue_leak_root_methods": [
+                "loadNode"
+            ],
+            "issue_primary_defect_method_uid": "dev.emberline.core.config.ConfigLoader.loadNode(String)",
+            "issue_primary_defect_method": "loadNode",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "9": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileOutputStream(dummy), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java, 159, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java"
+            ],
+            [
+                "testEmail"
+            ],
+            [
+                "private void testEmail() {\n    final ProgressWindow progressWindow = GameRunner.newProgressWindow(\"Sending test email...\");\n    progressWindow.setVisible(true);\n    final Runnable runnable = () -> {\n      // initialize variables to error state, override if successful\n      String message = \"An unknown occurred, report this as a bug on the TripleA dev forum\";\n      int messageType = JOptionPane.ERROR_MESSAGE;\n      try {\n        final String html = \"<html><body><h1>Success</h1><p>This was a test email sent by TripleA<p></body></html>\";\n        final File dummy = new File(ClientFileSystemHelper.getUserRootFolder(), \"dummySave.txt\");\n        dummy.deleteOnExit();\n        final FileOutputStream fout = new FileOutputStream(dummy);\n        fout.write(\"This file would normally be a save game\".getBytes());\n        fout.close();\n        ((IEmailSender) getBean()).sendEmail(\"TripleA Test\", html, dummy, \"dummy.txt\");\n        // email was sent, or an exception would have been thrown\n        message = \"Email sent, it should arrive shortly, otherwise check your spam folder\";\n        messageType = JOptionPane.INFORMATION_MESSAGE;\n      } catch (final IOException ioe) {\n        message = \"Unable to send email: \" + ioe.getMessage();\n      } finally {\n        // now that we have a result, marshall it back unto the swing thread\n        final String finalMessage = message;\n        final int finalMessageType = messageType;\n        SwingUtilities.invokeLater(() -> {\n          try {\n            GameRunner.showMessageDialog(\n                finalMessage,\n                GameRunner.Title.of(\"Email Test\"),\n                finalMessageType);\n          } catch (final HeadlessException e) {\n            // should never happen in a GUI app\n          }\n        });\n        progressWindow.setVisible(false);\n      }\n    };\n    // start a background thread\n    final Thread t = new Thread(runnable);\n    t.start();\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileOutputStream` is created at line 12 and closed at line 14, but the close occurs only on the normal execution path inside the try block. If an exception is thrown between line 12 and line 14 (e.g., during the write operation at line 13), the close will be skipped, and the resource will not be released. The finally block does not contain a close operation for this resource, so there is no strong guarantee of release on all exits. Therefore, the resource can remain unclosed on some paths.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java:games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail():root:fout:159",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java:family:root:fout:fileoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java:component:autocloseable:fileoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java:games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail():root:fout:159",
+            "source_component_id": 14,
+            "source_line": 159,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+            "source_method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+            "source_method_name": "testEmail",
+            "leak_root_method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+            "leak_root_method_name": "testEmail",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                11
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-987.java",
+                    "pre_component:14",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:14"
+            ],
+            "issue_source_lines": [
+                159
+            ],
+            "issue_source_method_uids": [
+                "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()"
+            ],
+            "issue_source_methods": [
+                "testEmail"
+            ],
+            "issue_leak_root_method_uids": [
+                "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()"
+            ],
+            "issue_leak_root_methods": [
+                "testEmail"
+            ],
+            "issue_primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+            "issue_primary_defect_method": "testEmail",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "10": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileWriter(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java, 31, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java"
+            ],
+            [
+                "write"
+            ],
+            [
+                "public void write(Migration migration, File file) {\n\n    try {\n\n      FileWriter writer = new FileWriter(file);\n      writer.write(\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"yes\\\"?>\\n\");\n      writer.write(\"<!DOCTYPE xml>\\n\");\n      if (comment != null) {\n        writer.write(\"<!-- \");\n        writer.write(comment);\n        writer.write(\" -->\\n\");\n      }\n\n      JAXBContext jaxbContext = JAXBContext.newInstance(Migration.class);\n      Marshaller marshaller = jaxbContext.createMarshaller();\n      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);\n      marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);\n\n      marshaller.marshal(migration, writer);\n\n      writer.close();\n\n    } catch (IOException | JAXBException e) {\n      throw new RuntimeException(e);\n    }\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The FileWriter is created and closed only on the normal execution path inside the try block. If an IOException or JAXBException occurs before line 21, the close() call is skipped, and the resource may leak. The catch block converts exceptions to RuntimeException but does not close the writer. Since the release is not guaranteed on all exits (exceptions bypass it), the path is feasible and the resource is not definitely released before method exit.  \nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java:io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File):root:writer:31",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java:family:root:writer:filewriter",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java:component:autocloseable:filewriter:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java:io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File):root:writer:31",
+            "source_component_id": 17,
+            "source_line": 31,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
+            "source_method_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+            "source_method_name": "write",
+            "leak_root_method_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+            "leak_root_method_name": "write",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "filewriter",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                12
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-374.java",
+                    "pre_component:17",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:17"
+            ],
+            "issue_source_lines": [
+                31
+            ],
+            "issue_source_method_uids": [
+                "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)"
+            ],
+            "issue_source_methods": [
+                "write"
+            ],
+            "issue_leak_root_method_uids": [
+                "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)"
+            ],
+            "issue_leak_root_methods": [
+                "write"
+            ],
+            "issue_primary_defect_method_uid": "io.ebean.dbmigration.migrationreader.MigrationXmlWriter.write(Migration,File)",
+            "issue_primary_defect_method": "write",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "11": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(sourceFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java, 115, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java"
+            ],
+            [
+                "read"
+            ],
+            [
+                "public BufferedImage read() throws IOException {\n\t\ttry {\n\t\t\tFileInputStream fis = new FileInputStream(sourceFile);\n\t\t\timageSource = new InputStreamImageSource(fis);\n\t\t\timageSource.setThumbnailParameter(param);\n\t\t\tBufferedImage img = imageSource.read();\n\t\t\tfis.close();\n\t\t\treturn img;\n\n\t\t} catch (FileNotFoundException e) {\n\t\t\tthrow new FileNotFoundException(\n\t\t\t\t\t\"Could not find file: \" + sourceFile.getAbsolutePath()\n\t\t\t);\n\n\t\t} catch (UnsupportedFormatException e) {\n\t\t\tString sourcePath = sourceFile.getAbsolutePath();\n\t\t\tthrow new UnsupportedFormatException(\n\t\t\t\t\tUnsupportedFormatException.UNKNOWN,\n\t\t\t\t\t\"No suitable ImageReader found for \" + sourcePath + \".\"\n\t\t\t);\n\t\t}\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The FileInputStream is created at line 3 and closed at line 7, but the close occurs only on the normal execution path before the return. If an exception is thrown at lines 4\u20136 (e.g., UnsupportedFormatException), the close will be skipped, leaving the resource open. The catch blocks only rethrow exceptions and do not close the stream. Since the release is not guaranteed on all exits, the resource may leak.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java:net.coobird.thumbnailator.tasks.io.FileImageSource.read():root:fis:115",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java:family:root:fis:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java:net.coobird.thumbnailator.tasks.io.FileImageSource.read():root:fis:115",
+            "source_component_id": 13,
+            "source_line": 115,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+            "source_method_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+            "source_method_name": "read",
+            "leak_root_method_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+            "leak_root_method_name": "read",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "net.coobird.thumbnailator.tasks.io.FileImageSource.read()"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                13
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1336.java",
+                    "pre_component:13",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:13"
+            ],
+            "issue_source_lines": [
+                115
+            ],
+            "issue_source_method_uids": [
+                "net.coobird.thumbnailator.tasks.io.FileImageSource.read()"
+            ],
+            "issue_source_methods": [
+                "read"
+            ],
+            "issue_leak_root_method_uids": [
+                "net.coobird.thumbnailator.tasks.io.FileImageSource.read()"
+            ],
+            "issue_leak_root_methods": [
+                "read"
+            ],
+            "issue_primary_defect_method_uid": "net.coobird.thumbnailator.tasks.io.FileImageSource.read()",
+            "issue_primary_defect_method": "read",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "12": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileInputStream(keyFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java, 56, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java"
+            ],
+            [
+                "parseValue"
+            ],
+            [
+                "@Override\n    public PrivateKey parseValue(String value) throws GuacamoleServerException {\n\n        if (value == null || value.isEmpty())\n            return null;\n\n        try {\n\n            // Open and read the file specified in the configuration.\n            File keyFile = new File(value);\n            FileInputStream keyStreamIn = new FileInputStream(keyFile);\n            ByteArrayOutputStream keyStreamOut = new ByteArrayOutputStream();\n            byte[] keyBuffer = new byte[1024];\n\n            for (int readBytes; (readBytes = keyStreamIn.read(keyBuffer)) != -1;)\n                keyStreamOut.write(keyBuffer, 0, readBytes);\n\n            keyStreamIn.close();\n            final byte[] keyBytes = keyStreamOut.toByteArray();\n\n            // Set up decryption infrastructure\n            KeyFactory keyFactory = KeyFactory.getInstance(\"RSA\");\n            KeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);\n            return keyFactory.generatePrivate(keySpec);\n\n        }\n        catch (FileNotFoundException e) {\n            throw new GuacamoleServerException(\"Could not find the specified key file.\", e);\n        }\n        catch (IOException e) {\n            throw new GuacamoleServerException(\"Could not read in the specified key file.\", e);\n        }\n        catch (NoSuchAlgorithmException e) {\n            throw new GuacamoleServerException(\"RSA algorithm is not available.\", e);\n        }\n        catch (InvalidKeySpecException e) {\n            throw new GuacamoleServerException(\"Key is not in expected PKCS8 encoding.\", e);\n        }\n\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileInputStream` is created at line 11 and closed at line 18, but the close is only on the normal execution path inside the try block. If an exception occurs after line 11 but before line 18 (e.g., during reading or writing), the close will be skipped. Additionally, if any of the catch blocks are triggered, the method exits without closing the stream. There is no finally block or try-with-resources to guarantee closure on all exits. Therefore, the resource may remain unclosed.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java:org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String):root:keystreamin:56",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java:family:root:keystreamin:fileinputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java:component:autocloseable:fileinputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java:org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String):root:keystreamin:56",
+            "source_component_id": 11,
+            "source_line": 56,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
+            "source_method_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+            "source_method_name": "parseValue",
+            "leak_root_method_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+            "leak_root_method_name": "parseValue",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileinputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                14
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1532.java",
+                    "pre_component:11",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:11"
+            ],
+            "issue_source_lines": [
+                56
+            ],
+            "issue_source_method_uids": [
+                "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)"
+            ],
+            "issue_source_methods": [
+                "parseValue"
+            ],
+            "issue_leak_root_method_uids": [
+                "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)"
+            ],
+            "issue_leak_root_methods": [
+                "parseValue"
+            ],
+            "issue_primary_defect_method_uid": "org.apache.guacamole.auth.cas.conf.PrivateKeyGuacamoleProperty.parseValue(String)",
+            "issue_primary_defect_method": "parseValue",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "13": {
+        "bug_type": "MLK",
+        "buggy_value": "((new PrintWriter(new BufferedWriter(new FileWriter(f))), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java, 43, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java"
+            ],
+            [
+                "writeTestFile"
+            ],
+            [
+                "public static File writeTestFile(String fullFile) throws IOException {\n    File f = new File(\"Test.java\");\n    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f)));\n    out.println(fullFile);\n    out.close();\n    return f;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource (PrintWriter) is created and explicitly closed on the normal execution path (line 5), but the close occurs only in the normal flow without a finally block or try-with-resources. If an exception occurs between creation (line 3) and close (line 5), such as during out.println (line 4), the close will be skipped, leaving the resource unclosed. The path indicates a weak release (normal_only guarantee), so the resource is not definitely released on all exits.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java:PersistUtil.writeTestFile(String):root:out:43",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java:family:root:out:printwriter",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java:component:autocloseable:printwriter:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java:PersistUtil.writeTestFile(String):root:out:43",
+            "source_component_id": 21,
+            "source_line": 43,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+            "source_method_uid": "PersistUtil.writeTestFile(String)",
+            "source_method_name": "writeTestFile",
+            "leak_root_method_uid": "PersistUtil.writeTestFile(String)",
+            "leak_root_method_name": "writeTestFile",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "printwriter",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "PersistUtil.writeTestFile(String)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                15
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1010.java",
+                    "pre_component:21",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:21"
+            ],
+            "issue_source_lines": [
+                43
+            ],
+            "issue_source_method_uids": [
+                "PersistUtil.writeTestFile(String)"
+            ],
+            "issue_source_methods": [
+                "writeTestFile"
+            ],
+            "issue_leak_root_method_uids": [
+                "PersistUtil.writeTestFile(String)"
+            ],
+            "issue_leak_root_methods": [
+                "writeTestFile"
+            ],
+            "issue_primary_defect_method_uid": "PersistUtil.writeTestFile(String)",
+            "issue_primary_defect_method": "writeTestFile",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "14": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileWriter(new File(outputDir, filename)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java, 25, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java"
+            ],
+            [
+                "writeHTML"
+            ],
+            [
+                "public void writeHTML(SortedSet objects) throws IOException {\n        FileWriter fileWriter = new FileWriter(new File(outputDir, filename));\n\n        fileWriter.append(\"<HTML>\\n\" + \"<HEAD>\\n\" + \"<TITLE>\\n\");\n        fileWriter.append(title);\n        fileWriter.append(\"\\n\" + \"</TITLE>\\n\" + \"<LINK REL =\\\"stylesheet\\\" TYPE=\\\"text/css\\\" HREF=\\\"stylesheet.css\\\" TITLE=\\\"Style\\\">\\n\" + \"</HEAD>\\n\" + \"<BODY BGCOLOR=\\\"white\\\">\\n\" + \"<FONT size=\\\"+1\\\" CLASS=\\\"FrameHeadingFont\\\">\\n\" + \"<B>\");\n        fileWriter.append(title);\n        fileWriter.append(\"</B></FONT>\\n\" + \"<BR>\\n\" + \"<TABLE BORDER=\\\"0\\\" WIDTH=\\\"100%\\\" SUMMARY=\\\"\\\">\" + \"<TR>\\n\" + \"<TD NOWRAP><FONT CLASS=\\\"FrameItemFont\\\">\");\n\n\n        for (Object object : objects) {\n            fileWriter.append(\"<A HREF=\\\"\");\n            fileWriter.append(directory);\n            fileWriter.append(\"/\");\n            fileWriter.append(object.toString().toLowerCase());\n            fileWriter.append(getTargetExtension());\n            fileWriter.append(\"\\\" target=\\\"objectFrame\\\">\");\n            fileWriter.append(object.toString());\n            fileWriter.append(\"</A><BR>\\n\");\n        }\n\n        fileWriter.append(\"</FONT></TD>\\n\" +\n                \"</TR>\\n\" +\n                \"</TABLE>\\n\" +\n                \"\\n\" +\n                \"</BODY>\\n\" +\n                \"</HTML>\");\n\n        fileWriter.close();\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The FileWriter is created and closed only on the normal execution path (line 29). If an IOException occurs during any of the append operations (lines 4-27), the close() call will be skipped, leaving the resource open. Since the release is not guaranteed on all exits (no try-finally or try-with-resources), the path is feasible for an MLK bug.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java:liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet):root:filewriter:25",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java:family:root:filewriter:filewriter",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java:component:autocloseable:filewriter:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java:liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet):root:filewriter:25",
+            "source_component_id": 18,
+            "source_line": 25,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+            "source_method_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+            "source_method_name": "writeHTML",
+            "leak_root_method_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+            "leak_root_method_name": "writeHTML",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "filewriter",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                16
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-696.java",
+                    "pre_component:18",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:18"
+            ],
+            "issue_source_lines": [
+                25
+            ],
+            "issue_source_method_uids": [
+                "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)"
+            ],
+            "issue_source_methods": [
+                "writeHTML"
+            ],
+            "issue_leak_root_method_uids": [
+                "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)"
+            ],
+            "issue_leak_root_methods": [
+                "writeHTML"
+            ],
+            "issue_primary_defect_method_uid": "liquibase.dbdoc.HTMLListWriter.writeHTML(SortedSet)",
+            "issue_primary_defect_method": "writeHTML",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "15": {
+        "bug_type": "MLK",
+        "buggy_value": "((new BufferedReader(new InputStreamReader(connection.getInputStream(), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java, 125, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java"
+            ],
+            [
+                "postBody"
+            ],
+            [
+                "public static ReturnT postBody(String url, String accessToken, int timeout, Object requestObj, Class returnTargClassOfT) {\n        HttpURLConnection connection = null;\n        BufferedReader bufferedReader = null;\n        try {\n            // connection\n            URL realUrl = new URL(url);\n            connection = (HttpURLConnection) realUrl.openConnection();\n\n            // trust-https\n            boolean useHttps = url.startsWith(\"https\");\n            if (useHttps) {\n                HttpsURLConnection https = (HttpsURLConnection) connection;\n                trustAllHosts(https);\n            }\n\n            // connection setting\n            connection.setRequestMethod(\"POST\");\n            connection.setDoOutput(true);\n            connection.setDoInput(true);\n            connection.setUseCaches(false);\n            connection.setReadTimeout(timeout * 1000);\n            connection.setConnectTimeout(timeout * 1000);\n            connection.setRequestProperty(\"connection\", \"Keep-Alive\");\n            connection.setRequestProperty(\"Content-Type\", \"application/json;charset=UTF-8\");\n            connection.setRequestProperty(\"Accept-Charset\", \"application/json;charset=UTF-8\");\n\n            if(accessToken!=null && accessToken.trim().length()>0){\n                connection.setRequestProperty(XXL_JOB_ACCESS_TOKEN, accessToken);\n            }\n\n            // do connection\n            connection.connect();\n\n            // write requestBody\n            if (requestObj != null) {\n                String requestBody = GsonTool.toJson(requestObj);\n\n                DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());\n                dataOutputStream.write(requestBody.getBytes(\"UTF-8\"));\n                dataOutputStream.flush();\n                dataOutputStream.close();\n            }\n\n            /*byte[] requestBodyBytes = requestBody.getBytes(\"UTF-8\");\n            connection.setRequestProperty(\"Content-Length\", String.valueOf(requestBodyBytes.length));\n            OutputStream outwritestream = connection.getOutputStream();\n            outwritestream.write(requestBodyBytes);\n            outwritestream.flush();\n            outwritestream.close();*/\n\n            // valid StatusCode\n            int statusCode = connection.getResponseCode();\n            if (statusCode != 200) {\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting fail, StatusCode(\"+ statusCode +\") invalid. for url : \" + url);\n            }\n\n            // result\n            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), \"UTF-8\"));\n            StringBuilder result = new StringBuilder();\n            String line;\n            while ((line = bufferedReader.readLine()) != null) {\n                result.append(line);\n            }\n            String resultJson = result.toString();\n\n            // parse returnT\n            try {\n                ReturnT returnT = GsonTool.fromJson(resultJson, ReturnT.class, returnTargClassOfT);\n                return returnT;\n            } catch (Exception e) {\n                logger.error(\"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\", e);\n                return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting (url=\"+url+\") response content invalid(\"+ resultJson +\").\");\n            }\n\n        } catch (Exception e) {\n            logger.error(e.getMessage(), e);\n            return new ReturnT<String>(ReturnT.FAIL_CODE, \"xxl-job remoting error(\"+ e.getMessage() +\"), for url : \" + url);\n        } finally {\n            try {\n                if (bufferedReader != null) {\n                    bufferedReader.close();\n                }\n                if (connection != null) {\n                    connection.disconnect();\n                }\n            } catch (Exception e2) {\n                logger.error(e2.getMessage(), e2);\n            }\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The source is a BufferedReader created at line 58 and assigned to bufferedReader. The marked branch __NO_SINK_BRANCH_PATH_2__ indicates the source is executed but no sink is reached on that branch. The finally block (lines 78-89) unconditionally closes bufferedReader if non-null, which will execute for all continuations of this branch (normal flow or exception). Since the release is in finally, it provides a strong guarantee for the resource on this path.\n\nAnswer: No\n\nFallback: no-sink/weak-release branch is treated as leak-reachable.",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "unknown",
+            "guarantee_level": "none",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class):root:bufferedreader:125",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:family:root:bufferedreader:bufferedreader",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:component:autocloseable:bufferedreader:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java:com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class):root:bufferedreader:125",
+            "source_component_id": 3,
+            "source_line": 125,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+            "source_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "source_method_name": "postBody",
+            "leak_root_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "leak_root_method_name": "postBody",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "bufferedreader",
+            "has_no_sink_marker": true,
+            "has_weak_release_marker": false,
+            "path_length": 5,
+            "relevant_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                17
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1188.java",
+                    "pre_component:3",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:3"
+            ],
+            "issue_source_lines": [
+                125
+            ],
+            "issue_source_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_source_methods": [
+                "postBody"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)"
+            ],
+            "issue_leak_root_methods": [
+                "postBody"
+            ],
+            "issue_primary_defect_method_uid": "com.xxl.job.core.util.XxlJobRemotingUtil.postBody(String,String,int,Object,Class)",
+            "issue_primary_defect_method": "postBody",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "16": {
+        "bug_type": "MLK",
+        "buggy_value": "((outputStreamContainer.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java, 94, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java"
+            ],
+            [
+                "executeUpgradeInfos"
+            ],
+            [
+                "public void executeUpgradeInfos(\n\t\tString bundleSymbolicName, List<UpgradeInfo> upgradeInfos) {\n\n\t\tOutputStreamContainerFactory outputStreamContainerFactory =\n\t\t\t_outputStreamContainerFactoryTracker.\n\t\t\t\tgetOutputStreamContainerFactory();\n\n\t\tOutputStreamContainer outputStreamContainer =\n\t\t\toutputStreamContainerFactory.create(\n\t\t\t\t\"upgrade-\" + bundleSymbolicName);\n\n\t\tOutputStream outputStream = outputStreamContainer.getOutputStream();\n\n\t\tRelease release = _releaseLocalService.fetchRelease(bundleSymbolicName);\n\n\t\tif (release != null) {\n\t\t\t_releasePublisher.publishInProgress(release);\n\t\t}\n\n\t\t_outputStreamContainerFactoryTracker.runWithSwappedLog(\n\t\t\tnew UpgradeInfosRunnable(\n\t\t\t\tbundleSymbolicName, upgradeInfos, outputStream),\n\t\t\toutputStreamContainer.getDescription(), outputStream);\n\n\t\ttry {\n\t\t\toutputStream.close();\n\t\t}\n\t\tcatch (IOException ioe) {\n\t\t\tthrow new RuntimeException(ioe);\n\t\t}\n\n\t\trelease = _releaseLocalService.fetchRelease(bundleSymbolicName);\n\n\t\tif (release != null) {\n\t\t\t_releasePublisher.publish(release);\n\t\t}\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `outputStream` is obtained at line 12 and closed at line 26 inside a try block, but the close is not in a finally block. If an exception occurs before line 25 or during the close itself, the resource may not be released. The release is only guaranteed on the normal path, not on all exits.  \nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java:com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List):root:outputstreamcontainer:94",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java:family:root:outputstreamcontainer:getoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java:component:autocloseable:getoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java:com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List):root:outputstreamcontainer:94",
+            "source_component_id": 23,
+            "source_line": 94,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+            "source_method_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+            "source_method_name": "executeUpgradeInfos",
+            "leak_root_method_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+            "leak_root_method_name": "executeUpgradeInfos",
+            "source_origin": "factory",
+            "source_confidence": "high",
+            "source_symbol": "getoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                18
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-671.java",
+                    "pre_component:23",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:23"
+            ],
+            "issue_source_lines": [
+                94
+            ],
+            "issue_source_method_uids": [
+                "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)"
+            ],
+            "issue_source_methods": [
+                "executeUpgradeInfos"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)"
+            ],
+            "issue_leak_root_methods": [
+                "executeUpgradeInfos"
+            ],
+            "issue_primary_defect_method_uid": "com.liferay.portal.upgrade.internal.executor.UpgradeExecutor.executeUpgradeInfos(String,List)",
+            "issue_primary_defect_method": "executeUpgradeInfos",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "17": {
+        "bug_type": "MLK",
+        "buggy_value": "((new ObjectOutputStream(new FileOutputStream(file)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java, 93, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java"
+            ],
+            [
+                "save"
+            ],
+            [
+                "protected void save() {\n        try {\n            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));\n            Map<byte[], byte[]> raw = new HashMap<>();\n            for (Map.Entry<ByteBuffer, ByteBuffer> mapEntry : data.entrySet()) {\n                byte[] key = (mapEntry.getKey() != null) ? mapEntry.getKey().array() : null;\n                byte[] value = (mapEntry.getValue() != null) ? mapEntry.getValue().array() : null;\n                raw.put(key, value);\n            }\n            os.writeObject(raw);\n            os.close();\n        } catch (IOException e) {\n            throw new ConnectException(e);\n        }\n    }"
+            ]
+        ],
+        "explanation": "Explanation: The resource is created at line 3 and closed at line 11, but the close occurs only on the normal execution path inside the try block. If an IOException occurs during os.writeObject(raw) (line 10) or earlier, the close at line 11 will be skipped, and the exception handler at lines 12-14 will throw a ConnectException without closing the resource. Since the release is not guaranteed on all exits (exceptions bypass it), the resource may leak.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java:org.apache.kafka.connect.storage.FileOffsetBackingStore.save():root:os:93",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java:family:root:os:objectoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java:component:autocloseable:objectoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java:org.apache.kafka.connect.storage.FileOffsetBackingStore.save():root:os:93",
+            "source_component_id": 19,
+            "source_line": 93,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+            "source_method_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+            "source_method_name": "save",
+            "leak_root_method_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+            "leak_root_method_name": "save",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "objectoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                19
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1120.java",
+                    "pre_component:19",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:19"
+            ],
+            "issue_source_lines": [
+                93
+            ],
+            "issue_source_method_uids": [
+                "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()"
+            ],
+            "issue_source_methods": [
+                "save"
+            ],
+            "issue_leak_root_method_uids": [
+                "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()"
+            ],
+            "issue_leak_root_methods": [
+                "save"
+            ],
+            "issue_primary_defect_method_uid": "org.apache.kafka.connect.storage.FileOffsetBackingStore.save()",
+            "issue_primary_defect_method": "save",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "18": {
+        "bug_type": "MLK",
+        "buggy_value": "((new OutputStreamWriter(new BufferedOutputStream(new ByteBufOutputStream(buffer))), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java, 54, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java"
+            ],
+            [
+                "render"
+            ],
+            [
+                "@SuppressWarnings(\"ThrowableResultOfMethodCallIgnored\")\n  @Override\n  public void render(Context ctx, HealthCheckResults healthCheckResults) throws Exception {\n    ByteBuf buffer = byteBufAllocator.buffer();\n    boolean first = true;\n    boolean unhealthy = false;\n\n    try {\n      Writer writer = new OutputStreamWriter(new BufferedOutputStream(new ByteBufOutputStream(buffer)));\n      for (Map.Entry<String, HealthCheck.Result> entry : healthCheckResults.getResults().entrySet()) {\n        if (first) {\n          first = false;\n        } else {\n          writer.write(\"\\n\");\n        }\n        String name = entry.getKey();\n        HealthCheck.Result result = entry.getValue();\n        writer.append(name).append(\" : \").append(result.isHealthy() ? \"HEALTHY\" : \"UNHEALTHY\");\n        if (!result.isHealthy()) {\n          unhealthy = true;\n          writer.append(\" [\").append(result.getMessage()).append(\"]\");\n          if (result.getError() != null) {\n            writer.append(\" [\").append(result.getError().toString()).append(\"]\");\n          }\n        }\n      }\n      writer.close();\n    } catch (Exception e) {\n      buffer.release();\n      throw e;\n    }\n\n    ctx.getResponse()\n      .contentTypeIfNotSet(HttpHeaderConstants.PLAIN_TEXT_UTF8)\n      .status(unhealthy ? 503 : 200)\n      .send(buffer);\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The resource `writer` is created at line 9 and closed at line 27, but the close occurs inside a try block without a finally. If an exception occurs before line 27, the close is skipped, and the underlying `ByteBufOutputStream` (and its associated `ByteBuf` buffer) may not be properly released. Although `buffer.release()` is called in the catch block for exceptions, that only handles exceptions thrown in the try block, not the scenario where `writer.close()` itself might throw an exception after the try block completes normally. Since the release is not guaranteed on all exits (e.g., if `writer.close()` throws), the resource may remain unclosed.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java:ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults):root:writer:54",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java:family:root:writer:outputstreamwriter",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java:component:autocloseable:outputstreamwriter:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java:ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults):root:writer:54",
+            "source_component_id": 20,
+            "source_line": 54,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-871.java",
+            "source_method_uid": "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+            "source_method_name": "render",
+            "leak_root_method_uid": "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+            "leak_root_method_name": "render",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "outputstreamwriter",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                21
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-871.java",
+                    "pre_component:20",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:20"
+            ],
+            "issue_source_lines": [
+                54
+            ],
+            "issue_source_method_uids": [
+                "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)"
+            ],
+            "issue_source_methods": [
+                "render"
+            ],
+            "issue_leak_root_method_uids": [
+                "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)"
+            ],
+            "issue_leak_root_methods": [
+                "render"
+            ],
+            "issue_primary_defect_method_uid": "ratpack.health.internal.HealthCheckResultsRenderer.render(Context,HealthCheckResults)",
+            "issue_primary_defect_method": "render",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "19": {
+        "bug_type": "MLK",
+        "buggy_value": "((new FileOutputStream(outFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java, 95, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java"
+            ],
+            [
+                "saveToFile"
+            ],
+            [
+                "private void saveToFile(ResContainer rc, File outFile) {\n\t\tCodeWriter cw = rc.getContent();\n\t\tif (cw != null) {\n\t\t\tcw.save(outFile);\n\t\t\treturn;\n\t\t}\n\t\tInputStream binary = rc.getBinary();\n\t\tif(binary != null) {\n\t\t\ttry {\n\t\t\t\toutFile.getParentFile().mkdirs();\n\t\t\t\tFileOutputStream binaryFileStream = new FileOutputStream(outFile);\n\t\t\t\tIOUtils.copy(binary, binaryFileStream);\n\t\t\t\tbinaryFileStream.close();\n\t\t\t\tbinary.close();\n\t\t\t}\n\t\t\tcatch(IOException e) {\n\t\t\t\tLOG.warn(\"Resource '{}' not saved, got exception {}\", rc.getName(), e);\n\t\t\t}\n\t\t\treturn;\n\t\t}\n\t\tLOG.warn(\"Resource '{}' not saved, unknown type\", rc.getName());\n\t}"
+            ]
+        ],
+        "explanation": "Explanation: The resource `FileOutputStream` is created at line 11 and closed at line 13, but the close occurs inside a try block without a finally. If an exception occurs during `IOUtils.copy` (line 12) or `binaryFileStream.close()` itself, the catch block handles the exception but does not rethrow it, and the method proceeds to return. However, the close at line 13 is only reached on the normal path; if an exception is thrown at line 12, the close is skipped. Since the release is not guaranteed on all exits (exceptions bypass it), the resource may leak.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "normal_only",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java:jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File):root:binaryfilestream:95",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java:family:root:binaryfilestream:fileoutputstream",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java:component:autocloseable:fileoutputstream:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java:jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File):root:binaryfilestream:95",
+            "source_component_id": 16,
+            "source_line": 95,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-901.java",
+            "source_method_uid": "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+            "source_method_name": "saveToFile",
+            "leak_root_method_uid": "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+            "leak_root_method_name": "saveToFile",
+            "source_origin": "new",
+            "source_confidence": "high",
+            "source_symbol": "fileoutputstream",
+            "has_no_sink_marker": false,
+            "has_weak_release_marker": true,
+            "path_length": 6,
+            "relevant_method_uids": [
+                "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                22
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-901.java",
+                    "pre_component:16",
+                    "autocloseable",
+                    "weak_or_unknown"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:16"
+            ],
+            "issue_source_lines": [
+                95
+            ],
+            "issue_source_method_uids": [
+                "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)"
+            ],
+            "issue_source_methods": [
+                "saveToFile"
+            ],
+            "issue_leak_root_method_uids": [
+                "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)"
+            ],
+            "issue_leak_root_methods": [
+                "saveToFile"
+            ],
+            "issue_primary_defect_method_uid": "jadx.core.xmlgen.ResourcesSaver.saveToFile(ResContainer,File)",
+            "issue_primary_defect_method": "saveToFile",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    },
+    "20": {
+        "bug_type": "MLK",
+        "buggy_value": "((url.openConnection().getInputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java, 77, -1), ValueLabel.SRC)",
+        "relevant_functions": [
+            [
+                "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java"
+            ],
+            [
+                "getCalleeTarget"
+            ],
+            [
+                "@Override\n  public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {\n    IMethod target = base.getCalleeTarget(caller, site, receiver);\n    if (target != null && target.getReference().equals(loadFileFunRef)) {\n\n      Set<String> names = new HashSet<String>();\n      SSAInstruction call = caller.getIR().getInstructions()[caller.getIR().getCallInstructionIndices(site).intIterator().next()];\n      if (call.getNumberOfUses() > 1) {\n        LocalPointerKey fileNameV = new LocalPointerKey(caller, call.getUse(1));\n        OrdinalSet<InstanceKey> ptrs = builder.getPointerAnalysis().getPointsToSet(fileNameV);\n        for(InstanceKey k : ptrs) {\n          if (k instanceof ConstantKey) {\n            Object v = ((ConstantKey)k).getValue();\n            if (v instanceof String) {\n              names.add((String)v);\n            }\n          }\n        }\n\n        if (names.size() == 1) {\n          String str = names.iterator().next();\n          try {\n            JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);\n            URL url = new URL(builder.getBaseURL(), str);\n            if(!loadedFiles.contains(url)) {\n              // try to open the input stream for the URL.  if it fails, we'll get an IOException and fall through to default case\n              InputStream inputStream = url.openConnection().getInputStream();\n              inputStream.close();\n              JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, url);\n              loadedFiles.add(url);\n              IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), \"L\" + url.getFile()));\n              return script.getMethod(JavaScriptMethods.fnSelector);\n            }\n          } catch (MalformedURLException e1) {\n            // do nothing, fall through and return 'target'\n          } catch (IOException e) {\n            // do nothing, fall through and return 'target'\n          } catch (RuntimeException e) {\n            // do nothing, fall through and return 'target'\n          }\n        }\n      }\n    }\n\n    return target;\n  }"
+            ]
+        ],
+        "explanation": "Explanation: The InputStream is created at line 27 and closed at line 28 on the normal path inside the try block, but if an exception occurs after creation and before the close (or during close itself), the close may be skipped. The release is not in a finally block or try-with-resources, so it is not guaranteed on all exits. The path indicates the resource may stay open if an exception bypasses the close.\n\nAnswer: Yes",
+        "metadata": {
+            "resource_kind": "autocloseable",
+            "release_context": "normal",
+            "guarantee_level": "all_exit_paths",
+            "obligation_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java:com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass):root:url:77",
+            "obligation_family_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java:family:root:url:openconnection",
+            "obligation_component_key": "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java:component:autocloseable:openconnection:/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java:com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass):root:url:77",
+            "source_component_id": 24,
+            "source_line": 77,
+            "source_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java",
+            "source_method_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+            "source_method_name": "getCalleeTarget",
+            "leak_root_method_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+            "leak_root_method_name": "getCalleeTarget",
+            "source_origin": "factory",
+            "source_confidence": "high",
+            "source_symbol": "openconnection",
+            "has_no_sink_marker": true,
+            "has_weak_release_marker": false,
+            "path_length": 5,
+            "relevant_method_uids": [
+                "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)"
+            ],
+            "issue_mode": "issue_online_component",
+            "issue_member_ids": [
+                23
+            ],
+            "issue_member_count": 1,
+            "issue_component_signatures": [
+                [
+                    "/home/jiayu/desktop/jleakdetector/benchmark/java/jleaks_mlk_20/bug_files/jleaks-bug-1061.java",
+                    "pre_component:24",
+                    "autocloseable",
+                    "strong"
+                ]
+            ],
+            "issue_component_keys": [
+                "pre_component:24"
+            ],
+            "issue_source_lines": [
+                77
+            ],
+            "issue_source_method_uids": [
+                "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)"
+            ],
+            "issue_source_methods": [
+                "getCalleeTarget"
+            ],
+            "issue_leak_root_method_uids": [
+                "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)"
+            ],
+            "issue_leak_root_methods": [
+                "getCalleeTarget"
+            ],
+            "issue_primary_defect_method_uid": "com.ibm.wala.cast.js.ipa.callgraph.LoadFileTargetSelector.getCalleeTarget(CGNode,CallSiteReference,IClass)",
+            "issue_primary_defect_method": "getCalleeTarget",
+            "issue_primary_confidence": 1.0
+        },
+        "is_human_confirmed_true": "False"
+    }
+}
