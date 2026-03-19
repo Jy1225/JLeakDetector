@@ -2089,8 +2089,14 @@ class DFBScanAgent(Agent):
             "has_weak_release_marker": has_weak_release_marker,
             "path_length": len(buggy_path),
             "relevant_method_uids": sorted(
-                self.__build_java_mlk_function_signature_key(function)
-                for function in relevant_functions.values()
+                {
+                    (
+                        function.function_uid
+                        if function.function_uid != ""
+                        else self.__build_java_mlk_function_signature_key(function)
+                    )
+                    for function in relevant_functions.values()
+                }
             ),
         }
         return metadata
