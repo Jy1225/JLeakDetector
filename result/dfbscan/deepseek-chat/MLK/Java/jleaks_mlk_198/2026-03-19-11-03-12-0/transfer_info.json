@@ -1,0 +1,572 @@
+{
+    "((new SchSession(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 493, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new SchSession(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 493, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new SchSession(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 493, -1), ValueLabel.SRC), ((value, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 534, 1), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((value, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 534, 1), ValueLabel.ARG)",
+            "terminal_line": 534,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        }
+    ],
+    "((jsch.getSession(hostSystem.getUser(), hostSystem.getHost(), hostSystem.getPort()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 460, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((jsch.getSession(hostSystem.getUser(), hostSystem.getHost(), hostSystem.getPort()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 460, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((jsch.getSession(hostSystem.getUser(), hostSystem.getHost(), hostSystem.getPort()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 460, -1), ValueLabel.SRC), ((session, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 495, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((session, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 495, 0), ValueLabel.ARG)",
+            "terminal_line": 495,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        }
+    ],
+    "((new PrintStream(inputToChannel, true), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 488, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(inputToChannel, true), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 488, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(inputToChannel, true), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 488, -1), ValueLabel.SRC), ((commander, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 497, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((commander, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 497, 0), ValueLabel.ARG)",
+            "terminal_line": 497,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        },
+        {
+            "src_value": "((new PrintStream(inputToChannel, true), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 488, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(inputToChannel, true), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 488, -1), ValueLabel.SRC), ((commander, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 497, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((commander, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 497, 0), ValueLabel.ARG)",
+            "terminal_line": 497,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        }
+    ],
+    "((channel.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 487, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((channel.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 487, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((channel.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 487, -1), ValueLabel.SRC), ((inputToChannel, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 498, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((inputToChannel, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 498, 0), ValueLabel.ARG)",
+            "terminal_line": 498,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        },
+        {
+            "src_value": "((channel.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 487, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((channel.getOutputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 487, -1), ValueLabel.SRC), ((inputToChannel, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 498, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((inputToChannel, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 498, 0), ValueLabel.ARG)",
+            "terminal_line": 498,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        }
+    ],
+    "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java, 112, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java, 112, -1), ValueLabel.SRC)",
+            "reason": "return statement directly returns factory-created resource",
+            "rule_hit": "return_line_factory_hint",
+            "path_key": "[((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java, 112, -1), ValueLabel.SRC), ((loadTerms(...), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java, 113, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((loadTerms(...), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java, 113, 0), ValueLabel.RET)",
+            "terminal_line": 113,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1384.java"
+        }
+    ],
+    "((new BufferedReader(new InputStreamReader(new FileInputStream(filename), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 72, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedReader(new InputStreamReader(new FileInputStream(filename), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 72, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedReader(new InputStreamReader(new FileInputStream(filename), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 72, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 72, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 72, 0), ValueLabel.RET)",
+            "terminal_line": 72,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java"
+        }
+    ],
+    "((new BufferedWriter(new FileWriter(cache.journalFile, true)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java, 213, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedWriter(new FileWriter(cache.journalFile, true)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java, 213, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedWriter(new FileWriter(cache.journalFile, true)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java, 213, -1), ValueLabel.SRC), ((cache, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java, 214, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((cache, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java, 214, 0), ValueLabel.RET)",
+            "terminal_line": 214,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1333.java"
+        }
+    ],
+    "((new BufferedReader(new InputStreamReader(is, \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 51, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedReader(new InputStreamReader(is, \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 51, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedReader(new InputStreamReader(is, \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 51, -1), ValueLabel.SRC), ((new BufferedReader(new InputStreamReader(is, \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 51, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new BufferedReader(new InputStreamReader(is, \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 51, 0), ValueLabel.RET)",
+            "terminal_line": 51,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java"
+        }
+    ],
+    "((new BufferedReader(new InputStreamReader(new FileInputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 47, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedReader(new InputStreamReader(new FileInputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 47, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedReader(new InputStreamReader(new FileInputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 47, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 47, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 47, 0), ValueLabel.RET)",
+            "terminal_line": 47,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java"
+        }
+    ],
+    "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 55, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 55, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), \"UTF-8\")), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 55, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 55, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java, 55, 0), ValueLabel.RET)",
+            "terminal_line": 55,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-471.java"
+        }
+    ],
+    "((new FileInputStream(source), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 302, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(source), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 302, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new FileInputStream(source), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 302, -1), ValueLabel.SRC), ((file, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 303, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((file, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java, 303, 0), ValueLabel.ARG)",
+            "terminal_line": 303,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-240.java"
+        }
+    ],
+    "((res.getResourceStream().getInputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java, 213, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((res.getResourceStream().getInputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java, 213, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((res.getResourceStream().getInputStream(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java, 213, -1), ValueLabel.SRC), ((in, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java, 214, 0), ValueLabel.PARA)]",
+            "path_length": 2,
+            "terminal_label": "PARA",
+            "terminal_value": "((in, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java, 214, 0), ValueLabel.PARA)",
+            "terminal_line": 214,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-454.java"
+        }
+    ],
+    "((new FileOutputStream(caKsFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java, 347, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileOutputStream(caKsFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java, 347, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new FileOutputStream(caKsFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java, 347, -1), ValueLabel.SRC), ((os, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java, 348, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((os, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java, 348, 0), ValueLabel.ARG)",
+            "terminal_line": 348,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1193.java"
+        }
+    ],
+    "((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, 0), ValueLabel.RET)",
+            "terminal_line": 751,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java"
+        },
+        {
+            "src_value": "((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 758, 0), ValueLabel.RET)",
+            "terminal_line": 758,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java"
+        }
+    ],
+    "((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new FileOutputStream(explodedFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java, 751, 0), ValueLabel.RET)",
+            "terminal_line": 751,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-881.java"
+        }
+    ],
+    "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename, append), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 100, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename, append), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 100, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename, append), encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 100, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 100, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 100, 0), ValueLabel.RET)",
+            "terminal_line": 100,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java"
+        }
+    ],
+    "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append),encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 113, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append),encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 113, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append),encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 113, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 113, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java, 113, 0), ValueLabel.RET)",
+            "terminal_line": 113,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1047.java"
+        }
+    ],
+    "((thisClass.getResourceAsStream(jarname), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 49, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((thisClass.getResourceAsStream(jarname), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 49, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((thisClass.getResourceAsStream(jarname), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 49, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 49, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 49, 0), ValueLabel.RET)",
+            "terminal_line": 49,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java"
+        }
+    ],
+    "((new PrintWriter(getOutputWriter(output, encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 172, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintWriter(getOutputWriter(output, encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 172, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new PrintWriter(getOutputWriter(output, encoding)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 172, -1), ValueLabel.SRC), ((new NoDocumentXMPMetaHandler(metadata, writer), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 173, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new NoDocumentXMPMetaHandler(metadata, writer), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 173, 0), ValueLabel.RET)",
+            "terminal_line": 173,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        }
+    ],
+    "((new FileInputStream(filename.toString()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 72, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(filename.toString()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 72, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new FileInputStream(filename.toString()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 72, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 72, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 72, 0), ValueLabel.RET)",
+            "terminal_line": 72,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java"
+        }
+    ],
+    "((jarfile.getInputStream(ze), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 107, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((jarfile.getInputStream(ze), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 107, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((jarfile.getInputStream(ze), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 107, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 107, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java, 107, 0), ValueLabel.RET)",
+            "terminal_line": 107,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-561.java"
+        }
+    ],
+    "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 179, -1), ValueLabel.OUT), ((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)",
+            "terminal_line": 180,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 179, -1), ValueLabel.OUT), ((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)",
+            "terminal_line": 180,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 165, -1), ValueLabel.OUT), ((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)",
+            "terminal_line": 166,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 165, -1), ValueLabel.OUT), ((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)",
+            "terminal_line": 166,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, -1), ValueLabel.OUT), ((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)",
+            "terminal_line": 152,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 282, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, -1), ValueLabel.OUT), ((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)",
+            "terminal_line": 152,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        }
+    ],
+    "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 179, -1), ValueLabel.OUT), ((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)",
+            "terminal_line": 180,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 179, -1), ValueLabel.OUT), ((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((writer (captured in closure), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 180, 0), ValueLabel.RET)",
+            "terminal_line": 180,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 165, -1), ValueLabel.OUT), ((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)",
+            "terminal_line": 166,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 165, -1), ValueLabel.OUT), ((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((handler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 166, 0), ValueLabel.RET)",
+            "terminal_line": 166,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, -1), ValueLabel.OUT), ((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)",
+            "terminal_line": 152,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        },
+        {
+            "src_value": "((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new OutputStreamWriter(output, UTF_8), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 284, 0), ValueLabel.RET), ((getOutputWriter(output, encoding), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, -1), ValueLabel.OUT), ((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((WriteOutContentHandler, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java, 152, 0), ValueLabel.RET)",
+            "terminal_line": 152,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-1459.java"
+        }
+    ],
+    "((return new PropertyResourceBundle(entryUrl.openStream());, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java, 401, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((return new PropertyResourceBundle(entryUrl.openStream());, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java, 401, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((return new PropertyResourceBundle(entryUrl.openStream());, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java, 401, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java, 401, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java, 401, 0), ValueLabel.RET)",
+            "terminal_line": 401,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-548.java"
+        }
+    ],
+    "((new FileInputStream(dfos.getFile()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 248, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(dfos.getFile()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 248, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new FileInputStream(dfos.getFile()), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 248, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 248, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 248, 0), ValueLabel.RET)",
+            "terminal_line": 248,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java"
+        }
+    ],
+    "((loader.getResourceAsStream(name), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java, 100, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((loader.getResourceAsStream(name), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java, 100, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((loader.getResourceAsStream(name), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java, 100, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java, 100, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java, 100, 0), ValueLabel.RET)",
+            "terminal_line": 100,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-207.java"
+        }
+    ],
+    "((Camera camera = Camera.open(cameraId);, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java, 37, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((Camera camera = Camera.open(cameraId);, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java, 37, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((Camera camera = Camera.open(cameraId);, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java, 37, -1), ValueLabel.SRC), ((camera, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java, 46, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((camera, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java, 46, 0), ValueLabel.RET)",
+            "terminal_line": 46,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-446.java"
+        }
+    ],
+    "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java, 43, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java, 43, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new FileInputStream(file), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java, 43, -1), ValueLabel.SRC), ((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java, 43, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((None, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java, 43, 0), ValueLabel.RET)",
+            "terminal_line": 43,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-295.java"
+        }
+    ],
+    "((new DeferredFileOutputStream(sizeThreshold, outputFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 588, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new DeferredFileOutputStream(sizeThreshold, outputFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 588, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new DeferredFileOutputStream(sizeThreshold, outputFile), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 588, -1), ValueLabel.SRC), ((dfos, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 590, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((dfos, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java, 590, 0), ValueLabel.RET)",
+            "terminal_line": 590,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-816.java"
+        }
+    ],
+    "((new BufferedInputStream(new FileInputStream(cacheConfig)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedInputStream(new FileInputStream(cacheConfig)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new BufferedInputStream(new FileInputStream(cacheConfig)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, -1), ValueLabel.SRC), (((arg to setInputStream), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "(((arg to setInputStream), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, 0), ValueLabel.ARG)",
+            "terminal_line": 545,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java"
+        },
+        {
+            "src_value": "((new BufferedInputStream(new FileInputStream(cacheConfig)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new BufferedInputStream(new FileInputStream(cacheConfig)), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, -1), ValueLabel.SRC), (((arg to setInputStream), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "(((arg to setInputStream), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java, 545, 0), ValueLabel.ARG)",
+            "terminal_line": 545,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-530.java"
+        }
+    ],
+    "((new CompletableFuture<>(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java, 184, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new CompletableFuture<>(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java, 184, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new CompletableFuture<>(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java, 184, -1), ValueLabel.SRC), ((promise, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java, 186, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((promise, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java, 186, 0), ValueLabel.RET)",
+            "terminal_line": 186,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-202.java"
+        }
+    ],
+    "((new PlatformDdlWriter(platform, serverConfig, prefix, migrationConfig), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 447, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PlatformDdlWriter(platform, serverConfig, prefix, migrationConfig), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 447, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PlatformDdlWriter(platform, serverConfig, prefix, migrationConfig), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 447, -1), ValueLabel.SRC), ((PlatformDdlWriter, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 447, 0), ValueLabel.RET), ((createDdlWriter(databasePlatform, \"\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 377, -1), ValueLabel.OUT), ((writer, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 738, 0), ValueLabel.ARG)]",
+            "path_length": 4,
+            "terminal_label": "ARG",
+            "terminal_value": "((writer, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java, 738, 0), ValueLabel.ARG)",
+            "terminal_line": 738,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/jleaks_mlk_198/bug_files/jleaks-bug-373.java"
+        }
+    ]
+}
