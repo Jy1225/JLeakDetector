@@ -1,0 +1,14 @@
+{
+    "mode": "canonical",
+    "enabled": true,
+    "raw_report_count": 428,
+    "canonical_issue_count": 315,
+    "pre_cluster_issue_count": 428,
+    "second_pass_merge_count": 111,
+    "third_pass_merge_count": 2,
+    "low_conf_attached_reports": 0,
+    "structural_merge_enabled": true,
+    "structural_merge_hops": 2,
+    "reduced_report_count": 113,
+    "reduction_ratio": 0.26401869158878505
+}
