@@ -4138,6 +4138,15 @@ class DFBScanAgent(Agent):
         self, bug_reports: Dict[int, "BugReport"]
     ) -> Dict[str, dict]:
         grouped: Dict[str, Dict[str, object]] = {}
+        uid_to_function: Dict[str, Function] = {}
+        if self.language == "Java" and self.bug_type == "MLK":
+            for function in self.ts_analyzer.function_env.values():
+                function_uid = (
+                    function.function_uid
+                    if function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(function)
+                )
+                uid_to_function[function_uid] = function
 
         for bug_report_id in sorted(bug_reports.keys()):
             bug_report = bug_reports[bug_report_id]
@@ -4164,25 +4173,54 @@ class DFBScanAgent(Agent):
                     function.function_name
                 )
 
-            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
-            if src_function is not None:
-                method_uid = (
-                    src_function.function_uid
-                    if src_function.function_uid != ""
-                    else self.__build_java_mlk_function_signature_key(src_function)
-                )
-                method_name = src_function.function_name
-                method_start_line = src_function.start_line_number
-                method_end_line = src_function.end_line_number
-                helper_like = self.__is_java_mlk_helper_function_for_dedup(src_function)
+            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+            source_line = int(metadata.get("source_line", src_value.line_number))
+            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+            source_method_name = str(metadata.get("source_method_name", "")).strip()
+
+            method_uid = source_method_uid
+            method_name = source_method_name
+            method_start_line = -1
+            method_end_line = -1
+            helper_like = False
+            if method_uid != "":
+                method_function = uid_to_function.get(method_uid)
+                if method_function is not None:
+                    method_start_line = method_function.start_line_number
+                    method_end_line = method_function.end_line_number
+                    helper_like = self.__is_java_mlk_helper_function_for_dedup(
+                        method_function
+                    )
+                if method_name == "":
+                    method_name = (
+                        method_function.function_name
+                        if method_function is not None
+                        else "UNKNOWN_METHOD"
+                    )
             else:
-                method_uid = (
-                    f"{normalized_file}:UNKNOWN_METHOD:{src_value.line_number}"
-                )
+                src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+                if src_function is not None:
+                    method_uid = (
+                        src_function.function_uid
+                        if src_function.function_uid != ""
+                        else self.__build_java_mlk_function_signature_key(src_function)
+                    )
+                    method_name = src_function.function_name
+                    method_start_line = src_function.start_line_number
+                    method_end_line = src_function.end_line_number
+                    helper_like = self.__is_java_mlk_helper_function_for_dedup(
+                        src_function
+                    )
+                else:
+                    method_uid = (
+                        f"{normalized_file}:UNKNOWN_METHOD:{src_value.line_number}"
+                    )
+                    method_name = "UNKNOWN_METHOD"
+                    method_start_line = -1
+                    method_end_line = -1
+                    helper_like = False
+            if method_name == "":
                 method_name = "UNKNOWN_METHOD"
-                method_start_line = -1
-                method_end_line = -1
-                helper_like = False
 
             method_buckets = cast(Dict[str, Dict[str, object]], file_entry["method_buckets"])
             if method_uid not in method_buckets:
@@ -4207,10 +4245,9 @@ class DFBScanAgent(Agent):
                 }
 
             method_entry = method_buckets[method_uid]
-            cast(Set[int], method_entry["source_lines"]).add(src_value.line_number)
+            cast(Set[int], method_entry["source_lines"]).add(source_line)
             cast(List[int], method_entry["report_ids"]).append(bug_report_id)
             method_entry["report_count"] = int(method_entry["report_count"]) + 1
-            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
             guarantee_level = normalize_guarantee_level(
                 str(metadata.get("guarantee_level", GUARANTEE_NONE))
             )
@@ -4630,7 +4667,7 @@ class DFBScanAgent(Agent):
                 release_context=release_context,
                 guarantee_level=guarantee_level,
                 buggy_path=None,
-                merge_mode="issue",
+                merge_mode="issue_online",
             )
             groups.setdefault(signature, []).append(bug_report_id)
 
@@ -4657,7 +4694,7 @@ class DFBScanAgent(Agent):
             issue_entry = representative_bug_report.to_dict()
             issue_entry["issue_member_ids"] = member_ids
             issue_entry["issue_member_count"] = len(member_ids)
-            issue_entry["issue_mode"] = "issue"
+            issue_entry["issue_mode"] = "issue_online"
             issue_entry["issue_signature"] = [str(part) for part in signature]
             issue_entry["issue_family_key"] = (
                 str(signature[1]) if len(signature) > 1 else ""
@@ -4684,6 +4721,458 @@ class DFBScanAgent(Agent):
             ),
         }
         return issue_payload, stats_payload
+
+    def __build_java_mlk_issue_component_signature_from_report(
+        self, bug_report: "BugReport"
+    ) -> Tuple[str, str, str, str]:
+        metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+        source_file = str(
+            metadata.get("source_file", bug_report.buggy_value.file)
+        ).replace("\\", "/").lower()
+        component_key = str(
+            metadata.get(
+                "obligation_component_key",
+                self.__get_java_mlk_source_obligation_component_key(
+                    bug_report.buggy_value
+                ),
+            )
+        )
+        resource_kind = normalize_resource_kind(
+            str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
+        )
+        guarantee_level = normalize_guarantee_level(
+            str(metadata.get("guarantee_level", GUARANTEE_NONE))
+        )
+        guarantee_class = (
+            "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+        )
+        return (
+            source_file,
+            component_key,
+            resource_kind,
+            guarantee_class,
+        )
+
+    def __build_java_mlk_issue_reports_from_raw(
+        self, bug_reports: Dict[int, "BugReport"]
+    ) -> Tuple[Dict[int, "BugReport"], Dict[str, object]]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return dict(bug_reports), {
+                "mode": "issue_online_component",
+                "raw_report_count": len(bug_reports),
+                "issue_count": len(bug_reports),
+                "pre_signature_group_count": len(bug_reports),
+                "graph_merge_count": 0,
+                "reduced_report_count": 0,
+                "reduction_ratio": 0.0,
+            }
+
+        raw_count = len(bug_reports)
+        if raw_count == 0:
+            return {}, {
+                "mode": "issue_online_component",
+                "raw_report_count": 0,
+                "issue_count": 0,
+                "pre_signature_group_count": 0,
+                "graph_merge_count": 0,
+                "reduced_report_count": 0,
+                "reduction_ratio": 0.0,
+            }
+
+        signatures: List[Tuple[str, str, str, str]] = []
+        member_ids_by_signature: Dict[Tuple[str, str, str, str], List[int]] = defaultdict(list)
+        for bug_report_id in sorted(bug_reports.keys()):
+            signature = self.__build_java_mlk_issue_component_signature_from_report(
+                bug_reports[bug_report_id]
+            )
+            member_ids_by_signature[signature].append(bug_report_id)
+        signatures = sorted(member_ids_by_signature.keys())
+        pre_signature_group_count = len(signatures)
+
+        uid_to_function_id: Dict[str, int] = {}
+        for function in self.ts_analyzer.function_env.values():
+            function_uid = (
+                function.function_uid
+                if function.function_uid != ""
+                else self.__build_java_mlk_function_signature_key(function)
+            )
+            uid_to_function_id[function_uid] = function.function_id
+        call_out = self.ts_analyzer.function_caller_callee_map
+        call_in = self.ts_analyzer.function_callee_caller_map
+
+        def _coarse_family_anchor(component_key: str) -> str:
+            if ":component:" in component_key:
+                suffix = component_key.split(":component:", 1)[1]
+            elif ":family:" in component_key:
+                suffix = component_key.split(":family:", 1)[1]
+            else:
+                suffix = component_key
+            parts = [part for part in suffix.split(":") if part != ""]
+            if len(parts) >= 2:
+                return ":".join(parts[:2])
+            if len(parts) == 1:
+                return parts[0]
+            return suffix
+
+        def _min_line_gap(lines_a: Set[int], lines_b: Set[int]) -> int:
+            filtered_a = [line for line in lines_a if line >= 0]
+            filtered_b = [line for line in lines_b if line >= 0]
+            if len(filtered_a) == 0 or len(filtered_b) == 0:
+                return 10**9
+            return min(
+                abs(line_a - line_b) for line_a in filtered_a for line_b in filtered_b
+            )
+
+        hop_cache: Dict[Tuple[str, str], bool] = {}
+
+        def _short_hop_related(fid_a: int, fid_b: int, max_hops: int) -> bool:
+            if fid_a == fid_b:
+                return True
+            queue: deque[Tuple[int, int]] = deque([(fid_a, 0)])
+            visited: Set[int] = {fid_a}
+            while len(queue) > 0:
+                current_id, hop = queue.popleft()
+                if hop >= max_hops:
+                    continue
+                neighbors = set(call_out.get(current_id, set()))
+                neighbors.update(call_in.get(current_id, set()))
+                for next_id in neighbors:
+                    if next_id == fid_b:
+                        return True
+                    if next_id in visited:
+                        continue
+                    visited.add(next_id)
+                    queue.append((next_id, hop + 1))
+            return False
+
+        def _method_sets_related_by_hops(
+            method_uids_a: Set[str], method_uids_b: Set[str], max_pairs: int = 36
+        ) -> bool:
+            uid_pairs: List[Tuple[str, str]] = []
+            for uid_a in sorted(method_uids_a):
+                if uid_a == "":
+                    continue
+                for uid_b in sorted(method_uids_b):
+                    if uid_b == "":
+                        continue
+                    if uid_a == uid_b:
+                        return True
+                    pair = (uid_a, uid_b) if uid_a <= uid_b else (uid_b, uid_a)
+                    uid_pairs.append(pair)
+            if len(uid_pairs) == 0:
+                return False
+            uid_pairs = sorted(set(uid_pairs))
+            if len(uid_pairs) > max_pairs:
+                uid_pairs = uid_pairs[:max_pairs]
+            for uid_a, uid_b in uid_pairs:
+                cache_key = (uid_a, uid_b)
+                if cache_key in hop_cache:
+                    if hop_cache[cache_key]:
+                        return True
+                    continue
+                fid_a = uid_to_function_id.get(uid_a)
+                fid_b = uid_to_function_id.get(uid_b)
+                if fid_a is None or fid_b is None:
+                    hop_cache[cache_key] = False
+                    continue
+                related = _short_hop_related(
+                    fid_a, fid_b, self.java_mlk_canonical_merge_hops
+                )
+                hop_cache[cache_key] = related
+                if related:
+                    return True
+            return False
+
+        feature_by_signature: Dict[Tuple[str, str, str, str], Dict[str, object]] = {}
+        for signature in signatures:
+            member_ids = sorted(set(member_ids_by_signature[signature]))
+            method_uids: Set[str] = set()
+            source_symbols: Set[str] = set()
+            leak_root_uids: Set[str] = set()
+            source_lines: Set[int] = set()
+            component_keys: Set[str] = set()
+            source_method_uids: Set[str] = set()
+            for member_id in member_ids:
+                bug_report = bug_reports[member_id]
+                metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
+                source_method_uid = str(metadata.get("source_method_uid", "")).strip()
+                if source_method_uid != "":
+                    source_method_uids.add(source_method_uid)
+                    method_uids.add(source_method_uid)
+                leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
+                if leak_root_uid != "":
+                    leak_root_uids.add(leak_root_uid)
+                    method_uids.add(leak_root_uid)
+                relevant_uids = metadata.get("relevant_method_uids", [])
+                if isinstance(relevant_uids, list):
+                    for uid in relevant_uids:
+                        uid_str = str(uid).strip()
+                        if uid_str != "":
+                            method_uids.add(uid_str)
+                source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+                source_lines.add(int(metadata.get("source_line", -1)))
+                component_key = str(metadata.get("obligation_component_key", "")).strip()
+                if component_key != "":
+                    component_keys.add(component_key)
+
+            feature_by_signature[signature] = {
+                "member_ids": member_ids,
+                "method_uids": method_uids,
+                "source_method_uids": source_method_uids,
+                "source_symbols": source_symbols,
+                "leak_root_uids": leak_root_uids,
+                "source_lines": source_lines,
+                "component_keys": component_keys,
+                "family_anchor": _coarse_family_anchor(signature[1]),
+            }
+
+        parent: Dict[int, int] = {idx: idx for idx in range(len(signatures))}
+
+        def _find_root(idx: int) -> int:
+            current = idx
+            while parent[current] != current:
+                parent[current] = parent[parent[current]]
+                current = parent[current]
+            return current
+
+        def _union(idx_a: int, idx_b: int) -> bool:
+            root_a = _find_root(idx_a)
+            root_b = _find_root(idx_b)
+            if root_a == root_b:
+                return False
+            if signatures[root_a] <= signatures[root_b]:
+                parent[root_b] = root_a
+            else:
+                parent[root_a] = root_b
+            return True
+
+        graph_merge_count = 0
+        for idx_a in range(len(signatures)):
+            sig_a = signatures[idx_a]
+            feature_a = feature_by_signature[sig_a]
+            for idx_b in range(idx_a + 1, len(signatures)):
+                sig_b = signatures[idx_b]
+                if (
+                    sig_a[0] != sig_b[0]
+                    or sig_a[2] != sig_b[2]
+                    or sig_a[3] != sig_b[3]
+                ):
+                    continue
+                feature_b = feature_by_signature[sig_b]
+
+                method_uids_a = cast(Set[str], feature_a["method_uids"])
+                method_uids_b = cast(Set[str], feature_b["method_uids"])
+                source_method_uids_a = cast(Set[str], feature_a["source_method_uids"])
+                source_method_uids_b = cast(Set[str], feature_b["source_method_uids"])
+                symbols_a = cast(Set[str], feature_a["source_symbols"])
+                symbols_b = cast(Set[str], feature_b["source_symbols"])
+                leak_roots_a = cast(Set[str], feature_a["leak_root_uids"])
+                leak_roots_b = cast(Set[str], feature_b["leak_root_uids"])
+                source_lines_a = cast(Set[int], feature_a["source_lines"])
+                source_lines_b = cast(Set[int], feature_b["source_lines"])
+                component_keys_a = cast(Set[str], feature_a["component_keys"])
+                component_keys_b = cast(Set[str], feature_b["component_keys"])
+                family_anchor_a = str(feature_a["family_anchor"])
+                family_anchor_b = str(feature_b["family_anchor"])
+
+                symbols_intersection = symbols_a & symbols_b
+                method_intersection = method_uids_a & method_uids_b
+                source_method_intersection = source_method_uids_a & source_method_uids_b
+                leak_root_intersection = leak_roots_a & leak_roots_b
+                component_intersection = component_keys_a & component_keys_b
+                min_line_gap = _min_line_gap(source_lines_a, source_lines_b)
+
+                should_merge = False
+                if len(component_intersection) > 0:
+                    should_merge = True
+                elif len(source_method_intersection) > 0 and len(symbols_intersection) > 0:
+                    should_merge = True
+                elif len(method_intersection) > 0 and min_line_gap <= 4:
+                    should_merge = True
+                elif len(leak_root_intersection) > 0 and len(symbols_intersection) > 0:
+                    should_merge = True
+                elif (
+                    family_anchor_a != ""
+                    and family_anchor_a == family_anchor_b
+                    and len(symbols_intersection) > 0
+                    and _method_sets_related_by_hops(method_uids_a, method_uids_b)
+                    and min_line_gap <= 18
+                ):
+                    should_merge = True
+                elif (
+                    len(symbols_intersection) > 0
+                    and _method_sets_related_by_hops(method_uids_a, method_uids_b)
+                    and min_line_gap <= 10
+                ):
+                    should_merge = True
+
+                if should_merge and _union(idx_a, idx_b):
+                    graph_merge_count += 1
+
+        component_member_ids: Dict[int, List[int]] = defaultdict(list)
+        component_signatures: Dict[int, List[Tuple[str, str, str, str]]] = defaultdict(list)
+        for idx, signature in enumerate(signatures):
+            root_idx = _find_root(idx)
+            component_member_ids[root_idx].extend(member_ids_by_signature[signature])
+            component_signatures[root_idx].append(signature)
+
+        issue_reports: Dict[int, BugReport] = {}
+        component_roots = sorted(
+            component_member_ids.keys(),
+            key=lambda rid: min(component_member_ids[rid]),
+        )
+        for issue_idx, root_idx in enumerate(component_roots):
+            member_ids = sorted(set(component_member_ids[root_idx]))
+            method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
+                member_ids, bug_reports
+            )
+            method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+            for method_uid, method_entry in method_buckets.items():
+                method_score = self.__score_java_mlk_method_bucket(method_entry)
+                method_candidates.append((method_uid, method_score, method_entry))
+            (
+                primary_method_uid,
+                primary_method_name,
+                primary_method_confidence,
+            ) = self.__select_java_mlk_primary_method_from_candidates(method_candidates)
+
+            representative_id = member_ids[0]
+            best_rep_score = -10**9
+            for candidate_id in member_ids:
+                candidate_report = bug_reports[candidate_id]
+                candidate_metadata = (
+                    candidate_report.metadata
+                    if hasattr(candidate_report, "metadata")
+                    else {}
+                )
+                confidence_rank = self.__java_mlk_source_confidence_rank(
+                    str(candidate_metadata.get("source_confidence", "medium"))
+                )
+                marker_bonus = int(
+                    bool(candidate_metadata.get("has_no_sink_marker", False))
+                ) + int(bool(candidate_metadata.get("has_weak_release_marker", False)))
+                candidate_method_uid = str(
+                    candidate_metadata.get(
+                        "source_method_uid",
+                        candidate_metadata.get("leak_root_method_uid", ""),
+                    )
+                ).strip()
+                primary_match_bonus = (
+                    1 if primary_method_uid != "" and candidate_method_uid == primary_method_uid else 0
+                )
+                candidate_score = confidence_rank * 100 + marker_bonus * 10 + primary_match_bonus
+                if candidate_score > best_rep_score:
+                    best_rep_score = candidate_score
+                    representative_id = candidate_id
+                elif candidate_score == best_rep_score and candidate_id < representative_id:
+                    representative_id = candidate_id
+
+            representative_report = bug_reports[representative_id]
+            merged_relevant_functions: Dict[int, Function] = {}
+            source_lines: Set[int] = set()
+            source_method_uids: Set[str] = set()
+            source_method_names: Set[str] = set()
+            component_keys: Set[str] = set()
+            leak_root_uids: Set[str] = set()
+            leak_root_names: Set[str] = set()
+            for member_id in member_ids:
+                member_report = bug_reports[member_id]
+                for function_id, function in member_report.relevant_functions.items():
+                    merged_relevant_functions[function_id] = function
+                member_meta = (
+                    member_report.metadata if hasattr(member_report, "metadata") else {}
+                )
+                source_lines.add(int(member_meta.get("source_line", -1)))
+                source_method_uid = str(member_meta.get("source_method_uid", "")).strip()
+                source_method_name = str(member_meta.get("source_method_name", "")).strip()
+                if source_method_uid != "":
+                    source_method_uids.add(source_method_uid)
+                if source_method_name != "":
+                    source_method_names.add(source_method_name)
+                component_key = str(member_meta.get("obligation_component_key", "")).strip()
+                if component_key != "":
+                    component_keys.add(component_key)
+                leak_root_uid = str(member_meta.get("leak_root_method_uid", "")).strip()
+                leak_root_name = str(member_meta.get("leak_root_method_name", "")).strip()
+                if leak_root_uid != "":
+                    leak_root_uids.add(leak_root_uid)
+                if leak_root_name != "":
+                    leak_root_names.add(leak_root_name)
+
+            issue_metadata = dict(
+                representative_report.metadata
+                if hasattr(representative_report, "metadata")
+                else {}
+            )
+            issue_metadata["issue_mode"] = "issue_online_component"
+            issue_metadata["issue_member_ids"] = member_ids
+            issue_metadata["issue_member_count"] = len(member_ids)
+            issue_metadata["issue_component_signatures"] = [
+                [str(part) for part in signature]
+                for signature in sorted(component_signatures[root_idx])
+            ]
+            issue_metadata["issue_component_keys"] = sorted(component_keys)
+            issue_metadata["issue_source_lines"] = sorted(line for line in source_lines if line >= 0)
+            issue_metadata["issue_source_method_uids"] = sorted(source_method_uids)
+            issue_metadata["issue_source_methods"] = sorted(source_method_names)
+            issue_metadata["issue_leak_root_method_uids"] = sorted(leak_root_uids)
+            issue_metadata["issue_leak_root_methods"] = sorted(leak_root_names)
+            issue_metadata["issue_primary_defect_method_uid"] = primary_method_uid
+            issue_metadata["issue_primary_defect_method"] = primary_method_name
+            issue_metadata["issue_primary_confidence"] = primary_method_confidence
+            if primary_method_uid != "":
+                issue_metadata["source_method_uid"] = primary_method_uid
+            if primary_method_name != "":
+                issue_metadata["source_method_name"] = primary_method_name
+            if primary_method_uid != "":
+                issue_metadata["leak_root_method_uid"] = primary_method_uid
+            if primary_method_name != "":
+                issue_metadata["leak_root_method_name"] = primary_method_name
+            issue_metadata["relevant_method_uids"] = sorted(
+                {
+                    (
+                        function.function_uid
+                        if function.function_uid != ""
+                        else self.__build_java_mlk_function_signature_key(function)
+                    )
+                    for function in merged_relevant_functions.values()
+                }
+            )
+            sorted_source_lines = sorted(line for line in source_lines if line >= 0)
+            if len(sorted_source_lines) > 0:
+                issue_metadata["source_line"] = sorted_source_lines[0]
+
+            issue_explanation = representative_report.explanation
+            if len(member_ids) > 1:
+                issue_explanation = (
+                    issue_explanation
+                    + f"\n\nIssue aggregation: merged {len(member_ids)} evidences into one issue component."
+                )
+            issue_report = BugReport(
+                self.bug_type,
+                representative_report.buggy_value,
+                merged_relevant_functions,
+                issue_explanation,
+                metadata=issue_metadata,
+                is_human_confirmed_true=representative_report.is_human_confirmed_true,
+            )
+            issue_reports[issue_idx] = issue_report
+
+        issue_count = len(issue_reports)
+        stats_payload: Dict[str, object] = {
+            "mode": "issue_online_component",
+            "raw_report_count": raw_count,
+            "issue_count": issue_count,
+            "pre_signature_group_count": pre_signature_group_count,
+            "graph_merge_count": graph_merge_count,
+            "reduced_report_count": raw_count - issue_count,
+            "reduction_ratio": (
+                float(raw_count - issue_count) / float(raw_count)
+                if raw_count > 0
+                else 0.0
+            ),
+        }
+        return issue_reports, stats_payload
 
     def __build_java_mlk_method_buckets_for_member_reports(
         self,
@@ -5610,9 +6099,10 @@ class DFBScanAgent(Agent):
 
     def __write_detect_outputs(self) -> Tuple[int, int, int]:
         bug_reports = self.state.bug_reports
-        detect_payload = self.__build_detect_info_payload(bug_reports)
+        raw_detect_payload = self.__build_detect_info_payload(bug_reports)
+        detect_payload = raw_detect_payload
         detect_by_file_payload = self.__build_detect_info_by_file_payload(bug_reports)
-        raw_count = len(detect_payload)
+        raw_count = len(raw_detect_payload)
         merged_count = raw_count
         canonical_count = raw_count
 
@@ -5623,24 +6113,30 @@ class DFBScanAgent(Agent):
         canonical_payload: Dict[int, dict] = {}
         canonical_stats: Dict[str, object] = {}
         if self.language == "Java" and self.bug_type == "MLK":
-            merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
+            issue_reports, issue_stats = self.__build_java_mlk_issue_reports_from_raw(
                 bug_reports
+            )
+            detect_payload = self.__build_detect_info_payload(issue_reports)
+            issue_payload = dict(detect_payload)
+            detect_by_file_payload = self.__build_detect_info_by_file_payload(
+                issue_reports
+            )
+
+            merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
+                issue_reports
             )
             merged_count = len(merged_payload)
-            issue_payload, issue_stats = self.__build_java_mlk_issue_detect_payload(
-                bug_reports
-            )
             if self.java_mlk_canonical_mode:
                 canonical_payload, canonical_stats = (
-                    self.__build_java_mlk_canonical_detect_payload(bug_reports)
+                    self.__build_java_mlk_canonical_detect_payload(issue_reports)
                 )
             else:
                 canonical_payload = dict(detect_payload)
                 canonical_stats = {
                     "mode": "canonical",
                     "enabled": False,
-                    "raw_report_count": raw_count,
-                    "canonical_issue_count": raw_count,
+                    "raw_report_count": len(detect_payload),
+                    "canonical_issue_count": len(detect_payload),
                     "reduced_report_count": 0,
                     "reduction_ratio": 0.0,
                 }
@@ -5655,6 +6151,10 @@ class DFBScanAgent(Agent):
                 json.dump(detect_by_file_payload, by_file_info_file, indent=4)
 
             if self.language == "Java" and self.bug_type == "MLK":
+                with open(
+                    self.res_dir_path + "/detect_info_raw.json", "w"
+                ) as raw_info_file:
+                    json.dump(raw_detect_payload, raw_info_file, indent=4)
                 with open(
                     self.res_dir_path + "/detect_info_merged.json", "w"
                 ) as merged_info_file:
