@@ -214,12 +214,18 @@ class DFBScanAgent(Agent):
         # - source: keep original source-sink granularity (most conservative)
         # - obligation: collapse derived source family inside one obligation
         # - issue: collapse by obligation + primary method + weak/strong semantics
+        # - issue_online: same as issue but intended for scan-stage suppression
         # Default to source so scan-stage dedup never suppresses true positives;
         # semantic compression is handled in canonical output views.
         self.java_mlk_hard_dedup_mode = os.environ.get(
             "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "source"
         ).strip().lower()
-        if self.java_mlk_hard_dedup_mode not in {"source", "obligation", "issue"}:
+        if self.java_mlk_hard_dedup_mode not in {
+            "source",
+            "obligation",
+            "issue",
+            "issue_online",
+        }:
             self.java_mlk_hard_dedup_mode = "source"
         self.java_mlk_canonical_mode = (
             os.environ.get("REPOAUDIT_JAVA_MLK_CANONICAL_MODE", "true")
@@ -1492,6 +1498,93 @@ class DFBScanAgent(Agent):
                 f"source={str(src_value)}",
                 f"paths={len(buggy_paths)}",
             )
+        pending_fallback_candidates: Dict[Tuple[object, ...], Dict[str, object]] = {}
+        accepted_issue_signatures: Set[Tuple[object, ...]] = set()
+
+        def _build_candidate_relevant_functions(
+            candidate_path: List[Value],
+            value_to_function: Dict[Value, Optional[Function]],
+        ) -> Dict[int, Function]:
+            relevant_functions: Dict[int, Function] = {}
+            for value in candidate_path:
+                function = value_to_function.get(value)
+                if function is None:
+                    function = self.ts_analyzer.get_function_from_localvalue(value)
+                if function is not None:
+                    relevant_functions[function.function_id] = function
+            return relevant_functions
+
+        def _try_emit_reachable_candidate(
+            candidate_path: List[Value],
+            value_to_function: Dict[Value, Optional[Function]],
+            explanation: str,
+            resource_kind: str,
+            release_context: str,
+            guarantee_level: str,
+        ) -> Tuple[bool, Optional[Tuple[object, ...]]]:
+            passed_post_validation, reason = self.__post_validate_java_mlk_with_objid(
+                src_value, candidate_path, value_to_function
+            )
+            if not passed_post_validation:
+                self.logger.print_log(
+                    f"Skip candidate after Java MLK ownership validation: {reason}"
+                )
+                return False, None
+
+            relevant_functions = _build_candidate_relevant_functions(
+                candidate_path,
+                value_to_function,
+            )
+            if not self.__should_keep_java_mlk_source_by_confidence(
+                src_value, candidate_path
+            ):
+                self.logger.print_log(
+                    "Skip Java MLK candidate due to source confidence gate:",
+                    f"source={str(src_value)}",
+                    f"min={self.java_mlk_source_confidence_min}",
+                    f"actual={self.__infer_java_mlk_source_confidence(src_value)}",
+                )
+                return False, None
+
+            issue_signature = self.__build_java_mlk_report_signature(
+                src_value,
+                relevant_functions,
+                resource_kind=resource_kind,
+                release_context=release_context,
+                guarantee_level=guarantee_level,
+                buggy_path=candidate_path,
+                merge_mode="issue",
+            )
+            accepted_issue_signatures.add(issue_signature)
+
+            if not self.__register_java_mlk_report_signature(
+                src_value,
+                relevant_functions,
+                resource_kind=resource_kind,
+                release_context=release_context,
+                guarantee_level=guarantee_level,
+                buggy_path=candidate_path,
+            ):
+                return True, issue_signature
+
+            bug_report = BugReport(
+                self.bug_type,
+                src_value,
+                relevant_functions,
+                explanation,
+                metadata=self.__build_java_mlk_report_metadata(
+                    src_value=src_value,
+                    buggy_path=candidate_path,
+                    relevant_functions=relevant_functions,
+                    resource_kind=resource_kind,
+                    release_context=release_context,
+                    guarantee_level=guarantee_level,
+                ),
+            )
+            self.state.update_bug_report(bug_report)
+            self.__write_detect_outputs()
+            return True, issue_signature
+
         for buggy_path_raw in buggy_paths:
             buggy_path = self.__compress_java_mlk_candidate_path(buggy_path_raw)
             values_to_functions = {
@@ -1613,69 +1706,82 @@ class DFBScanAgent(Agent):
                     guarantee_level=path_guarantee_level,
                 )
             ):
-                self.logger.print_log(
-                    "Accept Java MLK candidate by no-sink fallback.",
-                    f"source={str(src_value)}",
-                    f"guarantee_level={path_guarantee_level}",
-                )
-                pv_output = PathValidatorOutput(
-                    True,
+                fallback_explanation = (
                     pv_output.explanation_str
-                    + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable.",
+                    + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable."
                 )
-
-            if pv_output.is_reachable:
-                passed_post_validation, reason = (
-                    self.__post_validate_java_mlk_with_objid(
-                        src_value, buggy_path, values_to_functions
-                    )
+                relevant_functions_for_issue = _build_candidate_relevant_functions(
+                    buggy_path,
+                    values_to_functions,
                 )
-                if not passed_post_validation:
-                    self.logger.print_log(
-                        f"Skip candidate after Java MLK ownership validation: {reason}"
-                    )
-                    continue
-                relevant_functions = {}
-                for value in buggy_path:
-                    function = self.ts_analyzer.get_function_from_localvalue(value)
-                    if function is not None:
-                        relevant_functions[function.function_id] = function
-                if not self.__should_keep_java_mlk_source_by_confidence(
-                    src_value, buggy_path
-                ):
-                    self.logger.print_log(
-                        "Skip Java MLK candidate due to source confidence gate:",
-                        f"source={str(src_value)}",
-                        f"min={self.java_mlk_source_confidence_min}",
-                        f"actual={self.__infer_java_mlk_source_confidence(src_value)}",
-                    )
-                    continue
-                if not self.__register_java_mlk_report_signature(
+                issue_signature = self.__build_java_mlk_report_signature(
                     src_value,
-                    relevant_functions,
+                    relevant_functions_for_issue,
                     resource_kind=path_resource_kind,
                     release_context=path_release_context,
                     guarantee_level=path_guarantee_level,
                     buggy_path=buggy_path,
-                ):
-                    continue
-
-                bug_report = BugReport(
-                    self.bug_type,
-                    src_value,
-                    relevant_functions,
-                    pv_output.explanation_str,
-                    metadata=self.__build_java_mlk_report_metadata(
-                        src_value=src_value,
-                        buggy_path=buggy_path,
-                        relevant_functions=relevant_functions,
-                        resource_kind=path_resource_kind,
-                        release_context=path_release_context,
-                        guarantee_level=path_guarantee_level,
-                    ),
+                    merge_mode="issue",
                 )
-                self.state.update_bug_report(bug_report)
-                self.__write_detect_outputs()
+                previous_candidate = pending_fallback_candidates.get(issue_signature)
+                should_replace = False
+                if previous_candidate is None:
+                    should_replace = True
+                else:
+                    previous_path = cast(List[Value], previous_candidate["buggy_path"])
+                    if len(buggy_path) < len(previous_path):
+                        should_replace = True
+                if should_replace:
+                    pending_fallback_candidates[issue_signature] = {
+                        "buggy_path": list(buggy_path),
+                        "values_to_functions": dict(values_to_functions),
+                        "explanation": fallback_explanation,
+                        "resource_kind": path_resource_kind,
+                        "release_context": path_release_context,
+                        "guarantee_level": path_guarantee_level,
+                    }
+                self.logger.print_log(
+                    "Queue Java MLK candidate by no-sink fallback (deferred).",
+                    f"source={str(src_value)}",
+                    f"guarantee_level={path_guarantee_level}",
+                )
+                continue
+
+            if pv_output.is_reachable:
+                _reported, _issue_signature = _try_emit_reachable_candidate(
+                    buggy_path=buggy_path,
+                    value_to_function=values_to_functions,
+                    explanation=pv_output.explanation_str,
+                    resource_kind=path_resource_kind,
+                    release_context=path_release_context,
+                    guarantee_level=path_guarantee_level,
+                )
+                continue
+
+        for issue_signature, pending_candidate in pending_fallback_candidates.items():
+            if issue_signature in accepted_issue_signatures:
+                continue
+            self.logger.print_log(
+                "Accept Java MLK candidate by no-sink fallback (deferred).",
+                f"source={str(src_value)}",
+            )
+            pending_buggy_path = cast(List[Value], pending_candidate["buggy_path"])
+            pending_values_to_functions = cast(
+                Dict[Value, Optional[Function]],
+                pending_candidate["values_to_functions"],
+            )
+            pending_explanation = str(pending_candidate["explanation"])
+            pending_resource_kind = str(pending_candidate["resource_kind"])
+            pending_release_context = str(pending_candidate["release_context"])
+            pending_guarantee_level = str(pending_candidate["guarantee_level"])
+            _try_emit_reachable_candidate(
+                candidate_path=pending_buggy_path,
+                value_to_function=pending_values_to_functions,
+                explanation=pending_explanation,
+                resource_kind=pending_resource_kind,
+                release_context=pending_release_context,
+                guarantee_level=pending_guarantee_level,
+            )
         return
 
     def __classify_java_mlk_external_termination(
@@ -5502,9 +5608,10 @@ class DFBScanAgent(Agent):
             "method_semantic",
             "obligation",
             "issue",
+            "issue_online",
         }:
             effective_merge_mode = "source"
-        if effective_merge_mode == "issue":
+        if effective_merge_mode in {"issue", "issue_online"}:
             guarantee_class = (
                 "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
             )
@@ -5724,6 +5831,27 @@ class DFBScanAgent(Agent):
                 unique_by_signature[signature] = path
         dedup_paths = list(unique_by_signature.values())
 
+        # Step 1.5: fold no-sink / weak-release branch variants by semantic key.
+        # These branch-preserving markers are valuable, but they also create many
+        # near-identical candidates that differ only by path construction details.
+        marker_semantic_representatives: Dict[Tuple[object, ...], List[Value]] = {}
+        non_marker_paths: List[List[Value]] = []
+        for path in dedup_paths:
+            has_marker = self.__has_java_mlk_no_sink_marker(
+                path
+            ) or self.__has_java_mlk_weak_release_marker(path)
+            if not has_marker:
+                non_marker_paths.append(path)
+                continue
+            semantic_key = self.__build_java_mlk_branch_semantic_key(path)
+            prev = marker_semantic_representatives.get(semantic_key)
+            if prev is None or len(path) < len(prev):
+                marker_semantic_representatives[semantic_key] = path
+        if len(marker_semantic_representatives) > 0:
+            dedup_paths = non_marker_paths + list(
+                marker_semantic_representatives.values()
+            )
+
         # Step 2: subset pruning on normalized value sets.
         path_sets = [
             self.__normalize_java_mlk_path_for_dedup(path) for path in dedup_paths
@@ -5851,6 +5979,42 @@ class DFBScanAgent(Agent):
             resource_kind,
             release_context,
             guarantee_level,
+        )
+
+    def __build_java_mlk_branch_semantic_key(
+        self, path: List[Value]
+    ) -> Tuple[object, ...]:
+        """
+        Build a coarse branch-semantic key for no-sink / weak-release candidates.
+        We intentionally ignore marker indexes (PATH_0/PATH_1...) and keep
+        terminal shape + semantics so equivalent branch artifacts can collapse.
+        """
+        normalized_set = self.__normalize_java_mlk_path_for_dedup(path)
+        path_signature = self.__build_java_mlk_path_signature(
+            path,
+            normalized_set=normalized_set,
+        )
+        terminal_label = "NONE"
+        terminal_method_uid = "UNKNOWN"
+        terminal_line = -1
+        for value in reversed(path):
+            if value.label == ValueLabel.LOCAL:
+                continue
+            terminal_label = value.label.name
+            terminal_line = value.line_number
+            terminal_function = self.ts_analyzer.get_function_from_localvalue(value)
+            if terminal_function is not None:
+                terminal_method_uid = (
+                    terminal_function.function_uid
+                    if terminal_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(terminal_function)
+                )
+            break
+        return (
+            path_signature,
+            terminal_label,
+            terminal_method_uid,
+            terminal_line,
         )
 
     def __normalize_java_mlk_path_for_dedup(self, path: List[Value]) -> Set[str]:
