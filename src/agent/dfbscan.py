@@ -2961,6 +2961,8 @@ class DFBScanAgent(Agent):
             root_var_by_src_key: Dict[str, str] = {}
             source_line_by_src_key: Dict[str, int] = {}
             source_norm_expr_by_src_key: Dict[str, str] = {}
+            source_symbol_by_src_key: Dict[str, str] = {}
+            source_anchor_by_src_key: Dict[str, str] = {}
             source_keys_by_norm_expr: Dict[str, List[Tuple[int, str]]] = defaultdict(list)
             source_keys_by_line: Dict[int, List[str]] = defaultdict(list)
 
@@ -2979,6 +2981,9 @@ class DFBScanAgent(Agent):
                 source_line_by_src_key[src_key] = src_value.line_number
                 normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
                 source_norm_expr_by_src_key[src_key] = normalized_src_name
+                source_symbol_by_src_key[src_key] = self.__infer_java_mlk_source_symbol(
+                    src_value
+                )
                 source_keys_by_norm_expr[normalized_src_name].append(
                     (src_value.line_number, src_key)
                 )
@@ -3025,6 +3030,10 @@ class DFBScanAgent(Agent):
                     )
                 result[src_key] = local_key
                 source_local_key_by_src[src_key] = local_key
+                source_symbol = source_symbol_by_src_key.get(src_key, "unknown")
+                source_anchor_by_src_key[src_key] = self.__extract_java_mlk_obligation_anchor(
+                    local_key, source_symbol
+                )
 
             function_source_context[function_id] = {
                 "function": function,
@@ -3035,6 +3044,8 @@ class DFBScanAgent(Agent):
                 "root_var_by_src_key": root_var_by_src_key,
                 "source_line_by_src_key": source_line_by_src_key,
                 "source_norm_expr_by_src_key": source_norm_expr_by_src_key,
+                "source_symbol_by_src_key": source_symbol_by_src_key,
+                "source_anchor_by_src_key": source_anchor_by_src_key,
                 "source_keys_by_norm_expr": source_keys_by_norm_expr,
                 "source_keys_by_line": source_keys_by_line,
                 "para_name_to_index": para_name_to_index,
@@ -3377,8 +3388,13 @@ class DFBScanAgent(Agent):
                     classify_resource_kind(src_value.name, src_value.file)
                 ),
                 "source_symbol": self.__infer_java_mlk_source_symbol(src_value),
+                "source_line": src_value.line_number,
                 "source_method_uid": source_method_uid,
                 "obligation_key": obligation_key,
+                "obligation_anchor": self.__extract_java_mlk_obligation_anchor(
+                    obligation_key,
+                    self.__infer_java_mlk_source_symbol(src_value),
+                ),
             }
             parent[src_key] = src_key
 
@@ -3503,6 +3519,87 @@ class DFBScanAgent(Agent):
                             representatives_by_method[uid_a],
                             representatives_by_method[uid_b],
                         )
+
+            # Secondary anchor-based linking to absorb wrapper/callee variants
+            # whose source symbols differ but represent one obligation chain.
+            bucket_by_anchor: Dict[Tuple[str, str, str], List[str]] = defaultdict(list)
+            for src_key, attrs in source_attrs.items():
+                obligation_anchor = str(attrs.get("obligation_anchor", ""))
+                if obligation_anchor == "":
+                    continue
+                anchor_key = (
+                    str(attrs.get("file", "")),
+                    str(attrs.get("resource_kind", "")),
+                    obligation_anchor,
+                )
+                bucket_by_anchor[anchor_key].append(src_key)
+
+            generic_root_tokens = {
+                "in",
+                "out",
+                "is",
+                "os",
+                "stream",
+                "reader",
+                "writer",
+                "input",
+                "output",
+                "file",
+                "tmp",
+                "buffer",
+                "br",
+                "bw",
+                "fis",
+                "fos",
+            }
+            for anchor_key, member_keys in bucket_by_anchor.items():
+                if len(member_keys) <= 1:
+                    continue
+                obligation_anchor = anchor_key[2]
+                anchor_kind = obligation_anchor.split(":", 1)[0]
+                anchor_token = obligation_anchor.split(":", 1)[1] if ":" in obligation_anchor else ""
+
+                representatives_by_method: Dict[str, str] = {}
+                for src_key in member_keys:
+                    method_uid = str(source_attrs[src_key].get("source_method_uid", ""))
+                    if method_uid == "":
+                        continue
+                    if method_uid not in representatives_by_method:
+                        representatives_by_method[method_uid] = src_key
+                    else:
+                        _union(representatives_by_method[method_uid], src_key)
+
+                method_uids = sorted(representatives_by_method.keys())
+                for idx_a in range(len(method_uids)):
+                    uid_a = method_uids[idx_a]
+                    for idx_b in range(idx_a + 1, len(method_uids)):
+                        uid_b = method_uids[idx_b]
+                        if not _method_related_by_hops(uid_a, uid_b):
+                            continue
+                        rep_a = representatives_by_method[uid_a]
+                        rep_b = representatives_by_method[uid_b]
+                        symbol_a = str(source_attrs[rep_a].get("source_symbol", ""))
+                        symbol_b = str(source_attrs[rep_b].get("source_symbol", ""))
+                        line_a = int(source_attrs[rep_a].get("source_line", -1))
+                        line_b = int(source_attrs[rep_b].get("source_line", -1))
+                        line_gap = (
+                            abs(line_a - line_b)
+                            if line_a >= 0 and line_b >= 0
+                            else 0
+                        )
+                        same_symbol = symbol_a != "" and symbol_a == symbol_b
+                        if (
+                            not same_symbol
+                            and anchor_kind == "root"
+                            and anchor_token in generic_root_tokens
+                            and line_gap > 4
+                        ):
+                            continue
+                        if not same_symbol and line_gap > max(
+                            10, self.java_mlk_canonical_merge_hops * 8
+                        ):
+                            continue
+                        _union(rep_a, rep_b)
 
         grouped_members: Dict[str, List[str]] = defaultdict(list)
         for src_key in source_attrs.keys():
@@ -3889,6 +3986,8 @@ class DFBScanAgent(Agent):
         source_var_by_src_key = caller_context["source_var_by_src_key"]
         root_var_by_src_key = caller_context["root_var_by_src_key"]
         source_line_by_src_key = caller_context["source_line_by_src_key"]
+        source_symbol_by_src_key = caller_context.get("source_symbol_by_src_key", {})
+        source_anchor_by_src_key = caller_context.get("source_anchor_by_src_key", {})
 
         exact_candidates = source_keys_by_norm_expr.get(normalized_arg_expr, [])
         matched_source_key = self.__pick_java_mlk_source_key_near_line(
@@ -3935,6 +4034,51 @@ class DFBScanAgent(Agent):
             )
             if candidate_key != "":
                 return candidate_key
+
+        # Fallback 1: expression symbol alignment + nearest source line.
+        arg_symbol = self.__infer_java_mlk_symbol_from_expression(call_arg.name)
+        if arg_symbol != "unknown":
+            symbol_candidates: List[Tuple[int, str]] = []
+            for src_key, src_symbol in source_symbol_by_src_key.items():
+                if src_symbol != arg_symbol:
+                    continue
+                symbol_candidates.append(
+                    (int(source_line_by_src_key.get(src_key, -1)), src_key)
+                )
+            symbol_matched = self.__pick_java_mlk_source_key_near_line(
+                symbol_candidates,
+                call_arg.line_number,
+            )
+            if symbol_matched != "":
+                return symbol_matched
+
+        # Fallback 2: anchor-level approximation for wrapper forwarding.
+        arg_anchor_candidates: Set[str] = set()
+        for dependency in dependency_tokens:
+            root_var = self.__resolve_java_root_variable_at_line(
+                dependency,
+                call_arg.line_number,
+                assignment_timeline,
+                set(),
+            )
+            if root_var != "":
+                arg_anchor_candidates.add(f"root:{root_var.lower()}")
+        if arg_symbol != "unknown":
+            arg_anchor_candidates.add(f"src:{arg_symbol}")
+        if len(arg_anchor_candidates) > 0:
+            anchor_candidates: List[Tuple[int, str]] = []
+            for src_key, anchor in source_anchor_by_src_key.items():
+                if anchor not in arg_anchor_candidates:
+                    continue
+                anchor_candidates.append(
+                    (int(source_line_by_src_key.get(src_key, -1)), src_key)
+                )
+            anchor_matched = self.__pick_java_mlk_source_key_near_line(
+                anchor_candidates,
+                call_arg.line_number,
+            )
+            if anchor_matched != "":
+                return anchor_matched
 
         return ""
 
@@ -4273,13 +4417,19 @@ class DFBScanAgent(Agent):
         score += 2.0 * source_medium_confidence_count
         score -= 1.0 * source_low_confidence_count
         score += 2.5 * explanation_hit_count
-        score += 1.0 * chain_support_count
-        score += 6.0 * leak_root_hit_count
+        if report_count > 0:
+            score += 0.8 * chain_support_count
+            score += 6.0 * leak_root_hit_count
+        else:
+            score += 0.25 * chain_support_count
+            score += 1.5 * leak_root_hit_count
         score += 1.0 * source_line_count
         if local_evidence_count == 0 and chain_support_count > 0:
             # Supporting-only methods (no direct source evidence) should rarely
             # become primary defect method.
             score -= 6.0
+        if report_count == 0:
+            score -= 12.0
         if helper_like:
             score -= 8.0
         if method_name == "UNKNOWN_METHOD":
@@ -4354,25 +4504,42 @@ class DFBScanAgent(Agent):
         if len(method_candidates) == 0:
             return "", "UNKNOWN_METHOD", 0.0
 
-        method_candidates.sort(
-            key=lambda item: (
+        def _candidate_sort_key(
+            item: Tuple[str, float, Dict[str, object]]
+        ) -> Tuple[float, int, str]:
+            return (
                 -item[1],
                 int(item[2].get("method_start_line", -1)),
                 str(item[2].get("method_name", "")),
             )
+
+        method_candidates.sort(
+            key=_candidate_sort_key
         )
 
+        source_evidence_candidates: List[Tuple[str, float, Dict[str, object]]] = []
         eligible_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+        report_backed_candidates: List[Tuple[str, float, Dict[str, object]]] = []
         for method_uid, method_score, method_entry in method_candidates:
+            report_count = int(method_entry.get("report_count", 0))
+            if report_count > 0:
+                report_backed_candidates.append((method_uid, method_score, method_entry))
             if bool(method_entry.get("helper_like", False)):
                 continue
             if self.__is_java_mlk_forwarding_method_entry(method_entry):
                 continue
             eligible_candidates.append((method_uid, method_score, method_entry))
+            if report_count > 0:
+                source_evidence_candidates.append((method_uid, method_score, method_entry))
 
-        ranked_candidates = (
-            eligible_candidates if len(eligible_candidates) > 0 else method_candidates
-        )
+        if len(source_evidence_candidates) > 0:
+            ranked_candidates = sorted(source_evidence_candidates, key=_candidate_sort_key)
+        elif len(report_backed_candidates) > 0:
+            ranked_candidates = sorted(report_backed_candidates, key=_candidate_sort_key)
+        elif len(eligible_candidates) > 0:
+            ranked_candidates = sorted(eligible_candidates, key=_candidate_sort_key)
+        else:
+            ranked_candidates = method_candidates
         primary_uid, primary_score, primary_entry = ranked_candidates[0]
         primary_name = str(primary_entry.get("method_name", "UNKNOWN_METHOD"))
 
@@ -5016,6 +5183,60 @@ class DFBScanAgent(Agent):
                 name = tail.split("(", 1)[0].strip().lower()
                 return name
 
+            hop_relation_cache: Dict[Tuple[str, str], bool] = {}
+
+            def _method_sets_related_by_hops(
+                method_uids_a: Set[str], method_uids_b: Set[str], max_pairs: int = 36
+            ) -> bool:
+                uid_pairs: List[Tuple[str, str]] = []
+                for uid_a in sorted(method_uids_a):
+                    if uid_a == "":
+                        continue
+                    for uid_b in sorted(method_uids_b):
+                        if uid_b == "":
+                            continue
+                        if uid_a == uid_b:
+                            return True
+                        pair = (
+                            uid_a if uid_a <= uid_b else uid_b,
+                            uid_b if uid_a <= uid_b else uid_a,
+                        )
+                        uid_pairs.append(pair)
+                if len(uid_pairs) == 0:
+                    return False
+                uid_pairs = sorted(set(uid_pairs))
+                if len(uid_pairs) > max_pairs:
+                    uid_pairs = uid_pairs[:max_pairs]
+                for uid_a, uid_b in uid_pairs:
+                    cache_key = (uid_a, uid_b)
+                    if cache_key in hop_relation_cache:
+                        if hop_relation_cache[cache_key]:
+                            return True
+                        continue
+                    fid_a = uid_to_function_id.get(uid_a)
+                    fid_b = uid_to_function_id.get(uid_b)
+                    if fid_a is None or fid_b is None:
+                        hop_relation_cache[cache_key] = False
+                        continue
+                    related = _short_hop_related(
+                        fid_a, fid_b, self.java_mlk_canonical_merge_hops
+                    )
+                    hop_relation_cache[cache_key] = related
+                    if related:
+                        return True
+                return False
+
+            def _min_line_gap(lines_a: Set[int], lines_b: Set[int]) -> int:
+                filtered_a = [line for line in lines_a if line >= 0]
+                filtered_b = [line for line in lines_b if line >= 0]
+                if len(filtered_a) == 0 or len(filtered_b) == 0:
+                    return 10**9
+                return min(
+                    abs(line_a - line_b)
+                    for line_a in filtered_a
+                    for line_b in filtered_b
+                )
+
             merged_root_ids = sorted(merged_groups.keys())
             root_parent: Dict[int, int] = {root_id: root_id for root_id in merged_root_ids}
 
@@ -5063,14 +5284,25 @@ class DFBScanAgent(Agent):
                 }
                 source_symbols: Set[str] = set()
                 leak_root_uids: Set[str] = set()
+                source_lines: Set[int] = set()
+                component_keys: Set[str] = set()
                 for member_id in member_ids:
                     metadata = cast(Dict[str, object], bug_reports[member_id].metadata)
                     source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
+                    source_lines.add(int(metadata.get("source_line", -1)))
                     leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
                     if leak_root_uid != "":
                         leak_root_uids.add(leak_root_uid)
+                    component_key = str(metadata.get("obligation_component_key", "")).strip()
+                    if component_key != "":
+                        component_keys.add(component_key)
 
                 representative_signature = sorted(merged_signatures[root_id])[0]
+                family_anchors: Set[str] = set(
+                    _coarse_family_anchor(signature[1])
+                    for signature in merged_signatures.get(root_id, [])
+                    if len(signature) > 1 and str(signature[1]) != ""
+                )
                 group_profile[root_id] = {
                     "signature": representative_signature,
                     "member_ids": member_ids,
@@ -5078,6 +5310,9 @@ class DFBScanAgent(Agent):
                     "primary_method_uid": primary_method_uid,
                     "source_symbols": source_symbols,
                     "leak_root_uids": leak_root_uids,
+                    "source_lines": source_lines,
+                    "component_keys": component_keys,
+                    "family_anchors": family_anchors,
                 }
 
             for idx_a, root_a in enumerate(merged_root_ids):
@@ -5101,11 +5336,28 @@ class DFBScanAgent(Agent):
                     symbols_b = cast(Set[str], profile_b["source_symbols"])
                     leak_roots_a = cast(Set[str], profile_a["leak_root_uids"])
                     leak_roots_b = cast(Set[str], profile_b["leak_root_uids"])
+                    source_lines_a = cast(Set[int], profile_a["source_lines"])
+                    source_lines_b = cast(Set[int], profile_b["source_lines"])
+                    component_keys_a = cast(Set[str], profile_a["component_keys"])
+                    component_keys_b = cast(Set[str], profile_b["component_keys"])
+                    family_anchors_a = cast(Set[str], profile_a["family_anchors"])
+                    family_anchors_b = cast(Set[str], profile_b["family_anchors"])
+                    symbols_intersection = symbols_a & symbols_b
+                    family_anchor_intersection = family_anchors_a & family_anchors_b
+                    min_line_gap = _min_line_gap(source_lines_a, source_lines_b)
 
                     should_merge = False
                     if len(method_uids_a & method_uids_b) > 0:
                         should_merge = True
                     elif len(leak_roots_a & leak_roots_b) > 0:
+                        should_merge = True
+                    elif len(component_keys_a & component_keys_b) > 0:
+                        should_merge = True
+                    elif (
+                        len(family_anchor_intersection) > 0
+                        and len(symbols_intersection) > 0
+                        and min_line_gap <= 12
+                    ):
                         should_merge = True
 
                     primary_a = str(profile_a["primary_method_uid"]).strip()
@@ -5131,12 +5383,27 @@ class DFBScanAgent(Agent):
                                 ):
                                     should_merge = True
                                 elif (
-                                    len(symbols_a & symbols_b) > 0
+                                    len(symbols_intersection) > 0
                                     and _short_hop_related(
                                         fid_a, fid_b, self.java_mlk_canonical_merge_hops
                                     )
                                 ):
                                     should_merge = True
+
+                    if (
+                        not should_merge
+                        and len(symbols_intersection) > 0
+                        and _method_sets_related_by_hops(method_uids_a, method_uids_b)
+                        and min_line_gap <= 10
+                    ):
+                        should_merge = True
+                    if (
+                        not should_merge
+                        and len(family_anchor_intersection) > 0
+                        and _method_sets_related_by_hops(method_uids_a, method_uids_b)
+                        and min_line_gap <= 18
+                    ):
+                        should_merge = True
 
                     if should_merge and _union_root_group(root_a, root_b):
                         third_pass_merge_count += 1
@@ -5492,8 +5759,8 @@ class DFBScanAgent(Agent):
             return "low"
         return "medium"
 
-    def __infer_java_mlk_source_symbol(self, src_value: Value) -> str:
-        normalized_expr = self.__normalize_java_mlk_source_name(src_value.name)
+    def __infer_java_mlk_symbol_from_expression(self, expression: str) -> str:
+        normalized_expr = self.__normalize_java_mlk_source_name(expression)
         creation_match = re.search(
             r"\bnew([A-Za-z_][A-Za-z0-9_]*)\s*\(",
             normalized_expr,
@@ -5512,6 +5779,21 @@ class DFBScanAgent(Agent):
         if token_match is not None:
             return token_match.group(1).lower()
         return "unknown"
+
+    def __extract_java_mlk_obligation_anchor(
+        self, obligation_key: str, source_symbol: str
+    ) -> str:
+        match = re.search(r":(root|src):([^:]+):(-?\d+)$", obligation_key)
+        if match is None:
+            return f"src:{source_symbol.lower()}"
+        anchor_kind = match.group(1).lower()
+        anchor_token = match.group(2).lower()
+        if anchor_kind == "src":
+            anchor_token = source_symbol.lower()
+        return f"{anchor_kind}:{anchor_token}"
+
+    def __infer_java_mlk_source_symbol(self, src_value: Value) -> str:
+        return self.__infer_java_mlk_symbol_from_expression(src_value.name)
 
     def __derive_java_mlk_obligation_family_key(
         self, src_value: Value, obligation_key: str
