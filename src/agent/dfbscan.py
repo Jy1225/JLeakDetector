@@ -1553,7 +1553,7 @@ class DFBScanAgent(Agent):
                 release_context=release_context,
                 guarantee_level=guarantee_level,
                 buggy_path=candidate_path,
-                merge_mode="issue",
+                merge_mode="issue_online",
             )
             accepted_issue_signatures.add(issue_signature)
 
@@ -1721,7 +1721,7 @@ class DFBScanAgent(Agent):
                     release_context=path_release_context,
                     guarantee_level=path_guarantee_level,
                     buggy_path=buggy_path,
-                    merge_mode="issue",
+                    merge_mode="issue_online",
                 )
                 previous_candidate = pending_fallback_candidates.get(issue_signature)
                 should_replace = False
@@ -5899,7 +5899,7 @@ class DFBScanAgent(Agent):
             "issue_online",
         }:
             effective_merge_mode = "source"
-        if effective_merge_mode in {"issue", "issue_online"}:
+        if effective_merge_mode == "issue":
             guarantee_class = (
                 "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
             )
@@ -5909,6 +5909,18 @@ class DFBScanAgent(Agent):
                 normalize_resource_kind(resource_kind),
                 guarantee_class,
                 leak_root_method_uid if leak_root_method_uid != "" else source_anchor_key,
+            )
+        if effective_merge_mode == "issue_online":
+            # Online dedup identity must remain stable across wrapper/callee
+            # attribution drift. Do not include leak-root uid here.
+            guarantee_class = (
+                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+            )
+            return (
+                normalized_src_file,
+                obligation_component_signature,
+                normalize_resource_kind(resource_kind),
+                guarantee_class,
             )
         if effective_merge_mode == "obligation":
             obligation_kind = self.java_mlk_obligation_kind_by_key.get(
