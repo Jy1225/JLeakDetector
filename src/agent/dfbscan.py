@@ -9,6 +9,12 @@ from typing import cast
 from tqdm import tqdm
 
 from agent.agent import *
+from agent.java_mlk_issue_graph import (
+    IssueGraphBuilder,
+    IssueComponent,
+    SourceInstance,
+)
+from agent.java_mlk_component_pipeline import ComponentWitnessSelector
 
 from tstool.dfbscan_extractor.Java.Java_MLK_extractor import Java_MLK_Extractor
 from tstool.validator.java_resource_ownership_validator import JavaResourceOwnershipValidator
@@ -199,45 +205,21 @@ class DFBScanAgent(Agent):
         )
         self.z3_prefilter_stats = Z3PrefilterStats()
         self.java_mlk_transfer_records: Dict[str, List[Dict[str, object]]] = {}
-        self.java_mlk_report_merge_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_REPORT_MERGE_MODE", "method_semantic"
-        ).strip().lower()
-        if self.java_mlk_report_merge_mode not in {
-            "source",
-            "method",
-            "method_semantic",
-            "obligation",
-            "issue",
-        }:
-            self.java_mlk_report_merge_mode = "source"
-        # Hard dedup mode is configurable:
-        # - source: keep original source-sink granularity (most conservative)
-        # - obligation: collapse derived source family inside one obligation
-        # - issue: collapse by obligation + primary method + weak/strong semantics
-        # - issue_online: same as issue but intended for scan-stage suppression
-        # Default to source so scan-stage dedup never suppresses true positives;
-        # semantic compression is handled in canonical output views.
-        self.java_mlk_hard_dedup_mode = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_HARD_DEDUP_MODE", "source"
-        ).strip().lower()
-        if self.java_mlk_hard_dedup_mode not in {
-            "source",
-            "obligation",
-            "issue",
-            "issue_online",
-        }:
-            self.java_mlk_hard_dedup_mode = "source"
-        self.java_mlk_canonical_mode = (
-            os.environ.get("REPOAUDIT_JAVA_MLK_CANONICAL_MODE", "true")
+        self.java_mlk_issue_first = (
+            os.environ.get("REPOAUDIT_JAVA_MLK_ISSUE_FIRST", "true")
             .strip()
             .lower()
             == "true"
         )
-        self.java_mlk_output_view = os.environ.get(
-            "REPOAUDIT_JAVA_MLK_OUTPUT_VIEW", "both"
-        ).strip().lower()
-        if self.java_mlk_output_view not in {"raw", "canonical", "both"}:
-            self.java_mlk_output_view = "both"
+        try:
+            self.java_mlk_max_witness_per_component = int(
+                os.environ.get("REPOAUDIT_JAVA_MLK_MAX_WITNESS_PER_COMPONENT", "2")
+            )
+        except ValueError:
+            self.java_mlk_max_witness_per_component = 2
+        self.java_mlk_max_witness_per_component = max(
+            1, min(5, self.java_mlk_max_witness_per_component)
+        )
         self.java_mlk_family_link_mode = os.environ.get(
             "REPOAUDIT_JAVA_MLK_FAMILY_LINK_MODE", "aggressive"
         ).strip().lower()
@@ -248,23 +230,7 @@ class DFBScanAgent(Agent):
         ).strip().lower()
         if self.java_mlk_source_confidence_min not in {"low", "medium", "high"}:
             self.java_mlk_source_confidence_min = "low"
-        self.java_mlk_canonical_structural_merge = (
-            os.environ.get(
-                "REPOAUDIT_JAVA_MLK_CANONICAL_STRUCTURAL_MERGE", "true"
-            )
-            .strip()
-            .lower()
-            == "true"
-        )
-        try:
-            self.java_mlk_canonical_merge_hops = int(
-                os.environ.get("REPOAUDIT_JAVA_MLK_CANONICAL_MERGE_HOPS", "2")
-            )
-        except ValueError:
-            self.java_mlk_canonical_merge_hops = 2
-        self.java_mlk_canonical_merge_hops = max(
-            1, min(4, self.java_mlk_canonical_merge_hops)
-        )
+        self.java_mlk_issue_merge_hops = 2
         self.java_mlk_report_signatures: Set[Tuple[object, ...]] = set()
         self.java_mlk_source_coverage_stats: Dict[str, object] = {}
 
@@ -272,7 +238,10 @@ class DFBScanAgent(Agent):
         self.java_mlk_source_obligation_keys: Dict[str, str] = {}
         self.java_mlk_source_obligation_family_keys: Dict[str, str] = {}
         self.java_mlk_source_obligation_component_keys: Dict[str, str] = {}
-        self.java_mlk_obligation_kind_by_key: Dict[str, str] = {}
+        self.java_mlk_source_instances_by_key: Dict[str, SourceInstance] = {}
+        self.java_mlk_source_component_id_by_key: Dict[str, int] = {}
+        self.java_mlk_issue_components: List[IssueComponent] = []
+        self.java_mlk_component_selection: Dict[int, List[Value]] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             self.java_mlk_source_coverage_stats = (
                 self.__build_java_mlk_source_coverage_stats(self.src_values)
@@ -293,11 +262,6 @@ class DFBScanAgent(Agent):
                     self.java_mlk_source_obligation_keys,
                 )
             )
-            self.java_mlk_obligation_kind_by_key = (
-                self.__build_java_mlk_obligation_kind_index(
-                    self.src_values, self.java_mlk_source_obligation_keys
-                )
-            )
             obligation_count = len(set(self.java_mlk_source_obligation_keys.values()))
             obligation_family_count = len(
                 set(self.java_mlk_source_obligation_family_keys.values())
@@ -313,6 +277,22 @@ class DFBScanAgent(Agent):
             )
             self.logger.print_console(
                 f"Java MLK obligation components inferred: {obligation_component_count}"
+            )
+            (
+                self.java_mlk_source_instances_by_key,
+                self.java_mlk_issue_components,
+                self.java_mlk_component_selection,
+            ) = self.__build_java_mlk_issue_components_pre_llm(self.src_values)
+            self.java_mlk_source_component_id_by_key = {}
+            for component in self.java_mlk_issue_components:
+                for src_key in component.member_source_keys:
+                    self.java_mlk_source_component_id_by_key[src_key] = (
+                        component.component_id
+                    )
+            self.logger.print_console(
+                "Java MLK issue-first pre-clustering:",
+                f"components={len(self.java_mlk_issue_components)}",
+                f"selected_sources={sum(len(v) for v in self.java_mlk_component_selection.values())}",
             )
             if len(self.java_mlk_source_coverage_stats) > 0:
                 self.logger.print_console(
@@ -896,408 +876,38 @@ class DFBScanAgent(Agent):
                 )
         return
 
-    # TOBE deprecated
-    def start_scan_sequential(self) -> None:
-        self.logger.print_console("Start data-flow bug scanning...")
-        if self.language == "Java" and self.bug_type == "MLK":
-            self.logger.print_console(
-                "Java MLK mode:",
-                f"merge_view={self.java_mlk_report_merge_mode}",
-                f"hard_dedup={self.java_mlk_hard_dedup_mode}",
-                f"canonical={self.java_mlk_canonical_mode}",
-                f"output_view={self.java_mlk_output_view}",
-                f"family_link={self.java_mlk_family_link_mode}",
-                f"source_conf_min={self.java_mlk_source_confidence_min}",
-                f"structural_merge={self.java_mlk_canonical_structural_merge}",
-                f"merge_hops={self.java_mlk_canonical_merge_hops}",
-            )
-
-        # Total number of source values
-        total_src_values = len(self.src_values)
-
-        # Process each source value sequentially with a progress bar
-        with tqdm(
-            total=total_src_values, desc="Processing Source Values", unit="src"
-        ) as pbar:
-            for src_value in self.src_values:
-                worklist = []
-                src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
-                if src_function is None:
-                    pbar.update(1)
-                    continue
-
-                if self.__skip_source_by_java_soot_prefilter(src_value, src_function):
-                    pbar.update(1)
-                    continue
-
-                initial_context = CallContext(False)
-                root_resource_kind = self.__infer_java_mlk_resource_kind(src_value)
-                worklist.append((src_value, src_function, initial_context))
-
-                while len(worklist) > 0:
-                    (start_value, start_function, call_context) = worklist.pop(0)
-                    if len(call_context.context) >= self.call_depth:
-                        continue
-
-                    # Construct the input for intra-procedural data-flow analysis
-                    sinks_in_function = self.extractor.extract_sinks(start_function)
-                    sink_values = [
-                        (
-                            sink.name,
-                            sink.line_number - start_function.start_line_number + 1,
-                        )
-                        for sink in sinks_in_function
-                    ]
-
-                    call_statements = []
-                    for call_site_node in start_function.function_call_site_nodes:
-                        file_content = self.ts_analyzer.code_in_files[
-                            start_function.file_path
-                        ]
-                        call_site_line_number = (
-                            file_content[: call_site_node.start_byte].count("\n") + 1
-                        )
-                        call_site_name = file_content[
-                            call_site_node.start_byte : call_site_node.end_byte
-                        ]
-                        call_statements.append((call_site_name, call_site_line_number))
-
-                    ret_values = [
-                        (
-                            ret.name,
-                            ret.line_number - start_function.start_line_number + 1,
-                        )
-                        for ret in (
-                            start_function.retvals
-                            if start_function.retvals is not None
-                            else []
-                        )
-                    ]
-                    df_input = IntraDataFlowAnalyzerInput(
-                        start_function,
-                        start_value,
-                        sink_values,
-                        call_statements,
-                        ret_values,
-                        resource_kind=root_resource_kind,
-                        resource_rules=self.__build_java_mlk_intra_rules(
-                            root_resource_kind, src_value.file
-                        ),
-                    )
-
-                    # Invoke the intra-procedural data-flow analysis
-                    df_output = self.intra_dfa.invoke(
-                        df_input, IntraDataFlowAnalyzerOutput
-                    )
-                    if df_output is None:
-                        continue
-
-                    for path_index in range(len(df_output.reachable_values)):
-                        reachable_values_in_single_path = set([])
-                        for value in df_output.reachable_values[path_index]:
-                            reachable_values_in_single_path.add((value, call_context))
-                        self.state.update_reachable_values_per_path(
-                            (start_value, call_context), reachable_values_in_single_path
-                        )
-                        source_executed = True
-                        if path_index < len(df_output.source_executed_per_path):
-                            source_executed = df_output.source_executed_per_path[path_index]
-                        self.state.update_source_executed_per_path(
-                            (start_value, call_context), source_executed
-                        )
-                        path_line_numbers: List[int] = []
-                        if path_index < len(df_output.path_line_numbers_per_path):
-                            path_line_numbers = df_output.path_line_numbers_per_path[
-                                path_index
-                            ]
-                        self.state.update_path_line_numbers_per_path(
-                            (start_value, call_context), path_line_numbers
-                        )
-                        release_context = RELEASE_CONTEXT_UNKNOWN
-                        if path_index < len(df_output.release_context_per_path):
-                            release_context = normalize_release_context(
-                                df_output.release_context_per_path[path_index]
-                            )
-                        guarantee_level = GUARANTEE_NONE
-                        if path_index < len(df_output.guarantee_level_per_path):
-                            guarantee_level = normalize_guarantee_level(
-                                df_output.guarantee_level_per_path[path_index]
-                            )
-                        self.state.update_release_context_per_path(
-                            (start_value, call_context), release_context
-                        )
-                        self.state.update_guarantee_level_per_path(
-                            (start_value, call_context), guarantee_level
-                        )
-
-                        delta_worklist = self.__update_worklist(
-                            df_input, df_output, call_context, path_index
-                        )
-                        worklist.extend(delta_worklist)
-
-                self.__collect_potential_buggy_paths(
-                    src_value, (src_value, CallContext(False))
-                )
-
-                if src_value not in self.state.potential_buggy_paths:
-                    pbar.update(1)
-                    continue
-
-                buggy_paths = self.__filter_redundant_java_mlk_paths(
-                    src_value, self.state.potential_buggy_paths[src_value]
-                )
-                seen_path_validator_signatures: Set[Tuple[object, ...]] = set()
-                for buggy_path_raw in buggy_paths:
-                    buggy_path = self.__compress_java_mlk_candidate_path(
-                        buggy_path_raw
-                    )
-                    values_to_functions = {
-                        value: self.ts_analyzer.get_function_from_localvalue(value)
-                        for value in buggy_path
-                    }
-
-                    if self.__skip_by_java_soot_prefilter(
-                        src_value, buggy_path, values_to_functions
-                    ):
-                        continue
-
-                    if self.__skip_by_java_z3_prefilter(
-                        src_value, buggy_path, values_to_functions
-                    ):
-                        continue
-
-                    (
-                        path_resource_kind,
-                        path_release_context,
-                        path_guarantee_level,
-                        path_servlet_context,
-                    ) = self.__extract_java_mlk_path_semantics(src_value, buggy_path)
-                    if self.language == "Java" and self.bug_type == "MLK":
-                        pv_signature = self.__build_java_mlk_path_validator_signature(
-                            buggy_path,
-                            path_resource_kind,
-                            path_release_context,
-                            path_guarantee_level,
-                            path_servlet_context,
-                        )
-                        if pv_signature in seen_path_validator_signatures:
-                            continue
-                        seen_path_validator_signatures.add(pv_signature)
-                    pv_input = PathValidatorInput(
-                        self.bug_type,
-                        buggy_path,
-                        values_to_functions,
-                        resource_kind=path_resource_kind,
-                        release_context=path_release_context,
-                        guarantee_level=path_guarantee_level,
-                        resource_semantic_rules=self.__build_java_mlk_path_rules(
-                            path_resource_kind, path_servlet_context
-                        ),
-                        servlet_context=path_servlet_context,
-                    )
-                    pv_output = self.path_validator.invoke(
-                        pv_input, PathValidatorOutput
-                    )
-
-                    if pv_output is None:
-                        continue
-
-                    should_strict_by_marker = (
-                        self.__has_java_mlk_no_sink_marker(buggy_path)
-                        and self.__is_java_mlk_close_biased_negative(
-                            pv_output.explanation_str
-                        )
-                    )
-                    should_strict_by_semantics = should_trigger_strict_recheck(
-                        path_release_context, path_guarantee_level
-                    )
-                    should_strict_by_explanation = (
-                        self.__should_force_java_mlk_strict_recheck(
-                            buggy_path=buggy_path,
-                            pv_explanation=pv_output.explanation_str,
-                            release_context=path_release_context,
-                            guarantee_level=path_guarantee_level,
-                        )
-                    )
-                    if (
-                        self.language == "Java"
-                        and self.bug_type == "MLK"
-                        and not pv_output.is_reachable
-                        and (
-                            should_strict_by_marker
-                            or should_strict_by_semantics
-                            or should_strict_by_explanation
-                        )
-                    ):
-                        strict_pv_input = PathValidatorInput(
-                            self.bug_type,
-                            buggy_path,
-                            values_to_functions,
-                            strict_branch_semantics=True,
-                            resource_kind=path_resource_kind,
-                            release_context=path_release_context,
-                            guarantee_level=path_guarantee_level,
-                            resource_semantic_rules=self.__build_java_mlk_path_rules(
-                                path_resource_kind, path_servlet_context
-                            ),
-                            servlet_context=path_servlet_context,
-                        )
-                        strict_pv_output = self.path_validator.invoke(
-                            strict_pv_input, PathValidatorOutput
-                        )
-                        if strict_pv_output is not None:
-                            pv_output = strict_pv_output
-
-                    if (
-                        self.language == "Java"
-                        and self.bug_type == "MLK"
-                        and not pv_output.is_reachable
-                        and self.__should_accept_java_mlk_no_sink_fallback(
-                            buggy_path=buggy_path,
-                            pv_explanation=pv_output.explanation_str,
-                            guarantee_level=path_guarantee_level,
-                        )
-                    ):
-                        self.logger.print_log(
-                            "Accept Java MLK candidate by no-sink fallback.",
-                            f"source={str(src_value)}",
-                            f"guarantee_level={path_guarantee_level}",
-                        )
-                        pv_output = PathValidatorOutput(
-                            True,
-                            pv_output.explanation_str
-                            + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable.",
-                        )
-
-                    if pv_output.is_reachable:
-                        passed_post_validation, reason = (
-                            self.__post_validate_java_mlk_with_objid(
-                                src_value,
-                                buggy_path,
-                                values_to_functions,
-                            )
-                        )
-                        if not passed_post_validation:
-                            self.logger.print_log(
-                                f"Skip candidate after Java MLK ownership validation: {reason}"
-                            )
-                            continue
-                        relevant_functions = {}
-                        for value in buggy_path:
-                            function = self.ts_analyzer.get_function_from_localvalue(
-                                value
-                            )
-                            if function is not None:
-                                relevant_functions[function.function_id] = function
-                        if not self.__should_keep_java_mlk_source_by_confidence(
-                            src_value, buggy_path
-                        ):
-                            self.logger.print_log(
-                                "Skip Java MLK candidate due to source confidence gate:",
-                                f"source={str(src_value)}",
-                                f"min={self.java_mlk_source_confidence_min}",
-                                f"actual={self.__infer_java_mlk_source_confidence(src_value)}",
-                            )
-                            continue
-                        if not self.__register_java_mlk_report_signature(
-                            src_value,
-                            relevant_functions,
-                            resource_kind=path_resource_kind,
-                            release_context=path_release_context,
-                            guarantee_level=path_guarantee_level,
-                            buggy_path=buggy_path,
-                        ):
-                            continue
-
-                        bug_report = BugReport(
-                            self.bug_type,
-                            src_value,
-                            relevant_functions,
-                            pv_output.explanation_str,
-                            metadata=self.__build_java_mlk_report_metadata(
-                                src_value=src_value,
-                                buggy_path=buggy_path,
-                                relevant_functions=relevant_functions,
-                                resource_kind=path_resource_kind,
-                                release_context=path_release_context,
-                                guarantee_level=path_guarantee_level,
-                            ),
-                        )
-                        self.state.update_bug_report(bug_report)
-
-                # Dump bug reports
-                self.__write_detect_outputs()
-
-                # Update the progress bar
-                pbar.update(1)
-
-        # Final summary
-        raw_report_count, merged_report_count, canonical_report_count = (
-            self.__write_detect_outputs()
-        )
-        total_bug_number = raw_report_count
-        if (
-            self.language == "Java"
-            and self.bug_type == "MLK"
-            and self.java_mlk_output_view == "canonical"
-        ):
-            total_bug_number = canonical_report_count
-        self.logger.print_console(
-            f"{total_bug_number} bug(s) was/were detected in total."
-        )
-        self.logger.print_console(
-            f"The bug report(s) has/have been dumped to {self.res_dir_path}/detect_info.json"
-        )
-        self.logger.print_console(
-            f"File-level merged view has been dumped to {self.res_dir_path}/detect_info_by_file.json"
-        )
-        if self.language == "Java" and self.bug_type == "MLK":
-            self.logger.print_console(
-                f"Java MLK merged report(s): {merged_report_count} (mode={self.java_mlk_report_merge_mode})"
-            )
-            self.logger.print_console(
-                f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
-            )
-            self.logger.print_console(
-                f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
-            )
-            self.logger.print_console(
-                f"Canonical issue view: {canonical_report_count} (mode=family)"
-            )
-            self.logger.print_console(
-                f"Canonical view has been dumped to {self.res_dir_path}/detect_info_canonical.json"
-            )
-        self.logger.print_console("The log files are as follows:")
-        for log_file in self.get_log_files():
-            self.logger.print_console(log_file)
-        self.logger.print_console(
-            f"Soot source-level skipped source(s): {self.soot_prefilter_source_skipped}"
-        )
-        self.__dump_java_mlk_source_coverage_stats()
-        self.__dump_java_mlk_transfer_records()
-        self.__dump_soot_source_gate_events()
-        self.__dump_soot_prefilter_stats()
-        self.__dump_z3_prefilter_stats()
-        return
-
     def start_scan(self) -> None:
         self.logger.print_console("Start data-flow bug scanning in parallel...")
         self.logger.print_console(f"Max number of workers: {self.max_neural_workers}")
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
                 "Java MLK mode:",
-                f"merge_view={self.java_mlk_report_merge_mode}",
-                f"hard_dedup={self.java_mlk_hard_dedup_mode}",
-                f"canonical={self.java_mlk_canonical_mode}",
-                f"output_view={self.java_mlk_output_view}",
+                f"issue_first={self.java_mlk_issue_first}",
+                f"max_witness={self.java_mlk_max_witness_per_component}",
                 f"family_link={self.java_mlk_family_link_mode}",
                 f"source_conf_min={self.java_mlk_source_confidence_min}",
-                f"structural_merge={self.java_mlk_canonical_structural_merge}",
-                f"merge_hops={self.java_mlk_canonical_merge_hops}",
             )
+        src_values_to_process: List[Value] = list(self.src_values)
+        if self.language == "Java" and self.bug_type == "MLK" and self.java_mlk_issue_first:
+            selected_values: List[Value] = []
+            for component in self.java_mlk_issue_components:
+                selected_values.extend(
+                    self.java_mlk_component_selection.get(component.component_id, [])
+                )
+            if len(selected_values) > 0:
+                unique: Dict[str, Value] = {}
+                for src_value in selected_values:
+                    unique[str(src_value)] = src_value
+                src_values_to_process = list(unique.values())
+                self.logger.print_console(
+                    "Java MLK issue-first source selection:",
+                    f"raw_sources={len(self.src_values)}",
+                    f"selected_sources={len(src_values_to_process)}",
+                    f"components={len(self.java_mlk_issue_components)}",
+                )
 
         # Total number of source values
-        total_src_values = len(self.src_values)
+        total_src_values = len(src_values_to_process)
 
         # Process each source value in parallel with a progress bar
         with tqdm(
@@ -1306,7 +916,7 @@ class DFBScanAgent(Agent):
             with ThreadPoolExecutor(max_workers=self.max_neural_workers) as executor:
                 futures = [
                     executor.submit(self.__process_src_value, src_value)
-                    for src_value in self.src_values
+                    for src_value in src_values_to_process
                 ]
                 for future in as_completed(futures):
                     try:
@@ -1318,16 +928,7 @@ class DFBScanAgent(Agent):
                         pbar.update(1)
 
         # Final summary
-        raw_report_count, merged_report_count, canonical_report_count = (
-            self.__write_detect_outputs()
-        )
-        total_bug_number = raw_report_count
-        if (
-            self.language == "Java"
-            and self.bug_type == "MLK"
-            and self.java_mlk_output_view == "canonical"
-        ):
-            total_bug_number = canonical_report_count
+        total_bug_number = self.__write_detect_outputs()
         self.logger.print_console(
             f"{total_bug_number} bug(s) was/were detected in total."
         )
@@ -1339,19 +940,7 @@ class DFBScanAgent(Agent):
         )
         if self.language == "Java" and self.bug_type == "MLK":
             self.logger.print_console(
-                f"Java MLK merged report(s): {merged_report_count} (mode={self.java_mlk_report_merge_mode})"
-            )
-            self.logger.print_console(
-                f"Merged view has been dumped to {self.res_dir_path}/detect_info_merged.json"
-            )
-            self.logger.print_console(
-                f"Issue-level view has been dumped to {self.res_dir_path}/detect_info_issue.json"
-            )
-            self.logger.print_console(
-                f"Canonical issue view: {canonical_report_count} (mode=family)"
-            )
-            self.logger.print_console(
-                f"Canonical view has been dumped to {self.res_dir_path}/detect_info_canonical.json"
+                f"Raw evidence view has been dumped to {self.res_dir_path}/detect_info_raw.json"
             )
         self.logger.print_console("The log files are as follows:")
         for log_file in self.get_log_files():
@@ -1546,24 +1135,16 @@ class DFBScanAgent(Agent):
                 )
                 return False, None
 
-            issue_signature = self.__build_java_mlk_report_signature(
+            issue_signature = self.__build_java_mlk_issue_signature(
                 src_value,
-                relevant_functions,
                 resource_kind=resource_kind,
-                release_context=release_context,
                 guarantee_level=guarantee_level,
-                buggy_path=candidate_path,
-                merge_mode="issue_online",
             )
             accepted_issue_signatures.add(issue_signature)
 
             if not self.__register_java_mlk_report_signature(
                 src_value,
                 relevant_functions,
-                resource_kind=resource_kind,
-                release_context=release_context,
-                guarantee_level=guarantee_level,
-                buggy_path=candidate_path,
             ):
                 return True, issue_signature
 
@@ -1710,18 +1291,10 @@ class DFBScanAgent(Agent):
                     pv_output.explanation_str
                     + "\n\nFallback: no-sink/weak-release branch is treated as leak-reachable."
                 )
-                relevant_functions_for_issue = _build_candidate_relevant_functions(
-                    buggy_path,
-                    values_to_functions,
-                )
-                issue_signature = self.__build_java_mlk_report_signature(
+                issue_signature = self.__build_java_mlk_issue_signature(
                     src_value,
-                    relevant_functions_for_issue,
                     resource_kind=path_resource_kind,
-                    release_context=path_release_context,
                     guarantee_level=path_guarantee_level,
-                    buggy_path=buggy_path,
-                    merge_mode="issue_online",
                 )
                 previous_candidate = pending_fallback_candidates.get(issue_signature)
                 should_replace = False
@@ -2058,6 +1631,9 @@ class DFBScanAgent(Agent):
         obligation_component_key = self.__get_java_mlk_source_obligation_component_key(
             src_value
         )
+        source_component_id = self.java_mlk_source_component_id_by_key.get(
+            str(src_value), -1
+        )
         leak_root_method_uid, leak_root_method_name = (
             self.__infer_java_mlk_report_leak_root_method(
                 src_value,
@@ -2076,6 +1652,7 @@ class DFBScanAgent(Agent):
             "obligation_key": obligation_key,
             "obligation_family_key": obligation_family_key,
             "obligation_component_key": obligation_component_key,
+            "source_component_id": source_component_id,
             "source_line": src_value.line_number,
             "source_file": src_value.file,
             "source_method_uid": src_method_uid,
@@ -2115,7 +1692,7 @@ class DFBScanAgent(Agent):
         if source_rank >= minimum_rank:
             return True
         # Keep weak/no-sink branches even for lower-confidence sources;
-        # they are useful for recall/debug and canonical merging.
+        # they are useful for recall/debug and issue aggregation.
         return self.__has_java_mlk_no_sink_marker(
             buggy_path
         ) or self.__has_java_mlk_weak_release_marker(buggy_path)
@@ -3234,9 +2811,9 @@ class DFBScanAgent(Agent):
                 local_key = source_local_key_by_src.get(member_key, result[member_key])
                 ranked_candidates.append((-confidence_rank, local_key))
             ranked_candidates.sort()
-            canonical_key = ranked_candidates[0][1]
+            representative_key = ranked_candidates[0][1]
             for member_key in member_keys:
-                result[member_key] = canonical_key
+                result[member_key] = representative_key
 
         if interproc_link_count > 0:
             self.logger.print_log(
@@ -3348,9 +2925,11 @@ class DFBScanAgent(Agent):
             grouped_members[find_root(src_key)].append(src_key)
 
         for member_keys in grouped_members.values():
-            canonical_family = min(source_family_keys.get(member_key, "") for member_key in member_keys)
+            representative_family = min(
+                source_family_keys.get(member_key, "") for member_key in member_keys
+            )
             for member_key in member_keys:
-                source_family_keys[member_key] = canonical_family
+                source_family_keys[member_key] = representative_family
 
         return source_family_keys
 
@@ -3469,7 +3048,7 @@ class DFBScanAgent(Agent):
                 found = False
                 while len(queue) > 0:
                     current_id, hop = queue.popleft()
-                    if hop >= self.java_mlk_canonical_merge_hops:
+                    if hop >= self.java_mlk_issue_merge_hops:
                         continue
                     neighbors = set(call_out.get(current_id, set()))
                     neighbors.update(call_in.get(current_id, set()))
@@ -3596,7 +3175,7 @@ class DFBScanAgent(Agent):
                         ):
                             continue
                         if not same_symbol and line_gap > max(
-                            10, self.java_mlk_canonical_merge_hops * 8
+                            10, self.java_mlk_issue_merge_hops * 8
                         ):
                             continue
                         _union(rep_a, rep_b)
@@ -3623,44 +3202,6 @@ class DFBScanAgent(Agent):
                 source_component_keys[member_key] = component_key
 
         return source_component_keys
-
-    def __build_java_mlk_obligation_kind_index(
-        self,
-        src_values: List[Value],
-        source_obligation_keys: Dict[str, str],
-    ) -> Dict[str, str]:
-        if self.language != "Java" or self.bug_type != "MLK":
-            return {}
-
-        kind_candidates: Dict[str, Set[str]] = defaultdict(set)
-        for src_value in src_values:
-            src_key = str(src_value)
-            obligation_key = source_obligation_keys.get(src_key, "")
-            if obligation_key == "":
-                continue
-            kind_candidates[obligation_key].add(
-                normalize_resource_kind(classify_resource_kind(src_value.name, src_value.file))
-            )
-
-        kind_priority = [
-            RESOURCE_KIND_PROCESS,
-            RESOURCE_KIND_LOCK,
-            RESOURCE_KIND_EXECUTOR,
-            RESOURCE_KIND_TEMP_RESOURCE,
-            RESOURCE_KIND_TRANSACTION,
-            RESOURCE_KIND_SUBSCRIPTION,
-            RESOURCE_KIND_AUTOCLOSEABLE,
-        ]
-
-        result: Dict[str, str] = {}
-        for obligation_key, kinds in kind_candidates.items():
-            chosen = RESOURCE_KIND_AUTOCLOSEABLE
-            for kind in kind_priority:
-                if kind in kinds:
-                    chosen = kind
-                    break
-            result[obligation_key] = chosen
-        return result
 
     def __build_java_mlk_assignment_timeline(
         self, function: Function
@@ -4589,139 +4130,6 @@ class DFBScanAgent(Agent):
 
         return str(primary_uid), primary_name, primary_confidence
 
-    def __build_java_mlk_merged_detect_payload(
-        self, bug_reports: Dict[int, "BugReport"]
-    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
-        merge_mode = self.java_mlk_report_merge_mode
-        groups: Dict[Tuple[object, ...], List[int]] = {}
-
-        for bug_report_id in sorted(bug_reports.keys()):
-            bug_report = bug_reports[bug_report_id]
-            src_value = bug_report.buggy_value
-            relevant_functions = bug_report.relevant_functions
-            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
-            resource_kind = str(
-                metadata.get("resource_kind", self.__infer_java_mlk_resource_kind(src_value))
-            )
-            release_context = str(
-                metadata.get("release_context", RELEASE_CONTEXT_UNKNOWN)
-            )
-            guarantee_level = str(metadata.get("guarantee_level", GUARANTEE_NONE))
-            signature = self.__build_java_mlk_report_signature(
-                src_value,
-                relevant_functions,
-                resource_kind=resource_kind,
-                release_context=release_context,
-                guarantee_level=guarantee_level,
-                buggy_path=None,
-                merge_mode=merge_mode,
-            )
-            if signature not in groups:
-                groups[signature] = []
-            groups[signature].append(bug_report_id)
-
-        merged_payload: Dict[int, dict] = {}
-        for merged_idx, (signature, member_ids) in enumerate(groups.items()):
-            representative_id = min(member_ids)
-            representative_bug_report = bug_reports[representative_id]
-            merged_entry = representative_bug_report.to_dict()
-            merged_entry["merged_member_ids"] = member_ids
-            merged_entry["merged_member_count"] = len(member_ids)
-            merged_entry["merge_mode"] = merge_mode
-            merged_entry["merge_signature"] = [str(part) for part in signature]
-            merged_payload[merged_idx] = merged_entry
-
-        raw_count = len(bug_reports)
-        merged_count = len(merged_payload)
-        stats_payload: Dict[str, object] = {
-            "merge_mode": merge_mode,
-            "raw_report_count": raw_count,
-            "merged_report_count": merged_count,
-            "reduced_report_count": raw_count - merged_count,
-            "reduction_ratio": (
-                float(raw_count - merged_count) / float(raw_count)
-                if raw_count > 0
-                else 0.0
-            ),
-        }
-        return merged_payload, stats_payload
-
-    def __build_java_mlk_issue_detect_payload(
-        self, bug_reports: Dict[int, "BugReport"]
-    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
-        groups: Dict[Tuple[object, ...], List[int]] = {}
-        for bug_report_id in sorted(bug_reports.keys()):
-            bug_report = bug_reports[bug_report_id]
-            src_value = bug_report.buggy_value
-            relevant_functions = bug_report.relevant_functions
-            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
-            resource_kind = str(
-                metadata.get("resource_kind", self.__infer_java_mlk_resource_kind(src_value))
-            )
-            release_context = str(metadata.get("release_context", RELEASE_CONTEXT_UNKNOWN))
-            guarantee_level = str(metadata.get("guarantee_level", GUARANTEE_NONE))
-            signature = self.__build_java_mlk_report_signature(
-                src_value,
-                relevant_functions,
-                resource_kind=resource_kind,
-                release_context=release_context,
-                guarantee_level=guarantee_level,
-                buggy_path=None,
-                merge_mode="issue_online",
-            )
-            groups.setdefault(signature, []).append(bug_report_id)
-
-        issue_payload: Dict[int, dict] = {}
-        for issue_idx, (signature, member_ids) in enumerate(groups.items()):
-            representative_id = min(member_ids)
-            best_rank = -1
-            for candidate_id in member_ids:
-                candidate_report = bug_reports[candidate_id]
-                candidate_metadata = (
-                    candidate_report.metadata
-                    if hasattr(candidate_report, "metadata")
-                    else {}
-                )
-                candidate_rank = self.__java_mlk_source_confidence_rank(
-                    str(candidate_metadata.get("source_confidence", "medium"))
-                )
-                if candidate_rank > best_rank:
-                    best_rank = candidate_rank
-                    representative_id = candidate_id
-                elif candidate_rank == best_rank and candidate_id < representative_id:
-                    representative_id = candidate_id
-            representative_bug_report = bug_reports[representative_id]
-            issue_entry = representative_bug_report.to_dict()
-            issue_entry["issue_member_ids"] = member_ids
-            issue_entry["issue_member_count"] = len(member_ids)
-            issue_entry["issue_mode"] = "issue_online"
-            issue_entry["issue_signature"] = [str(part) for part in signature]
-            issue_entry["issue_family_key"] = (
-                str(signature[1]) if len(signature) > 1 else ""
-            )
-            issue_entry["issue_component_key"] = (
-                str(signature[1]) if len(signature) > 1 else ""
-            )
-            issue_entry["issue_leak_root_method_uid"] = (
-                str(signature[4]) if len(signature) > 4 else ""
-            )
-            issue_payload[issue_idx] = issue_entry
-
-        raw_count = len(bug_reports)
-        issue_count = len(issue_payload)
-        stats_payload: Dict[str, object] = {
-            "mode": "issue",
-            "raw_report_count": raw_count,
-            "issue_count": issue_count,
-            "reduced_report_count": raw_count - issue_count,
-            "reduction_ratio": (
-                float(raw_count - issue_count) / float(raw_count)
-                if raw_count > 0
-                else 0.0
-            ),
-        }
-        return issue_payload, stats_payload
-
     def __build_java_mlk_issue_component_signature_from_report(
         self, bug_report: "BugReport"
     ) -> Tuple[str, str, str, str]:
@@ -4729,14 +4137,19 @@ class DFBScanAgent(Agent):
         source_file = str(
             metadata.get("source_file", bug_report.buggy_value.file)
         ).replace("\\", "/").lower()
-        component_key = str(
-            metadata.get(
-                "obligation_component_key",
-                self.__get_java_mlk_source_obligation_component_key(
-                    bug_report.buggy_value
-                ),
+        src_key = str(bug_report.buggy_value)
+        pre_component_id = self.java_mlk_source_component_id_by_key.get(src_key)
+        if pre_component_id is not None:
+            component_key = f"pre_component:{pre_component_id}"
+        else:
+            component_key = str(
+                metadata.get(
+                    "obligation_component_key",
+                    self.__get_java_mlk_source_obligation_component_key(
+                        bug_report.buggy_value
+                    ),
+                )
             )
-        )
         resource_kind = normalize_resource_kind(
             str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
         )
@@ -4876,7 +4289,7 @@ class DFBScanAgent(Agent):
                     hop_cache[cache_key] = False
                     continue
                 related = _short_hop_related(
-                    fid_a, fid_b, self.java_mlk_canonical_merge_hops
+                    fid_a, fid_b, self.java_mlk_issue_merge_hops
                 )
                 hop_cache[cache_key] = related
                 if related:
@@ -4911,7 +4324,16 @@ class DFBScanAgent(Agent):
                             method_uids.add(uid_str)
                 source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
                 source_lines.add(int(metadata.get("source_line", -1)))
-                component_key = str(metadata.get("obligation_component_key", "")).strip()
+                try:
+                    component_id = int(metadata.get("source_component_id", -1))
+                except Exception:
+                    component_id = -1
+                if component_id >= 0:
+                    component_key = f"pre_component:{component_id}"
+                else:
+                    component_key = str(
+                        metadata.get("obligation_component_key", "")
+                    ).strip()
                 if component_key != "":
                     component_keys.add(component_key)
 
@@ -5089,7 +4511,16 @@ class DFBScanAgent(Agent):
                     source_method_uids.add(source_method_uid)
                 if source_method_name != "":
                     source_method_names.add(source_method_name)
-                component_key = str(member_meta.get("obligation_component_key", "")).strip()
+                try:
+                    component_id = int(member_meta.get("source_component_id", -1))
+                except Exception:
+                    component_id = -1
+                if component_id >= 0:
+                    component_key = f"pre_component:{component_id}"
+                else:
+                    component_key = str(
+                        member_meta.get("obligation_component_key", "")
+                    ).strip()
                 if component_key != "":
                     component_keys.add(component_key)
                 leak_root_uid = str(member_meta.get("leak_root_method_uid", "")).strip()
@@ -5173,6 +4604,81 @@ class DFBScanAgent(Agent):
             ),
         }
         return issue_reports, stats_payload
+
+    def __build_java_mlk_issue_components_pre_llm(
+        self, src_values: List[Value]
+    ) -> Tuple[Dict[str, SourceInstance], List[IssueComponent], Dict[int, List[Value]]]:
+        if self.language != "Java" or self.bug_type != "MLK":
+            return {}, [], {}
+
+        source_instances: List[SourceInstance] = []
+        source_instances_by_key: Dict[str, SourceInstance] = {}
+        source_value_by_key: Dict[str, Value] = {}
+        for src_value in src_values:
+            src_key = str(src_value)
+            src_function = self.ts_analyzer.get_function_from_localvalue(src_value)
+            source_method_uid = ""
+            if src_function is not None:
+                source_method_uid = (
+                    src_function.function_uid
+                    if src_function.function_uid != ""
+                    else self.__build_java_mlk_function_signature_key(src_function)
+                )
+            component_key = self.__get_java_mlk_source_obligation_component_key(src_value)
+            resource_kind = normalize_resource_kind(
+                classify_resource_kind(src_value.name, src_value.file)
+            )
+            guarantee_class = "weak_or_unknown"
+            source_symbol = self.__infer_java_mlk_source_symbol(src_value)
+            source_file = src_value.file.replace("\\", "/").lower()
+            inst = SourceInstance(
+                src_key=src_key,
+                src_value=src_value,
+                source_file=source_file,
+                source_method_uid=source_method_uid,
+                obligation_component_key=component_key,
+                resource_kind=resource_kind,
+                guarantee_class=guarantee_class,
+                source_symbol=source_symbol,
+                source_line=src_value.line_number,
+            )
+            source_instances.append(inst)
+            source_instances_by_key[src_key] = inst
+            source_value_by_key[src_key] = src_value
+
+        method_id_by_uid: Dict[str, int] = {}
+        for function in self.ts_analyzer.function_env.values():
+            function_uid = (
+                function.function_uid
+                if function.function_uid != ""
+                else self.__build_java_mlk_function_signature_key(function)
+            )
+            method_id_by_uid[function_uid] = function.function_id
+
+        builder = IssueGraphBuilder(
+            source_instances=source_instances,
+            method_id_by_uid=method_id_by_uid,
+            call_out=self.ts_analyzer.function_caller_callee_map,
+            call_in=self.ts_analyzer.function_callee_caller_map,
+            max_method_hops=self.java_mlk_issue_merge_hops,
+        )
+        components = builder.connected_components()
+
+        selector = ComponentWitnessSelector(
+            source_by_key=source_instances_by_key,
+            max_witness_per_component=self.java_mlk_max_witness_per_component,
+        )
+        component_selection: Dict[int, List[Value]] = {}
+        for component in components:
+            selection = selector.select(component)
+            selected_values: List[Value] = []
+            for src_key in selection.selected_source_keys:
+                src_value = source_value_by_key.get(src_key)
+                if src_value is not None:
+                    selected_values.append(src_value)
+            if len(selected_values) > 0:
+                component_selection[component.component_id] = selected_values
+        return source_instances_by_key, components, component_selection
 
     def __build_java_mlk_method_buckets_for_member_reports(
         self,
@@ -5325,822 +4831,22 @@ class DFBScanAgent(Agent):
 
         return method_buckets
 
-    def __build_java_mlk_canonical_detect_payload(
-        self, bug_reports: Dict[int, "BugReport"]
-    ) -> Tuple[Dict[int, dict], Dict[str, object]]:
-        if self.language != "Java" or self.bug_type != "MLK":
-            return {}, {
-                "mode": "canonical",
-                "enabled": False,
-                "raw_report_count": len(bug_reports),
-                "canonical_issue_count": len(bug_reports),
-                "reduced_report_count": 0,
-                "reduction_ratio": 0.0,
-            }
-
-        def _coarse_family_anchor(component_key: str) -> str:
-            if ":component:" in component_key:
-                suffix = component_key.split(":component:", 1)[1]
-            elif ":family:" in component_key:
-                suffix = component_key.split(":family:", 1)[1]
-            else:
-                return component_key
-            parts = [part for part in suffix.split(":") if part != ""]
-            if len(parts) >= 3:
-                return ":".join(parts[:3])
-            if len(parts) >= 2:
-                return ":".join(parts[:2])
-            return suffix
-
-        # Step 1: build base groups and downgrade low-confidence sources by
-        # attaching them to high/medium-confidence family in same method/file/semantics.
-        high_family_by_method: Dict[Tuple[str, str, str, str], str] = {}
-        for bug_report_id in sorted(bug_reports.keys()):
-            bug_report = bug_reports[bug_report_id]
-            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
-            source_file = str(metadata.get("source_file", bug_report.buggy_value.file)).replace(
-                "\\", "/"
-            ).lower()
-            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
-            if source_method_uid == "":
-                continue
-            resource_kind = normalize_resource_kind(
-                str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
-            )
-            guarantee_level = normalize_guarantee_level(
-                str(metadata.get("guarantee_level", GUARANTEE_NONE))
-            )
-            guarantee_class = (
-                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
-            )
-            confidence = self.__normalize_java_mlk_source_confidence(
-                str(metadata.get("source_confidence", "medium"))
-            )
-            if confidence == "low":
-                continue
-            obligation_component_key = str(
-                metadata.get(
-                    "obligation_component_key",
-                    self.__get_java_mlk_source_obligation_component_key(
-                        bug_report.buggy_value
-                    ),
-                )
-            )
-            method_key = (
-                source_file,
-                source_method_uid,
-                resource_kind,
-                guarantee_class,
-            )
-            previous_family = high_family_by_method.get(method_key, "")
-            if previous_family == "" or obligation_component_key < previous_family:
-                high_family_by_method[method_key] = obligation_component_key
-
-        groups: Dict[Tuple[str, str, str, str], List[int]] = defaultdict(list)
-        low_conf_attached_reports = 0
-        for bug_report_id in sorted(bug_reports.keys()):
-            bug_report = bug_reports[bug_report_id]
-            metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
-            source_file = str(metadata.get("source_file", bug_report.buggy_value.file)).replace(
-                "\\", "/"
-            ).lower()
-            obligation_component_key = str(
-                metadata.get(
-                    "obligation_component_key",
-                    self.__get_java_mlk_source_obligation_component_key(
-                        bug_report.buggy_value
-                    ),
-                )
-            )
-            resource_kind = normalize_resource_kind(
-                str(metadata.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
-            )
-            guarantee_level = normalize_guarantee_level(
-                str(metadata.get("guarantee_level", GUARANTEE_NONE))
-            )
-            guarantee_class = (
-                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
-            )
-            source_method_uid = str(metadata.get("source_method_uid", "")).strip()
-            confidence = self.__normalize_java_mlk_source_confidence(
-                str(metadata.get("source_confidence", "medium"))
-            )
-            if confidence == "low" and source_method_uid != "":
-                attach_key = (
-                    source_file,
-                    source_method_uid,
-                    resource_kind,
-                    guarantee_class,
-                )
-                attach_family = high_family_by_method.get(attach_key, "")
-                if attach_family != "" and attach_family != obligation_component_key:
-                    obligation_component_key = attach_family
-                    low_conf_attached_reports += 1
-
-            signature = (
-                source_file,
-                obligation_component_key,
-                resource_kind,
-                guarantee_class,
-            )
-            groups[signature].append(bug_report_id)
-
-        pre_cluster_group_count = len(groups)
-
-        # Step 2: semantic second-pass clustering inside same file/semantics.
-        signatures = sorted(groups.keys())
-        cluster_features: Dict[Tuple[str, str, str, str], Dict[str, object]] = {}
-        for signature in signatures:
-            member_ids = sorted(set(groups[signature]))
-            method_uids: Set[str] = set()
-            source_lines: Set[int] = set()
-            source_symbols: Set[str] = set()
-            leak_root_uids: Set[str] = set()
-            non_low_conf_count = 0
-            for member_id in member_ids:
-                bug_report = bug_reports[member_id]
-                metadata = bug_report.metadata if hasattr(bug_report, "metadata") else {}
-                source_method_uid = str(metadata.get("source_method_uid", "")).strip()
-                if source_method_uid != "":
-                    method_uids.add(source_method_uid)
-                relevant_uids = metadata.get("relevant_method_uids", [])
-                if isinstance(relevant_uids, list):
-                    for relevant_uid in relevant_uids:
-                        relevant_uid_str = str(relevant_uid).strip()
-                        if relevant_uid_str != "":
-                            method_uids.add(relevant_uid_str)
-                source_lines.add(int(metadata.get("source_line", -1)))
-                source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
-                leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
-                if leak_root_uid != "":
-                    leak_root_uids.add(leak_root_uid)
-                confidence = self.__normalize_java_mlk_source_confidence(
-                    str(metadata.get("source_confidence", "medium"))
-                )
-                if confidence != "low":
-                    non_low_conf_count += 1
-
-            cluster_features[signature] = {
-                "method_uids": method_uids,
-                "source_lines": source_lines,
-                "source_symbols": source_symbols,
-                "leak_root_uids": leak_root_uids,
-                "non_low_conf_count": non_low_conf_count,
-                "coarse_family_anchor": _coarse_family_anchor(signature[1]),
-            }
-
-        parent: Dict[int, int] = {idx: idx for idx in range(len(signatures))}
-
-        def _find_root(idx: int) -> int:
-            current = idx
-            while parent[current] != current:
-                parent[current] = parent[parent[current]]
-                current = parent[current]
-            return current
-
-        def _union(idx_a: int, idx_b: int) -> bool:
-            root_a = _find_root(idx_a)
-            root_b = _find_root(idx_b)
-            if root_a == root_b:
-                return False
-            if signatures[root_a] <= signatures[root_b]:
-                parent[root_b] = root_a
-            else:
-                parent[root_a] = root_b
-            return True
-
-        second_pass_merge_count = 0
-        if self.java_mlk_family_link_mode == "aggressive":
-            for idx_a in range(len(signatures)):
-                signature_a = signatures[idx_a]
-                feature_a = cluster_features[signature_a]
-                for idx_b in range(idx_a + 1, len(signatures)):
-                    signature_b = signatures[idx_b]
-                    # Same file/resource/guarantee class only.
-                    if (
-                        signature_a[0] != signature_b[0]
-                        or signature_a[2] != signature_b[2]
-                        or signature_a[3] != signature_b[3]
-                    ):
-                        continue
-                    feature_b = cluster_features[signature_b]
-
-                    should_merge = False
-                    method_intersection = cast(
-                        Set[str], feature_a["method_uids"]
-                    ) & cast(Set[str], feature_b["method_uids"])
-                    if len(method_intersection) > 0:
-                        should_merge = True
-                    else:
-                        root_intersection = cast(
-                            Set[str], feature_a["leak_root_uids"]
-                        ) & cast(Set[str], feature_b["leak_root_uids"])
-                        if len(root_intersection) > 0:
-                            should_merge = True
-                    if (
-                        not should_merge
-                        and feature_a["coarse_family_anchor"] == feature_b["coarse_family_anchor"]
-                    ):
-                        should_merge = True
-                    if not should_merge:
-                        lines_a = cast(Set[int], feature_a["source_lines"])
-                        lines_b = cast(Set[int], feature_b["source_lines"])
-                        if len(lines_a & lines_b) > 0:
-                            should_merge = True
-                        elif (
-                            int(feature_a["non_low_conf_count"]) == 0
-                            or int(feature_b["non_low_conf_count"]) == 0
-                        ):
-                            symbol_intersection = cast(
-                                Set[str], feature_a["source_symbols"]
-                            ) & cast(Set[str], feature_b["source_symbols"])
-                            if len(symbol_intersection) > 0:
-                                filtered_a = [line for line in lines_a if line >= 0]
-                                filtered_b = [line for line in lines_b if line >= 0]
-                                if len(filtered_a) > 0 and len(filtered_b) > 0:
-                                    min_gap = min(
-                                        abs(line_a - line_b)
-                                        for line_a in filtered_a
-                                        for line_b in filtered_b
-                                    )
-                                    if min_gap <= 3:
-                                        should_merge = True
-
-                    if should_merge and _union(idx_a, idx_b):
-                        second_pass_merge_count += 1
-
-        merged_groups: Dict[int, List[int]] = defaultdict(list)
-        merged_signatures: Dict[int, List[Tuple[str, str, str, str]]] = defaultdict(list)
-        for idx, signature in enumerate(signatures):
-            root_idx = _find_root(idx)
-            merged_groups[root_idx].extend(groups[signature])
-            merged_signatures[root_idx].append(signature)
-
-        # Step 3: structural merge by call-graph relation between primary methods.
-        third_pass_merge_count = 0
-        final_groups: Dict[int, List[int]] = dict(merged_groups)
-        final_signatures: Dict[int, List[Tuple[str, str, str, str]]] = dict(
-            merged_signatures
-        )
-        if (
-            self.java_mlk_family_link_mode == "aggressive"
-            and self.java_mlk_canonical_structural_merge
-        ):
-            uid_to_function_id: Dict[str, int] = {}
-            for function in self.ts_analyzer.function_env.values():
-                function_uid = (
-                    function.function_uid
-                    if function.function_uid != ""
-                    else self.__build_java_mlk_function_signature_key(function)
-                )
-                uid_to_function_id[function_uid] = function.function_id
-
-            call_out = self.ts_analyzer.function_caller_callee_map
-            call_in = self.ts_analyzer.function_callee_caller_map
-            graph_nodes: Set[int] = set(self.ts_analyzer.function_env.keys())
-            for caller_id, callee_ids in call_out.items():
-                graph_nodes.add(caller_id)
-                graph_nodes.update(callee_ids)
-            for callee_id, caller_ids in call_in.items():
-                graph_nodes.add(callee_id)
-                graph_nodes.update(caller_ids)
-
-            index_counter = 0
-            dfn: Dict[int, int] = {}
-            low: Dict[int, int] = {}
-            stack: List[int] = []
-            in_stack: Set[int] = set()
-            scc_id_by_node: Dict[int, int] = {}
-            scc_counter = 0
-
-            def _tarjan(node_id: int) -> None:
-                nonlocal index_counter, scc_counter
-                dfn[node_id] = index_counter
-                low[node_id] = index_counter
-                index_counter += 1
-                stack.append(node_id)
-                in_stack.add(node_id)
-
-                for next_id in call_out.get(node_id, set()):
-                    if next_id not in dfn:
-                        _tarjan(next_id)
-                        low[node_id] = min(low[node_id], low[next_id])
-                    elif next_id in in_stack:
-                        low[node_id] = min(low[node_id], dfn[next_id])
-
-                if low[node_id] == dfn[node_id]:
-                    while stack:
-                        top = stack.pop()
-                        in_stack.remove(top)
-                        scc_id_by_node[top] = scc_counter
-                        if top == node_id:
-                            break
-                    scc_counter += 1
-
-            for node_id in sorted(graph_nodes):
-                if node_id not in dfn:
-                    _tarjan(node_id)
-
-            def _short_hop_related(fid_a: int, fid_b: int, max_hops: int) -> bool:
-                if fid_a == fid_b:
-                    return True
-                queue: deque[Tuple[int, int]] = deque([(fid_a, 0)])
-                visited: Set[int] = {fid_a}
-                while len(queue) > 0:
-                    current_id, hop = queue.popleft()
-                    if hop >= max_hops:
-                        continue
-                    neighbors = set(call_out.get(current_id, set()))
-                    neighbors.update(call_in.get(current_id, set()))
-                    for next_id in neighbors:
-                        if next_id == fid_b:
-                            return True
-                        if next_id in visited:
-                            continue
-                        visited.add(next_id)
-                        queue.append((next_id, hop + 1))
-                return False
-
-            def _extract_method_name(method_uid: str) -> str:
-                method_uid = method_uid.strip()
-                if method_uid in uid_to_function_id:
-                    function_id = uid_to_function_id[method_uid]
-                    if function_id in self.ts_analyzer.function_env:
-                        return self.ts_analyzer.function_env[function_id].function_name.lower()
-                # Fallback parsing for noisy uid text.
-                tail = method_uid.rsplit(".", 1)[-1]
-                name = tail.split("(", 1)[0].strip().lower()
-                return name
-
-            hop_relation_cache: Dict[Tuple[str, str], bool] = {}
-
-            def _method_sets_related_by_hops(
-                method_uids_a: Set[str], method_uids_b: Set[str], max_pairs: int = 36
-            ) -> bool:
-                uid_pairs: List[Tuple[str, str]] = []
-                for uid_a in sorted(method_uids_a):
-                    if uid_a == "":
-                        continue
-                    for uid_b in sorted(method_uids_b):
-                        if uid_b == "":
-                            continue
-                        if uid_a == uid_b:
-                            return True
-                        pair = (
-                            uid_a if uid_a <= uid_b else uid_b,
-                            uid_b if uid_a <= uid_b else uid_a,
-                        )
-                        uid_pairs.append(pair)
-                if len(uid_pairs) == 0:
-                    return False
-                uid_pairs = sorted(set(uid_pairs))
-                if len(uid_pairs) > max_pairs:
-                    uid_pairs = uid_pairs[:max_pairs]
-                for uid_a, uid_b in uid_pairs:
-                    cache_key = (uid_a, uid_b)
-                    if cache_key in hop_relation_cache:
-                        if hop_relation_cache[cache_key]:
-                            return True
-                        continue
-                    fid_a = uid_to_function_id.get(uid_a)
-                    fid_b = uid_to_function_id.get(uid_b)
-                    if fid_a is None or fid_b is None:
-                        hop_relation_cache[cache_key] = False
-                        continue
-                    related = _short_hop_related(
-                        fid_a, fid_b, self.java_mlk_canonical_merge_hops
-                    )
-                    hop_relation_cache[cache_key] = related
-                    if related:
-                        return True
-                return False
-
-            def _min_line_gap(lines_a: Set[int], lines_b: Set[int]) -> int:
-                filtered_a = [line for line in lines_a if line >= 0]
-                filtered_b = [line for line in lines_b if line >= 0]
-                if len(filtered_a) == 0 or len(filtered_b) == 0:
-                    return 10**9
-                return min(
-                    abs(line_a - line_b)
-                    for line_a in filtered_a
-                    for line_b in filtered_b
-                )
-
-            merged_root_ids = sorted(merged_groups.keys())
-            root_parent: Dict[int, int] = {root_id: root_id for root_id in merged_root_ids}
-
-            def _find_root_group(root_id: int) -> int:
-                current = root_id
-                while root_parent[current] != current:
-                    root_parent[current] = root_parent[root_parent[current]]
-                    current = root_parent[current]
-                return current
-
-            def _union_root_group(root_a: int, root_b: int) -> bool:
-                group_a = _find_root_group(root_a)
-                group_b = _find_root_group(root_b)
-                if group_a == group_b:
-                    return False
-                signature_a = sorted(merged_signatures.get(group_a, [signatures[group_a]]))[0]
-                signature_b = sorted(merged_signatures.get(group_b, [signatures[group_b]]))[0]
-                if signature_a <= signature_b:
-                    root_parent[group_b] = group_a
-                else:
-                    root_parent[group_a] = group_b
-                return True
-
-            group_profile: Dict[int, Dict[str, object]] = {}
-            for root_id in merged_root_ids:
-                member_ids = sorted(set(merged_groups[root_id]))
-                method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
-                    member_ids, bug_reports
-                )
-                method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
-                for method_uid, method_entry in method_buckets.items():
-                    method_score = self.__score_java_mlk_method_bucket(method_entry)
-                    method_candidates.append((method_uid, method_score, method_entry))
-                (
-                    primary_method_uid,
-                    _primary_method_name,
-                    _primary_method_confidence,
-                ) = self.__select_java_mlk_primary_method_from_candidates(
-                    method_candidates
-                )
-                method_uids = {
-                    str(method_uid)
-                    for method_uid, _, _ in method_candidates
-                    if str(method_uid).strip() != ""
-                }
-                source_symbols: Set[str] = set()
-                leak_root_uids: Set[str] = set()
-                source_lines: Set[int] = set()
-                component_keys: Set[str] = set()
-                for member_id in member_ids:
-                    metadata = cast(Dict[str, object], bug_reports[member_id].metadata)
-                    source_symbols.add(str(metadata.get("source_symbol", "unknown")).lower())
-                    source_lines.add(int(metadata.get("source_line", -1)))
-                    leak_root_uid = str(metadata.get("leak_root_method_uid", "")).strip()
-                    if leak_root_uid != "":
-                        leak_root_uids.add(leak_root_uid)
-                    component_key = str(metadata.get("obligation_component_key", "")).strip()
-                    if component_key != "":
-                        component_keys.add(component_key)
-
-                representative_signature = sorted(merged_signatures[root_id])[0]
-                family_anchors: Set[str] = set(
-                    _coarse_family_anchor(signature[1])
-                    for signature in merged_signatures.get(root_id, [])
-                    if len(signature) > 1 and str(signature[1]) != ""
-                )
-                group_profile[root_id] = {
-                    "signature": representative_signature,
-                    "member_ids": member_ids,
-                    "method_uids": method_uids,
-                    "primary_method_uid": primary_method_uid,
-                    "source_symbols": source_symbols,
-                    "leak_root_uids": leak_root_uids,
-                    "source_lines": source_lines,
-                    "component_keys": component_keys,
-                    "family_anchors": family_anchors,
-                }
-
-            for idx_a, root_a in enumerate(merged_root_ids):
-                profile_a = group_profile[root_a]
-                signature_a = cast(Tuple[str, str, str, str], profile_a["signature"])
-                for idx_b in range(idx_a + 1, len(merged_root_ids)):
-                    root_b = merged_root_ids[idx_b]
-                    profile_b = group_profile[root_b]
-                    signature_b = cast(Tuple[str, str, str, str], profile_b["signature"])
-                    # Same file/resource/guarantee class only.
-                    if (
-                        signature_a[0] != signature_b[0]
-                        or signature_a[2] != signature_b[2]
-                        or signature_a[3] != signature_b[3]
-                    ):
-                        continue
-
-                    method_uids_a = cast(Set[str], profile_a["method_uids"])
-                    method_uids_b = cast(Set[str], profile_b["method_uids"])
-                    symbols_a = cast(Set[str], profile_a["source_symbols"])
-                    symbols_b = cast(Set[str], profile_b["source_symbols"])
-                    leak_roots_a = cast(Set[str], profile_a["leak_root_uids"])
-                    leak_roots_b = cast(Set[str], profile_b["leak_root_uids"])
-                    source_lines_a = cast(Set[int], profile_a["source_lines"])
-                    source_lines_b = cast(Set[int], profile_b["source_lines"])
-                    component_keys_a = cast(Set[str], profile_a["component_keys"])
-                    component_keys_b = cast(Set[str], profile_b["component_keys"])
-                    family_anchors_a = cast(Set[str], profile_a["family_anchors"])
-                    family_anchors_b = cast(Set[str], profile_b["family_anchors"])
-                    symbols_intersection = symbols_a & symbols_b
-                    family_anchor_intersection = family_anchors_a & family_anchors_b
-                    min_line_gap = _min_line_gap(source_lines_a, source_lines_b)
-
-                    should_merge = False
-                    if len(method_uids_a & method_uids_b) > 0:
-                        should_merge = True
-                    elif len(leak_roots_a & leak_roots_b) > 0:
-                        should_merge = True
-                    elif len(component_keys_a & component_keys_b) > 0:
-                        should_merge = True
-                    elif (
-                        len(family_anchor_intersection) > 0
-                        and len(symbols_intersection) > 0
-                        and min_line_gap <= 12
-                    ):
-                        should_merge = True
-
-                    primary_a = str(profile_a["primary_method_uid"]).strip()
-                    primary_b = str(profile_b["primary_method_uid"]).strip()
-                    if not should_merge and primary_a != "" and primary_b != "":
-                        if primary_a == primary_b:
-                            should_merge = True
-                        else:
-                            name_a = _extract_method_name(primary_a)
-                            name_b = _extract_method_name(primary_b)
-                            if name_a != "" and name_a == name_b and len(symbols_a & symbols_b) > 0:
-                                should_merge = True
-
-                            fid_a = uid_to_function_id.get(primary_a)
-                            fid_b = uid_to_function_id.get(primary_b)
-                            if (
-                                not should_merge
-                                and fid_a is not None
-                                and fid_b is not None
-                            ):
-                                if scc_id_by_node.get(fid_a, -1) == scc_id_by_node.get(
-                                    fid_b, -2
-                                ):
-                                    should_merge = True
-                                elif (
-                                    len(symbols_intersection) > 0
-                                    and _short_hop_related(
-                                        fid_a, fid_b, self.java_mlk_canonical_merge_hops
-                                    )
-                                ):
-                                    should_merge = True
-
-                    if (
-                        not should_merge
-                        and len(symbols_intersection) > 0
-                        and _method_sets_related_by_hops(method_uids_a, method_uids_b)
-                        and min_line_gap <= 10
-                    ):
-                        should_merge = True
-                    if (
-                        not should_merge
-                        and len(family_anchor_intersection) > 0
-                        and _method_sets_related_by_hops(method_uids_a, method_uids_b)
-                        and min_line_gap <= 18
-                    ):
-                        should_merge = True
-
-                    if should_merge and _union_root_group(root_a, root_b):
-                        third_pass_merge_count += 1
-
-            regrouped_groups: Dict[int, List[int]] = defaultdict(list)
-            regrouped_signatures: Dict[int, List[Tuple[str, str, str, str]]] = defaultdict(list)
-            for root_id in merged_root_ids:
-                final_root = _find_root_group(root_id)
-                regrouped_groups[final_root].extend(merged_groups[root_id])
-                regrouped_signatures[final_root].extend(merged_signatures[root_id])
-
-            final_groups = {
-                root_id: sorted(set(member_ids))
-                for root_id, member_ids in regrouped_groups.items()
-            }
-            final_signatures = {
-                root_id: sorted(
-                    {
-                        signature
-                        for signature in signature_candidates
-                    }
-                )
-                for root_id, signature_candidates in regrouped_signatures.items()
-            }
-
-        canonical_payload: Dict[int, dict] = {}
-        root_indices = sorted(
-            final_groups.keys(),
-            key=lambda root_idx: min(final_groups[root_idx]),
-        )
-        for issue_idx, root_idx in enumerate(root_indices):
-            member_ids_unsorted = final_groups[root_idx]
-            signature_candidates = final_signatures[root_idx]
-            signature = sorted(signature_candidates)[0]
-            member_ids = sorted(member_ids_unsorted)
-            method_buckets = self.__build_java_mlk_method_buckets_for_member_reports(
-                member_ids, bug_reports
-            )
-
-            method_candidates: List[Tuple[str, float, Dict[str, object]]] = []
-            for method_uid, method_entry in method_buckets.items():
-                method_score = self.__score_java_mlk_method_bucket(method_entry)
-                method_candidates.append((method_uid, method_score, method_entry))
-            (
-                primary_method_uid,
-                primary_method_name,
-                primary_method_confidence,
-            ) = self.__select_java_mlk_primary_method_from_candidates(method_candidates)
-
-            representative_id = member_ids[0]
-            best_rep_score = -10**9
-            for candidate_id in member_ids:
-                candidate_report = bug_reports[candidate_id]
-                candidate_metadata = (
-                    candidate_report.metadata
-                    if hasattr(candidate_report, "metadata")
-                    else {}
-                )
-                confidence_rank = self.__java_mlk_source_confidence_rank(
-                    str(candidate_metadata.get("source_confidence", "medium"))
-                )
-                candidate_method_uid = str(
-                    candidate_metadata.get(
-                        "leak_root_method_uid",
-                        candidate_metadata.get("source_method_uid", ""),
-                    )
-                ).strip()
-                marker_bonus = int(
-                    bool(candidate_metadata.get("has_no_sink_marker", False))
-                ) + int(bool(candidate_metadata.get("has_weak_release_marker", False)))
-                method_match_bonus = 1 if candidate_method_uid == primary_method_uid else 0
-                candidate_score = confidence_rank * 100 + marker_bonus * 10 + method_match_bonus
-                if candidate_score > best_rep_score:
-                    best_rep_score = candidate_score
-                    representative_id = candidate_id
-                elif candidate_score == best_rep_score and candidate_id < representative_id:
-                    representative_id = candidate_id
-
-            representative_bug_report = bug_reports[representative_id]
-            canonical_entry = representative_bug_report.to_dict()
-            canonical_entry["canonical_mode"] = "family"
-            canonical_entry["canonical_signature"] = [str(part) for part in signature]
-            canonical_entry["canonical_pre_cluster_signatures"] = [
-                [str(part) for part in sig] for sig in sorted(signature_candidates)
-            ]
-            canonical_entry["canonical_member_ids"] = member_ids
-            canonical_entry["canonical_member_count"] = len(member_ids)
-            canonical_entry["canonical_component_keys"] = sorted(
-                {
-                    str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "obligation_component_key", ""
-                        )
-                    )
-                    for member_id in member_ids
-                    if str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "obligation_component_key", ""
-                        )
-                    )
-                    != ""
-                }
-            )
-            canonical_entry["canonical_leak_root_method_uids"] = sorted(
-                {
-                    str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "leak_root_method_uid", ""
-                        )
-                    )
-                    for member_id in member_ids
-                    if str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "leak_root_method_uid", ""
-                        )
-                    )
-                    != ""
-                }
-            )
-            canonical_entry["canonical_leak_root_methods"] = sorted(
-                {
-                    str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "leak_root_method_name", ""
-                        )
-                    )
-                    for member_id in member_ids
-                    if str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "leak_root_method_name", ""
-                        )
-                    )
-                    != ""
-                }
-            )
-            canonical_entry["canonical_primary_defect_method"] = primary_method_name
-            canonical_entry["canonical_primary_defect_method_uid"] = primary_method_uid
-            canonical_entry["canonical_primary_confidence"] = primary_method_confidence
-            canonical_entry["canonical_methods"] = sorted(
-                {
-                    str(method_entry.get("method_name", ""))
-                    for _, _, method_entry in method_candidates
-                    if str(method_entry.get("method_name", "")) != ""
-                }
-            )
-            canonical_entry["canonical_method_uids"] = sorted(
-                {
-                    str(method_entry.get("method_uid", ""))
-                    for _, _, method_entry in method_candidates
-                    if str(method_entry.get("method_uid", "")) != ""
-                }
-            )
-            canonical_entry["canonical_source_lines"] = sorted(
-                {
-                    int(cast(Dict[str, object], bug_reports[member_id].metadata).get("source_line", -1))
-                    for member_id in member_ids
-                }
-            )
-            canonical_entry["canonical_source_confidence_histogram"] = {
-                "high": 0,
-                "medium": 0,
-                "low": 0,
-            }
-            canonical_entry["canonical_source_origins"] = sorted(
-                {
-                    str(
-                        cast(Dict[str, object], bug_reports[member_id].metadata).get(
-                            "source_origin", "unknown"
-                        )
-                    )
-                    for member_id in member_ids
-                }
-            )
-            for member_id in member_ids:
-                member_meta = cast(Dict[str, object], bug_reports[member_id].metadata)
-                member_conf = self.__normalize_java_mlk_source_confidence(
-                    str(member_meta.get("source_confidence", "medium"))
-                )
-                canonical_entry["canonical_source_confidence_histogram"][member_conf] += 1
-
-            canonical_payload[issue_idx] = canonical_entry
-
-        raw_count = len(bug_reports)
-        canonical_count = len(canonical_payload)
-        stats_payload: Dict[str, object] = {
-            "mode": "canonical",
-            "enabled": self.java_mlk_canonical_mode,
-            "raw_report_count": raw_count,
-            "canonical_issue_count": canonical_count,
-            "pre_cluster_issue_count": pre_cluster_group_count,
-            "second_pass_merge_count": second_pass_merge_count,
-            "third_pass_merge_count": third_pass_merge_count,
-            "low_conf_attached_reports": low_conf_attached_reports,
-            "structural_merge_enabled": self.java_mlk_canonical_structural_merge,
-            "structural_merge_hops": self.java_mlk_canonical_merge_hops,
-            "reduced_report_count": raw_count - canonical_count,
-            "reduction_ratio": (
-                float(raw_count - canonical_count) / float(raw_count)
-                if raw_count > 0
-                else 0.0
-            ),
-        }
-        return canonical_payload, stats_payload
-
-    def __write_detect_outputs(self) -> Tuple[int, int, int]:
+    def __write_detect_outputs(self) -> int:
         bug_reports = self.state.bug_reports
         raw_detect_payload = self.__build_detect_info_payload(bug_reports)
         detect_payload = raw_detect_payload
         detect_by_file_payload = self.__build_detect_info_by_file_payload(bug_reports)
-        raw_count = len(raw_detect_payload)
-        merged_count = raw_count
-        canonical_count = raw_count
-
-        merged_payload: Dict[int, dict] = {}
-        merged_stats: Dict[str, object] = {}
-        issue_payload: Dict[int, dict] = {}
+        issue_count = len(raw_detect_payload)
         issue_stats: Dict[str, object] = {}
-        canonical_payload: Dict[int, dict] = {}
-        canonical_stats: Dict[str, object] = {}
         if self.language == "Java" and self.bug_type == "MLK":
             issue_reports, issue_stats = self.__build_java_mlk_issue_reports_from_raw(
                 bug_reports
             )
             detect_payload = self.__build_detect_info_payload(issue_reports)
-            issue_payload = dict(detect_payload)
             detect_by_file_payload = self.__build_detect_info_by_file_payload(
                 issue_reports
             )
-
-            merged_payload, merged_stats = self.__build_java_mlk_merged_detect_payload(
-                issue_reports
-            )
-            merged_count = len(merged_payload)
-            if self.java_mlk_canonical_mode:
-                canonical_payload, canonical_stats = (
-                    self.__build_java_mlk_canonical_detect_payload(issue_reports)
-                )
-            else:
-                canonical_payload = dict(detect_payload)
-                canonical_stats = {
-                    "mode": "canonical",
-                    "enabled": False,
-                    "raw_report_count": len(detect_payload),
-                    "canonical_issue_count": len(detect_payload),
-                    "reduced_report_count": 0,
-                    "reduction_ratio": 0.0,
-                }
-            canonical_count = len(canonical_payload)
+            issue_count = len(detect_payload)
 
         with self.lock:
             with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
@@ -6156,31 +4862,11 @@ class DFBScanAgent(Agent):
                 ) as raw_info_file:
                     json.dump(raw_detect_payload, raw_info_file, indent=4)
                 with open(
-                    self.res_dir_path + "/detect_info_merged.json", "w"
-                ) as merged_info_file:
-                    json.dump(merged_payload, merged_info_file, indent=4)
-                with open(
-                    self.res_dir_path + "/detect_info_merge_stats.json", "w"
-                ) as merged_stats_file:
-                    json.dump(merged_stats, merged_stats_file, indent=4)
-                with open(
-                    self.res_dir_path + "/detect_info_issue.json", "w"
-                ) as issue_info_file:
-                    json.dump(issue_payload, issue_info_file, indent=4)
-                with open(
                     self.res_dir_path + "/detect_info_issue_stats.json", "w"
                 ) as issue_stats_file:
                     json.dump(issue_stats, issue_stats_file, indent=4)
-                with open(
-                    self.res_dir_path + "/detect_info_canonical.json", "w"
-                ) as canonical_info_file:
-                    json.dump(canonical_payload, canonical_info_file, indent=4)
-                with open(
-                    self.res_dir_path + "/detect_info_canonical_stats.json", "w"
-                ) as canonical_stats_file:
-                    json.dump(canonical_stats, canonical_stats_file, indent=4)
 
-        return raw_count, merged_count, canonical_count
+        return issue_count
 
     def __is_java_mlk_helper_function_for_dedup(self, function: Function) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":
@@ -6328,32 +5014,10 @@ class DFBScanAgent(Agent):
         self,
         src_value: Value,
         relevant_functions: Dict[int, Function],
-        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
-        release_context: str = RELEASE_CONTEXT_UNKNOWN,
-        guarantee_level: str = GUARANTEE_NONE,
-        buggy_path: Optional[List[Value]] = None,
-        merge_mode: Optional[str] = None,
     ) -> Tuple[object, ...]:
-        """
-        Build a stable signature for dedup.
-        Use source anchor function (the function that contains src_value) as
-        primary key to collapse duplicated variants of the same source across
-        slightly different interprocedural tails.
-        """
         normalized_src_file = src_value.file.replace("\\", "/").lower()
         normalized_src_name = self.__normalize_java_mlk_source_name(src_value.name)
         src_signature = f"{normalized_src_file}:{normalized_src_name}"
-        obligation_signature = self.__get_java_mlk_source_obligation_key(src_value)
-        obligation_family_signature = self.__get_java_mlk_source_obligation_family_key(
-            src_value
-        )
-        obligation_component_signature = (
-            self.__get_java_mlk_source_obligation_component_key(src_value)
-        )
-        leak_root_method_uid, _ = self.__infer_java_mlk_report_leak_root_method(
-            src_value,
-            relevant_functions,
-        )
 
         source_anchor_key = ""
         non_helper_keys: List[str] = []
@@ -6384,96 +5048,38 @@ class DFBScanAgent(Agent):
                 source_anchor_key = sorted(set(fallback_keys))[0]
             else:
                 source_anchor_key = "UNKNOWN"
-
-        effective_merge_mode = (
-            merge_mode.strip().lower()
-            if merge_mode is not None
-            else self.java_mlk_report_merge_mode
-        )
-        if effective_merge_mode not in {
-            "source",
-            "method",
-            "method_semantic",
-            "obligation",
-            "issue",
-            "issue_online",
-        }:
-            effective_merge_mode = "source"
-        if effective_merge_mode == "issue":
-            guarantee_class = (
-                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
-            )
-            return (
-                normalized_src_file,
-                obligation_component_signature,
-                normalize_resource_kind(resource_kind),
-                guarantee_class,
-                leak_root_method_uid if leak_root_method_uid != "" else source_anchor_key,
-            )
-        if effective_merge_mode == "issue_online":
-            # Online dedup identity must remain stable across wrapper/callee
-            # attribution drift. Do not include leak-root uid here.
-            guarantee_class = (
-                "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
-            )
-            return (
-                normalized_src_file,
-                obligation_component_signature,
-                normalize_resource_kind(resource_kind),
-                guarantee_class,
-            )
-        if effective_merge_mode == "obligation":
-            obligation_kind = self.java_mlk_obligation_kind_by_key.get(
-                obligation_signature,
-                normalize_resource_kind(resource_kind),
-            )
-            return (
-                obligation_signature,
-                obligation_kind,
-            )
-        if effective_merge_mode == "method":
-            return (normalized_src_file, source_anchor_key)
-        if effective_merge_mode == "method_semantic":
-            has_no_sink_marker = (
-                self.__has_java_mlk_no_sink_marker(buggy_path)
-                if buggy_path is not None
-                else False
-            )
-            has_weak_release_marker = (
-                self.__has_java_mlk_weak_release_marker(buggy_path)
-                if buggy_path is not None
-                else False
-            )
-            return (
-                normalized_src_file,
-                source_anchor_key,
-                normalize_resource_kind(resource_kind),
-                normalize_release_context(release_context),
-                normalize_guarantee_level(guarantee_level),
-                has_no_sink_marker,
-                has_weak_release_marker,
-            )
         return (src_signature, source_anchor_key)
+
+    def __build_java_mlk_issue_signature(
+        self,
+        src_value: Value,
+        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
+        guarantee_level: str = GUARANTEE_NONE,
+    ) -> Tuple[object, ...]:
+        normalized_src_file = src_value.file.replace("\\", "/").lower()
+        obligation_component_signature = (
+            self.__get_java_mlk_source_obligation_component_key(src_value)
+        )
+        guarantee_class = (
+            "strong" if is_all_exit_guaranteed(guarantee_level) else "weak_or_unknown"
+        )
+        return (
+            normalized_src_file,
+            obligation_component_signature,
+            normalize_resource_kind(resource_kind),
+            guarantee_class,
+        )
 
     def __register_java_mlk_report_signature(
         self,
         src_value: Value,
         relevant_functions: Dict[int, Function],
-        resource_kind: str = RESOURCE_KIND_AUTOCLOSEABLE,
-        release_context: str = RELEASE_CONTEXT_UNKNOWN,
-        guarantee_level: str = GUARANTEE_NONE,
-        buggy_path: Optional[List[Value]] = None,
     ) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":
             return True
         signature = self.__build_java_mlk_report_signature(
             src_value,
             relevant_functions,
-            resource_kind=resource_kind,
-            release_context=release_context,
-            guarantee_level=guarantee_level,
-            buggy_path=buggy_path,
-            merge_mode=self.java_mlk_hard_dedup_mode,
         )
         with self.lock:
             if signature in self.java_mlk_report_signatures:

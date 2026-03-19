@@ -6,13 +6,13 @@ IFS=$'\n\t'
 # Goal: avoid running jleaks_mlk_198 on every code tweak.
 #
 # Default flow:
-#   1) run jleaks_mlk_20
-#   2) build and run a C/D duplicate stress subset from latest jleaks_mlk_198 result
+#   1) build and run a C/D duplicate stress subset from latest jleaks_mlk_198 result
+#   2) (optional) run jleaks_mlk_20
 #   3) (optional) run full jleaks_mlk_198
 #
 # Env knobs:
 #   MODEL=deepseek-chat
-#   FAST_RUN_QUICK=true
+#   FAST_RUN_QUICK=false
 #   FAST_RUN_CD_SUBSET=true
 #   FAST_RUN_FULL=false
 #   FAST_CD_TOP_N=40
@@ -21,7 +21,7 @@ IFS=$'\n\t'
 #   FAST_SUBSET_DIR=../tmp/jleaks_mlk_cd_top_${FAST_CD_TOP_N}
 
 MODEL="${MODEL:-deepseek-chat}"
-FAST_RUN_QUICK="${FAST_RUN_QUICK:-true}"
+FAST_RUN_QUICK="${FAST_RUN_QUICK:-false}"
 FAST_RUN_CD_SUBSET="${FAST_RUN_CD_SUBSET:-true}"
 FAST_RUN_FULL="${FAST_RUN_FULL:-false}"
 FAST_CD_TOP_N="${FAST_CD_TOP_N:-40}"
@@ -72,7 +72,6 @@ print(
     f"precision={d.get('file_level_precision', 0):.4f} "
     f"reports={d.get('total_reports', 0)} "
     f"dup_extra={d.get('duplicate_extra_reports', 0)} "
-    f"canonical_dup_extra={d.get('canonical_duplicate_extra_reports', 0)} "
     f"primary_hit={d.get('file_level_primary_defect_method_hit_ratio', 0):.4f} "
     f"loose_hit={d.get('file_level_loose_defect_method_hit_ratio', 0):.4f} "
     f"result={result_dir}"
@@ -106,10 +105,10 @@ import csv, json, os, re, shutil, sys
 from collections import defaultdict
 
 latest_198, full_bench_dir, subset_dir, top_n = sys.argv[1], sys.argv[2], sys.argv[3], int(sys.argv[4])
-detect_info_path = os.path.join(latest_198, "detect_info.json")
+detect_info_path = os.path.join(latest_198, "detect_info_raw.json")
 gt_csv = os.path.join(full_bench_dir, "metadata", "vulnerability_list.csv")
 if not os.path.exists(detect_info_path):
-    raise SystemExit(f"missing detect_info.json: {detect_info_path}")
+    raise SystemExit(f"missing detect_info_raw.json: {detect_info_path}")
 if not os.path.exists(gt_csv):
     raise SystemExit(f"missing vulnerability_list.csv: {gt_csv}")
 

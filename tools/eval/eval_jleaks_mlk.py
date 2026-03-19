@@ -206,8 +206,8 @@ def main() -> None:
     gt_bug_ids = set(gt.keys())
 
     detect_info = _load_json(os.path.join(result_dir, "detect_info.json"))
+    detect_info_raw = _load_json(os.path.join(result_dir, "detect_info_raw.json"))
     detect_by_file = _load_json(os.path.join(result_dir, "detect_info_by_file.json"))
-    detect_canonical = _load_json(os.path.join(result_dir, "detect_info_canonical.json"))
     source_coverage_stats = _load_json(
         os.path.join(result_dir, "source_coverage_stats.json")
     )
@@ -218,11 +218,11 @@ def main() -> None:
 
     reports_by_bug: Dict[int, List[Dict]] = defaultdict(list)
     report_method_hits = 0
+    detect_entries = _iter_payload_entries(detect_info)
+    detect_entries_raw = _iter_payload_entries(detect_info_raw)
     total_reports = 0
 
-    for _, report_entry in detect_info.items():
-        if not isinstance(report_entry, dict):
-            continue
+    for report_entry in detect_entries:
         bug_id = _extract_report_bug_id(report_entry)
         if bug_id <= 0:
             continue
@@ -257,29 +257,6 @@ def main() -> None:
         if report_count > 1:
             duplicate_bug_count += 1
             duplicate_extra_reports += report_count - 1
-
-    canonical_reports_by_bug: Dict[int, List[Dict]] = defaultdict(list)
-    canonical_total_reports = 0
-    canonical_entries = _iter_payload_entries(detect_canonical)
-    if len(canonical_entries) == 0:
-        canonical_entries = _iter_payload_entries(detect_info)
-    for entry in canonical_entries:
-        bug_id = _extract_report_bug_id(entry)
-        if bug_id <= 0:
-            continue
-        canonical_total_reports += 1
-        canonical_reports_by_bug[bug_id].append(entry)
-    canonical_detected_bug_ids = set(canonical_reports_by_bug.keys())
-    canonical_recall = (
-        float(len(canonical_detected_bug_ids)) / float(gt_count) if gt_count > 0 else 0.0
-    )
-    canonical_duplicate_bug_count = 0
-    canonical_duplicate_extra_reports = 0
-    for bug_id in canonical_detected_bug_ids:
-        canonical_count = len(canonical_reports_by_bug.get(bug_id, []))
-        if canonical_count > 1:
-            canonical_duplicate_bug_count += 1
-            canonical_duplicate_extra_reports += canonical_count - 1
 
     file_method_hits = 0
     file_method_hits_loose = 0
@@ -339,13 +316,10 @@ def main() -> None:
         "file_level_recall": recall,
         "file_level_precision": precision,
         "total_reports": total_reports,
+        "raw_total_reports": len(detect_entries_raw) if len(detect_entries_raw) > 0 else total_reports,
+        "issue_total_reports": total_reports,
         "duplicate_bug_count": duplicate_bug_count,
         "duplicate_extra_reports": duplicate_extra_reports,
-        "canonical_total_reports": canonical_total_reports,
-        "canonical_detected_bug_count": len(canonical_detected_bug_ids),
-        "canonical_file_level_recall": canonical_recall,
-        "canonical_duplicate_bug_count": canonical_duplicate_bug_count,
-        "canonical_duplicate_extra_reports": canonical_duplicate_extra_reports,
         "report_level_defect_method_hit_ratio": (
             float(report_method_hits) / float(total_reports) if total_reports > 0 else 0.0
         ),
@@ -467,11 +441,10 @@ def main() -> None:
     print(f"[eval] duplicates -> {duplicate_path}")
     print(f"[eval] duplicate pattern summary -> {duplicate_pattern_summary_path}")
     print(
-        "[eval] recall={:.4f}, precision={:.4f}, raw_dup_extra={}, canonical_dup_extra={}, primary_method_hit={:.4f}".format(
+        "[eval] recall={:.4f}, precision={:.4f}, raw_dup_extra={}, primary_method_hit={:.4f}".format(
             summary["file_level_recall"],
             summary["file_level_precision"],
             summary["duplicate_extra_reports"],
-            summary["canonical_duplicate_extra_reports"],
             summary["file_level_primary_defect_method_hit_ratio"],
         )
     )
