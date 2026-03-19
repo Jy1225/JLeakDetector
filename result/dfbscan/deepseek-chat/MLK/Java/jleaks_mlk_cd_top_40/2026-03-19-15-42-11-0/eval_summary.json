@@ -1,0 +1,37 @@
+{
+    "result_dir": "../result/dfbscan/deepseek-chat/MLK/Java/jleaks_mlk_cd_top_40/2026-03-19-15-42-11-0",
+    "ground_truth_count": 40,
+    "detected_bug_count": 40,
+    "missing_bug_count": 0,
+    "file_level_recall": 1.0,
+    "file_level_precision": 1.0,
+    "total_reports": 163,
+    "duplicate_bug_count": 39,
+    "duplicate_extra_reports": 123,
+    "canonical_total_reports": 121,
+    "canonical_detected_bug_count": 40,
+    "canonical_file_level_recall": 1.0,
+    "canonical_duplicate_bug_count": 36,
+    "canonical_duplicate_extra_reports": 81,
+    "report_level_defect_method_hit_ratio": 0.3067484662576687,
+    "file_level_primary_defect_method_hit_ratio": 0.3,
+    "file_level_loose_defect_method_hit_ratio": 0.9,
+    "fn_taxonomy": {
+        "no_source": {
+            "count": 0,
+            "bug_ids": []
+        },
+        "soot_source_blocked": {
+            "count": 0,
+            "bug_ids": []
+        },
+        "transfer_drop": {
+            "count": 0,
+            "bug_ids": []
+        },
+        "other": {
+            "count": 0,
+            "bug_ids": []
+        }
+    }
+}

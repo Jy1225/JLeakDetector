@@ -1,0 +1,2 @@
+[quick20] recall=1.0000 precision=1.0000 reports=22 dup_extra=2 canonical_dup_extra=1 primary_hit=1.0000 loose_hit=1.0000 result=../result/dfbscan/deepseek-chat/MLK/Java/jleaks_mlk_20/2026-03-19-15-39-13-0
+[cd_top40] recall=1.0000 precision=1.0000 reports=163 dup_extra=123 canonical_dup_extra=81 primary_hit=0.3000 loose_hit=0.9000 result=../result/dfbscan/deepseek-chat/MLK/Java/jleaks_mlk_cd_top_40/2026-03-19-15-42-11-0
