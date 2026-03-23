@@ -21,11 +21,7 @@ from tstool.validator.java_resource_ownership_validator import JavaResourceOwner
 from tstool.validator.java_resource_semantics import (
     RESOURCE_KIND_AUTOCLOSEABLE,
     RESOURCE_KIND_LOCK,
-    RESOURCE_KIND_EXECUTOR,
     RESOURCE_KIND_TEMP_RESOURCE,
-    RESOURCE_KIND_TRANSACTION,
-    RESOURCE_KIND_SUBSCRIPTION,
-    RESOURCE_KIND_PROCESS,
     GUARANTEE_NONE,
     GUARANTEE_NORMAL_ONLY,
     GUARANTEE_ALL_EXIT_PATHS,
@@ -145,12 +141,10 @@ class DFBScanAgent(Agent):
         with self.lock:
             self.log_dir_path = f"{BASE_PATH}/log/dfbscan/{self.model_name}/{self.bug_type}/{self.language}/{self.project_name}/{time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime())}-{agent_id}"
             self.res_dir_path = f"{BASE_PATH}/result/dfbscan/{self.model_name}/{self.bug_type}/{self.language}/{self.project_name}/{time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime())}-{agent_id}"
-            if not os.path.exists(self.log_dir_path):
-                os.makedirs(self.log_dir_path)
+            os.makedirs(self.log_dir_path, exist_ok=True)
             self.logger = Logger(self.log_dir_path + "/" + "dfbscan.log")
 
-            if not os.path.exists(self.res_dir_path):
-                os.makedirs(self.res_dir_path)
+            os.makedirs(self.res_dir_path, exist_ok=True)
 
         # LLM tools used by DFBScanAgent
         self.intra_dfa = IntraDataFlowAnalyzer(
@@ -4849,6 +4843,7 @@ class DFBScanAgent(Agent):
             issue_count = len(detect_payload)
 
         with self.lock:
+            os.makedirs(self.res_dir_path, exist_ok=True)
             with open(self.res_dir_path + "/detect_info.json", "w") as bug_info_file:
                 json.dump(detect_payload, bug_info_file, indent=4)
             with open(

@@ -11,8 +11,6 @@ __pycache__/
 
 *.pyc
 
-# Ignore all content in benchmark directory...
-
 # Distribution / packaging
 .Python
 build/
