@@ -3903,6 +3903,23 @@ class DFBScanAgent(Agent):
 
         return payload
 
+    def __java_mlk_method_local_evidence_count(
+        self, method_entry: Dict[str, object]
+    ) -> float:
+        weak_evidence_count = float(int(method_entry.get("weak_evidence_count", 0)))
+        no_sink_marker_count = float(int(method_entry.get("no_sink_marker_count", 0)))
+        weak_release_marker_count = float(
+            int(method_entry.get("weak_release_marker_count", 0))
+        )
+        source_line_count = float(
+            len(cast(Set[int], method_entry.get("source_lines", set())))
+        )
+        report_count = float(int(method_entry.get("report_count", 0)))
+        local_count = weak_evidence_count + no_sink_marker_count + weak_release_marker_count
+        if report_count > 0 and source_line_count > 0:
+            local_count += 0.5
+        return local_count
+
     def __score_java_mlk_method_bucket(self, method_entry: Dict[str, object]) -> float:
         report_count = float(int(method_entry.get("report_count", 0)))
         weak_evidence_count = float(int(method_entry.get("weak_evidence_count", 0)))
@@ -3926,9 +3943,7 @@ class DFBScanAgent(Agent):
         method_name = str(method_entry.get("method_name", ""))
         source_line_count = float(len(cast(Set[int], method_entry.get("source_lines", set()))))
 
-        local_evidence_count = (
-            weak_evidence_count + no_sink_marker_count + weak_release_marker_count
-        )
+        local_evidence_count = self.__java_mlk_method_local_evidence_count(method_entry)
         score = 3.0 * report_count
         score += 7.5 * weak_evidence_count
         score += 10.0 * no_sink_marker_count
@@ -3944,10 +3959,13 @@ class DFBScanAgent(Agent):
             score += 0.25 * chain_support_count
             score += 1.5 * leak_root_hit_count
         score += 1.0 * source_line_count
-        if local_evidence_count == 0 and chain_support_count > 0:
+        if local_evidence_count <= 0 and chain_support_count > 0:
             # Supporting-only methods (no direct source evidence) should rarely
             # become primary defect method.
-            score -= 6.0
+            score -= 12.0
+        if report_count > 0 and local_evidence_count <= 0:
+            # Report-backed but lacking local leak evidence is suspicious.
+            score -= 5.0
         if report_count == 0:
             score -= 12.0
         if helper_like:
@@ -4040,20 +4058,30 @@ class DFBScanAgent(Agent):
         source_evidence_candidates: List[Tuple[str, float, Dict[str, object]]] = []
         eligible_candidates: List[Tuple[str, float, Dict[str, object]]] = []
         report_backed_candidates: List[Tuple[str, float, Dict[str, object]]] = []
+        report_backed_local_candidates: List[Tuple[str, float, Dict[str, object]]] = []
         for method_uid, method_score, method_entry in method_candidates:
             report_count = int(method_entry.get("report_count", 0))
+            local_evidence_count = self.__java_mlk_method_local_evidence_count(
+                method_entry
+            )
             if report_count > 0:
                 report_backed_candidates.append((method_uid, method_score, method_entry))
+                if local_evidence_count > 0:
+                    report_backed_local_candidates.append(
+                        (method_uid, method_score, method_entry)
+                    )
             if bool(method_entry.get("helper_like", False)):
                 continue
             if self.__is_java_mlk_forwarding_method_entry(method_entry):
                 continue
             eligible_candidates.append((method_uid, method_score, method_entry))
-            if report_count > 0:
+            if report_count > 0 and local_evidence_count > 0:
                 source_evidence_candidates.append((method_uid, method_score, method_entry))
 
         if len(source_evidence_candidates) > 0:
             ranked_candidates = sorted(source_evidence_candidates, key=_candidate_sort_key)
+        elif len(report_backed_local_candidates) > 0:
+            ranked_candidates = sorted(report_backed_local_candidates, key=_candidate_sort_key)
         elif len(report_backed_candidates) > 0:
             ranked_candidates = sorted(report_backed_candidates, key=_candidate_sort_key)
         elif len(eligible_candidates) > 0:
