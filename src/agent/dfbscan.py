@@ -2991,6 +2991,52 @@ class DFBScanAgent(Agent):
                 parent[root_a] = root_b
             return True
 
+        def _component_size(src_key: str) -> int:
+            root_key = _find_root(src_key)
+            size = 0
+            for candidate_key in source_attrs.keys():
+                if _find_root(candidate_key) == root_key:
+                    size += 1
+            return size
+
+        def _union_with_size_cap(src_a: str, src_b: str, max_size: int) -> bool:
+            root_a = _find_root(src_a)
+            root_b = _find_root(src_b)
+            if root_a == root_b:
+                return False
+            size_a = _component_size(root_a)
+            size_b = _component_size(root_b)
+            if size_a + size_b > max_size:
+                return False
+            return _union(root_a, root_b)
+
+        low_info_symbols = {
+            "",
+            "unknown",
+            "in",
+            "out",
+            "is",
+            "os",
+            "stream",
+            "reader",
+            "writer",
+            "input",
+            "output",
+            "file",
+            "tmp",
+            "buffer",
+            "obj",
+            "value",
+            "result",
+            "false",
+            "true",
+            "null",
+        }
+
+        def _is_low_info_symbol(symbol: str) -> bool:
+            normalized_symbol = symbol.strip().lower()
+            return normalized_symbol in low_info_symbols
+
         # Baseline: same exact obligation key always belongs to one component.
         obligation_members: Dict[str, List[str]] = defaultdict(list)
         for src_key, attrs in source_attrs.items():
@@ -3003,176 +3049,62 @@ class DFBScanAgent(Agent):
                 _union(head, member_key)
 
         if self.java_mlk_family_link_mode == "aggressive":
-            uid_to_function_id: Dict[str, int] = {}
-            for function in self.ts_analyzer.function_env.values():
-                function_uid = (
-                    function.function_uid
-                    if function.function_uid != ""
-                    else self.__build_java_mlk_function_signature_key(function)
-                )
-                uid_to_function_id[function_uid] = function.function_id
+            # P0 hard-safety refactor:
+            # keep cross-method collapsing evidence-driven only.
+            # Cross-method hard links are already encoded in obligation_key by
+            # __build_java_mlk_source_obligation_index (parameter derivation /
+            # wrapper-return linking). Therefore, in aggressive mode we only
+            # apply an extra *local* merge in the same method for extremely
+            # near-line duplicates and never merge cross-method by symbol/hops.
+            strict_local_link_count = 0
+            strict_local_cap_skipped = 0
+            max_local_component_size = 6
 
-            call_out = self.ts_analyzer.function_caller_callee_map
-            call_in = self.ts_analyzer.function_callee_caller_map
-
-            method_hop_cache: Dict[Tuple[str, str], bool] = {}
-
-            def _method_related_by_hops(method_uid_a: str, method_uid_b: str) -> bool:
-                if method_uid_a == "" or method_uid_b == "":
-                    return False
-                if method_uid_a == method_uid_b:
-                    return True
-                cache_key = (
-                    method_uid_a
-                    if method_uid_a <= method_uid_b
-                    else method_uid_b,
-                    method_uid_b
-                    if method_uid_a <= method_uid_b
-                    else method_uid_a,
-                )
-                if cache_key in method_hop_cache:
-                    return method_hop_cache[cache_key]
-                fid_a = uid_to_function_id.get(method_uid_a)
-                fid_b = uid_to_function_id.get(method_uid_b)
-                if fid_a is None or fid_b is None:
-                    method_hop_cache[cache_key] = False
-                    return False
-                queue: deque[Tuple[int, int]] = deque([(fid_a, 0)])
-                visited: Set[int] = {fid_a}
-                found = False
-                while len(queue) > 0:
-                    current_id, hop = queue.popleft()
-                    if hop >= self.java_mlk_issue_merge_hops:
-                        continue
-                    neighbors = set(call_out.get(current_id, set()))
-                    neighbors.update(call_in.get(current_id, set()))
-                    for next_id in neighbors:
-                        if next_id == fid_b:
-                            found = True
-                            queue.clear()
-                            break
-                        if next_id in visited:
-                            continue
-                        visited.add(next_id)
-                        queue.append((next_id, hop + 1))
-                method_hop_cache[cache_key] = found
-                return found
-
-            bucket_by_semantics: Dict[Tuple[str, str, str], List[str]] = defaultdict(list)
+            local_buckets: Dict[Tuple[str, str, str, str], List[str]] = defaultdict(list)
             for src_key, attrs in source_attrs.items():
-                semantic_key = (
+                method_uid = str(attrs.get("source_method_uid", ""))
+                if method_uid == "":
+                    continue
+                source_symbol = str(attrs.get("source_symbol", "")).strip().lower()
+                if _is_low_info_symbol(source_symbol):
+                    continue
+                local_key = (
                     str(attrs.get("file", "")),
+                    method_uid,
                     str(attrs.get("resource_kind", "")),
-                    str(attrs.get("source_symbol", "")),
+                    str(attrs.get("obligation_anchor", "")),
                 )
-                bucket_by_semantics[semantic_key].append(src_key)
+                local_buckets[local_key].append(src_key)
 
-            for member_keys in bucket_by_semantics.values():
+            for member_keys in local_buckets.values():
                 if len(member_keys) <= 1:
                     continue
-                # Build per-method representatives for cheaper pair checks.
-                representatives_by_method: Dict[str, str] = {}
-                for src_key in member_keys:
-                    method_uid = str(source_attrs[src_key].get("source_method_uid", ""))
-                    if method_uid == "":
-                        continue
-                    if method_uid not in representatives_by_method:
-                        representatives_by_method[method_uid] = src_key
-                    else:
-                        _union(representatives_by_method[method_uid], src_key)
-
-                method_uids = sorted(representatives_by_method.keys())
-                for idx_a in range(len(method_uids)):
-                    uid_a = method_uids[idx_a]
-                    for idx_b in range(idx_a + 1, len(method_uids)):
-                        uid_b = method_uids[idx_b]
-                        if not _method_related_by_hops(uid_a, uid_b):
-                            continue
-                        _union(
-                            representatives_by_method[uid_a],
-                            representatives_by_method[uid_b],
-                        )
-
-            # Secondary anchor-based linking to absorb wrapper/callee variants
-            # whose source symbols differ but represent one obligation chain.
-            bucket_by_anchor: Dict[Tuple[str, str, str], List[str]] = defaultdict(list)
-            for src_key, attrs in source_attrs.items():
-                obligation_anchor = str(attrs.get("obligation_anchor", ""))
-                if obligation_anchor == "":
-                    continue
-                anchor_key = (
-                    str(attrs.get("file", "")),
-                    str(attrs.get("resource_kind", "")),
-                    obligation_anchor,
+                sorted_members = sorted(
+                    member_keys,
+                    key=lambda item: int(source_attrs[item].get("source_line", -1)),
                 )
-                bucket_by_anchor[anchor_key].append(src_key)
-
-            generic_root_tokens = {
-                "in",
-                "out",
-                "is",
-                "os",
-                "stream",
-                "reader",
-                "writer",
-                "input",
-                "output",
-                "file",
-                "tmp",
-                "buffer",
-                "br",
-                "bw",
-                "fis",
-                "fos",
-            }
-            for anchor_key, member_keys in bucket_by_anchor.items():
-                if len(member_keys) <= 1:
-                    continue
-                obligation_anchor = anchor_key[2]
-                anchor_kind = obligation_anchor.split(":", 1)[0]
-                anchor_token = obligation_anchor.split(":", 1)[1] if ":" in obligation_anchor else ""
-
-                representatives_by_method: Dict[str, str] = {}
-                for src_key in member_keys:
-                    method_uid = str(source_attrs[src_key].get("source_method_uid", ""))
-                    if method_uid == "":
+                head = sorted_members[0]
+                head_line = int(source_attrs[head].get("source_line", -1))
+                for member_key in sorted_members[1:]:
+                    member_line = int(source_attrs[member_key].get("source_line", -1))
+                    if head_line < 0 or member_line < 0:
                         continue
-                    if method_uid not in representatives_by_method:
-                        representatives_by_method[method_uid] = src_key
+                    if abs(head_line - member_line) > 2:
+                        continue
+                    if _union_with_size_cap(
+                        head, member_key, max_local_component_size
+                    ):
+                        strict_local_link_count += 1
                     else:
-                        _union(representatives_by_method[method_uid], src_key)
+                        strict_local_cap_skipped += 1
 
-                method_uids = sorted(representatives_by_method.keys())
-                for idx_a in range(len(method_uids)):
-                    uid_a = method_uids[idx_a]
-                    for idx_b in range(idx_a + 1, len(method_uids)):
-                        uid_b = method_uids[idx_b]
-                        if not _method_related_by_hops(uid_a, uid_b):
-                            continue
-                        rep_a = representatives_by_method[uid_a]
-                        rep_b = representatives_by_method[uid_b]
-                        symbol_a = str(source_attrs[rep_a].get("source_symbol", ""))
-                        symbol_b = str(source_attrs[rep_b].get("source_symbol", ""))
-                        line_a = int(source_attrs[rep_a].get("source_line", -1))
-                        line_b = int(source_attrs[rep_b].get("source_line", -1))
-                        line_gap = (
-                            abs(line_a - line_b)
-                            if line_a >= 0 and line_b >= 0
-                            else 0
-                        )
-                        same_symbol = symbol_a != "" and symbol_a == symbol_b
-                        if (
-                            not same_symbol
-                            and anchor_kind == "root"
-                            and anchor_token in generic_root_tokens
-                            and line_gap > 4
-                        ):
-                            continue
-                        if not same_symbol and line_gap > max(
-                            10, self.java_mlk_issue_merge_hops * 8
-                        ):
-                            continue
-                        _union(rep_a, rep_b)
+            if strict_local_link_count > 0 or strict_local_cap_skipped > 0:
+                self.logger.print_log(
+                    "Java MLK component strict-local links:",
+                    f"linked={strict_local_link_count}",
+                    f"cap_skipped={strict_local_cap_skipped}",
+                    f"max_component_size={max_local_component_size}",
+                )
 
         grouped_members: Dict[str, List[str]] = defaultdict(list)
         for src_key in source_attrs.keys():
@@ -3184,13 +3116,29 @@ class DFBScanAgent(Agent):
             sample_attrs = source_attrs[sample_key]
             normalized_file = str(sample_attrs.get("file", ""))
             resource_kind = str(sample_attrs.get("resource_kind", RESOURCE_KIND_AUTOCLOSEABLE))
-            source_symbol = str(sample_attrs.get("source_symbol", "unknown"))
+            representative_symbol = "unknown"
+            informative_symbols = sorted(
+                {
+                    str(source_attrs[member_key].get("source_symbol", "")).strip().lower()
+                    for member_key in member_keys
+                    if not _is_low_info_symbol(
+                        str(source_attrs[member_key].get("source_symbol", ""))
+                    )
+                }
+            )
+            if len(informative_symbols) > 0:
+                representative_symbol = informative_symbols[0]
+            else:
+                raw_symbol = str(sample_attrs.get("source_symbol", "unknown")).strip().lower()
+                representative_symbol = (
+                    raw_symbol if not _is_low_info_symbol(raw_symbol) else "unknown"
+                )
             anchor_key = min(
                 str(source_attrs[member_key].get("obligation_key", member_key))
                 for member_key in member_keys
             )
             component_key = (
-                f"{normalized_file}:component:{resource_kind}:{source_symbol}:{anchor_key}"
+                f"{normalized_file}:component:{resource_kind}:{representative_symbol}:{anchor_key}"
             )
             for member_key in member_keys:
                 source_component_keys[member_key] = component_key
