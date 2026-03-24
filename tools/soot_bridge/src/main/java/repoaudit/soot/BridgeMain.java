@@ -366,7 +366,8 @@ public final class BridgeMain {
     private static List<Map<String, Object>> collectIfNodes(Body body) {
         List<Map<String, Object>> ifNodes = new ArrayList<Map<String, Object>>();
         Map<Unit, Map<Local, Object>> constantInStates = computeConstantInStates(body);
-        IdentityHashMap<IfStmt, BranchReachability> branchReachability = analyzeBranchReachability(body);
+        //IdentityHashMap<IfStmt, BranchReachability> branchReachability = analyzeBranchReachability(body);
+        IdentityHashMap<IfStmt, BranchReachability> branchReachability = new IdentityHashMap<IfStmt, BranchReachability>();
         BriefBlockGraph blockGraph = new BriefBlockGraph(body);
         IdentityHashMap<Unit, Block> unitToBlock = new IdentityHashMap<Unit, Block>();
         IdentityHashMap<Block, int[]> blockScope = new IdentityHashMap<Block, int[]>();
