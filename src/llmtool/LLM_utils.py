@@ -1,7 +1,7 @@
 # Imports
 from openai import *
 from pathlib import Path
-from typing import Tuple
+from typing import Dict, List, Tuple
 import google.generativeai as genai
 import anthropic
 import signal
@@ -19,6 +19,30 @@ from botocore.exceptions import BotoCoreError, ClientError
 import boto3
 from ui.logger import Logger
 
+OPENAI_COMPATIBLE_PROVIDERS: Dict[str, Dict[str, object]] = {
+    "qwen": {
+        "env_keys": ["DASHSCOPE_API_KEY", "QWEN_API_KEY"],
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "timeout": 100,
+    },
+    "kimi": {
+        "env_keys": ["MOONSHOT_API_KEY", "KIMI_API_KEY"],
+        "base_url": "https://api.moonshot.cn/v1",
+        "timeout": 180,
+    },
+}
+
+MODEL_FAMILY_TOKENIZER: Dict[str, str] = {
+    "openai-reasoning": "o200k_base",
+    "openai-gpt": "cl100k_base",
+    "deepseek": "o200k_base",
+    "qwen": "o200k_base",
+    "kimi": "o200k_base",
+    "claude": "cl100k_base",
+    "gemini": "o200k_base",
+    "unknown": "cl100k_base",
+}
+
 
 class LLM:
     """
@@ -26,6 +50,8 @@ class LLM:
     - Gemini
     - OpenAI: GPT-3.5, GPT-4, o3-mini
     - DeepSeek: V3, R1
+    - Qwen
+    - Kimi / Moonshot
     - Claude: 3.5 and 3.7
     """
 
@@ -38,9 +64,13 @@ class LLM:
         max_output_length: int = 4096,
     ) -> None:
         self.online_model_name = online_model_name
-        self.encoding = tiktoken.encoding_for_model(
-            "gpt-3.5-turbo-0125"
-        )  # We only use gpt-3.5 to measure token cost
+        self.normalized_model_name = online_model_name.strip().lower()
+        self.model_family = self._identify_model_family(online_model_name)
+        self.token_count_mode = "model_family_estimated"
+        self.token_encoding_name = MODEL_FAMILY_TOKENIZER.get(
+            self.model_family, MODEL_FAMILY_TOKENIZER["unknown"]
+        )
+        self.encoding = self._build_token_encoder(self.token_encoding_name)
         self.temperature = temperature
         self.systemRole = system_role
         self.logger = logger
@@ -52,30 +82,71 @@ class LLM:
     ) -> Tuple[str, int, int]:
         self.logger.print_log(self.online_model_name, "is running")
         output = ""
-        if "gemini" in self.online_model_name:
+        if self.model_family == "gemini":
             output = self.infer_with_gemini(message)
-        elif "gpt" in self.online_model_name:
+        elif self.model_family == "qwen":
+            output = self.infer_with_qwen_model(message)
+        elif self.model_family == "kimi":
+            output = self.infer_with_kimi_model(message)
+        elif self.model_family == "openai-gpt":
             output = self.infer_with_openai_model(message)
-        elif "o3-mini" in self.online_model_name:
+        elif self.model_family == "openai-reasoning":
             output = self.infer_with_o3_mini_model(message)
-        elif "claude" in self.online_model_name:
+        elif self.model_family == "claude":
             output = self.infer_with_claude_key(message)
             # output = self.infer_with_claude_aws_bedrock(message)
-        elif "deepseek" in self.online_model_name:
+        elif self.model_family == "deepseek":
             output = self.infer_with_deepseek_model(message)
         else:
-            raise ValueError("Unsupported model name")
+            raise ValueError(
+                f"Unsupported model name: {self.online_model_name} "
+                f"(resolved family={self.model_family})"
+            )
 
         input_token_cost = (
             0
             if not is_measure_cost
-            else len(self.encoding.encode(self.systemRole))
-            + len(self.encoding.encode(message))
+            else self._count_tokens(self.systemRole) + self._count_tokens(message)
         )
         output_token_cost = (
-            0 if not is_measure_cost else len(self.encoding.encode(output))
+            0 if not is_measure_cost else self._count_tokens(output)
         )
         return output, input_token_cost, output_token_cost
+
+    def _identify_model_family(self, model_name: str) -> str:
+        normalized_name = model_name.strip().lower()
+        if "gemini" in normalized_name:
+            return "gemini"
+        if "qwen" in normalized_name:
+            return "qwen"
+        if "kimi" in normalized_name or "moonshot" in normalized_name:
+            return "kimi"
+        if "deepseek" in normalized_name:
+            return "deepseek"
+        if "claude" in normalized_name:
+            return "claude"
+        if normalized_name.startswith("o1") or normalized_name.startswith("o3") or normalized_name.startswith("o4"):
+            return "openai-reasoning"
+        if "gpt" in normalized_name:
+            return "openai-gpt"
+        return "unknown"
+
+    def _build_token_encoder(self, encoding_name: str):
+        try:
+            return tiktoken.get_encoding(encoding_name)
+        except Exception:
+            return tiktoken.get_encoding(MODEL_FAMILY_TOKENIZER["unknown"])
+
+    def _count_tokens(self, text: str) -> int:
+        if text is None or text == "":
+            return 0
+        try:
+            return len(self.encoding.encode(text))
+        except Exception:
+            return len(self._build_token_encoder(MODEL_FAMILY_TOKENIZER["unknown"]).encode(text))
+
+    def _normalize_api_key(self, api_key: str) -> str:
+        return api_key.split(":")[0].strip()
 
     def run_with_timeout(self, func, timeout):
         """Run a function with timeout that works in multiple threads"""
@@ -126,13 +197,87 @@ class LLM:
 
         return ""
 
-    def infer_with_openai_model(self, message):
-        """Infer using the OpenAI model"""
-        api_key = os.environ.get("OPENAI_API_KEY").split(":")[0]
-        model_input = [
+    def _build_model_input(self, message: str) -> List[Dict[str, str]]:
+        return [
             {"role": "system", "content": self.systemRole},
             {"role": "user", "content": message},
         ]
+
+    def _get_required_api_key(self, env_keys: List[str], provider_name: str) -> str:
+        for env_key in env_keys:
+            value = os.environ.get(env_key)
+            if value:
+                return value
+        raise EnvironmentError(
+            f"Please set one of {', '.join(env_keys)} to use the {provider_name} model."
+        )
+
+    def _infer_with_openai_compatible_model(
+        self,
+        message: str,
+        api_key: str,
+        base_url: str,
+        timeout: int,
+        include_temperature: bool = True,
+    ) -> str:
+        model_input = self._build_model_input(message)
+
+        def call_api():
+            client = OpenAI(api_key=api_key, base_url=base_url)
+            request_kwargs = {
+                "model": self.online_model_name,
+                "messages": model_input,
+            }
+            if include_temperature:
+                request_kwargs["temperature"] = self.temperature
+            response = client.chat.completions.create(**request_kwargs)
+            return response.choices[0].message.content
+
+        tryCnt = 0
+        while tryCnt < 5:
+            tryCnt += 1
+            try:
+                output = self.run_with_timeout(call_api, timeout=timeout)
+                if output:
+                    return output
+            except Exception as e:
+                self.logger.print_log(f"API error: {e}")
+            time.sleep(2)
+
+        return ""
+
+    def infer_with_qwen_model(self, message: str) -> str:
+        """Infer using a Qwen model via Alibaba Cloud Model Studio."""
+        provider_config = OPENAI_COMPATIBLE_PROVIDERS["qwen"]
+        api_key = self._get_required_api_key(
+            provider_config["env_keys"], "Qwen / DashScope"
+        )
+        return self._infer_with_openai_compatible_model(
+            message=message,
+            api_key=api_key,
+            base_url=provider_config["base_url"],
+            timeout=provider_config["timeout"],
+        )
+
+    def infer_with_kimi_model(self, message: str) -> str:
+        """Infer using a Kimi model via Moonshot AI."""
+        provider_config = OPENAI_COMPATIBLE_PROVIDERS["kimi"]
+        api_key = self._get_required_api_key(
+            provider_config["env_keys"], "Kimi / Moonshot"
+        )
+        return self._infer_with_openai_compatible_model(
+            message=message,
+            api_key=api_key,
+            base_url=provider_config["base_url"],
+            timeout=provider_config["timeout"],
+        )
+
+    def infer_with_openai_model(self, message):
+        """Infer using the OpenAI model"""
+        api_key = self._normalize_api_key(
+            self._get_required_api_key(["OPENAI_API_KEY"], "OpenAI")
+        )
+        model_input = self._build_model_input(message)
 
         def call_api():
             client = OpenAI(api_key=api_key)
@@ -158,11 +303,10 @@ class LLM:
 
     def infer_with_o3_mini_model(self, message):
         """Infer using the o3-mini model"""
-        api_key = os.environ.get("OPENAI_API_KEY").split(":")[0]
-        model_input = [
-            {"role": "system", "content": self.systemRole},
-            {"role": "user", "content": message},
-        ]
+        api_key = self._normalize_api_key(
+            self._get_required_api_key(["OPENAI_API_KEY"], "OpenAI")
+        )
+        model_input = self._build_model_input(message)
 
         def call_api():
             client = OpenAI(api_key=api_key)
@@ -188,14 +332,8 @@ class LLM:
         """
         Infer using the DeepSeek model
         """
-        api_key = os.environ.get("DEEPSEEK_API_KEY2")
-        model_input = [
-            {
-                "role": "system",
-                "content": self.systemRole,
-            },
-            {"role": "user", "content": message},
-        ]
+        api_key = self._get_required_api_key(["DEEPSEEK_API_KEY2"], "DeepSeek")
+        model_input = self._build_model_input(message)
 
         def call_api():
             client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")

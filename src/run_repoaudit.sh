@@ -7,7 +7,7 @@ IFS=$'\n\t'
 # e.g. "en_US:en"), which can break RepoAudit --language parsing.
 # Use REPOAUDIT_LANGUAGE for overriding scan language.
 ANALYSIS_LANGUAGE="${REPOAUDIT_LANGUAGE:-Java}"
-MODEL="${MODEL:-deepseek-chat}"
+MODEL="${MODEL:-deepseek-chat}"  # e.g. deepseek-chat, qwen3.5-plus, kimi-k2.5
 DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-jleaks_mlk_198}"
 DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="${SCAN_TYPE:-dfbscan}"
@@ -39,9 +39,20 @@ REPOAUDIT_AUTO_EVAL_JLEAKS_MLK="${REPOAUDIT_AUTO_EVAL_JLEAKS_MLK:-false}"       
 # Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${ANALYSIS_LANGUAGE}/${DEFAULT_PROJECT_NAME}"
 
+now_ts() {
+  python3 -c 'import time; print(f"{time.time():.6f}")'
+}
+
+elapsed_sec() {
+  python3 -c 'import sys; print(f"{float(sys.argv[2]) - float(sys.argv[1]):.3f}")' "$1" "$2"
+}
+
+PIPELINE_START_TS="$(now_ts)"
+SOOT_FACTS_GENERATION_SEC="0.000"
+
 show_usage() {
   cat <<'EOF'
-Usage: run_scan.sh [PROJECT_PATH] [BUG_TYPE]
+Usage: run_repoaudit.sh [PROJECT_PATH] [BUG_TYPE]
 
 Arguments:
   PROJECT_PATH   Optional absolute/relative path to the subject project.
@@ -54,10 +65,19 @@ Bug type meanings:
   UAF  - Use After Free
 
 Examples:
-  ./run_scan.sh
-  ./run_scan.sh /path/to/my/project
-  ./run_scan.sh ./repos/demo UAF
-  ./run_scan.sh --help
+  ./run_repoaudit.sh
+  ./run_repoaudit.sh /path/to/my/project
+  ./run_repoaudit.sh ./repos/demo UAF
+  MODEL=qwen-plus ./run_repoaudit.sh /path/to/java/project MLK
+  MODEL=kimi-k2.5 ./run_repoaudit.sh /path/to/java/project MLK
+  ./run_repoaudit.sh --help
+
+Model examples:
+  deepseek-chat | deepseek-reasoner | qwen-plus | qwen-max | qwen-turbo | kimi-k2.5 | kimi-k2 | kimi-k2-thinking
+
+API keys:
+  Qwen: export DASHSCOPE_API_KEY=your_key
+  Kimi: export MOONSHOT_API_KEY=your_key
 EOF
 }
 
@@ -105,6 +125,7 @@ if [[ "$PROJECT_PATH_ABS" == *"/jleaks"* || "$PROJECT_PATH_ABS" == *"\\jleaks"* 
 fi
 
 if [[ "$ENABLE_SOOT_PREFILTER" == "true" && "$AUTO_GENERATE_SOOT_FACTS" == "true" ]]; then
+  SOOT_GEN_START_TS="$(now_ts)"
   if [[ -z "$SOOT_FACTS_PATH" ]]; then
     SOOT_FACTS_PATH="$PROJECT_PATH_ABS/.repoaudit/soot_facts.json"
   fi
@@ -144,6 +165,8 @@ if [[ "$ENABLE_SOOT_PREFILTER" == "true" && "$AUTO_GENERATE_SOOT_FACTS" == "true
       exit 1
     fi
   fi
+  SOOT_GEN_END_TS="$(now_ts)"
+  SOOT_FACTS_GENERATION_SEC="$(elapsed_sec "$SOOT_GEN_START_TS" "$SOOT_GEN_END_TS")"
 fi
 
 # --- Run ---
@@ -191,6 +214,40 @@ python3 repoaudit.py \
   "${SOOT_FLAGS[@]}" \
   "${Z3_FLAGS[@]}"; then
   exit 1
+fi
+
+PIPELINE_END_TS="$(now_ts)"
+PIPELINE_TOTAL_SEC="$(elapsed_sec "$PIPELINE_START_TS" "$PIPELINE_END_TS")"
+
+if [[ "$SCAN_TYPE" == "dfbscan" ]]; then
+  RESULT_ROOT="../result/dfbscan/${MODEL}/${BUG_TYPE}/${ANALYSIS_LANGUAGE}/$(basename -- "$PROJECT_PATH_ABS")"
+  LATEST_RESULT_DIR="$(ls -1dt "$RESULT_ROOT"/* 2>/dev/null | head -n 1 || true)"
+  if [[ -n "$LATEST_RESULT_DIR" ]]; then
+    METRICS_PATH="$LATEST_RESULT_DIR/run_metrics_raw.json"
+    python3 - "$METRICS_PATH" "$PIPELINE_TOTAL_SEC" "$SOOT_FACTS_GENERATION_SEC" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+metrics_path = Path(sys.argv[1])
+pipeline_total_sec = float(sys.argv[2])
+soot_generation_sec = float(sys.argv[3])
+
+if metrics_path.exists():
+    with open(metrics_path, "r", encoding="utf-8") as f:
+        payload = json.load(f)
+else:
+    payload = {"schema_version": "1.0", "timing": {}, "llm_usage": {}}
+
+timing = payload.setdefault("timing", {})
+timing["pipeline_total_sec"] = round(pipeline_total_sec, 3)
+timing["soot_facts_generation_sec"] = round(soot_generation_sec, 3)
+
+with open(metrics_path, "w", encoding="utf-8") as f:
+    json.dump(payload, f, indent=4)
+PY
+    echo "[Info] Raw run metrics written to: $METRICS_PATH"
+  fi
 fi
 
 if [[ "$REPOAUDIT_AUTO_EVAL_JLEAKS_MLK" == "true" \

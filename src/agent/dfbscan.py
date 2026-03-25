@@ -2,10 +2,11 @@ import json
 import os
 import re
 import threading
+import time
 from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import cast
+from typing import Dict, List, Set, Tuple, cast
 from tqdm import tqdm
 
 from agent.agent import *
@@ -113,6 +114,7 @@ class DFBScanAgent(Agent):
         z3_min_parsed_constraints: int = 2,
         agent_id: int = 0,
     ) -> None:
+        self.scan_started_at = time.perf_counter()
         self.bug_type = bug_type
         self.is_reachable = is_reachable
 
@@ -947,6 +949,8 @@ class DFBScanAgent(Agent):
         self.__dump_soot_source_gate_events()
         self.__dump_soot_prefilter_stats()
         self.__dump_z3_prefilter_stats()
+        scan_total_sec = max(0.0, time.perf_counter() - self.scan_started_at)
+        self.__dump_run_metrics(scan_total_sec)
         return
 
     def __process_src_value(self, src_value: Value) -> None:
@@ -4838,6 +4842,60 @@ class DFBScanAgent(Agent):
                     json.dump(issue_stats, issue_stats_file, indent=4)
 
         return issue_count
+
+    def __collect_llm_usage_stats(self) -> Dict[str, object]:
+        tool_entries = [
+            self.intra_dfa.get_usage_stats(),
+            self.path_validator.get_usage_stats(),
+        ]
+        tool_breakdown = {
+            str(entry["tool_name"]): entry for entry in tool_entries
+        }
+        total_input_tokens = sum(int(entry["input_tokens"]) for entry in tool_entries)
+        total_output_tokens = sum(int(entry["output_tokens"]) for entry in tool_entries)
+        total_query_count = sum(int(entry["query_count"]) for entry in tool_entries)
+        representative_entry = tool_entries[0] if len(tool_entries) > 0 else {}
+
+        return {
+            "model_name": self.model_name,
+            "model_family": representative_entry.get("model_family", "unknown"),
+            "token_count_mode": representative_entry.get(
+                "token_count_mode", "model_family_estimated"
+            ),
+            "token_encoding_name": representative_entry.get(
+                "token_encoding_name", "unknown"
+            ),
+            "input_tokens": total_input_tokens,
+            "output_tokens": total_output_tokens,
+            "total_tokens": total_input_tokens + total_output_tokens,
+            "query_count": total_query_count,
+            "tool_breakdown": tool_breakdown,
+        }
+
+    def __dump_run_metrics(self, scan_total_sec: float) -> None:
+        metrics_payload = {
+            "schema_version": "1.0",
+            "project_name": self.project_name,
+            "project_path": self.project_path,
+            "model_name": self.model_name,
+            "language": self.language,
+            "bug_type": self.bug_type,
+            "run_id": Path(self.res_dir_path).name,
+            "result_dir": self.res_dir_path,
+            "log_dir": self.log_dir_path,
+            "timing": {
+                "pipeline_total_sec": None,
+                "soot_facts_generation_sec": None,
+                "scan_total_sec": round(scan_total_sec, 3),
+            },
+            "llm_usage": self.__collect_llm_usage_stats(),
+        }
+
+        metrics_path = Path(self.res_dir_path) / "run_metrics_raw.json"
+        with self.lock:
+            os.makedirs(self.res_dir_path, exist_ok=True)
+            with open(metrics_path, "w") as metrics_file:
+                json.dump(metrics_payload, metrics_file, indent=4)
 
     def __is_java_mlk_helper_function_for_dedup(self, function: Function) -> bool:
         if self.language != "Java" or self.bug_type != "MLK":

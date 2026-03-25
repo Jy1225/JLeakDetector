@@ -52,6 +52,21 @@ class LLMTool(ABC):
         self.output_token_cost = 0
         self.total_query_num = 0
 
+    def get_usage_stats(self) -> Dict[str, object]:
+        return {
+            "tool_name": type(self).__name__,
+            "model_name": self.model_name,
+            "model_family": getattr(self.model, "model_family", "unknown"),
+            "token_count_mode": getattr(
+                self.model, "token_count_mode", "model_family_estimated"
+            ),
+            "token_encoding_name": getattr(self.model, "token_encoding_name", "unknown"),
+            "input_tokens": self.input_token_cost,
+            "output_tokens": self.output_token_cost,
+            "total_tokens": self.input_token_cost + self.output_token_cost,
+            "query_count": self.total_query_num,
+        }
+
     def invoke(self, input: LLMToolInput, cls: Type[T]) -> Optional[T]:
         """
         Invoke the LLM tool with the given input.
