@@ -54,6 +54,7 @@ class LLMTool(ABC):
         self.reasoning_token_cost = 0
         self.prompt_cache_hit_tokens = 0
         self.prompt_cache_miss_tokens = 0
+        self.provider_total_tokens = 0
         self.token_count_mode = getattr(
             self.model, "token_count_mode", "model_family_estimated"
         )
@@ -67,7 +68,12 @@ class LLMTool(ABC):
             "token_encoding_name": getattr(self.model, "token_encoding_name", "unknown"),
             "input_tokens": self.input_token_cost,
             "output_tokens": self.output_token_cost,
-            "total_tokens": self.input_token_cost + self.output_token_cost,
+            "total_tokens": (
+                self.provider_total_tokens
+                if self.token_count_mode == "provider_usage"
+                else self.input_token_cost + self.output_token_cost
+            ),
+            "provider_total_tokens": self.provider_total_tokens,
             "reasoning_tokens": self.reasoning_token_cost,
             "prompt_cache_hit_tokens": self.prompt_cache_hit_tokens,
             "prompt_cache_miss_tokens": self.prompt_cache_miss_tokens,
@@ -124,10 +130,9 @@ class LLMTool(ABC):
                 if single_query_num > self.max_query_num:
                     break
                 single_query_num += 1
-                response, input_token_cost, output_token_cost = self.model.infer(
+                response, input_token_cost, output_token_cost, usage_info = self.model.infer(
                     prompt, True
                 )
-                usage_info = self.model.get_last_usage_info()
                 self.logger.print_log("Response:", "\n", response)
                 self.input_token_cost += input_token_cost
                 self.output_token_cost += output_token_cost
@@ -143,6 +148,11 @@ class LLMTool(ABC):
                     )
                     self.prompt_cache_miss_tokens += int(
                         usage_info.get("prompt_cache_miss_tokens", 0)
+                    )
+                    self.provider_total_tokens += int(
+                        usage_info.get(
+                            "total_tokens", input_token_cost + output_token_cost
+                        )
                     )
                 output = self._parse_response(response, input)
 

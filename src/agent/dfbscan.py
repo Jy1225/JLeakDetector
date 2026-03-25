@@ -4854,6 +4854,9 @@ class DFBScanAgent(Agent):
         total_input_tokens = sum(int(entry["input_tokens"]) for entry in tool_entries)
         total_output_tokens = sum(int(entry["output_tokens"]) for entry in tool_entries)
         total_query_count = sum(int(entry["query_count"]) for entry in tool_entries)
+        total_provider_total_tokens = sum(
+            int(entry.get("provider_total_tokens", 0)) for entry in tool_entries
+        )
         total_reasoning_tokens = sum(
             int(entry.get("reasoning_tokens", 0)) for entry in tool_entries
         )
@@ -4876,7 +4879,12 @@ class DFBScanAgent(Agent):
             ),
             "input_tokens": total_input_tokens,
             "output_tokens": total_output_tokens,
-            "total_tokens": total_input_tokens + total_output_tokens,
+            "total_tokens": (
+                total_provider_total_tokens
+                if representative_entry.get("token_count_mode") == "provider_usage"
+                else total_input_tokens + total_output_tokens
+            ),
+            "provider_total_tokens": total_provider_total_tokens,
             "reasoning_tokens": total_reasoning_tokens,
             "prompt_cache_hit_tokens": total_prompt_cache_hit_tokens,
             "prompt_cache_miss_tokens": total_prompt_cache_miss_tokens,

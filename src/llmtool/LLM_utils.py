@@ -1,7 +1,7 @@
 # Imports
 from openai import *
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 import google.generativeai as genai
 import anthropic
 import signal
@@ -75,37 +75,35 @@ class LLM:
         self.systemRole = system_role
         self.logger = logger
         self.max_output_length = max_output_length
-        self._thread_state = threading.local()
         return
 
     def infer(
         self, message: str, is_measure_cost: bool = False
-    ) -> Tuple[str, int, int]:
+    ) -> Tuple[str, int, int, Optional[Dict[str, object]]]:
         self.logger.print_log(self.online_model_name, "is running")
-        self._clear_last_usage_info()
         output = ""
+        usage_info: Optional[Dict[str, object]] = None
         if self.model_family == "gemini":
-            output = self.infer_with_gemini(message)
+            output, usage_info = self.infer_with_gemini(message)
         elif self.model_family == "qwen":
-            output = self.infer_with_qwen_model(message)
+            output, usage_info = self.infer_with_qwen_model(message)
         elif self.model_family == "kimi":
-            output = self.infer_with_kimi_model(message)
+            output, usage_info = self.infer_with_kimi_model(message)
         elif self.model_family == "openai-gpt":
-            output = self.infer_with_openai_model(message)
+            output, usage_info = self.infer_with_openai_model(message)
         elif self.model_family == "openai-reasoning":
-            output = self.infer_with_o3_mini_model(message)
+            output, usage_info = self.infer_with_o3_mini_model(message)
         elif self.model_family == "claude":
-            output = self.infer_with_claude_key(message)
+            output, usage_info = self.infer_with_claude_key(message)
             # output = self.infer_with_claude_aws_bedrock(message)
         elif self.model_family == "deepseek":
-            output = self.infer_with_deepseek_model(message)
+            output, usage_info = self.infer_with_deepseek_model(message)
         else:
             raise ValueError(
                 f"Unsupported model name: {self.online_model_name} "
                 f"(resolved family={self.model_family})"
             )
 
-        usage_info = self.get_last_usage_info()
         input_token_cost = (
             0
             if not is_measure_cost
@@ -126,7 +124,7 @@ class LLM:
                 else self._count_tokens(output)
             )
         )
-        return output, input_token_cost, output_token_cost
+        return output, input_token_cost, output_token_cost, usage_info
 
     def _identify_model_family(self, model_name: str) -> str:
         normalized_name = model_name.strip().lower()
@@ -163,15 +161,6 @@ class LLM:
     def _normalize_api_key(self, api_key: str) -> str:
         return api_key.split(":")[0].strip()
 
-    def _clear_last_usage_info(self) -> None:
-        self._thread_state.last_usage_info = None
-
-    def get_last_usage_info(self) -> Dict[str, object] | None:
-        last_usage = getattr(self._thread_state, "last_usage_info", None)
-        if isinstance(last_usage, dict):
-            return dict(last_usage)
-        return None
-
     def _get_usage_field(self, usage_obj, field_name: str, default=0):
         if usage_obj is None:
             return default
@@ -179,11 +168,10 @@ class LLM:
             return usage_obj.get(field_name, default)
         return getattr(usage_obj, field_name, default)
 
-    def _store_usage_from_response(self, response) -> None:
+    def _extract_usage_from_response(self, response) -> Optional[Dict[str, object]]:
         usage = getattr(response, "usage", None)
         if usage is None:
-            self._clear_last_usage_info()
-            return
+            return None
 
         completion_details = self._get_usage_field(
             usage, "completion_tokens_details", None
@@ -210,7 +198,7 @@ class LLM:
             self._get_usage_field(completion_details, "reasoning_tokens", 0) or 0
         )
 
-        self._thread_state.last_usage_info = {
+        return {
             "token_count_mode": "provider_usage",
             "prompt_tokens": prompt_tokens,
             "completion_tokens": completion_tokens,
@@ -236,7 +224,9 @@ class LLM:
                 self.logger.print_log(f"Operation failed: {e}")
                 return ""
 
-    def infer_with_gemini(self, message: str) -> str:
+    def infer_with_gemini(
+        self, message: str
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using the Gemini model from Google Generative AI"""
         gemini_model = genai.GenerativeModel("gemini-pro")
 
@@ -256,7 +246,7 @@ class LLM:
                     temperature=self.temperature
                 ),
             )
-            return response.text
+            return response.text, None
 
         tryCnt = 0
         while tryCnt < 5:
@@ -270,7 +260,7 @@ class LLM:
                 self.logger.print_log(f"API error: {e}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
     def _build_model_input(self, message: str) -> List[Dict[str, str]]:
         return [
@@ -294,7 +284,7 @@ class LLM:
         base_url: str,
         timeout: int,
         include_temperature: bool = True,
-    ) -> str:
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         model_input = self._build_model_input(message)
 
         def call_api():
@@ -306,8 +296,10 @@ class LLM:
             if include_temperature:
                 request_kwargs["temperature"] = self.temperature
             response = client.chat.completions.create(**request_kwargs)
-            self._store_usage_from_response(response)
-            return response.choices[0].message.content
+            return (
+                response.choices[0].message.content,
+                self._extract_usage_from_response(response),
+            )
 
         tryCnt = 0
         while tryCnt < 5:
@@ -320,9 +312,11 @@ class LLM:
                 self.logger.print_log(f"API error: {e}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
-    def infer_with_qwen_model(self, message: str) -> str:
+    def infer_with_qwen_model(
+        self, message: str
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using a Qwen model via Alibaba Cloud Model Studio."""
         provider_config = OPENAI_COMPATIBLE_PROVIDERS["qwen"]
         api_key = self._get_required_api_key(
@@ -335,7 +329,9 @@ class LLM:
             timeout=provider_config["timeout"],
         )
 
-    def infer_with_kimi_model(self, message: str) -> str:
+    def infer_with_kimi_model(
+        self, message: str
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using a Kimi model via Moonshot AI."""
         provider_config = OPENAI_COMPATIBLE_PROVIDERS["kimi"]
         api_key = self._get_required_api_key(
@@ -348,7 +344,9 @@ class LLM:
             timeout=provider_config["timeout"],
         )
 
-    def infer_with_openai_model(self, message):
+    def infer_with_openai_model(
+        self, message
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using the OpenAI model"""
         api_key = self._normalize_api_key(
             self._get_required_api_key(["OPENAI_API_KEY"], "OpenAI")
@@ -362,8 +360,10 @@ class LLM:
                 messages=model_input,
                 temperature=self.temperature,
             )
-            self._store_usage_from_response(response)
-            return response.choices[0].message.content
+            return (
+                response.choices[0].message.content,
+                self._extract_usage_from_response(response),
+            )
 
         tryCnt = 0
         while tryCnt < 5:
@@ -376,9 +376,11 @@ class LLM:
                 self.logger.print_log(f"API error: {e}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
-    def infer_with_o3_mini_model(self, message):
+    def infer_with_o3_mini_model(
+        self, message
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using the o3-mini model"""
         api_key = self._normalize_api_key(
             self._get_required_api_key(["OPENAI_API_KEY"], "OpenAI")
@@ -390,8 +392,10 @@ class LLM:
             response = client.chat.completions.create(
                 model=self.online_model_name, messages=model_input
             )
-            self._store_usage_from_response(response)
-            return response.choices[0].message.content
+            return (
+                response.choices[0].message.content,
+                self._extract_usage_from_response(response),
+            )
 
         tryCnt = 0
         while tryCnt < 5:
@@ -404,9 +408,11 @@ class LLM:
                 self.logger.print_log(f"API error: {e}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
-    def infer_with_deepseek_model(self, message):
+    def infer_with_deepseek_model(
+        self, message
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """
         Infer using the DeepSeek model
         """
@@ -420,8 +426,10 @@ class LLM:
                 messages=model_input,
                 temperature=self.temperature,
             )
-            self._store_usage_from_response(response)
-            return response.choices[0].message.content
+            return (
+                response.choices[0].message.content,
+                self._extract_usage_from_response(response),
+            )
 
         tryCnt = 0
         while tryCnt < 5:
@@ -434,9 +442,11 @@ class LLM:
                 self.logger.print_log(f"API error: {e}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
-    def infer_with_claude_aws_bedrock(self, message):
+    def infer_with_claude_aws_bedrock(
+        self, message
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using the Claude model via AWS Bedrock"""
         timeout = 500
         model_input = [
@@ -493,7 +503,7 @@ class LLM:
                 result = response["content"][0]["text"]
             if "3.7" in self.online_model_name:
                 result = response["content"][1]["text"]
-            return result
+            return result, None
 
         tryCnt = 0
         while tryCnt < 5:
@@ -511,9 +521,11 @@ class LLM:
                 self.logger.print_log(f"API error: {str(e)}")
             time.sleep(2)
 
-        return ""
+        return "", None
 
-    def infer_with_claude_key(self, message):
+    def infer_with_claude_key(
+        self, message
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
         """Infer using the Claude model via API key, with thinking mode for 3.7"""
         api_key = os.environ.get("ANTHROPIC_API_KEY")
         if not api_key:
@@ -559,10 +571,10 @@ class LLM:
                 and len(response.content) > 1
             ):
                 # For Claude 3.7 with thinking mode, get the final response (skip thinking content)
-                return response.content[-1].text
+                return response.content[-1].text, None
             else:
                 # For Claude 3.5 or any standard response
-                return response.content[0].text
+                return response.content[0].text, None
 
         tryCnt = 0
         max_retries = 5
@@ -582,4 +594,4 @@ class LLM:
                 if tryCnt == max_retries:
                     self.logger.print_log("Max retries reached for Claude API")
             time.sleep(2)
-        return ""
+        return "", None
