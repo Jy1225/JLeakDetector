@@ -51,19 +51,26 @@ class LLMTool(ABC):
         self.input_token_cost = 0
         self.output_token_cost = 0
         self.total_query_num = 0
+        self.reasoning_token_cost = 0
+        self.prompt_cache_hit_tokens = 0
+        self.prompt_cache_miss_tokens = 0
+        self.token_count_mode = getattr(
+            self.model, "token_count_mode", "model_family_estimated"
+        )
 
     def get_usage_stats(self) -> Dict[str, object]:
         return {
             "tool_name": type(self).__name__,
             "model_name": self.model_name,
             "model_family": getattr(self.model, "model_family", "unknown"),
-            "token_count_mode": getattr(
-                self.model, "token_count_mode", "model_family_estimated"
-            ),
+            "token_count_mode": self.token_count_mode,
             "token_encoding_name": getattr(self.model, "token_encoding_name", "unknown"),
             "input_tokens": self.input_token_cost,
             "output_tokens": self.output_token_cost,
             "total_tokens": self.input_token_cost + self.output_token_cost,
+            "reasoning_tokens": self.reasoning_token_cost,
+            "prompt_cache_hit_tokens": self.prompt_cache_hit_tokens,
+            "prompt_cache_miss_tokens": self.prompt_cache_miss_tokens,
             "query_count": self.total_query_num,
         }
 
@@ -120,9 +127,23 @@ class LLMTool(ABC):
                 response, input_token_cost, output_token_cost = self.model.infer(
                     prompt, True
                 )
+                usage_info = self.model.get_last_usage_info()
                 self.logger.print_log("Response:", "\n", response)
                 self.input_token_cost += input_token_cost
                 self.output_token_cost += output_token_cost
+                if usage_info is not None:
+                    self.token_count_mode = str(
+                        usage_info.get("token_count_mode", self.token_count_mode)
+                    )
+                    self.reasoning_token_cost += int(
+                        usage_info.get("reasoning_tokens", 0)
+                    )
+                    self.prompt_cache_hit_tokens += int(
+                        usage_info.get("prompt_cache_hit_tokens", 0)
+                    )
+                    self.prompt_cache_miss_tokens += int(
+                        usage_info.get("prompt_cache_miss_tokens", 0)
+                    )
                 output = self._parse_response(response, input)
 
                 if output is not None:

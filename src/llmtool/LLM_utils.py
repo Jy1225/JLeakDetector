@@ -75,12 +75,14 @@ class LLM:
         self.systemRole = system_role
         self.logger = logger
         self.max_output_length = max_output_length
+        self._thread_state = threading.local()
         return
 
     def infer(
         self, message: str, is_measure_cost: bool = False
     ) -> Tuple[str, int, int]:
         self.logger.print_log(self.online_model_name, "is running")
+        self._clear_last_usage_info()
         output = ""
         if self.model_family == "gemini":
             output = self.infer_with_gemini(message)
@@ -103,13 +105,26 @@ class LLM:
                 f"(resolved family={self.model_family})"
             )
 
+        usage_info = self.get_last_usage_info()
         input_token_cost = (
             0
             if not is_measure_cost
-            else self._count_tokens(self.systemRole) + self._count_tokens(message)
+            else (
+                int(usage_info["prompt_tokens"])
+                if usage_info is not None
+                and usage_info.get("token_count_mode") == "provider_usage"
+                else self._count_tokens(self.systemRole) + self._count_tokens(message)
+            )
         )
         output_token_cost = (
-            0 if not is_measure_cost else self._count_tokens(output)
+            0
+            if not is_measure_cost
+            else (
+                int(usage_info["completion_tokens"])
+                if usage_info is not None
+                and usage_info.get("token_count_mode") == "provider_usage"
+                else self._count_tokens(output)
+            )
         )
         return output, input_token_cost, output_token_cost
 
@@ -147,6 +162,66 @@ class LLM:
 
     def _normalize_api_key(self, api_key: str) -> str:
         return api_key.split(":")[0].strip()
+
+    def _clear_last_usage_info(self) -> None:
+        self._thread_state.last_usage_info = None
+
+    def get_last_usage_info(self) -> Dict[str, object] | None:
+        last_usage = getattr(self._thread_state, "last_usage_info", None)
+        if isinstance(last_usage, dict):
+            return dict(last_usage)
+        return None
+
+    def _get_usage_field(self, usage_obj, field_name: str, default=0):
+        if usage_obj is None:
+            return default
+        if isinstance(usage_obj, dict):
+            return usage_obj.get(field_name, default)
+        return getattr(usage_obj, field_name, default)
+
+    def _store_usage_from_response(self, response) -> None:
+        usage = getattr(response, "usage", None)
+        if usage is None:
+            self._clear_last_usage_info()
+            return
+
+        completion_details = self._get_usage_field(
+            usage, "completion_tokens_details", None
+        )
+        prompt_tokens = int(self._get_usage_field(usage, "prompt_tokens", 0) or 0)
+        completion_tokens = int(
+            self._get_usage_field(usage, "completion_tokens", 0) or 0
+        )
+        total_tokens = int(
+            self._get_usage_field(
+                usage,
+                "total_tokens",
+                prompt_tokens + completion_tokens,
+            )
+            or (prompt_tokens + completion_tokens)
+        )
+        prompt_cache_hit_tokens = int(
+            self._get_usage_field(usage, "prompt_cache_hit_tokens", 0) or 0
+        )
+        prompt_cache_miss_tokens = int(
+            self._get_usage_field(usage, "prompt_cache_miss_tokens", 0) or 0
+        )
+        reasoning_tokens = int(
+            self._get_usage_field(completion_details, "reasoning_tokens", 0) or 0
+        )
+
+        self._thread_state.last_usage_info = {
+            "token_count_mode": "provider_usage",
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
+            "prompt_cache_hit_tokens": prompt_cache_hit_tokens,
+            "prompt_cache_miss_tokens": prompt_cache_miss_tokens,
+            "reasoning_tokens": reasoning_tokens,
+            "token_encoding_name": self.token_encoding_name,
+            "model_family": self.model_family,
+            "model_name": self.online_model_name,
+        }
 
     def run_with_timeout(self, func, timeout):
         """Run a function with timeout that works in multiple threads"""
@@ -231,6 +306,7 @@ class LLM:
             if include_temperature:
                 request_kwargs["temperature"] = self.temperature
             response = client.chat.completions.create(**request_kwargs)
+            self._store_usage_from_response(response)
             return response.choices[0].message.content
 
         tryCnt = 0
@@ -286,6 +362,7 @@ class LLM:
                 messages=model_input,
                 temperature=self.temperature,
             )
+            self._store_usage_from_response(response)
             return response.choices[0].message.content
 
         tryCnt = 0
@@ -313,6 +390,7 @@ class LLM:
             response = client.chat.completions.create(
                 model=self.online_model_name, messages=model_input
             )
+            self._store_usage_from_response(response)
             return response.choices[0].message.content
 
         tryCnt = 0
@@ -342,6 +420,7 @@ class LLM:
                 messages=model_input,
                 temperature=self.temperature,
             )
+            self._store_usage_from_response(response)
             return response.choices[0].message.content
 
         tryCnt = 0
