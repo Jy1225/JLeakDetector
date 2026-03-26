@@ -12,7 +12,8 @@ import openpyxl
 from openpyxl.styles import Alignment, Font
 
 
-DEFAULT_BENCHMARK_XLSX = Path("real_world_test/selected_real_world_projects.xlsx")
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_BENCHMARK_XLSX = BASE_DIR / "selected_real_world_projects.xlsx"
 
 
 @dataclass

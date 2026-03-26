@@ -35,6 +35,9 @@ REPOAUDIT_JAVA_MLK_MAX_WITNESS_PER_COMPONENT="${REPOAUDIT_JAVA_MLK_MAX_WITNESS_P
 REPOAUDIT_JAVA_MLK_FAMILY_LINK_MODE="${REPOAUDIT_JAVA_MLK_FAMILY_LINK_MODE:-aggressive}"           # conservative/aggressive
 REPOAUDIT_JAVA_MLK_SOURCE_CONFIDENCE_MIN="${REPOAUDIT_JAVA_MLK_SOURCE_CONFIDENCE_MIN:-low}"        # low/medium/high
 REPOAUDIT_AUTO_EVAL_JLEAKS_MLK="${REPOAUDIT_AUTO_EVAL_JLEAKS_MLK:-false}"                         # true/false
+AUTO_GENERATE_REVIEW_XLSX="${AUTO_GENERATE_REVIEW_XLSX:-true}"                                     # true/false
+REVIEW_BUILDER_SCRIPT="${REVIEW_BUILDER_SCRIPT:-../real_world_test/build_review_units_excel.py}"   # path to excel builder
+REVIEW_BENCHMARK_XLSX="${REVIEW_BENCHMARK_XLSX:-../real_world_test/selected_real_world_projects.xlsx}" # benchmark xlsx
 
 # Construct the default project *path* from ANALYSIS_LANGUAGE + DEFAULT_PROJECT_NAME
 DEFAULT_PROJECT_PATH="../benchmark/${ANALYSIS_LANGUAGE}/${DEFAULT_PROJECT_NAME}"
@@ -78,6 +81,9 @@ Model examples:
 API keys:
   Qwen: export DASHSCOPE_API_KEY=your_key
   Kimi: export MOONSHOT_API_KEY=your_key
+
+Post-run artifacts:
+  AUTO_GENERATE_REVIEW_XLSX=true will auto-build review_units.xlsx beside detect_info.json
 EOF
 }
 
@@ -219,6 +225,8 @@ fi
 PIPELINE_END_TS="$(now_ts)"
 PIPELINE_TOTAL_SEC="$(elapsed_sec "$PIPELINE_START_TS" "$PIPELINE_END_TS")"
 
+LATEST_RESULT_DIR=""
+
 if [[ "$SCAN_TYPE" == "dfbscan" ]]; then
   RESULT_ROOT="../result/dfbscan/${MODEL}/${BUG_TYPE}/${ANALYSIS_LANGUAGE}/$(basename -- "$PROJECT_PATH_ABS")"
   LATEST_RESULT_DIR="$(ls -1dt "$RESULT_ROOT"/* 2>/dev/null | head -n 1 || true)"
@@ -250,12 +258,27 @@ PY
   fi
 fi
 
+if [[ "$SCAN_TYPE" == "dfbscan" \
+   && "$AUTO_GENERATE_REVIEW_XLSX" == "true" \
+   && -n "$LATEST_RESULT_DIR" ]]; then
+  if [[ -f "$REVIEW_BUILDER_SCRIPT" ]]; then
+    if [[ -f "$REVIEW_BENCHMARK_XLSX" ]]; then
+      echo "[Info] Auto-generating review workbook: $LATEST_RESULT_DIR/review_units.xlsx"
+      python3 "$REVIEW_BUILDER_SCRIPT" \
+        --result-dir "$LATEST_RESULT_DIR" \
+        --benchmark-xlsx "$REVIEW_BENCHMARK_XLSX" || true
+    else
+      echo "[Warn] REVIEW_BENCHMARK_XLSX not found: $REVIEW_BENCHMARK_XLSX" >&2
+    fi
+  else
+    echo "[Warn] REVIEW_BUILDER_SCRIPT not found: $REVIEW_BUILDER_SCRIPT" >&2
+  fi
+fi
+
 if [[ "$REPOAUDIT_AUTO_EVAL_JLEAKS_MLK" == "true" \
    && "$ANALYSIS_LANGUAGE" == "Java" \
    && "$BUG_TYPE" == "MLK" \
    && "$PROJECT_PATH_ABS" == *"jleaks_mlk_"* ]]; then
-  RESULT_ROOT="../result/dfbscan/${MODEL}/${BUG_TYPE}/${ANALYSIS_LANGUAGE}/$(basename -- "$PROJECT_PATH_ABS")"
-  LATEST_RESULT_DIR="$(ls -1dt "$RESULT_ROOT"/* 2>/dev/null | head -n 1 || true)"
   if [[ -n "$LATEST_RESULT_DIR" && -f "../tools/eval/eval_jleaks_mlk.py" ]]; then
     echo "[Info] Auto-evaluating latest run: $LATEST_RESULT_DIR"
     python3 ../tools/eval/eval_jleaks_mlk.py \
