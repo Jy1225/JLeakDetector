@@ -76,7 +76,7 @@ echo "[Step] Building annotation-tools"
 (cd "$AT_DIR" && ./.build-without-test.sh)
 
 echo "[Step] Building stubparser"
-(cd "$STUBPARSER_DIR" && ./.build-without-test.sh)
+(cd "$STUBPARSER_DIR" && ./mvnw package -DskipTests)
 
 echo "[Step] Building jspecify"
 (
