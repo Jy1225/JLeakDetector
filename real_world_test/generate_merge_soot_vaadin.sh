@@ -111,7 +111,10 @@ run_bridge() {
     runtime_cp="$SOOT_JAR:$class_dir"
   fi
 
+  local OLD_IFS="$IFS"
+  IFS=' '
   read -r -a heap_arr <<< "$HEAP_OPTS"
+  IFS="$OLD_IFS"
   cmd=("$JAVA_BIN")
   if (( ${#heap_arr[@]} > 0 )); then
     cmd+=("${heap_arr[@]}")
