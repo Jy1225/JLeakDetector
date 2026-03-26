@@ -159,6 +159,10 @@ def _make_base_env(project: ProjectConfig) -> Dict[str, str]:
         env["JAVA_HOME"] = str(project.java_home)
         existing_path = env.get("PATH", "")
         env["PATH"] = str(project.java_home / "bin") + os.pathsep + existing_path
+    if project.soot_strategy in {"triplea_bridge", "fitnesse_bridge"}:
+        gradle_home = REPO_ROOT / "real_world_test" / ".gradle_user_homes" / project.name
+        gradle_home.mkdir(parents=True, exist_ok=True)
+        env["GRADLE_USER_HOME"] = str(gradle_home)
     return env
 
 
@@ -544,6 +548,9 @@ def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
 
     ledger_rows: List[Dict[str, object]] = []
 
+    soot_paths: Dict[str, Path] = {}
+
+    print("\n=== Phase 1: generate soot facts for all projects ===")
     for project in projects:
         print(f"\n=== Project: {project.name} ===")
         project_log = ledger_dir / f"{project.name}.log"
@@ -596,6 +603,13 @@ def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
 
         if soot_facts_path is None:
             raise RuntimeError(f"Soot facts path missing for project {project.name}")
+        soot_paths[project.name] = soot_facts_path
+
+    print("\n=== Phase 2: run RepoAudit experiment matrix ===")
+    for project in projects:
+        soot_facts_path = soot_paths[project.name]
+        project_log = ledger_dir / f"{project.name}.log"
+        print(f"\n=== Project runs: {project.name} ===")
 
         for variant in VARIANTS:
             for repeat_index in range(1, int(config["repeat_count"]) + 1):

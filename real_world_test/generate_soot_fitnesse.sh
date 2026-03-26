@@ -45,6 +45,7 @@ require_cmd() {
 
 find_class_dir() {
   for candidate in \
+    "$PROJECT_PATH/classes" \
     "$PROJECT_PATH/build/classes/java/main" \
     "$PROJECT_PATH/build/classes/main" \
     "$PROJECT_PATH/build/classes"; do
@@ -67,7 +68,7 @@ require_cmd "$JAVAC_BIN"
 
 CLASS_DIR="$(find_class_dir)"
 if [[ -z "$CLASS_DIR" ]]; then
-  echo "[Error] no compiled FitNesse class directory found. Please run ./gradlew classes first." >&2
+  echo "[Error] no compiled FitNesse class directory found. Please run 'ant compile' first." >&2
   exit 1
 fi
 

@@ -39,14 +39,25 @@ java -version
 javac -version
 
 cd "$PROJECT_PATH"
-if [[ ! -x "./gradlew" ]]; then
-  echo "[Error] ./gradlew not found in $PROJECT_PATH" >&2
+
+if [[ ! -f "./build.xml" ]]; then
+  echo "[Error] build.xml not found in $PROJECT_PATH" >&2
   exit 1
 fi
 
-echo "[Step] Building FitNesse with Gradle classes task"
-./gradlew classes --no-daemon --stacktrace
+echo "[Step] Preparing FitNesse antlib jars"
+mkdir -p antlib
+if grep -q 'http://repo2.maven.org/maven2' build.xml; then
+  sed -i 's#http://repo2.maven.org/maven2#https://repo.maven.apache.org/maven2#g' build.xml
+fi
+
+curl -L https://repo.maven.apache.org/maven2/org/apache/ivy/ivy/2.4.0/ivy-2.4.0.jar -o antlib/ivy.jar
+curl -L https://repo.maven.apache.org/maven2/org/bouncycastle/bcprov-jdk16/1.46/bcprov-jdk16-1.46.jar -o antlib/bcprov.jar
+curl -L https://repo.maven.apache.org/maven2/org/bouncycastle/bcpg-jdk16/1.46/bcpg-jdk16-1.46.jar -o antlib/bcpg.jar
+
+echo "[Step] Building FitNesse with Ant compile task"
+ant compile
 
 echo "[Info] Candidate class directories:"
-find build -type d \( -path '*/classes/java/main' -o -path '*/classes/main' -o -path '*/classes' \) 2>/dev/null | sort || true
+find . -maxdepth 2 -type d \( -name 'classes' -o -path '*/classes/java/main' -o -path '*/classes/main' \) 2>/dev/null | sort || true
 echo "[OK] FitNesse legacy build completed."
