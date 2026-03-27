@@ -96,13 +96,14 @@ class PathValidator(LLMTool):
             self.prompt_file = (
                 f"{BASE_PATH}/prompt/{language}/dfbscan/path_validator.json"
             )
+        with open(self.prompt_file, "r", encoding="utf-8") as f:
+            self.prompt_template_dict = json.load(f)
         return
 
     def _get_prompt(self, input: LLMToolInput) -> str:
         if not isinstance(input, PathValidatorInput):
             raise TypeError("expect PathValidatorInput")
-        with open(self.prompt_file, "r") as f:
-            prompt_template_dict = json.load(f)
+        prompt_template_dict = self.prompt_template_dict
         prompt = prompt_template_dict["task"]
         prompt += "\n" + "\n".join(prompt_template_dict["analysis_rules"])
         prompt += "\n" + "\n".join(prompt_template_dict["analysis_examples"])
