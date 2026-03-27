@@ -1,0 +1,101 @@
+$ bash /home/jiayu/Desktop/JLeakDetector/real_world_test/generate_merge_soot_vaadin.sh /home/jiayu/Desktop/real_world_repos/framework
+[Info] Vaadin module count: 11
+[Info] Vaadin jar count in repo: 45
+[Info] bridge module: shared_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/shared/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: compatibility-client_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/compatibility-client/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: buildhelpers_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/buildhelpers/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: widgets_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/widgets/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: server_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/server/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/home/jiayu/.m2/repository/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+[Info] bridge module: uitest_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/uitest/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: client_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/client/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: uitest-common_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/uitest-common/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: compatibility-shared_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/compatibility-shared/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: client-compiler_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/client-compiler/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: compatibility-server_target_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/framework/compatibility-server/target/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] merged file written to: /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/soot_facts_merged.json
+[Info] total input files: 11
+[Info] merged methods: 41638
+[Info] duplicate function_uid count: 2232
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/shared_target_classes.json: 614 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/compatibility-client_target_classes.json: 4331 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/buildhelpers_target_classes.json: 15 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json: 2327 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/server_target_classes.json: 6346 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/uitest_target_classes.json: 18199 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/client_target_classes.json: 7535 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/uitest-common_target_classes.json: 302 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/compatibility-shared_target_classes.json: 134 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/client-compiler_target_classes.json: 265 methods
+[Info] /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/compatibility-server_target_classes.json: 3802 methods
+[Warn] duplicate preview:
+  - com.vaadin.shared.VBrowserDetails.<init>(String) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.parseAndroidVersion(String) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.parseIOSVersion(String) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.parseOsVersion(String) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.parseVersionString(String) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.safeSubstring(String,int,int) (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isFirefox() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isGecko() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isWebKit() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isPresto() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isTrident() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isSafari() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isChrome() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isChromeFrameCapable() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isChromeFrame() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isOpera() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isIE() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isEdge() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.isPhantomJS() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  - com.vaadin.shared.VBrowserDetails.getBrowserEngineVersion() (kept-first, source=/home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/modules/widgets_target_classes.json)
+  ... and 2212 more duplicates
+[Info] merged soot facts: /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/soot_facts_merged.json
+[Info] manifest: /home/jiayu/Desktop/real_world_repos/framework/.repoaudit/vaadin_bridge/module_manifest.tsv
+

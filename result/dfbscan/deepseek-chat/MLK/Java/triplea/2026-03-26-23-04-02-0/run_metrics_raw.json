@@ -1,0 +1,62 @@
+{
+    "schema_version": "1.0",
+    "project_name": "triplea",
+    "project_path": "/home/jiayu/Desktop/real_world_repos/triplea",
+    "model_name": "deepseek-chat",
+    "language": "Java",
+    "bug_type": "MLK",
+    "run_id": "2026-03-26-23-04-02-0",
+    "result_dir": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/deepseek-chat/MLK/Java/triplea/2026-03-26-23-04-02-0",
+    "log_dir": "/home/jiayu/Desktop/JLeakDetector/log/dfbscan/deepseek-chat/MLK/Java/triplea/2026-03-26-23-04-02-0",
+    "timing": {
+        "pipeline_total_sec": 952.832,
+        "soot_facts_generation_sec": 0.0,
+        "scan_total_sec": 712.97
+    },
+    "llm_usage": {
+        "model_name": "deepseek-chat",
+        "model_family": "deepseek",
+        "token_count_mode": "provider_usage",
+        "token_encoding_name": "o200k_base",
+        "input_tokens": 417647,
+        "output_tokens": 168232,
+        "total_tokens": 585879,
+        "provider_total_tokens": 585879,
+        "reasoning_tokens": 0,
+        "prompt_cache_hit_tokens": 364992,
+        "prompt_cache_miss_tokens": 52655,
+        "query_count": 405,
+        "tool_breakdown": {
+            "IntraDataFlowAnalyzer": {
+                "tool_name": "IntraDataFlowAnalyzer",
+                "model_name": "deepseek-chat",
+                "model_family": "deepseek",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 228506,
+                "output_tokens": 146865,
+                "total_tokens": 375371,
+                "provider_total_tokens": 375371,
+                "reasoning_tokens": 0,
+                "prompt_cache_hit_tokens": 206080,
+                "prompt_cache_miss_tokens": 22426,
+                "query_count": 210
+            },
+            "PathValidator": {
+                "tool_name": "PathValidator",
+                "model_name": "deepseek-chat",
+                "model_family": "deepseek",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 189141,
+                "output_tokens": 21367,
+                "total_tokens": 210508,
+                "provider_total_tokens": 210508,
+                "reasoning_tokens": 0,
+                "prompt_cache_hit_tokens": 158912,
+                "prompt_cache_miss_tokens": 30229,
+                "query_count": 195
+            }
+        }
+    }
+}

@@ -1,0 +1,550 @@
+$ bash /home/jiayu/Desktop/JLeakDetector/real_world_test/generate_merge_soot_lucene.sh /home/jiayu/Desktop/real_world_repos/lucene
+[Info] Lucene module count: 90
+[Info] Lucene jar count in repo: 22
+[Info] bridge module: solr_build_solr-core_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-core/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_solr-core_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-core/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_solr-solrj_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-solrj/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_solr-solrj_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-solrj/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-velocity_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-velocity/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-velocity_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-velocity/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-uima_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-uima/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-uima_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-uima/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-dataimporthandler_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-dataimporthandler/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-dataimporthandler_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-dataimporthandler/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-map-reduce_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-map-reduce/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-map-reduce_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-map-reduce/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-cell_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-cell/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-cell_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-cell/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-dataimporthandler-extras_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-dataimporthandler-extras/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-dataimporthandler-extras_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-dataimporthandler-extras/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-analytics_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-analytics/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-analytics_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-analytics/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-analysis-extras_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-analysis-extras/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-analysis-extras_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-analysis-extras/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-morphlines-cell_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-morphlines-cell/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-morphlines-cell_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-morphlines-cell/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-clustering_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-clustering/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-clustering_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-clustering/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-morphlines-core_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-morphlines-core/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-morphlines-core_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-morphlines-core/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-langid_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-langid/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_contrib_solr-langid_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/contrib/solr-langid/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_solr-test-framework_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-test-framework/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: solr_build_solr-test-framework_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/solr/build/solr-test-framework/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_replicator_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/replicator/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_replicator_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/replicator/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_join_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/join/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_join_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/join/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_queryparser_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/queryparser/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_queryparser_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/queryparser/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_expressions_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/expressions/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_expressions_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/expressions/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_suggest_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/suggest/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_suggest_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/suggest/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial3d_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial3d/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial3d_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial3d/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_misc_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/misc/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_misc_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/misc/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_benchmark_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/benchmark/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_benchmark_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/benchmark/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_demo_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/demo/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_demo_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/demo/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_codecs_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/codecs/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_codecs_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/codecs/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_test-framework_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/test-framework/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_test-framework_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/test-framework/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_queries_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/queries/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_queries_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/queries/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_facet_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/facet/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_facet_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/facet/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_core_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/core/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_core_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/core/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_sandbox_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/sandbox/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_sandbox_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/sandbox/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_highlighter_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/highlighter/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_highlighter_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/highlighter/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_backward-codecs_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/backward-codecs/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_backward-codecs_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/backward-codecs/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_grouping_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/grouping/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_grouping_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/grouping/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_memory_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/memory/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_memory_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/memory/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_morfologik_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/morfologik/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_morfologik_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/morfologik/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_common_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/common/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_common_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/common/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_uima_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/uima/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_uima_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/uima/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_smartcn_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/smartcn/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_smartcn_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/smartcn/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_stempel_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/stempel/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_stempel_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/stempel/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_kuromoji_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/kuromoji/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_kuromoji_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/kuromoji/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_phonetic_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/phonetic/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_phonetic_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/phonetic/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_icu_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/icu/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_analysis_icu_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/analysis/icu/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_classification_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/classification/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_classification_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/classification/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial-extras_classes
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial-extras/classes
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] bridge module: lucene_build_spatial-extras_classes_java
+[Info] class dir: /home/jiayu/Desktop/real_world_repos/lucene/lucene/build/spatial-extras/classes/java
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+[Info] merged file written to: /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/soot_facts_merged.json
+[Info] total input files: 90
+[Info] merged methods: 47677
+[Info] duplicate function_uid count: 0
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-core_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-core_classes_java.json: 12918 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-solrj_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-solrj_classes_java.json: 4491 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-velocity_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-velocity_classes_java.json: 35 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-uima_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-uima_classes_java.json: 34 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-dataimporthandler_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-dataimporthandler_classes_java.json: 624 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-map-reduce_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-map-reduce_classes_java.json: 340 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-cell_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-cell_classes_java.json: 63 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-dataimporthandler-extras_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-dataimporthandler-extras_classes_java.json: 61 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-analytics_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-analytics_classes_java.json: 537 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-analysis-extras_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-analysis-extras_classes_java.json: 17 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-morphlines-cell_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-morphlines-cell_classes_java.json: 22 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-clustering_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-clustering_classes_java.json: 92 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-morphlines-core_classes.json: 71 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-morphlines-core_classes_java.json: 86 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-langid_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_contrib_solr-langid_classes_java.json: 34 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-test-framework_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/solr_build_solr-test-framework_classes_java.json: 966 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_replicator_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_replicator_classes_java.json: 244 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_join_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_join_classes_java.json: 505 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_queryparser_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_queryparser_classes_java.json: 1332 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_expressions_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_expressions_classes_java.json: 251 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_suggest_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_suggest_classes_java.json: 781 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial3d_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial3d_classes_java.json: 892 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_misc_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_misc_classes_java.json: 199 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_benchmark_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_benchmark_classes_java.json: 806 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial_classes_java.json: 184 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_demo_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_demo_classes_java.json: 67 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_codecs_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_codecs_classes_java.json: 1425 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_test-framework_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_test-framework_classes_java.json: 3217 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_queries_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_queries_classes_java.json: 963 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_facet_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_facet_classes_java.json: 552 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_core_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_core_classes_java.json: 10037 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_sandbox_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_sandbox_classes_java.json: 550 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_highlighter_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_highlighter_classes_java.json: 516 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_backward-codecs_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_backward-codecs_classes_java.json: 267 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_grouping_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_grouping_classes_java.json: 244 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_memory_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_memory_classes_java.json: 193 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_morfologik_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_morfologik_classes_java.json: 24 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_common_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_common_classes_java.json: 2571 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_uima_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_uima_classes_java.json: 35 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_smartcn_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_smartcn_classes_java.json: 100 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_stempel_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_stempel_classes_java.json: 98 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_kuromoji_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_kuromoji_classes_java.json: 311 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_phonetic_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_phonetic_classes_java.json: 27 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_icu_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_analysis_icu_classes_java.json: 131 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_classification_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_classification_classes_java.json: 78 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial-extras_classes.json: 0 methods
+[Info] /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/modules/lucene_build_spatial-extras_classes_java.json: 686 methods
+[Info] merged soot facts: /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/soot_facts_merged.json
+[Info] manifest: /home/jiayu/Desktop/real_world_repos/lucene/.repoaudit/lucene_bridge/module_manifest.tsv
+

@@ -1,0 +1,5 @@
+$ bash /home/jiayu/Desktop/JLeakDetector/real_world_test/generate_soot_fitnesse.sh /home/jiayu/Desktop/real_world_repos/fitnesse
+[Info] FitNesse class dir: /home/jiayu/Desktop/real_world_repos/fitnesse/classes
+[Info] FitNesse soot output: /home/jiayu/Desktop/real_world_repos/fitnesse/.repoaudit/soot_facts.json
+[OK] Generated FitNesse soot facts: /home/jiayu/Desktop/real_world_repos/fitnesse/.repoaudit/soot_facts.json
+

@@ -13,6 +13,12 @@
   "soot_bridge_jar": "tools/soot_bridge/target/soot-bridge-all.jar",
   "projects": [
     {
+      "name": "triplea",
+      "path": "~/Desktop/real_world_repos/triplea",
+      "java_home": "${JDK8_FX_HOME}",
+      "soot_strategy": "triplea_bridge"
+    },
+    {
       "name": "lucene",
       "path": "~/Desktop/real_world_repos/lucene",
       "java_home": "${JDK8_HOME}",

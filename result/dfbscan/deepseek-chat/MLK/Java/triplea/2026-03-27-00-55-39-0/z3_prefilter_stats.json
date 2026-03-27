@@ -1,0 +1,13 @@
+{
+    "total": 174,
+    "sat": 0,
+    "unsat": 0,
+    "unknown": 0,
+    "disabled": 174,
+    "skipped_by_unsat": 0,
+    "no_constraint": 0,
+    "parse_fail": 0,
+    "timeout": 0,
+    "unsupported_expr": 0,
+    "has_if_but_unmapped": 0
+}
