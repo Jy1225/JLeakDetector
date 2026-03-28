@@ -1,0 +1,1797 @@
+{
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+        "file_name": "CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+        "report_count": 1,
+        "report_ids": [
+            21
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01.bad()",
+                "method_start_line": 20,
+                "method_end_line": 63,
+                "source_lines": [
+                    28
+                ],
+                "report_ids": [
+                    21
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+        "file_name": "CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+        "report_count": 1,
+        "report_ids": [
+            6
+        ],
+        "method_count": 1,
+        "primary_defect_method": "helperBad",
+        "primary_defect_method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "helperBad",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.helperBad()",
+                "method_start_line": 17,
+                "method_end_line": 27,
+                "source_lines": [
+                    19
+                ],
+                "report_ids": [
+                    6
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "helperBad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+        "file_name": "CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+        "report_count": 1,
+        "report_ids": [
+            11
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01.bad()",
+                "method_start_line": 19,
+                "method_end_line": 62,
+                "source_lines": [
+                    37
+                ],
+                "report_ids": [
+                    11
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+        "file_name": "CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+        "report_count": 1,
+        "report_ids": [
+            12
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.bad()",
+                "method_start_line": 20,
+                "method_end_line": 62,
+                "source_lines": [
+                    27
+                ],
+                "report_ids": [
+                    12
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+        "file_name": "CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+        "report_count": 1,
+        "report_ids": [
+            4
+        ],
+        "method_count": 2,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()",
+                "method_start_line": 22,
+                "method_end_line": 85,
+                "source_lines": [
+                    32
+                ],
+                "report_ids": [
+                    4
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "good1",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.good1()",
+                "method_start_line": 87,
+                "method_end_line": 152,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "good1"
+        ],
+        "related_methods": [
+            "bad",
+            "good1"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+        "report_count": 2,
+        "report_ids": [
+            28,
+            31
+        ],
+        "method_count": 2,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_07.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_07.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 35,
+                "method_end_line": 66,
+                "source_lines": [
+                    42
+                ],
+                "report_ids": [
+                    31
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "good2",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_07.good2(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 116,
+                "method_end_line": 151,
+                "source_lines": [
+                    123
+                ],
+                "report_ids": [
+                    28
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "good2"
+        ],
+        "related_methods": [
+            "bad",
+            "good2"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java",
+        "report_count": 1,
+        "report_ids": [
+            0
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_08.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_08.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 43,
+                "method_end_line": 74,
+                "source_lines": [
+                    50
+                ],
+                "report_ids": [
+                    0
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java",
+        "report_count": 1,
+        "report_ids": [
+            24
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_09.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_09.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    24
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java",
+        "report_count": 1,
+        "report_ids": [
+            5
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_10.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_10.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    5
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+        "report_count": 1,
+        "report_ids": [
+            26
+        ],
+        "method_count": 2,
+        "primary_defect_method": "good2",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_11.good2(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_11.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "good2",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_11.good2(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 110,
+                "method_end_line": 145,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    26
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "bad"
+        ],
+        "related_methods": [
+            "bad",
+            "good2"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java",
+        "report_count": 1,
+        "report_ids": [
+            35
+        ],
+        "method_count": 2,
+        "primary_defect_method": "good1",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_12.good1(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_12.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 97,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "good1",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_12.good1(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 100,
+                "method_end_line": 172,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    35
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "bad"
+        ],
+        "related_methods": [
+            "bad",
+            "good1"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+        "report_count": 1,
+        "report_ids": [
+            19
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_13.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_13.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    19
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+        "report_count": 2,
+        "report_ids": [
+            27,
+            33
+        ],
+        "method_count": 2,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_14.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_14.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    27
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "good1",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_14.good1(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 63,
+                "method_end_line": 107,
+                "source_lines": [
+                    77
+                ],
+                "report_ids": [
+                    33
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "good1"
+        ],
+        "related_methods": [
+            "bad",
+            "good1"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+        "report_count": 1,
+        "report_ids": [
+            20
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_15.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_15.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 66,
+                "source_lines": [
+                    37
+                ],
+                "report_ids": [
+                    20
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java",
+        "report_count": 1,
+        "report_ids": [
+            1
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_16.bad(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_16.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 61,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    1
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+        "file_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+        "report_count": 2,
+        "report_ids": [
+            30,
+            32
+        ],
+        "method_count": 2,
+        "primary_defect_method": "good1",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_17.good1(HttpServletRequest,HttpServletResponse)",
+        "primary_confidence": 0.5338983050847458,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_17.bad(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 29,
+                "method_end_line": 60,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    30
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "good1",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_17.good1(HttpServletRequest,HttpServletResponse)",
+                "method_start_line": 63,
+                "method_end_line": 98,
+                "source_lines": [
+                    70
+                ],
+                "report_ids": [
+                    32
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "bad"
+        ],
+        "related_methods": [
+            "bad",
+            "good1"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_01.java",
+        "report_count": 1,
+        "report_ids": [
+            13
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_01.bad()",
+                "method_start_line": 27,
+                "method_end_line": 58,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    13
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_02.java",
+        "report_count": 1,
+        "report_ids": [
+            22
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_02.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_02.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    22
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_03.java",
+        "report_count": 1,
+        "report_ids": [
+            9
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_03.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_03.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    9
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_04.java",
+        "report_count": 1,
+        "report_ids": [
+            16
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_04.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_04.bad()",
+                "method_start_line": 34,
+                "method_end_line": 63,
+                "source_lines": [
+                    41
+                ],
+                "report_ids": [
+                    16
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_05.java",
+        "report_count": 1,
+        "report_ids": [
+            25
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_05.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_05.bad()",
+                "method_start_line": 34,
+                "method_end_line": 63,
+                "source_lines": [
+                    41
+                ],
+                "report_ids": [
+                    25
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_06.java",
+        "report_count": 1,
+        "report_ids": [
+            15
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_06.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_06.bad()",
+                "method_start_line": 33,
+                "method_end_line": 62,
+                "source_lines": [
+                    40
+                ],
+                "report_ids": [
+                    15
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_07.java",
+        "report_count": 1,
+        "report_ids": [
+            2
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_07.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_07.bad()",
+                "method_start_line": 33,
+                "method_end_line": 62,
+                "source_lines": [
+                    40
+                ],
+                "report_ids": [
+                    2
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_08.java",
+        "report_count": 1,
+        "report_ids": [
+            17
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_08.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_08.bad()",
+                "method_start_line": 41,
+                "method_end_line": 70,
+                "source_lines": [
+                    48
+                ],
+                "report_ids": [
+                    17
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_09.java",
+        "report_count": 1,
+        "report_ids": [
+            38
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_09.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_09.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    38
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_10.java",
+        "report_count": 1,
+        "report_ids": [
+            3
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_10.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_10.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    3
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_11.java",
+        "report_count": 1,
+        "report_ids": [
+            8
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_11.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_11.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    8
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_13.java",
+        "report_count": 1,
+        "report_ids": [
+            36
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_13.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_13.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    36
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_14.java",
+        "report_count": 1,
+        "report_ids": [
+            10
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_14.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_14.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    10
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_15.java",
+        "report_count": 1,
+        "report_ids": [
+            14
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_15.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_15.bad()",
+                "method_start_line": 27,
+                "method_end_line": 62,
+                "source_lines": [
+                    35
+                ],
+                "report_ids": [
+                    14
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_16.java",
+        "report_count": 1,
+        "report_ids": [
+            34
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_16.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_16.bad()",
+                "method_start_line": 27,
+                "method_end_line": 57,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    34
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java",
+        "file_name": "CWE459_Incomplete_Cleanup__temp_file_17.java",
+        "report_count": 1,
+        "report_ids": [
+            18
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_17.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_17.bad()",
+                "method_start_line": 27,
+                "method_end_line": 56,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    18
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+        "file_name": "CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+        "report_count": 1,
+        "report_ids": [
+            37
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.bad()",
+                "method_start_line": 20,
+                "method_end_line": 42,
+                "source_lines": [
+                    26
+                ],
+                "report_ids": [
+                    37
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+        "file_name": "CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+        "report_count": 1,
+        "report_ids": [
+            7
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()",
+                "method_start_line": 21,
+                "method_end_line": 49,
+                "source_lines": [
+                    31
+                ],
+                "report_ids": [
+                    7
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+        "file_name": "CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+        "report_count": 1,
+        "report_ids": [
+            23
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.bad()",
+                "method_start_line": 20,
+                "method_end_line": 38,
+                "source_lines": [
+                    27
+                ],
+                "report_ids": [
+                    23
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+        "file_name": "CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+        "report_count": 1,
+        "report_ids": [
+            29
+        ],
+        "method_count": 1,
+        "primary_defect_method": "bad",
+        "primary_defect_method_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.bad()",
+                "method_start_line": 19,
+                "method_end_line": 38,
+                "source_lines": [
+                    25
+                ],
+                "report_ids": [
+                    29
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "bad"
+        ]
+    },
+    "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/IO.java": {
+        "file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/IO.java",
+        "file_name": "IO.java",
+        "report_count": 1,
+        "report_ids": [
+            39
+        ],
+        "method_count": 3,
+        "primary_defect_method": "getDBConnection",
+        "primary_defect_method_uid": "juliet.support.IO.getDBConnection()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getDBConnection",
+                "method_uid": "juliet.support.IO.getDBConnection()",
+                "method_start_line": 44,
+                "method_end_line": 46,
+                "source_lines": [
+                    45
+                ],
+                "report_ids": [
+                    39
+                ],
+                "report_count": 1,
+                "helper_like": true,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 24.0
+            },
+            {
+                "method_name": "bad",
+                "method_uid": "juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01.bad()",
+                "method_start_line": 22,
+                "method_end_line": 85,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "bad",
+                "method_uid": "testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01.bad()",
+                "method_start_line": 21,
+                "method_end_line": 49,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "bad"
+        ],
+        "related_methods": [
+            "bad",
+            "getDBConnection"
+        ]
+    }
+}

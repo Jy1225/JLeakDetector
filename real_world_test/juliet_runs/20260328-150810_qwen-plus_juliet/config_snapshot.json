@@ -16,7 +16,7 @@
     ]
   },
   "juliet": {
-    "enabled": false,
+    "enabled": true,
     "dataset_root": "benchmark/Java/toy",
     "java_home": "${JDK8_HOME}",
     "bug_type": "MLK",
