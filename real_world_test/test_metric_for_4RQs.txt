@@ -1,44 +1,78 @@
-RQ1:工具效果如何?与其他工具相比怎样?
+﻿RQ1:工具效果如何？与其他工具相比怎样？
 1、用来对比的工具：
-与PMD和spotbugs进行比较。
+与 PMD 和 SpotBugs 进行比较。
 
 2、衡量当前工具和其他工具效果所用的指标有哪些：
+在研究设计上，将实验分成两部分：
+
+（1）Juliet 测试集：
+使用 Juliet 测试集对严格分类指标进行分析，统计：
+TP：正确报告 bad case
+FP：错误报告 good case
+FN：漏报 bad case
+TN：未报告 good case
+precision（P）：TP / (TP + FP)
+recall（R）：TP / (TP + FN)
+F1-score：2PR / (P + R)
+
+（2）JLeaks 真实项目：
+由于无法对基准 bug 之外的所有报告进行人工确认，所以不再使用 FP / TN / P / F1 作为真实项目主指标。
+真实项目部分仅保留两个代表性项目进行工程可用性分析：
+- triplea-game/triplea
+- unclebob/fitnesse
+
+在真实项目测试中，采用如下指标：
 TP_known：命中基准集中已知 bug
 FN：基准中的 bug 没被命中
-TP_new：不在基准中，但人工确认是真 bug
-FP：人工确认是假阳性
-precision（P）：(TP_known + TP_new) / (TP_known + TP_new + FP) 报出来的问题里有多少是真的
-recall（R）：TP_known / (TP_known + FN) 已知真实 bug 中有多少被找到了
-F1-score：2PR / (P + R)	平衡 precision 和 recall
+recall_known：命中基准 bug 占全部基准 bug 的比率
+raw_report_count：detect_info_raw.json 中原始报告数量
+issue_count：detect_info.json 中聚合去重后的 issue 数量
+reduction_ratio：(raw_report_count - issue_count) / raw_report_count
+inspection_burden：人工检验负担，即需要人工检验的候选 issue 数量 / 基准 bug 数量
+Top-k% Recall：按 detect_info 中的排序，前 k% 候选 issue 覆盖的基准 bug 比例
+MRR：按 detect_info 中的排序，基准 bug 第一次被命中的平均倒数排名
+non-benchmark issue Jaccard：不同重复运行之间，基准 bug 之外候选 issue 集合的一致性
 
-RQ2:时间和token成本是多少？
+RQ2:时间和 token 成本是多少？
 1、方法：
 在测试时进行统计。
 
-我们还需要实现能够在测试时对时间和所花费token进行统计的代码逻辑
+我们还需要实现能够在测试时对时间和所花费 token 进行统计的代码逻辑。
 
 2、指标：
 （1）不同项目各自的运行时间
-（2）不同项目下平均命中每个真实bug的耗时
+（2）不同项目下平均命中每个真实 bug 的耗时
 （3）所有测试项目平均运行时间
-（4）所有测试项目平均命中每个真实bug的耗时
-（5）不同项目输入token总数
-（6）不同项目输出token总数
-（7）不同项目总token消耗
-（8）不同项目下平均命中每个真实bug需要的token数量
-（9）所有测试项目平均总token消耗
-（10）所有测试项目平均命中每个真实bug需要的token数量
+（4）所有测试项目平均命中每个真实 bug 的耗时
+（5）不同项目输入 token 总数
+（6）不同项目输出 token 总数
+（7）不同项目总 token 消耗
+（8）不同项目下平均命中每个真实 bug 需要的 token 数量
+（9）所有测试项目平均总 token 消耗
+（10）所有测试项目平均命中每个真实 bug 需要的 token 数量
+
+说明：
+- Juliet 部分可统计每种配置下的总时间 / 总 token 成本
+- 真实项目部分重点统计 triplea 和 fitnesse 的运行时间与 token 成本
+- 对真实项目，额外统计 time_per_TP_known 和 tokens_per_TP_known
 
 RQ3:不同大语言模型、不同参数上的表现如何？
-调用不同模型的api以及同一模型的不同参数进行测试，比较如下指标：
-precision（P）、recall（R）、F1-score、
-所有测试项目平均运行时间、所有测试项目平均每个真实bug的耗时、
-所有测试项目平均总token消耗、所有测试项目平均每个真实bug需要的token数量
+调用不同模型的 API 以及同一模型的不同参数进行测试，比较对应的指标以及：
+（1）Juliet 上的 TP / FP / TN / FN、Precision、Recall、F1、Specificity、MCC
+（2）真实项目上的 recall_known、Top-k% Recall、MRR、raw_report_count、issue_count、reduction_ratio、inspection_burden
+（3）所有测试项目平均运行时间、所有测试项目平均每个真实 bug 的耗时
+（4）所有测试项目平均总 token 消耗、所有测试项目平均每个真实 bug 需要的 token 数量
 
 RQ4:不同模块对工具效果的影响如何？
 进行消融实验。可供消融实验比较的有如下核心模块：
-（1）soot bridge去除
-（2）issue-first去除
-（3）soot bridge和issue-first一起去除
+（1）soot bridge 去除
+（2）issue-first 去除
+（3）soot bridge 和 issue-first 一起去除
+
+在 Juliet 上：
+- 比较 TP / FP / TN / FN 以及 Precision / Recall / F1 的变化
+
+在真实项目上：
+- 比较 recall_known、Top-k% Recall、MRR、raw_report_count、issue_count、reduction_ratio、inspection_burden、时间成本、token 成本的变化
 
 将得到的指标进行统计学上的比较即可，得出一系列结论。
