@@ -30,6 +30,11 @@ OPENAI_COMPATIBLE_PROVIDERS: Dict[str, Dict[str, object]] = {
         "base_url": "https://api.moonshot.cn/v1",
         "timeout": 180,
     },
+    "doubao": {
+        "env_keys": ["ARK_API_KEY", "DOUBAO_API_KEY", "VOLCENGINE_API_KEY"],
+        "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+        "timeout": 120,
+    },
 }
 
 MODEL_FAMILY_TOKENIZER: Dict[str, str] = {
@@ -38,9 +43,15 @@ MODEL_FAMILY_TOKENIZER: Dict[str, str] = {
     "deepseek": "o200k_base",
     "qwen": "o200k_base",
     "kimi": "o200k_base",
+    "doubao": "o200k_base",
     "claude": "cl100k_base",
     "gemini": "o200k_base",
     "unknown": "cl100k_base",
+}
+
+MODEL_NAME_ALIASES: Dict[str, str] = {
+    "doubao-seed-2.0-mini": "doubao-seed-2-0-mini-250821",
+    "doubao-seed-2-0-mini": "doubao-seed-2-0-mini-250821",
 }
 
 
@@ -63,9 +74,9 @@ class LLM:
         system_role: str = "You are an experienced programmer and good at understanding programs written in mainstream programming languages.",
         max_output_length: int = 4096,
     ) -> None:
-        self.online_model_name = online_model_name
-        self.normalized_model_name = online_model_name.strip().lower()
-        self.model_family = self._identify_model_family(online_model_name)
+        self.online_model_name = self._resolve_model_alias(online_model_name)
+        self.normalized_model_name = self.online_model_name.strip().lower()
+        self.model_family = self._identify_model_family(self.online_model_name)
         self.token_count_mode = "model_family_estimated"
         self.token_encoding_name = MODEL_FAMILY_TOKENIZER.get(
             self.model_family, MODEL_FAMILY_TOKENIZER["unknown"]
@@ -87,6 +98,8 @@ class LLM:
             output, usage_info = self.infer_with_gemini(message)
         elif self.model_family == "qwen":
             output, usage_info = self.infer_with_qwen_model(message)
+        elif self.model_family == "doubao":
+            output, usage_info = self.infer_with_doubao_model(message)
         elif self.model_family == "kimi":
             output, usage_info = self.infer_with_kimi_model(message)
         elif self.model_family == "openai-gpt":
@@ -132,6 +145,8 @@ class LLM:
             return "gemini"
         if "qwen" in normalized_name:
             return "qwen"
+        if "doubao" in normalized_name:
+            return "doubao"
         if "kimi" in normalized_name or "moonshot" in normalized_name:
             return "kimi"
         if "deepseek" in normalized_name:
@@ -143,6 +158,10 @@ class LLM:
         if "gpt" in normalized_name:
             return "openai-gpt"
         return "unknown"
+
+    def _resolve_model_alias(self, model_name: str) -> str:
+        normalized_name = model_name.strip().lower()
+        return MODEL_NAME_ALIASES.get(normalized_name, model_name)
 
     def _build_token_encoder(self, encoding_name: str):
         try:
@@ -336,6 +355,21 @@ class LLM:
         provider_config = OPENAI_COMPATIBLE_PROVIDERS["kimi"]
         api_key = self._get_required_api_key(
             provider_config["env_keys"], "Kimi / Moonshot"
+        )
+        return self._infer_with_openai_compatible_model(
+            message=message,
+            api_key=api_key,
+            base_url=provider_config["base_url"],
+            timeout=provider_config["timeout"],
+        )
+
+    def infer_with_doubao_model(
+        self, message: str
+    ) -> Tuple[str, Optional[Dict[str, object]]]:
+        """Infer using a Doubao model via Volcengine Ark OpenAI-compatible API."""
+        provider_config = OPENAI_COMPATIBLE_PROVIDERS["doubao"]
+        api_key = self._get_required_api_key(
+            provider_config["env_keys"], "Doubao / Volcengine Ark"
         )
         return self._infer_with_openai_compatible_model(
             message=message,

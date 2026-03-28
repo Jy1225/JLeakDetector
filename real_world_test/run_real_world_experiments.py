@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 SRC_DIR = REPO_ROOT / "src"
 DEFAULT_CONFIG = BASE_DIR / "experiment_config.json"
+REAL_WORLD_TOPK_PERCENTAGES = "5,10,20,50"
 
 
 VARIANTS = [
@@ -227,8 +228,6 @@ def _latest_new_result_dir(before: List[Path], after: List[Path]) -> Optional[Pa
     new_dirs = [p for p in after if p.resolve() not in before_set]
     if new_dirs:
         return sorted(new_dirs, key=lambda p: p.name)[-1]
-    if after:
-        return sorted(after, key=lambda p: p.name)[-1]
     return None
 
 
@@ -481,6 +480,28 @@ def _write_run_meta(result_dir: Path, payload: Dict[str, object]) -> None:
     _write_json(result_dir / "experiment_run_meta.json", payload)
 
 
+def _write_single_real_world_metrics(
+    result_dir: Path,
+    *,
+    dry_run: bool,
+    log_file: Path,
+) -> None:
+    _run_command(
+        [
+            sys.executable,
+            str(BASE_DIR / "summarize_real_world_metrics.py"),
+            "--result-dir",
+            str(result_dir),
+            "--topk-percentages",
+            REAL_WORLD_TOPK_PERCENTAGES,
+        ],
+        cwd=REPO_ROOT,
+        env=dict(os.environ),
+        log_file=log_file,
+        dry_run=dry_run,
+    )
+
+
 def _execute_one_run(
     config: Dict[str, object],
     project: ProjectConfig,
@@ -580,6 +601,7 @@ def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
         _ensure_file(_resolve_repo_path(str(config["run_repoaudit_script"])), "run_repoaudit.sh")
         _ensure_file(_resolve_repo_path(str(config["review_builder_script"])), "review builder script")
         _ensure_file(_resolve_repo_path(str(config["review_benchmark_xlsx"])), "review benchmark xlsx")
+        _ensure_file(BASE_DIR / "summarize_real_world_metrics.py", "real-world metrics summarizer")
         _ensure_file(_resolve_repo_path(str(config["soot_bridge_jar"])), "soot bridge jar")
         for project in projects:
             _ensure_file(project.path, f"project path for {project.name}")
@@ -683,6 +705,12 @@ def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
                 ledger_rows.append(row)
                 _write_json(ledger_dir / "experiment_runs.json", {"runs": ledger_rows})
                 _append_ledger_csv(ledger_dir / "experiment_runs.csv", ledger_rows)
+                if row["status"] == "success" and row["result_dir"] != "":
+                    _write_single_real_world_metrics(
+                        Path(str(row["result_dir"])),
+                        dry_run=dry_run,
+                        log_file=log_file,
+                    )
                 if row["status"] != "success" and not dry_run:
                     print(f"[Warn] run failed: {row['error_message']}")
 

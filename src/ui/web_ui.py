@@ -130,6 +130,7 @@ def display_results():
             "qwen-turbo",
             "qwen-max",
             "qwen-plus",
+            "doubao-seed-2.0-mini",
             "kimi-k2.5",
             "kimi-k2",
             "kimi-k2-thinking",
