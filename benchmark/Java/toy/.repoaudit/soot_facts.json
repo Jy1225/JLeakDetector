@@ -1,6 +1,6 @@
 {
   "generator": "soot-bridge",
-  "generated_at": 1773485715663,
+  "generated_at": 1774678261378,
   "line_mode": "absolute",
   "methods": {
     "MLKCase12_CloseableLeakByAssign.\u003cinit\u003e()": {
@@ -295,11 +295,11 @@
             11
           ],
           "true_unreachable": false,
-          "false_unreachable": true,
+          "false_unreachable": false,
           "true_unreachable_reason": "",
-          "false_unreachable_reason": "path_constraint_conflict",
-          "unreachable_reason": "path_constraint_conflict",
-          "proof_kind": "hard"
+          "false_unreachable_reason": "",
+          "unreachable_reason": "",
+          "proof_kind": "none"
         }
       ],
       "close_sites": [

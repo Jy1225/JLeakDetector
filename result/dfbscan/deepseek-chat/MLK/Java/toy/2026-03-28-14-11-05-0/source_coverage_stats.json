@@ -1,0 +1,271 @@
+{
+    "total_java_files": 44,
+    "files_with_sources": 38,
+    "files_without_sources": 6,
+    "coverage_ratio": 0.8636363636363636,
+    "total_sources": 116,
+    "source_count_by_confidence": {
+        "high": 22,
+        "medium": 94,
+        "low": 0
+    },
+    "source_count_by_origin": {
+        "acquire": 2,
+        "factory": 94,
+        "new": 20
+    },
+    "zero_source_files": [
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletRequest.java",
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletResponse.java",
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCase.java",
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCaseServlet.java",
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/AbstractTestCase.java",
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/IO.java"
+    ],
+    "source_count_by_file": {
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java": 6,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_12.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java": 3,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java": 6,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java": 4,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java": 2,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletRequest.java": 0,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletResponse.java": 0,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCase.java": 0,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCaseServlet.java": 0,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/IO.java": 1,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/AbstractTestCase.java": 0,
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/IO.java": 0
+    },
+    "source_lines_by_file": {
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java": [
+            28,
+            29,
+            73,
+            74
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java": [
+            19,
+            39
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java": [
+            37,
+            82
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java": [
+            27,
+            28,
+            71,
+            72
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java": [
+            32,
+            33,
+            36,
+            97,
+            98,
+            101
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java": [
+            42,
+            83,
+            123
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java": [
+            50,
+            91,
+            131
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java": [
+            36,
+            77,
+            117
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java": [
+            36,
+            77,
+            117
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java": [
+            36,
+            77,
+            117
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java": [
+            36,
+            67,
+            107,
+            142
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java": [
+            36,
+            77,
+            117
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java": [
+            36,
+            77,
+            117
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java": [
+            37,
+            81,
+            121
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java": [
+            36,
+            71
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java": [
+            36,
+            70
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java": [
+            34,
+            72
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java": [
+            41,
+            80,
+            116
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java": [
+            41,
+            80,
+            116
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java": [
+            40,
+            79,
+            115
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java": [
+            40,
+            79,
+            115
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java": [
+            48,
+            87,
+            123
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_12.java": [
+            34,
+            63,
+            99,
+            129
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java": [
+            34,
+            73,
+            109
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java": [
+            35,
+            77,
+            112
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java": [
+            34,
+            67
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java": [
+            34,
+            66
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java": [
+            26,
+            27,
+            50,
+            51
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java": [
+            31,
+            32,
+            35,
+            61,
+            62,
+            65
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java": [
+            27,
+            28,
+            47,
+            48
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java": [
+            25,
+            46
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletRequest.java": [],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/javax/servlet/http/HttpServletResponse.java": [],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCase.java": [],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/AbstractTestCaseServlet.java": [],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/juliet/support/IO.java": [
+            45
+        ],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/AbstractTestCase.java": [],
+        "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/testcasesupport/IO.java": []
+    }
+}
