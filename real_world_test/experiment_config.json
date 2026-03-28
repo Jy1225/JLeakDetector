@@ -6,23 +6,57 @@
   "bug_type": "MLK",
   "language": "Java",
   "repeat_count": 3,
-  "projects_root": "~/Desktop/real_world_repos",
   "run_repoaudit_script": "src/run_repoaudit.sh",
   "review_builder_script": "real_world_test/build_review_units_excel.py",
   "review_benchmark_xlsx": "real_world_test/selected_real_world_projects.xlsx",
   "soot_bridge_jar": "tools/soot_bridge/target/soot-bridge-all.jar",
-  "projects": [   
-    {
-    "name": "triplea",
-    "path": "~/Desktop/real_world_repos/triplea",
-    "java_home": "${JDK8_FX_HOME}",
-    "soot_strategy": "triplea_bridge"
-    },
-    {
-      "name": "fitnesse",
-      "path": "~/Desktop/real_world_repos/fitnesse",
-      "java_home": "${JDK8_HOME}",
-      "soot_strategy": "fitnesse_bridge"
-    }
-  ]
+  "real_world": {
+    "projects_root": "~/Desktop/real_world_repos",
+    "projects": [
+      {
+        "name": "triplea",
+        "path": "~/Desktop/real_world_repos/triplea",
+        "java_home": "${JDK8_FX_HOME}",
+        "soot_strategy": "triplea_bridge"
+      },
+      {
+        "name": "fitnesse",
+        "path": "~/Desktop/real_world_repos/fitnesse",
+        "java_home": "${JDK8_HOME}",
+        "soot_strategy": "fitnesse_bridge"
+      }
+    ]
+  },
+  "juliet": {
+    "enabled": false,
+    "dataset_root": "benchmark/Java/toy",
+    "java_home": "${JDK8_HOME}",
+    "bug_type": "MLK",
+    "language": "Java",
+    "repeat_count": 3,
+    "soot_strategy": "bridge",
+    "variants": [
+      {
+        "name": "baseline",
+        "enable_soot": true,
+        "issue_first": true
+      },
+      {
+        "name": "no_soot",
+        "enable_soot": false,
+        "issue_first": true
+      },
+      {
+        "name": "no_issue_first",
+        "enable_soot": true,
+        "issue_first": false
+      },
+      {
+        "name": "no_soot_no_issue_first",
+        "enable_soot": false,
+        "issue_first": false
+      }
+    ],
+    "notes": "Juliet execution uses the toy Java benchmark root because the MLK CWE cases and supporting classes are organized under benchmark/Java/toy."
+  }
 }
