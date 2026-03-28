@@ -57,6 +57,18 @@ class ProjectConfig:
     soot_strategy: str
 
 
+@dataclass
+class JulietConfig:
+    enabled: bool
+    dataset_root: Path
+    java_home: Optional[Path]
+    bug_type: str
+    language: str
+    repeat_count: int
+    soot_strategy: str
+    variants: List[Dict[str, object]]
+
+
 def _expand_path(raw: str) -> Path:
     expanded = os.path.expandvars(os.path.expanduser(raw))
     return Path(expanded).resolve()
@@ -75,9 +87,18 @@ def _load_config(config_path: Path) -> Dict[str, object]:
         return json.load(f)
 
 
+def _real_world_section(config: Dict[str, object]) -> Dict[str, object]:
+    section = config.get("real_world")
+    if isinstance(section, dict):
+        return section
+    # backward compatibility
+    return {"projects": config.get("projects", []), "projects_root": config.get("projects_root", "")}
+
+
 def _build_project_configs(config: Dict[str, object]) -> List[ProjectConfig]:
+    section = _real_world_section(config)
     projects = []
-    for item in config.get("projects", []):
+    for item in section.get("projects", []):
         if not isinstance(item, dict):
             continue
         java_home_raw = str(item.get("java_home", "") or "").strip()
@@ -93,7 +114,32 @@ def _build_project_configs(config: Dict[str, object]) -> List[ProjectConfig]:
     return projects
 
 
-def _validate_config(config: Dict[str, object], projects: Sequence[ProjectConfig]) -> None:
+def _build_juliet_config(config: Dict[str, object]) -> Optional[JulietConfig]:
+    section = config.get("juliet")
+    if not isinstance(section, dict):
+        return None
+    java_home_raw = str(section.get("java_home", "") or "").strip()
+    java_home = _expand_path(java_home_raw) if java_home_raw != "" else None
+    variants = section.get("variants", [])
+    if not isinstance(variants, list):
+        variants = []
+    return JulietConfig(
+        enabled=bool(section.get("enabled", False)),
+        dataset_root=_resolve_repo_path(str(section.get("dataset_root", ""))),
+        java_home=java_home,
+        bug_type=str(section.get("bug_type", config.get("bug_type", "MLK"))),
+        language=str(section.get("language", config.get("language", "Java"))),
+        repeat_count=int(section.get("repeat_count", 1)),
+        soot_strategy=str(section.get("soot_strategy", "ts-fallback")),
+        variants=[v for v in variants if isinstance(v, dict)],
+    )
+
+
+def _validate_config(
+    config: Dict[str, object],
+    projects: Sequence[ProjectConfig],
+    juliet_config: Optional[JulietConfig],
+) -> None:
     required_keys = [
         "model_name",
         "temperature",
@@ -110,8 +156,8 @@ def _validate_config(config: Dict[str, object], projects: Sequence[ProjectConfig
     for key in required_keys:
         if key not in config:
             raise KeyError(f"Missing config key: {key}")
-    if len(projects) == 0:
-        raise ValueError("No projects configured")
+    if len(projects) == 0 and not (juliet_config and juliet_config.enabled):
+        raise ValueError("No real-world projects configured and Juliet is disabled")
 
 
 def _timestamp() -> str:
@@ -528,7 +574,8 @@ def _execute_one_run(
 def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
     config = _load_config(config_path)
     projects = _build_project_configs(config)
-    _validate_config(config, projects)
+    juliet_config = _build_juliet_config(config)
+    _validate_config(config, projects, juliet_config)
     if not dry_run:
         _ensure_file(_resolve_repo_path(str(config["run_repoaudit_script"])), "run_repoaudit.sh")
         _ensure_file(_resolve_repo_path(str(config["review_builder_script"])), "review builder script")
@@ -539,6 +586,13 @@ def run_experiments(config_path: Path, *, dry_run: bool = False) -> Path:
             if project.java_home is not None:
                 _ensure_file(project.java_home / "bin" / "java", f"java binary for {project.name}")
                 _ensure_file(project.java_home / "bin" / "javac", f"javac binary for {project.name}")
+        if juliet_config is not None and juliet_config.enabled:
+            print("[Info] Juliet section detected in config.")
+            print("[Info] Current run_real_world_experiments.py still focuses on the real_world section only.")
+            print("[Info] Suggested future extension for Juliet:")
+            print("       1) compile / prepare Juliet dataset root")
+            print("       2) run the same 4 variants defined under juliet.variants")
+            print("       3) export TP/FP/TN/FN + Precision/Recall/F1/MCC")
     controller_run_id = f"{_timestamp()}_{config['model_name']}"
     ledger_dir = BASE_DIR / "experiment_runs" / controller_run_id
     ledger_dir.mkdir(parents=True, exist_ok=True)
