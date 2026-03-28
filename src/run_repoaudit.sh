@@ -8,7 +8,7 @@ IFS=$'\n\t'
 # Use REPOAUDIT_LANGUAGE for overriding scan language.
 ANALYSIS_LANGUAGE="${REPOAUDIT_LANGUAGE:-Java}"
 MODEL="${MODEL:-deepseek-chat}"  # e.g. deepseek-chat, qwen3.5-plus, kimi-k2.5
-DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-jleaks_mlk_198}"
+DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-toy}"
 DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="${SCAN_TYPE:-dfbscan}"
 REPOAUDIT_TEMPERATURE="${REPOAUDIT_TEMPERATURE:-0.0}"

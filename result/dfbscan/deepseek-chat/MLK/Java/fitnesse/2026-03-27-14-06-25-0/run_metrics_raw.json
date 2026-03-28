@@ -1,0 +1,62 @@
+{
+    "schema_version": "1.0",
+    "project_name": "fitnesse",
+    "project_path": "/home/jiayu/Desktop/real_world_repos/fitnesse",
+    "model_name": "deepseek-chat",
+    "language": "Java",
+    "bug_type": "MLK",
+    "run_id": "2026-03-27-14-06-25-0",
+    "result_dir": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/deepseek-chat/MLK/Java/fitnesse/2026-03-27-14-06-25-0",
+    "log_dir": "/home/jiayu/Desktop/JLeakDetector/log/dfbscan/deepseek-chat/MLK/Java/fitnesse/2026-03-27-14-06-25-0",
+    "timing": {
+        "pipeline_total_sec": 326.27,
+        "soot_facts_generation_sec": 0.0,
+        "scan_total_sec": 251.035
+    },
+    "llm_usage": {
+        "model_name": "deepseek-chat",
+        "model_family": "deepseek",
+        "token_count_mode": "provider_usage",
+        "token_encoding_name": "o200k_base",
+        "input_tokens": 224845,
+        "output_tokens": 79455,
+        "total_tokens": 304300,
+        "provider_total_tokens": 304300,
+        "reasoning_tokens": 0,
+        "prompt_cache_hit_tokens": 200192,
+        "prompt_cache_miss_tokens": 24653,
+        "query_count": 273,
+        "tool_breakdown": {
+            "IntraDataFlowAnalyzer": {
+                "tool_name": "IntraDataFlowAnalyzer",
+                "model_name": "deepseek-chat",
+                "model_family": "deepseek",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 120822,
+                "output_tokens": 64454,
+                "total_tokens": 185276,
+                "provider_total_tokens": 185276,
+                "reasoning_tokens": 0,
+                "prompt_cache_hit_tokens": 111232,
+                "prompt_cache_miss_tokens": 9590,
+                "query_count": 137
+            },
+            "PathValidator": {
+                "tool_name": "PathValidator",
+                "model_name": "deepseek-chat",
+                "model_family": "deepseek",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 104023,
+                "output_tokens": 15001,
+                "total_tokens": 119024,
+                "provider_total_tokens": 119024,
+                "reasoning_tokens": 0,
+                "prompt_cache_hit_tokens": 88960,
+                "prompt_cache_miss_tokens": 15063,
+                "query_count": 136
+            }
+        }
+    }
+}

@@ -1,6 +1,0 @@
-{
-    "name": "triplea",
-    "path": "~/Desktop/real_world_repos/triplea",
-    "java_home": "${JDK8_FX_HOME}",
-    "soot_strategy": "triplea_bridge"
-},
