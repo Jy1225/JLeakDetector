@@ -5,6 +5,7 @@ import argparse
 import csv
 import json
 import math
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -307,6 +308,47 @@ def _load_ledger_rows(experiment_run_dir: Path) -> List[Dict[str, object]]:
     return result
 
 
+def _load_result_dir_row(result_dir: Path) -> Dict[str, object]:
+    meta_path = result_dir / "experiment_run_meta.json"
+    if meta_path.exists():
+        meta = _load_json(meta_path)
+    else:
+        meta = {}
+
+    project_name = _normalize_text(meta.get("project_name")) or result_dir.parent.name
+    controller_run_id = _normalize_text(meta.get("controller_run_id")) or f"imported_{project_name}"
+    variant = _normalize_text(meta.get("variant")) or "unknown"
+    repeat_index = _safe_int(meta.get("repeat_index"), default=0)
+
+    return {
+        "controller_run_id": controller_run_id,
+        "project_name": project_name,
+        "variant": variant,
+        "repeat_index": repeat_index,
+        "result_dir": str(result_dir.resolve()),
+        "status": "success",
+    }
+
+
+def _collect_result_rows_from_roots(result_roots: Sequence[Path]) -> List[Dict[str, object]]:
+    rows: List[Dict[str, object]] = []
+    for root in result_roots:
+        if not root.exists():
+            raise FileNotFoundError(f"Result root not found: {root}")
+        for child in sorted(root.iterdir()):
+            if not child.is_dir():
+                continue
+            if not (child / "review_units.xlsx").exists():
+                continue
+            if not (child / "run_metrics_raw.json").exists():
+                continue
+            if not (child / "detect_info.json").exists():
+                continue
+            rows.append(_load_result_dir_row(child))
+    rows.sort(key=lambda row: (_normalize_text(row.get("project_name")), _normalize_text(row.get("variant")), _safe_int(row.get("repeat_index")), _normalize_text(row.get("result_dir"))))
+    return rows
+
+
 def _attach_nonbenchmark_jaccard(run_metrics: List[RunMetrics]) -> None:
     grouped: Dict[Tuple[str, str], List[RunMetrics]] = defaultdict(list)
     for item in run_metrics:
@@ -407,10 +449,16 @@ def _aggregate_group(
 
 
 def summarize_real_world_metrics(
-    experiment_run_dir: Path,
+    experiment_run_dir: Optional[Path],
     topk_percentages: Sequence[int],
+    ledger_rows_override: Optional[Sequence[Dict[str, object]]] = None,
 ) -> Tuple[List[RunMetrics], List[Dict[str, object]]]:
-    ledger_rows = _load_ledger_rows(experiment_run_dir)
+    if ledger_rows_override is not None:
+        ledger_rows = [dict(row) for row in ledger_rows_override]
+    else:
+        if experiment_run_dir is None:
+            raise ValueError("experiment_run_dir is required when ledger_rows_override is not provided")
+        ledger_rows = _load_ledger_rows(experiment_run_dir)
     run_metrics = [_load_run_metrics(row, topk_percentages) for row in ledger_rows]
     _attach_nonbenchmark_jaccard(run_metrics)
 
@@ -439,14 +487,73 @@ def _write_csv(path: Path, rows: Sequence[Dict[str, object]]) -> None:
         writer.writerows(rows)
 
 
+def _write_metrics_outputs(
+    output_dir: Path,
+    run_metrics: Sequence[RunMetrics],
+    summary_rows: Sequence[Dict[str, object]],
+    topk_percentages: Sequence[int],
+) -> None:
+    per_run_rows = [_run_metrics_to_row(item, topk_percentages) for item in run_metrics]
+
+    per_run_json = output_dir / "real_world_metrics_per_run.json"
+    per_run_csv = output_dir / "real_world_metrics_per_run.csv"
+    summary_json = output_dir / "real_world_metrics_summary.json"
+    summary_csv = output_dir / "real_world_metrics_summary.csv"
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(per_run_json, "w", encoding="utf-8") as f:
+        json.dump({"runs": per_run_rows}, f, indent=2, ensure_ascii=False)
+    _write_csv(per_run_csv, per_run_rows)
+
+    with open(summary_json, "w", encoding="utf-8") as f:
+        json.dump({"summary": list(summary_rows)}, f, indent=2, ensure_ascii=False)
+    _write_csv(summary_csv, summary_rows)
+
+
+def _write_single_result_output(
+    result_dir: Path,
+    run_metric: RunMetrics,
+    topk_percentages: Sequence[int],
+    output_json: Optional[Path] = None,
+) -> Path:
+    output_path = output_json if output_json is not None else (result_dir / "real_world_metrics.json")
+    payload = {
+        "schema_version": "1.0",
+        "result_dir": str(result_dir.resolve()),
+        "metrics": _run_metrics_to_row(run_metric, topk_percentages),
+    }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+    return output_path
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Summarize real-world RepoAudit metrics from experiment_runs."
     )
-    parser.add_argument(
+    input_group = parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument(
+        "--result-dir",
+        help="One RepoAudit result directory; writes real_world_metrics.json beside detect_info.json by default",
+    )
+    input_group.add_argument(
         "--experiment-run-dir",
-        required=True,
         help="Path to real_world_test/experiment_runs/<run_id>",
+    )
+    input_group.add_argument(
+        "--result-root",
+        action="append",
+        default=[],
+        help="Existing result root such as result/dfbscan/<model>/MLK/Java/fitnesse; can be repeated",
+    )
+    parser.add_argument(
+        "--output-dir",
+        help="Output directory for metrics files. Defaults to the experiment-run-dir or a generated imported directory.",
+    )
+    parser.add_argument(
+        "--output-json",
+        help="Optional output json path for --result-dir mode (default: <result-dir>/real_world_metrics.json)",
     )
     parser.add_argument(
         "--topk-percentages",
@@ -458,25 +565,42 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    experiment_run_dir = Path(args.experiment_run_dir).resolve()
     topk_percentages = [int(x.strip()) for x in args.topk_percentages.split(",") if x.strip() != ""]
+    if args.result_dir:
+        result_dir = _resolve_repo_local_path(args.result_dir)
+        run_metric = _load_run_metrics(_load_result_dir_row(result_dir), topk_percentages)
+        output_path = _write_single_result_output(
+            result_dir,
+            run_metric,
+            topk_percentages,
+            Path(args.output_json).resolve() if args.output_json else None,
+        )
+        print(f"[OK] real-world metrics written to: {output_path}")
+        return
+    if args.experiment_run_dir:
+        experiment_run_dir = Path(args.experiment_run_dir).resolve()
+        output_dir = Path(args.output_dir).resolve() if args.output_dir else experiment_run_dir
+        run_metrics, summary_rows = summarize_real_world_metrics(experiment_run_dir, topk_percentages)
+    else:
+        result_roots = [_resolve_repo_local_path(path) for path in args.result_root]
+        ledger_rows = _collect_result_rows_from_roots(result_roots)
+        if args.output_dir:
+            output_dir = Path(args.output_dir).resolve()
+        else:
+            suffix = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+            output_dir = (Path(__file__).resolve().parent / "experiment_runs" / f"imported_real_world_metrics_{suffix}").resolve()
+        run_metrics, summary_rows = summarize_real_world_metrics(
+            None,
+            topk_percentages,
+            ledger_rows_override=ledger_rows,
+        )
 
-    run_metrics, summary_rows = summarize_real_world_metrics(experiment_run_dir, topk_percentages)
-    per_run_rows = [_run_metrics_to_row(item, topk_percentages) for item in run_metrics]
+    _write_metrics_outputs(output_dir, run_metrics, summary_rows, topk_percentages)
 
-    per_run_json = experiment_run_dir / "real_world_metrics_per_run.json"
-    per_run_csv = experiment_run_dir / "real_world_metrics_per_run.csv"
-    summary_json = experiment_run_dir / "real_world_metrics_summary.json"
-    summary_csv = experiment_run_dir / "real_world_metrics_summary.csv"
-
-    with open(per_run_json, "w", encoding="utf-8") as f:
-        json.dump({"runs": per_run_rows}, f, indent=2, ensure_ascii=False)
-    _write_csv(per_run_csv, per_run_rows)
-
-    with open(summary_json, "w", encoding="utf-8") as f:
-        json.dump({"summary": summary_rows}, f, indent=2, ensure_ascii=False)
-    _write_csv(summary_csv, summary_rows)
-
+    per_run_json = output_dir / "real_world_metrics_per_run.json"
+    per_run_csv = output_dir / "real_world_metrics_per_run.csv"
+    summary_json = output_dir / "real_world_metrics_summary.json"
+    summary_csv = output_dir / "real_world_metrics_summary.csv"
     print(f"[OK] per-run metrics written to: {per_run_json}")
     print(f"[OK] per-run csv written to: {per_run_csv}")
     print(f"[OK] summary metrics written to: {summary_json}")

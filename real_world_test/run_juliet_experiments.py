@@ -24,6 +24,7 @@ DEFAULT_CONFIG = BASE_DIR / "experiment_config.json"
 class JulietConfig:
     enabled: bool
     dataset_root: Path
+    dataset_xlsx: Path
     java_home: Optional[Path]
     bug_type: str
     language: str
@@ -62,6 +63,7 @@ def _build_juliet_config(config: Dict[str, object]) -> JulietConfig:
     return JulietConfig(
         enabled=bool(section.get("enabled", False)),
         dataset_root=_resolve_repo_path(str(section.get("dataset_root", ""))),
+        dataset_xlsx=_resolve_repo_path(str(section.get("dataset_xlsx", BASE_DIR / "juliet_dataset.xlsx"))),
         java_home=java_home,
         bug_type=str(section.get("bug_type", config.get("bug_type", "MLK"))),
         language=str(section.get("language", config.get("language", "Java"))),
@@ -133,7 +135,11 @@ def _write_csv(path: Path, rows: List[Dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows:
         return
-    headers = list(rows[0].keys())
+    headers: List[str] = []
+    for row in rows:
+        for key in row.keys():
+            if key not in headers:
+                headers.append(key)
     with open(path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
@@ -155,8 +161,6 @@ def _latest_new_result_dir(before: List[Path], after: List[Path]) -> Optional[Pa
     new_dirs = [p for p in after if p.resolve() not in before_set]
     if new_dirs:
         return sorted(new_dirs, key=lambda p: p.name)[-1]
-    if after:
-        return sorted(after, key=lambda p: p.name)[-1]
     return None
 
 
@@ -246,8 +250,11 @@ def run_juliet_experiments(config_path: Path, *, dry_run: bool = False, force: b
 
     if not dry_run:
         _ensure_file(_resolve_repo_path(str(config["run_repoaudit_script"])), "run_repoaudit.sh")
-        _ensure_file(_resolve_repo_path(str(config["soot_bridge_jar"])), "soot bridge jar")
+        _ensure_file(BASE_DIR / "summarize_juliet_metrics.py", "summarize_juliet_metrics.py")
+        if juliet.soot_strategy == "bridge":
+            _ensure_file(_resolve_repo_path(str(config["soot_bridge_jar"])), "soot bridge jar")
         _ensure_file(juliet.dataset_root, "Juliet dataset root")
+        _ensure_file(juliet.dataset_xlsx, "Juliet dataset xlsx")
         if juliet.java_home is not None:
             _ensure_file(juliet.java_home / "bin" / "java", "Juliet java binary")
             _ensure_file(juliet.java_home / "bin" / "javac", "Juliet javac binary")
@@ -287,6 +294,7 @@ def run_juliet_experiments(config_path: Path, *, dry_run: bool = False, force: b
             "error_message": soot_error,
             "elapsed_sec": round(time.time() - soot_started, 3),
             "dataset_root": str(juliet.dataset_root),
+            "dataset_xlsx": str(juliet.dataset_xlsx),
             "soot_facts_path": str(soot_facts_path) if soot_facts_path else "",
         }
     )
@@ -307,6 +315,7 @@ def run_juliet_experiments(config_path: Path, *, dry_run: bool = False, force: b
             error_message = ""
             result_dir = ""
             metrics_json = ""
+            juliet_metrics_json = ""
             try:
                 _run_command(
                     [
@@ -320,11 +329,33 @@ def run_juliet_experiments(config_path: Path, *, dry_run: bool = False, force: b
                     log_file=log_file,
                     dry_run=dry_run,
                 )
-                after = _list_result_dirs(result_root)
-                latest = _latest_new_result_dir(before, after)
+                if dry_run:
+                    latest = None
+                else:
+                    after = _list_result_dirs(result_root)
+                    latest = _latest_new_result_dir(before, after)
+                    if latest is None:
+                        raise RuntimeError(f"No Juliet result directory found under: {result_root}")
                 if latest is not None:
                     result_dir = str(latest)
                     metrics_json = str(latest / "run_metrics_raw.json")
+                    if not dry_run:
+                        _ensure_file(latest / "detect_info.json", "Juliet detect_info.json")
+                    _run_command(
+                        [
+                            sys.executable,
+                            str(BASE_DIR / "summarize_juliet_metrics.py"),
+                            "--result-dir",
+                            result_dir,
+                            "--dataset-xlsx",
+                            str(juliet.dataset_xlsx),
+                        ],
+                        cwd=REPO_ROOT,
+                        env=env,
+                        log_file=log_file,
+                        dry_run=dry_run,
+                    )
+                    juliet_metrics_json = str(Path(result_dir) / "juliet_metrics.json")
             except Exception as err:
                 status = "failed"
                 error_message = str(err)
@@ -338,10 +369,12 @@ def run_juliet_experiments(config_path: Path, *, dry_run: bool = False, force: b
                     "issue_first": bool(variant.get("issue_first", True)),
                     "result_dir": result_dir,
                     "metrics_json": metrics_json,
+                    "juliet_metrics_json": juliet_metrics_json,
                     "status": status,
                     "error_message": error_message,
                     "elapsed_sec": round(time.time() - started_at, 3),
                     "dataset_root": str(juliet.dataset_root),
+                    "dataset_xlsx": str(juliet.dataset_xlsx),
                     "soot_facts_path": str(soot_facts_path),
                 }
             )

@@ -1,5 +1,5 @@
 {
-  "model_name": "qwen-plus",
+  "model_name": "deepseek-chat",
   "temperature": 0.0,
   "call_depth": 15,
   "max_neural_workers": 16,
@@ -28,7 +28,7 @@
     ]
   },
   "juliet": {
-    "enabled": false,
+    "enabled": true,
     "dataset_root": "benchmark/Java/toy",
     "dataset_xlsx": "real_world_test/juliet_dataset.xlsx",
     "java_home": "${JDK8_HOME}",

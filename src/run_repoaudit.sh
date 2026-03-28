@@ -7,7 +7,7 @@ IFS=$'\n\t'
 # e.g. "en_US:en"), which can break RepoAudit --language parsing.
 # Use REPOAUDIT_LANGUAGE for overriding scan language.
 ANALYSIS_LANGUAGE="${REPOAUDIT_LANGUAGE:-Java}"
-MODEL="${MODEL:-deepseek-chat}"  # e.g. deepseek-chat, qwen3.5-plus, kimi-k2.5
+MODEL="${MODEL:-deepseek-chat}"  # e.g. deepseek-chat, qwen3.5-plus, kimi-k2.5, doubao-seed-2.0-mini
 DEFAULT_PROJECT_NAME="${DEFAULT_PROJECT_NAME:-toy}"
 DEFAULT_BUG_TYPE="${DEFAULT_BUG_TYPE:-MLK}"     # allowed: MLK, NPD, UAF
 SCAN_TYPE="${SCAN_TYPE:-dfbscan}"
@@ -73,14 +73,16 @@ Examples:
   ./run_repoaudit.sh ./repos/demo UAF
   MODEL=qwen-plus ./run_repoaudit.sh /path/to/java/project MLK
   MODEL=kimi-k2.5 ./run_repoaudit.sh /path/to/java/project MLK
+  MODEL=doubao-seed-2.0-mini ./run_repoaudit.sh /path/to/java/project MLK
   ./run_repoaudit.sh --help
 
 Model examples:
-  deepseek-chat | deepseek-reasoner | qwen-plus | qwen-max | qwen-turbo | kimi-k2.5 | kimi-k2 | kimi-k2-thinking
+  deepseek-chat | deepseek-reasoner | qwen-plus | qwen-max | qwen-turbo | kimi-k2.5 | kimi-k2 | kimi-k2-thinking | doubao-seed-2.0-mini
 
 API keys:
   Qwen: export DASHSCOPE_API_KEY=your_key
   Kimi: export MOONSHOT_API_KEY=your_key
+  Doubao: export ARK_API_KEY=your_key
 
 Post-run artifacts:
   AUTO_GENERATE_REVIEW_XLSX=true will auto-build review_units.xlsx beside detect_info.json
