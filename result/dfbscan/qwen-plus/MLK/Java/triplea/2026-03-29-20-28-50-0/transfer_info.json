@@ -1,0 +1,106 @@
+{
+    "((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC), ((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, 0), ValueLabel.RET)",
+            "terminal_line": 26,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java"
+        }
+    ],
+    "((new GameObjectInputStream(this, stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 23, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new GameObjectInputStream(this, stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 23, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new GameObjectInputStream(this, stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 23, -1), ValueLabel.SRC), ((new GameObjectInputStream(this, stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 23, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new GameObjectInputStream(this, stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 23, 0), ValueLabel.RET)",
+            "terminal_line": 23,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java"
+        }
+    ],
+    "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC), ((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, 0), ValueLabel.RET)",
+            "terminal_line": 28,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java"
+        }
+    ],
+    "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC), ((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, 0), ValueLabel.RET)",
+            "terminal_line": 12,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java"
+        }
+    ],
+    "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC), ((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, 0), ValueLabel.RET)",
+            "terminal_line": 17,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java"
+        }
+    ],
+    "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC), ((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)",
+            "terminal_line": 80,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java"
+        }
+    ],
+    "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC), ((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 90, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 90, 0), ValueLabel.ARG)",
+            "terminal_line": 90,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java"
+        }
+    ],
+    "((new SynchedByteArrayOutputStream(System.err), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 74, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new SynchedByteArrayOutputStream(System.err), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 74, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new SynchedByteArrayOutputStream(System.err), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 74, -1), ValueLabel.SRC), ((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((print, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)",
+            "terminal_line": 80,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java"
+        }
+    ]
+}
