@@ -1,0 +1,70 @@
+{
+    "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((readable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 42, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((readable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 42, 0), ValueLabel.ARG)",
+            "terminal_line": 42,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        },
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((writable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 38, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((writable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 38, 0), ValueLabel.ARG)",
+            "terminal_line": 38,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        },
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((executable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 46, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((executable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 46, 0), ValueLabel.ARG)",
+            "terminal_line": 46,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        },
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((readable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 42, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((readable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 42, 0), ValueLabel.ARG)",
+            "terminal_line": 42,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        },
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((writable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 38, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((writable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 38, 0), ValueLabel.ARG)",
+            "terminal_line": 38,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        },
+        {
+            "src_value": "((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((File.createTempFile(\"temp\", \"1234\"), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 34, -1), ValueLabel.SRC), ((executable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 46, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((executable, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java, 46, 0), ValueLabel.ARG)",
+            "terminal_line": 46,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java"
+        }
+    ]
+}

@@ -1,0 +1,167 @@
+{
+    "((new FileInputStream(tempFile), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java, 81, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileInputStream(tempFile), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java, 81, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((new FileInputStream(tempFile), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java, 81, -1), ValueLabel.SRC), ((new FileInputStream(tempFile), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java, 81, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new FileInputStream(tempFile), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java, 81, 0), ValueLabel.RET)",
+            "terminal_line": 81,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java"
+        }
+    ],
+    "((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, -1), ValueLabel.SRC), ((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, 0), ValueLabel.RET)",
+            "terminal_line": 26,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java"
+        }
+    ],
+    "((ClassUtils.getResourceAsStream(getClass(), path), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java, 36, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((ClassUtils.getResourceAsStream(getClass(), path), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java, 36, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((ClassUtils.getResourceAsStream(getClass(), path), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java, 36, -1), ValueLabel.SRC), ((result, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java, 46, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((result, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java, 46, 0), ValueLabel.RET)",
+            "terminal_line": 46,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java"
+        }
+    ],
+    "((s.getInputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 24, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((s.getInputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 24, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((s.getInputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 24, -1), ValueLabel.SRC), ((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new BufferedReader(isr), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 26, 0), ValueLabel.RET)",
+            "terminal_line": 26,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java"
+        }
+    ],
+    "((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, -1), ValueLabel.SRC), ((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, 0), ValueLabel.RET)",
+            "terminal_line": 20,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java"
+        }
+    ],
+    "((s.getOutputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 19, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((s.getOutputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 19, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((s.getOutputStream(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 19, -1), ValueLabel.SRC), ((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new PrintStream(os), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java, 20, 0), ValueLabel.RET)",
+            "terminal_line": 20,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java"
+        }
+    ],
+    "((new StatementExecutor(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 13, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new StatementExecutor(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 13, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new StatementExecutor(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 13, -1), ValueLabel.SRC), ((statementExecutor, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 17, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((statementExecutor, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 17, 0), ValueLabel.RET)",
+            "terminal_line": 17,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java"
+        },
+        {
+            "src_value": "((new StatementExecutor(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 13, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new StatementExecutor(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 13, -1), ValueLabel.SRC), ((statementExecutor, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 17, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((statementExecutor, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java, 17, 0), ValueLabel.RET)",
+            "terminal_line": 17,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java"
+        }
+    ],
+    "((new  Writer() {\n  \n      @Override\n      public void close() throws IOException {\n        //sender.close();\n      }\n  \n      @Override\n      public void flush() throws IOException {\n        // sender.flush(); -- flush is done on write\n      }\n  \n      @Override\n      public void write(String str) throws IOException {\n        add(str);\n      }\n      \n      @Override\n      public void write(char[] cbuf, int off, int len) throws IOException {\n        write(new String(cbuf, off, len));\n      }\n    }, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java, 100, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new  Writer() {\n  \n      @Override\n      public void close() throws IOException {\n        //sender.close();\n      }\n  \n      @Override\n      public void flush() throws IOException {\n        // sender.flush(); -- flush is done on write\n      }\n  \n      @Override\n      public void write(String str) throws IOException {\n        add(str);\n      }\n      \n      @Override\n      public void write(char[] cbuf, int off, int len) throws IOException {\n        write(new String(cbuf, off, len));\n      }\n    }, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java, 100, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new  Writer() {\n  \n      @Override\n      public void close() throws IOException {\n        //sender.close();\n      }\n  \n      @Override\n      public void flush() throws IOException {\n        // sender.flush(); -- flush is done on write\n      }\n  \n      @Override\n      public void write(String str) throws IOException {\n        add(str);\n      }\n      \n      @Override\n      public void write(char[] cbuf, int off, int len) throws IOException {\n        write(new String(cbuf, off, len));\n      }\n    }, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java, 100, -1), ValueLabel.SRC), ((getWriter(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java, 100, 0), ValueLabel.RET), ((response.getWriter(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/TestResponder.java, 43, -1), ValueLabel.OUT), ((response.getWriter(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/TestResponder.java, 43, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((response.getWriter(), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/TestResponder.java, 43, 0), ValueLabel.RET)",
+            "terminal_line": 43,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/TestResponder.java"
+        }
+    ],
+    "((new ListExecutor(verbose, this), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java, 14, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new ListExecutor(verbose, this), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java, 14, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new ListExecutor(verbose, this), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java, 14, -1), ValueLabel.SRC), ((new ListExecutor(verbose, this), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java, 14, 0), ValueLabel.RET), ((slimFactory.getListExecutor(false), /home/jiayu/Desktop/real_world_repos/fitnesse/test/fitnesse/slim/ListExecutorTest.java, 10, -1), ValueLabel.OUT), ((slimFactory.getListExecutor(false), /home/jiayu/Desktop/real_world_repos/fitnesse/test/fitnesse/slim/ListExecutorTest.java, 10, 0), ValueLabel.RET)]",
+            "path_length": 4,
+            "terminal_label": "RET",
+            "terminal_value": "((slimFactory.getListExecutor(false), /home/jiayu/Desktop/real_world_repos/fitnesse/test/fitnesse/slim/ListExecutorTest.java, 10, 0), ValueLabel.RET)",
+            "terminal_line": 10,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/test/fitnesse/slim/ListExecutorTest.java"
+        }
+    ],
+    "((new PrintWriter(resultFile, \"UTF-8\"), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java, 411, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintWriter(resultFile, \"UTF-8\"), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java, 411, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new PrintWriter(resultFile, \"UTF-8\"), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java, 411, -1), ValueLabel.SRC), ((new PrintWriter(resultFile, \"UTF-8\"), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java, 411, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new PrintWriter(resultFile, \"UTF-8\"), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java, 411, 0), ValueLabel.RET)",
+            "terminal_line": 411,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java"
+        }
+    ],
+    "((new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, -1), ValueLabel.SRC), ((parser, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, 0), ValueLabel.RET), ((make(currentPage, input, SymbolProvider.wikiParsingProvider), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 10, -1), ValueLabel.OUT), ((make(currentPage, input, SymbolProvider.wikiParsingProvider), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 10, 0), ValueLabel.RET), ((Parser.make(parsingPage, linkReferenceString), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 33, -1), ValueLabel.OUT), ((linkReference, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 71, 0), ValueLabel.ARG)]",
+            "path_length": 6,
+            "terminal_label": "ARG",
+            "terminal_value": "((linkReference, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 71, 0), ValueLabel.ARG)",
+            "terminal_line": 71,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java"
+        },
+        {
+            "src_value": "((new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new Scanner(new TextMaker(currentPage, currentPage.getNamedPage()), input), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, -1), ValueLabel.SRC), ((parser, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 15, 0), ValueLabel.RET), ((make(currentPage, input, SymbolProvider.wikiParsingProvider), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 10, -1), ValueLabel.OUT), ((make(currentPage, input, SymbolProvider.wikiParsingProvider), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java, 10, 0), ValueLabel.RET), ((Parser.make(parsingPage, linkReferenceString), /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 33, -1), ValueLabel.OUT), ((linkReference, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 71, 0), ValueLabel.ARG)]",
+            "path_length": 6,
+            "terminal_label": "ARG",
+            "terminal_value": "((linkReference, /home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java, 71, 0), ValueLabel.ARG)",
+            "terminal_line": 71,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Alias.java"
+        }
+    ]
+}

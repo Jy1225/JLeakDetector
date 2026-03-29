@@ -1,0 +1,2173 @@
+{
+  "schema_version": "4.0",
+  "dataset_xlsx": "/home/jiayu/Desktop/JLeakDetector/real_world_test/juliet_dataset.xlsx",
+  "result_dir": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/doubao-seed-2-0-mini-260215/MLK/Java/toy/2026-03-28-23-18-05-0",
+  "detect_info_raw_json": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/doubao-seed-2-0-mini-260215/MLK/Java/toy/2026-03-28-23-18-05-0/detect_info_raw.json",
+  "detect_info_json": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/doubao-seed-2-0-mini-260215/MLK/Java/toy/2026-03-28-23-18-05-0/detect_info.json",
+  "benchmark_case_total": 37,
+  "benchmark_total_bug_hint": 45,
+  "tp_bug_count": 45,
+  "fn_bug_count": 0,
+  "tp_bug_rate": 1.0,
+  "tp_bug_ids": [
+    "1#1",
+    "1#2",
+    "10#1",
+    "11#1",
+    "12#1",
+    "13#1",
+    "14#1",
+    "15#1",
+    "16#1",
+    "17#1",
+    "18#1",
+    "19#1",
+    "2#1",
+    "2#2",
+    "2#3",
+    "20#1",
+    "21#1",
+    "22#1",
+    "23#1",
+    "24#1",
+    "25#1",
+    "26#1",
+    "27#1",
+    "28#1",
+    "29#1",
+    "3#1",
+    "3#2",
+    "30#1",
+    "31#1",
+    "32#1",
+    "33#1",
+    "34#1",
+    "34#2",
+    "35#1",
+    "35#2",
+    "35#3",
+    "36#1",
+    "36#2",
+    "37#1",
+    "4#1",
+    "5#1",
+    "6#1",
+    "7#1",
+    "8#1",
+    "9#1"
+  ],
+  "fn_bug_ids": [],
+  "tp_raw_report_count": 47,
+  "fp_raw_report_count": 11,
+  "raw_report_total": 58,
+  "merged_issue_count_hint": 42,
+  "tp_raw_report_ids": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "7",
+    "8",
+    "10",
+    "11",
+    "12",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "26",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "37",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51",
+    "53",
+    "54",
+    "55",
+    "56",
+    "57"
+  ],
+  "fp_raw_report_ids": [
+    "6",
+    "9",
+    "13",
+    "24",
+    "25",
+    "27",
+    "35",
+    "36",
+    "38",
+    "44",
+    "52"
+  ],
+  "bug_results": {
+    "1#1": {
+      "status": "TP",
+      "case_id": "1",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerBuffered",
+      "inferred_source_line": 28,
+      "anchor_line_text": "readerBuffered = new BufferedReader(readerInputStream);",
+      "matched_raw_report_ids": [
+        "7"
+      ]
+    },
+    "1#2": {
+      "status": "TP",
+      "case_id": "1",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerInputStream",
+      "inferred_source_line": 27,
+      "anchor_line_text": "readerInputStream = new InputStreamReader(System.in, \"UTF-8\");",
+      "matched_raw_report_ids": [
+        "15"
+      ]
+    },
+    "2#1": {
+      "status": "TP",
+      "case_id": "2",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "resultSet",
+      "inferred_source_line": 36,
+      "anchor_line_text": "resultSet = preparedStatement.executeQuery();",
+      "matched_raw_report_ids": [
+        "32"
+      ]
+    },
+    "2#2": {
+      "status": "TP",
+      "case_id": "2",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "dBConnection",
+      "inferred_source_line": 32,
+      "anchor_line_text": "dBConnection = IO.getDBConnection();",
+      "matched_raw_report_ids": [
+        "30",
+        "56"
+      ]
+    },
+    "2#3": {
+      "status": "TP",
+      "case_id": "2",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "preparedStatement",
+      "inferred_source_line": 33,
+      "anchor_line_text": "preparedStatement = dBConnection.prepareStatement(\"select * from users where id=?\");",
+      "matched_raw_report_ids": [
+        "31"
+      ]
+    },
+    "3#1": {
+      "status": "TP",
+      "case_id": "3",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerBuffered",
+      "inferred_source_line": 29,
+      "anchor_line_text": "readerBuffered = new BufferedReader(readerFile);",
+      "matched_raw_report_ids": [
+        "10"
+      ]
+    },
+    "3#2": {
+      "status": "TP",
+      "case_id": "3",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__FileReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerFile",
+      "inferred_source_line": 28,
+      "anchor_line_text": "readerFile = new FileReader(file);",
+      "matched_raw_report_ids": [
+        "17"
+      ]
+    },
+    "4#1": {
+      "status": "TP",
+      "case_id": "4",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01",
+      "defect_method": "bad",
+      "key_variable": "BAD_REENTRANT_LOCK",
+      "inferred_source_line": 19,
+      "anchor_line_text": "BAD_REENTRANT_LOCK.lock();",
+      "matched_raw_report_ids": [
+        "0"
+      ]
+    },
+    "5#1": {
+      "status": "TP",
+      "case_id": "5",
+      "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "class_name": "CWE404_Improper_Resource_Shutdown__ZipFile_01",
+      "defect_method": "bad",
+      "key_variable": "zFile",
+      "inferred_source_line": 37,
+      "anchor_line_text": "zFile = new ZipFile(filename);",
+      "matched_raw_report_ids": [
+        "14"
+      ]
+    },
+    "6#1": {
+      "status": "TP",
+      "case_id": "6",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_07",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 42,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "42"
+      ]
+    },
+    "7#1": {
+      "status": "TP",
+      "case_id": "7",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_08",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 50,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "41"
+      ]
+    },
+    "8#1": {
+      "status": "TP",
+      "case_id": "8",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_09",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "55"
+      ]
+    },
+    "9#1": {
+      "status": "TP",
+      "case_id": "9",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_10",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "22"
+      ]
+    },
+    "10#1": {
+      "status": "TP",
+      "case_id": "10",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_11",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "28"
+      ]
+    },
+    "11#1": {
+      "status": "TP",
+      "case_id": "11",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_12",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "49"
+      ]
+    },
+    "12#1": {
+      "status": "TP",
+      "case_id": "12",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_13",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "39"
+      ]
+    },
+    "13#1": {
+      "status": "TP",
+      "case_id": "13",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_14",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "16"
+      ]
+    },
+    "14#1": {
+      "status": "TP",
+      "case_id": "14",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_15",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 37,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "40"
+      ]
+    },
+    "15#1": {
+      "status": "TP",
+      "case_id": "15",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_16",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "1"
+      ]
+    },
+    "16#1": {
+      "status": "TP",
+      "case_id": "16",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+      "class_name": "CWE459_Incomplete_Cleanup__Servlet_temp_file_17",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 36,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "23"
+      ]
+    },
+    "17#1": {
+      "status": "TP",
+      "case_id": "17",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_01",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "53"
+      ]
+    },
+    "18#1": {
+      "status": "TP",
+      "case_id": "18",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_02",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "51"
+      ]
+    },
+    "19#1": {
+      "status": "TP",
+      "case_id": "19",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_03",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "37"
+      ]
+    },
+    "20#1": {
+      "status": "TP",
+      "case_id": "20",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_04",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 41,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "5"
+      ]
+    },
+    "21#1": {
+      "status": "TP",
+      "case_id": "21",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_05",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 41,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "3"
+      ]
+    },
+    "22#1": {
+      "status": "TP",
+      "case_id": "22",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_06",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 40,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "54"
+      ]
+    },
+    "23#1": {
+      "status": "TP",
+      "case_id": "23",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_07",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 40,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "4"
+      ]
+    },
+    "24#1": {
+      "status": "TP",
+      "case_id": "24",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_08",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 48,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "45"
+      ]
+    },
+    "25#1": {
+      "status": "TP",
+      "case_id": "25",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_09",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "18"
+      ]
+    },
+    "26#1": {
+      "status": "TP",
+      "case_id": "26",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_10",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "47"
+      ]
+    },
+    "27#1": {
+      "status": "TP",
+      "case_id": "27",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_11",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "2"
+      ]
+    },
+    "28#1": {
+      "status": "TP",
+      "case_id": "28",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_12.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_12",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "26"
+      ]
+    },
+    "29#1": {
+      "status": "TP",
+      "case_id": "29",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_13",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "50"
+      ]
+    },
+    "30#1": {
+      "status": "TP",
+      "case_id": "30",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_14",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "12"
+      ]
+    },
+    "31#1": {
+      "status": "TP",
+      "case_id": "31",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_15",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 35,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "46"
+      ]
+    },
+    "32#1": {
+      "status": "TP",
+      "case_id": "32",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_16",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "11"
+      ]
+    },
+    "33#1": {
+      "status": "TP",
+      "case_id": "33",
+      "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java",
+      "class_name": "CWE459_Incomplete_Cleanup__temp_file_17",
+      "defect_method": "bad",
+      "key_variable": "tempFile",
+      "inferred_source_line": 34,
+      "anchor_line_text": "tempFile = File.createTempFile(\"temp\", \"1234\");",
+      "matched_raw_report_ids": [
+        "29"
+      ]
+    },
+    "34#1": {
+      "status": "TP",
+      "case_id": "34",
+      "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerBuffered",
+      "inferred_source_line": 27,
+      "anchor_line_text": "readerBuffered = new BufferedReader(readerInputStream);",
+      "matched_raw_report_ids": [
+        "34"
+      ]
+    },
+    "34#2": {
+      "status": "TP",
+      "case_id": "34",
+      "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "class_name": "CWE772_Missing_Release_of_Resource__console_InputStreamReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerInputStream",
+      "inferred_source_line": 26,
+      "anchor_line_text": "readerInputStream = new InputStreamReader(System.in, \"UTF-8\");",
+      "matched_raw_report_ids": [
+        "33"
+      ]
+    },
+    "35#1": {
+      "status": "TP",
+      "case_id": "35",
+      "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "resultSet",
+      "inferred_source_line": 35,
+      "anchor_line_text": "resultSet = preparedStatement.executeQuery();",
+      "matched_raw_report_ids": [
+        "21"
+      ]
+    },
+    "35#2": {
+      "status": "TP",
+      "case_id": "35",
+      "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "dBConnection",
+      "inferred_source_line": 31,
+      "anchor_line_text": "dBConnection = IO.getDBConnection();",
+      "matched_raw_report_ids": [
+        "20",
+        "57"
+      ]
+    },
+    "35#3": {
+      "status": "TP",
+      "case_id": "35",
+      "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "class_name": "CWE772_Missing_Release_of_Resource__db_Connection_01",
+      "defect_method": "bad",
+      "key_variable": "preparedStatement",
+      "inferred_source_line": 32,
+      "anchor_line_text": "preparedStatement = dBConnection.prepareStatement(\"select * from users where id=?\");",
+      "matched_raw_report_ids": [
+        "19"
+      ]
+    },
+    "36#1": {
+      "status": "TP",
+      "case_id": "36",
+      "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerBuffered",
+      "inferred_source_line": 28,
+      "anchor_line_text": "readerBuffered = new BufferedReader(readerFile);",
+      "matched_raw_report_ids": [
+        "43"
+      ]
+    },
+    "36#2": {
+      "status": "TP",
+      "case_id": "36",
+      "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "class_name": "CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01",
+      "defect_method": "bad",
+      "key_variable": "readerFile",
+      "inferred_source_line": 27,
+      "anchor_line_text": "readerFile = new FileReader(file);",
+      "matched_raw_report_ids": [
+        "48"
+      ]
+    },
+    "37#1": {
+      "status": "TP",
+      "case_id": "37",
+      "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "class_name": "CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01",
+      "defect_method": "bad",
+      "key_variable": "zFile",
+      "inferred_source_line": 25,
+      "anchor_line_text": "zFile = new ZipFile(\"C:\\\\file.zip\");",
+      "matched_raw_report_ids": [
+        "8"
+      ]
+    }
+  },
+  "raw_report_classification": {
+    "0": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "4#1"
+      ],
+      "best_score": 215,
+      "matches": [
+        {
+          "bug_id": "4#1",
+          "case_id": "4",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+          "defect_method": "bad",
+          "key_variable": "BAD_REENTRANT_LOCK",
+          "inferred_source_line": 19,
+          "score": 215,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['lock']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java",
+      "source_line": 19,
+      "source_method_name": "helperBad"
+    },
+    "1": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "15#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "15#1",
+          "case_id": "15",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "2": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "27#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "27#1",
+          "case_id": "27",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_11.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "3": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "21#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "21#1",
+          "case_id": "21",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 41,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_05.java",
+      "source_line": 41,
+      "source_method_name": "bad"
+    },
+    "4": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "23#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "23#1",
+          "case_id": "23",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 40,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_07.java",
+      "source_line": 40,
+      "source_method_name": "bad"
+    },
+    "5": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "20#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "20#1",
+          "case_id": "20",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 41,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_04.java",
+      "source_line": 41,
+      "source_method_name": "bad"
+    },
+    "6": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java",
+      "source_line": 109,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__temp_file_14"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "7": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "1#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "1#1",
+          "case_id": "1",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerBuffered",
+          "inferred_source_line": 28,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['bufferedreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "source_line": 28,
+      "source_method_name": "bad"
+    },
+    "8": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "37#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "37#1",
+          "case_id": "37",
+          "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+          "defect_method": "bad",
+          "key_variable": "zFile",
+          "inferred_source_line": 25,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['zipfile']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "source_line": 25,
+      "source_method_name": "bad"
+    },
+    "9": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java",
+      "source_line": 46,
+      "source_method_name": "good1",
+      "relevant_classes": [
+        "CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01"
+      ],
+      "relevant_methods": [
+        "good1"
+      ]
+    },
+    "10": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "3#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "3#1",
+          "case_id": "3",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerBuffered",
+          "inferred_source_line": 29,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['bufferedreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "source_line": 29,
+      "source_method_name": "bad"
+    },
+    "11": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "32#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "32#1",
+          "case_id": "32",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_16.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "12": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "30#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "30#1",
+          "case_id": "30",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_14.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "13": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+      "source_line": 117,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_14"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "14": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "5#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "5#1",
+          "case_id": "5",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+          "defect_method": "bad",
+          "key_variable": "zFile",
+          "inferred_source_line": 37,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['zipfile']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__ZipFile_01.java",
+      "source_line": 37,
+      "source_method_name": "bad"
+    },
+    "15": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "1#2"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "1#2",
+          "case_id": "1",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerInputStream",
+          "inferred_source_line": 27,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['inputstreamreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java",
+      "source_line": 27,
+      "source_method_name": "bad"
+    },
+    "16": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "13#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "13#1",
+          "case_id": "13",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "17": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "3#2"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "3#2",
+          "case_id": "3",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerFile",
+          "inferred_source_line": 28,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['filereader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__FileReader_01.java",
+      "source_line": 28,
+      "source_method_name": "bad"
+    },
+    "18": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "25#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "25#1",
+          "case_id": "25",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_09.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "19": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "35#3"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "35#3",
+          "case_id": "35",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "preparedStatement",
+          "inferred_source_line": 32,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['preparestatement']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "source_line": 32,
+      "source_method_name": "bad"
+    },
+    "20": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "35#2"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "35#2",
+          "case_id": "35",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "dBConnection",
+          "inferred_source_line": 31,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['getdbconnection']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "source_line": 31,
+      "source_method_name": "bad"
+    },
+    "21": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "35#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "35#1",
+          "case_id": "35",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "resultSet",
+          "inferred_source_line": 35,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['executequery']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+      "source_line": 35,
+      "source_method_name": "bad"
+    },
+    "22": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "9#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "9#1",
+          "case_id": "9",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "23": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "16#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "16#1",
+          "case_id": "16",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "24": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java",
+      "source_line": 70,
+      "source_method_name": "good1",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_17"
+      ],
+      "relevant_methods": [
+        "good1"
+      ]
+    },
+    "25": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+      "source_line": 117,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_11"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "26": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "28#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "28#1",
+          "case_id": "28",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_12.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_12.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "27": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "source_line": 101,
+      "source_method_name": "good1",
+      "relevant_classes": [
+        "CWE404_Improper_Resource_Shutdown__db_Connection_01"
+      ],
+      "relevant_methods": [
+        "good1"
+      ]
+    },
+    "28": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "10#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "10#1",
+          "case_id": "10",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "29": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "33#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "33#1",
+          "case_id": "33",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_17.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "30": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "2#2"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "2#2",
+          "case_id": "2",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "dBConnection",
+          "inferred_source_line": 32,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['getdbconnection']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "source_line": 32,
+      "source_method_name": "bad"
+    },
+    "31": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "2#3"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "2#3",
+          "case_id": "2",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "preparedStatement",
+          "inferred_source_line": 33,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['preparestatement']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "source_line": 33,
+      "source_method_name": "bad"
+    },
+    "32": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "2#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "2#1",
+          "case_id": "2",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "resultSet",
+          "inferred_source_line": 36,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['executequery']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "33": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "34#2"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "34#2",
+          "case_id": "34",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerInputStream",
+          "inferred_source_line": 26,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['inputstreamreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "source_line": 26,
+      "source_method_name": "bad"
+    },
+    "34": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "34#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "34#1",
+          "case_id": "34",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerBuffered",
+          "inferred_source_line": 27,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['bufferedreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java",
+      "source_line": 27,
+      "source_method_name": "bad"
+    },
+    "35": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java",
+      "source_line": 109,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__temp_file_03"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "36": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+      "source_line": 117,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_13"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "37": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "19#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "19#1",
+          "case_id": "19",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_03.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "38": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+      "source_line": 81,
+      "source_method_name": "good1",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_15"
+      ],
+      "relevant_methods": [
+        "good1"
+      ]
+    },
+    "39": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "12#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "12#1",
+          "case_id": "12",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "40": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "14#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "14#1",
+          "case_id": "14",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 37,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java",
+      "source_line": 37,
+      "source_method_name": "bad"
+    },
+    "41": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "7#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "7#1",
+          "case_id": "7",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 50,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java",
+      "source_line": 50,
+      "source_method_name": "bad"
+    },
+    "42": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "6#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "6#1",
+          "case_id": "6",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 42,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+      "source_line": 42,
+      "source_method_name": "bad"
+    },
+    "43": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "36#1"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "36#1",
+          "case_id": "36",
+          "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerBuffered",
+          "inferred_source_line": 28,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['bufferedreader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "source_line": 28,
+      "source_method_name": "bad"
+    },
+    "44": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java",
+      "source_line": 123,
+      "source_method_name": "good2",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__Servlet_temp_file_07"
+      ],
+      "relevant_methods": [
+        "good2"
+      ]
+    },
+    "45": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "24#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "24#1",
+          "case_id": "24",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 48,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_08.java",
+      "source_line": 48,
+      "source_method_name": "bad"
+    },
+    "46": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "31#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "31#1",
+          "case_id": "31",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 35,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_15.java",
+      "source_line": 35,
+      "source_method_name": "bad"
+    },
+    "47": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "26#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "26#1",
+          "case_id": "26",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_10.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "48": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "36#2"
+      ],
+      "best_score": 190,
+      "matches": [
+        {
+          "bug_id": "36#2",
+          "case_id": "36",
+          "file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+          "defect_method": "bad",
+          "key_variable": "readerFile",
+          "inferred_source_line": 27,
+          "score": 190,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['filereader']",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java",
+      "source_line": 27,
+      "source_method_name": "bad"
+    },
+    "49": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "11#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "11#1",
+          "case_id": "11",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "50": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "29#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "29#1",
+          "case_id": "29",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_13.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "51": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "18#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "18#1",
+          "case_id": "18",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_02.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "52": {
+      "label": "FP",
+      "matched_bug_ids": [],
+      "best_score": 0,
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java",
+      "source_line": 72,
+      "source_method_name": "good1",
+      "relevant_classes": [
+        "CWE459_Incomplete_Cleanup__temp_file_01"
+      ],
+      "relevant_methods": [
+        "good1"
+      ]
+    },
+    "53": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "17#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "17#1",
+          "case_id": "17",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 34,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_01.java",
+      "source_line": 34,
+      "source_method_name": "bad"
+    },
+    "54": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "22#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "22#1",
+          "case_id": "22",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 40,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__temp_file_06.java",
+      "source_line": 40,
+      "source_method_name": "bad"
+    },
+    "55": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "8#1"
+      ],
+      "best_score": 230,
+      "matches": [
+        {
+          "bug_id": "8#1",
+          "case_id": "8",
+          "file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java",
+          "defect_method": "bad",
+          "key_variable": "tempFile",
+          "inferred_source_line": 36,
+          "score": 230,
+          "reasons": [
+            "exact_source_line_match",
+            "anchor_token_overlap=['createtempfile']",
+            "key_variable_in_buggy_value",
+            "same_benchmark_file_bad_path",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/MLK/CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java",
+      "source_line": 36,
+      "source_method_name": "bad"
+    },
+    "56": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "2#2"
+      ],
+      "best_score": 75,
+      "matches": [
+        {
+          "bug_id": "2#2",
+          "case_id": "2",
+          "file": "benchmark/Java/toy/MLK/CWE404_Improper_Resource_Shutdown__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "dBConnection",
+          "inferred_source_line": 32,
+          "score": 75,
+          "reasons": [
+            "anchor_token_overlap=['getdbconnection']",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/juliet/support/IO.java",
+      "source_line": 45,
+      "source_method_name": "getDBConnection"
+    },
+    "57": {
+      "label": "TP",
+      "matched_bug_ids": [
+        "35#2"
+      ],
+      "best_score": 75,
+      "matches": [
+        {
+          "bug_id": "35#2",
+          "case_id": "35",
+          "file": "benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java",
+          "defect_method": "bad",
+          "key_variable": "dBConnection",
+          "inferred_source_line": 31,
+          "score": 75,
+          "reasons": [
+            "anchor_token_overlap=['getdbconnection']",
+            "defect_method_in_bad_path"
+          ]
+        }
+      ],
+      "source_file": "benchmark/Java/toy/juliet/support/IO.java",
+      "source_line": 45,
+      "source_method_name": "getDBConnection"
+    }
+  },
+  "notes": {
+    "evaluation_unit": "Top-level bug recall is evaluated on detect_info_raw, not detect_info.",
+    "benchmark_total_bug_hint_definition": "Each key variable in juliet_dataset.xlsx details sheet is treated as one real resource-leak bug unit.",
+    "tp_bug_definition": "At least one raw report matches the benchmark bug unit.",
+    "fp_raw_report_definition": "A raw report does not match any benchmark bug unit.",
+    "merged_issue_count_hint_definition": "detect_info may merge multiple raw reports; it is retained only as a reference count."
+  }
+}

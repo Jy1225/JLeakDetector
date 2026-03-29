@@ -1,0 +1,1396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.9.8" sequence="0" timestamp="1774532239913" analysisTimestamp="1774756721643" release="">
+  <Project projectName="">
+    <Jar>/home/jiayu/Desktop/real_world_repos/fitnesse/classes</Jar>
+    <AuxClasspathEntry>/home/jiayu/Desktop/real_world_repos/fitnesse/classes</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/junit/junit/jars/junit-4.12.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.apache.ant/ant/jars/ant-1.9.4.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.apache.velocity/velocity/jars/velocity-1.7.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.eclipse.jgit/org.eclipse.jgit/jars/org.eclipse.jgit-3.6.2.201501210735-r.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.json/json/jars/json-20140107.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.htmlparser/htmlparser/jars/htmlparser-2.1.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.htmlparser/htmllexer/jars/htmllexer-2.1.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/commons-lang/commons-lang/jars/commons-lang-2.6.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/commons-collections/commons-collections/jars/commons-collections-3.2.2.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/jiayu/.ivy2/cache/com.googlecode.java-diff-utils/diffutils/jars/diffutils-1.3.0.jar</AuxClasspathEntry>
+  </Project>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fit.FileRunner">
+      <SourceLine classname="fit.FileRunner" start="17" end="80" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java"/>
+    </Class>
+    <Method classname="fit.FileRunner" name="read" signature="(Ljava/io/File;)Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="fit.FileRunner" start="64" end="68" startBytecode="0" endBytecode="123" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java"/>
+    </Method>
+    <Class classname="java.io.Reader" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.Reader" start="81" end="388" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fit.FileRunner" start="65" end="65" startBytecode="13" endBytecode="13" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fit.FileRunner" start="66" end="66" startBytecode="17" endBytecode="17" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Reader x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fit.FileRunner">
+      <SourceLine classname="fit.FileRunner" start="17" end="80" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java"/>
+    </Class>
+    <Method classname="fit.FileRunner" name="read" signature="(Ljava/io/File;)Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="fit.FileRunner" start="64" end="68" startBytecode="0" endBytecode="20" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Reader;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Reader" start="81" end="388" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Type>
+    <SourceLine classname="fit.FileRunner" start="65" end="65" startBytecode="8" endBytecode="8" sourcefile="FileRunner.java" sourcepath="fit/FileRunner.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.ConfigurationParameter">
+      <SourceLine classname="fitnesse.ConfigurationParameter" start="14" end="99" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java"/>
+    </Class>
+    <Method classname="fitnesse.ConfigurationParameter" name="loadProperties" signature="(Ljava/io/File;)Ljava/util/Properties;" isStatic="true">
+      <SourceLine classname="fitnesse.ConfigurationParameter" start="69" end="90" startBytecode="0" endBytecode="345" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java"/>
+    </Method>
+    <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="72" end="72" startBytecode="15" endBytecode="15" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="79" end="79" startBytecode="19" endBytecode="19" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="81" end="81" startBytecode="69" endBytecode="69" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="83" end="83" startBytecode="73" endBytecode="73" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="85" end="85" startBytecode="85" endBytecode="85" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="86" end="86" startBytecode="86" endBytecode="86" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="90" end="90" startBytecode="111" endBytecode="111" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{InputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fitnesse.ConfigurationParameter">
+      <SourceLine classname="fitnesse.ConfigurationParameter" start="14" end="99" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java"/>
+    </Class>
+    <Method classname="fitnesse.ConfigurationParameter" name="loadProperties" signature="(Ljava/io/File;)Ljava/util/Properties;" isStatic="true">
+      <SourceLine classname="fitnesse.ConfigurationParameter" start="69" end="90" startBytecode="0" endBytecode="58" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/InputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Type>
+    <SourceLine classname="fitnesse.ConfigurationParameter" start="72" end="72" startBytecode="10" endBytecode="10" sourcefile="ConfigurationParameter.java" sourcepath="fitnesse/ConfigurationParameter.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.http.InputStreamResponse">
+      <SourceLine classname="fitnesse.http.InputStreamResponse" start="15" end="52" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java"/>
+    </Class>
+    <Method classname="fitnesse.http.InputStreamResponse" name="setBody" signature="(Ljava/io/File;)V" isStatic="false">
+      <SourceLine classname="fitnesse.http.InputStreamResponse" start="49" end="52" startBytecode="0" endBytecode="105" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java"/>
+    </Method>
+    <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.http.InputStreamResponse" start="49" end="49" startBytecode="5" endBytecode="5" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.http.InputStreamResponse" start="50" end="50" startBytecode="9" endBytecode="9" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.http.InputStreamResponse" start="51" end="51" startBytecode="15" endBytecode="15" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.http.InputStreamResponse" start="52" end="52" startBytecode="21" endBytecode="21" sourcefile="InputStreamResponse.java" sourcepath="fitnesse/http/InputStreamResponse.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{InputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.junit.JavaFormatter$FileCopier">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="38" end="50" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Class>
+    <Method classname="fitnesse.junit.JavaFormatter$FileCopier" name="copy" signature="(Ljava/lang/String;Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="50" startBytecode="0" endBytecode="199" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Method>
+    <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="40" startBytecode="3" endBytecode="3" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="41" end="41" startBytecode="7" endBytecode="7" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="43" end="43" startBytecode="16" endBytecode="16" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="45" end="45" startBytecode="23" endBytecode="23" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{InputStream x 1,OutputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.junit.JavaFormatter$FileCopier">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="38" end="50" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Class>
+    <Method classname="fitnesse.junit.JavaFormatter$FileCopier" name="copy" signature="(Ljava/lang/String;Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="50" startBytecode="0" endBytecode="199" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Method>
+    <Class classname="java.io.OutputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.OutputStream" start="48" end="193" sourcefile="OutputStream.java" sourcepath="java/io/OutputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="41" end="41" startBytecode="12" endBytecode="12" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="43" end="43" startBytecode="16" endBytecode="16" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="45" end="45" startBytecode="23" endBytecode="23" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="48" end="48" startBytecode="47" endBytecode="47" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{OutputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fitnesse.junit.JavaFormatter$FileCopier">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="38" end="50" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Class>
+    <Method classname="fitnesse.junit.JavaFormatter$FileCopier" name="copy" signature="(Ljava/lang/String;Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="50" startBytecode="0" endBytecode="28" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/InputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Type>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="40" startBytecode="3" endBytecode="3" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fitnesse.junit.JavaFormatter$FileCopier">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="38" end="50" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Class>
+    <Method classname="fitnesse.junit.JavaFormatter$FileCopier" name="copy" signature="(Ljava/lang/String;Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="40" end="50" startBytecode="0" endBytecode="28" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/OutputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.OutputStream" start="48" end="193" sourcefile="OutputStream.java" sourcepath="java/io/OutputStream.java"/>
+    </Type>
+    <SourceLine classname="fitnesse.junit.JavaFormatter$FileCopier" start="41" end="41" startBytecode="7" endBytecode="7" sourcefile="JavaFormatter.java" sourcepath="fitnesse/junit/JavaFormatter.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.updates.FileUpdate">
+      <SourceLine classname="fitnesse.updates.FileUpdate" start="20" end="76" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java"/>
+    </Class>
+    <Method classname="fitnesse.updates.FileUpdate" name="copyResource" signature="()V" isStatic="false">
+      <SourceLine classname="fitnesse.updates.FileUpdate" start="38" end="57" startBytecode="0" endBytecode="350" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java"/>
+    </Method>
+    <Class classname="java.io.OutputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.OutputStream" start="48" end="193" sourcefile="OutputStream.java" sourcepath="java/io/OutputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.updates.FileUpdate" start="44" end="44" startBytecode="30" endBytecode="30" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.updates.FileUpdate" start="47" end="47" startBytecode="34" endBytecode="34" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.updates.FileUpdate" start="50" end="50" startBytecode="73" endBytecode="73" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.updates.FileUpdate" start="51" end="51" startBytecode="79" endBytecode="79" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{OutputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fitnesse.updates.FileUpdate">
+      <SourceLine classname="fitnesse.updates.FileUpdate" start="20" end="76" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java"/>
+    </Class>
+    <Method classname="fitnesse.updates.FileUpdate" name="copyResource" signature="()V" isStatic="false">
+      <SourceLine classname="fitnesse.updates.FileUpdate" start="38" end="57" startBytecode="0" endBytecode="64" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/OutputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.OutputStream" start="48" end="193" sourcefile="OutputStream.java" sourcepath="java/io/OutputStream.java"/>
+    </Type>
+    <SourceLine classname="fitnesse.updates.FileUpdate" start="44" end="44" startBytecode="22" endBytecode="22" sourcefile="FileUpdate.java" sourcepath="fitnesse/updates/FileUpdate.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.updates.ReplacingFileUpdate">
+      <SourceLine classname="fitnesse.updates.ReplacingFileUpdate" start="12" end="45" sourcefile="ReplacingFileUpdate.java" sourcepath="fitnesse/updates/ReplacingFileUpdate.java"/>
+    </Class>
+    <Method classname="fitnesse.updates.ReplacingFileUpdate" name="shouldBeApplied" signature="()Z" isStatic="false">
+      <SourceLine classname="fitnesse.updates.ReplacingFileUpdate" start="22" end="32" startBytecode="0" endBytecode="184" sourcefile="ReplacingFileUpdate.java" sourcepath="fitnesse/updates/ReplacingFileUpdate.java"/>
+    </Method>
+    <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.updates.ReplacingFileUpdate" start="28" end="28" startBytecode="40" endBytecode="40" sourcefile="ReplacingFileUpdate.java" sourcepath="fitnesse/updates/ReplacingFileUpdate.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.updates.ReplacingFileUpdate" start="30" end="30" startBytecode="48" endBytecode="48" sourcefile="ReplacingFileUpdate.java" sourcepath="fitnesse/updates/ReplacingFileUpdate.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{InputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesse.wiki.fs.ZipFileVersionsController">
+      <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="20" end="251" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java"/>
+    </Class>
+    <Method classname="fitnesse.wiki.fs.ZipFileVersionsController" name="addToZip" signature="(Ljava/io/File;Ljava/util/zip/ZipOutputStream;)V" isStatic="false">
+      <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="173" end="185" startBytecode="0" endBytecode="296" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java"/>
+    </Method>
+    <Class classname="java.io.InputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="173" end="173" startBytecode="5" endBytecode="5" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="177" end="177" startBytecode="9" endBytecode="9" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="178" end="178" startBytecode="48" endBytecode="48" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="179" end="179" startBytecode="61" endBytecode="61" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{InputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="fitnesse.wiki.fs.ZipFileVersionsController">
+      <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="20" end="251" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java"/>
+    </Class>
+    <Method classname="fitnesse.wiki.fs.ZipFileVersionsController" name="addToZip" signature="(Ljava/io/File;Ljava/util/zip/ZipOutputStream;)V" isStatic="false">
+      <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="173" end="185" startBytecode="0" endBytecode="48" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/InputStream;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.InputStream" start="50" end="708" sourcefile="InputStream.java" sourcepath="java/io/InputStream.java"/>
+    </Type>
+    <SourceLine classname="fitnesse.wiki.fs.ZipFileVersionsController" start="173" end="173" startBytecode="0" endBytecode="0" sourcefile="ZipFileVersionsController.java" sourcepath="fitnesse/wiki/fs/ZipFileVersionsController.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="fitnesseMain.FitNesseMain">
+      <SourceLine classname="fitnesseMain.FitNesseMain" start="19" end="162" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java"/>
+    </Class>
+    <Method classname="fitnesseMain.FitNesseMain" name="executeSingleCommand" signature="(Lfitnesse/FitNesse;Ljava/lang/String;Ljava/lang/String;)V" isStatic="false">
+      <SourceLine classname="fitnesseMain.FitNesseMain" start="101" end="123" startBytecode="0" endBytecode="320" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java"/>
+    </Method>
+    <Class classname="java.io.OutputStream" role="CLASS_REFTYPE">
+      <SourceLine classname="java.io.OutputStream" start="48" end="193" sourcefile="OutputStream.java" sourcepath="java/io/OutputStream.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="109" end="109" startBytecode="76" endBytecode="76" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="115" end="115" startBytecode="97" endBytecode="97" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="116" end="116" startBytecode="104" endBytecode="104" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="118" end="118" startBytecode="108" endBytecode="108" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="121" end="121" startBytecode="121" endBytecode="121" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="fitnesseMain.FitNesseMain" start="123" end="123" startBytecode="129" endBytecode="129" sourcefile="FitNesseMain.java" sourcepath="fitnesseMain/FitNesseMain.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{OutputStream x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="util.FileUtil">
+      <SourceLine classname="util.FileUtil" start="8" end="250" sourcefile="FileUtil.java" sourcepath="util/FileUtil.java"/>
+    </Class>
+    <Method classname="util.FileUtil" name="getFileLines" signature="(Ljava/io/File;)Ljava/util/LinkedList;" isStatic="true">
+      <SourceLine classname="util.FileUtil" start="142" end="149" startBytecode="0" endBytecode="25" sourcefile="FileUtil.java" sourcepath="util/FileUtil.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Reader;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Reader" start="81" end="388" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Type>
+    <SourceLine classname="util.FileUtil" start="143" end="143" startBytecode="8" endBytecode="8" sourcefile="FileUtil.java" sourcepath="util/FileUtil.java"/>
+  </BugInstance>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Thu, 26 Mar 2026 21:37:19 +0800" total_classes="958" referenced_classes="1442" total_bugs="16" total_size="28813" num_packages="59" java_version="11.0.30" vm_version="11.0.30+7-post-Ubuntu-1ubuntu122.04" cpu_seconds="220.48" clock_seconds="35.33" peak_mbytes="396.72" alloc_mbytes="3232.00" gc_seconds="0.64" priority_3="7" priority_2="9">
+    <PackageStats package="eg" total_bugs="0" total_types="2" total_size="19">
+      <ClassStats class="eg.Division" sourceFile="Division.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="eg.GetDates" sourceFile="GetDates.java" interface="false" size="6" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="eg.bowling" total_bugs="0" total_types="3" total_size="158">
+      <ClassStats class="eg.bowling.Bowling" sourceFile="Bowling.java" interface="true" size="9" bugs="0"/>
+      <ClassStats class="eg.bowling.BowlingGame" sourceFile="BowlingGame.java" interface="false" size="112" bugs="0"/>
+      <ClassStats class="eg.bowling.BowlingScorer" sourceFile="BowlingScorer.java" interface="false" size="37" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="eg.bowling.fixtures" total_bugs="0" total_types="4" total_size="172">
+      <ClassStats class="eg.bowling.fixtures.FinalScore" sourceFile="FinalScore.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="eg.bowling.fixtures.GameTiming" sourceFile="GameTiming.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="eg.bowling.fixtures.ScoreGame" sourceFile="ScoreGame.java" interface="false" size="102" bugs="0"/>
+      <ClassStats class="eg.bowling.fixtures.SimpleScoreGame" sourceFile="SimpleScoreGame.java" interface="false" size="24" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="eg.employeePayroll" total_bugs="0" total_types="4" total_size="31">
+      <ClassStats class="eg.employeePayroll.Employees" sourceFile="Employees.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="eg.employeePayroll.PayCheck" sourceFile="PayCheck.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="eg.employeePayroll.PayDay" sourceFile="PayDay.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="eg.employeePayroll.PaycheckInspector" sourceFile="PaycheckInspector.java" interface="false" size="7" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="eg.triviaGameExample" total_bugs="0" total_types="2" total_size="41">
+      <ClassStats class="eg.triviaGameExample.Game" sourceFile="Game.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="eg.triviaGameExample.Player" sourceFile="Player.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="eg.triviaGameExample.fitnesseFixtures" total_bugs="0" total_types="3" total_size="44">
+      <ClassStats class="eg.triviaGameExample.fitnesseFixtures.AddRemovePlayerFixture" sourceFile="AddRemovePlayerFixture.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="eg.triviaGameExample.fitnesseFixtures.GameTurnFixture" sourceFile="GameTurnFixture.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="eg.triviaGameExample.fitnesseFixtures.StaticGame" sourceFile="StaticGame.java" interface="false" size="6" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit" total_bugs="2" total_types="57" total_size="1824" priority_3="1" priority_2="1">
+      <ClassStats class="fit.ActionFixture" sourceFile="ActionFixture.java" interface="false" size="70" bugs="0"/>
+      <ClassStats class="fit.Binding" sourceFile="Binding.java" interface="false" size="106" bugs="0"/>
+      <ClassStats class="fit.Binding$NullBinding" sourceFile="Binding.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.Binding$QueryBinding" sourceFile="Binding.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.Binding$RecallBinding" sourceFile="Binding.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fit.Binding$RegexQueryBinding" sourceFile="Binding.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.Binding$SaveBinding" sourceFile="Binding.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fit.Binding$SetBinding" sourceFile="Binding.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fit.ColumnFixture" sourceFile="ColumnFixture.java" interface="false" size="52" bugs="0"/>
+      <ClassStats class="fit.Comment" sourceFile="Comment.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="fit.Counts" sourceFile="Counts.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fit.FileRunner" sourceFile="FileRunner.java" interface="false" size="55" bugs="2" priority_3="1" priority_2="1"/>
+      <ClassStats class="fit.FitMatcher" sourceFile="FitMatcher.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fit.FitProtocol" sourceFile="FitProtocol.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fit.FitServer" sourceFile="FitServer.java" interface="false" size="157" bugs="0"/>
+      <ClassStats class="fit.FitServer$TablePrintingFixtureListener" sourceFile="FitServer.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fit.Fixture" sourceFile="Fixture.java" interface="false" size="220" bugs="0"/>
+      <ClassStats class="fit.Fixture$1" sourceFile="Fixture.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fit.Fixture$CellComparator" sourceFile="Fixture.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fit.Fixture$RunTime" sourceFile="Fixture.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fit.Fixture$Unparseable" sourceFile="Fixture.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.FixtureClass" sourceFile="FixtureClass.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fit.FixtureListener" sourceFile="FixtureListener.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fit.FixtureLoader" sourceFile="FixtureLoader.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="fit.FixtureLoader$1" sourceFile="FixtureLoader.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fit.FixtureName" sourceFile="FixtureName.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fit.FixtureSupplier" sourceFile="FixtureSupplier.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fit.ImportFixture" sourceFile="ImportFixture.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fit.NullFixtureListener" sourceFile="NullFixtureListener.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fit.Parse" sourceFile="Parse.java" interface="false" size="135" bugs="0"/>
+      <ClassStats class="fit.PrimitiveFixture" sourceFile="PrimitiveFixture.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fit.RowFixture" sourceFile="RowFixture.java" interface="false" size="150" bugs="0"/>
+      <ClassStats class="fit.ScientificDouble" sourceFile="ScientificDouble.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="fit.SemaphoreFixture" sourceFile="SemaphoreFixture.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fit.SummaryFixture" sourceFile="SummaryFixture.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fit.TimedActionFixture" sourceFile="TimedActionFixture.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter" sourceFile="TypeAdapter.java" interface="false" size="105" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ArrayAdapter" sourceFile="TypeAdapter.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$BooleanAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ByteAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$CharAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassBooleanAdapter" sourceFile="TypeAdapter.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassByteAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassCharacterAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassDoubleAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassFloatAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassIntegerAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassLongAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ClassShortAdapter" sourceFile="TypeAdapter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$DelegateClassAdapter" sourceFile="TypeAdapter.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$DelegateObjectAdapter" sourceFile="TypeAdapter.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$DoubleAdapter" sourceFile="TypeAdapter.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$FloatAdapter" sourceFile="TypeAdapter.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$IntAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$LongAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.TypeAdapter$ShortAdapter" sourceFile="TypeAdapter.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fit.WikiRunner" sourceFile="WikiRunner.java" interface="false" size="15" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.decorator" total_bugs="0" total_types="5" total_size="126">
+      <ClassStats class="fit.decorator.CopyAndAppendLastRow" sourceFile="CopyAndAppendLastRow.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fit.decorator.FixtureDecorator" sourceFile="FixtureDecorator.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fit.decorator.IncrementColumnsValue" sourceFile="IncrementColumnsValue.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fit.decorator.Loop" sourceFile="Loop.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fit.decorator.TestFixture" sourceFile="TestFixture.java" interface="false" size="9" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.decorator.exceptions" total_bugs="0" total_types="1" total_size="5">
+      <ClassStats class="fit.decorator.exceptions.InvalidInputException" sourceFile="InvalidInputException.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.decorator.performance" total_bugs="0" total_types="3" total_size="74">
+      <ClassStats class="fit.decorator.performance.MaxTime" sourceFile="MaxTime.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fit.decorator.performance.TimeBasedFixtureDecorator" sourceFile="TimeBasedFixtureDecorator.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fit.decorator.performance.TimeRange" sourceFile="TimeRange.java" interface="false" size="27" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.decorator.util" total_bugs="0" total_types="11" total_size="287">
+      <ClassStats class="fit.decorator.util.ClassDelegatePointParser" sourceFile="ClassDelegatePointParser.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DataType" sourceFile="DataType.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DataType$1" sourceFile="DataType.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DataType$2" sourceFile="DataType.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DataType$3" sourceFile="DataType.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DataType$4" sourceFile="DataType.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fit.decorator.util.DefaultTimer" sourceFile="DefaultTimer.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fit.decorator.util.Delta" sourceFile="Delta.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fit.decorator.util.PointDataType" sourceFile="PointDataType.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fit.decorator.util.Table" sourceFile="Table.java" interface="false" size="117" bugs="0"/>
+      <ClassStats class="fit.decorator.util.Timer" sourceFile="Timer.java" interface="true" size="3" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.exception" total_bugs="0" total_types="11" total_size="59">
+      <ClassStats class="fit.exception.ClassIsNotFixtureException" sourceFile="ClassIsNotFixtureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.CouldNotLoadComponentFitFailureException" sourceFile="CouldNotLoadComponentFitFailureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.CouldNotParseFitFailureException" sourceFile="CouldNotParseFitFailureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.FitFailureException" sourceFile="FitFailureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.FitMatcherException" sourceFile="FitMatcherException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.FitParseException" sourceFile="FitParseException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.FixtureException" sourceFile="FixtureException.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fit.exception.NoDefaultConstructorFixtureException" sourceFile="NoDefaultConstructorFixtureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.NoSuchFieldFitFailureException" sourceFile="NoSuchFieldFitFailureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.NoSuchFixtureException" sourceFile="NoSuchFixtureException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fit.exception.NoSuchMethodFitFailureException" sourceFile="NoSuchMethodFitFailureException.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fit.testFxtr" total_bugs="0" total_types="2" total_size="9">
+      <ClassStats class="fit.testFxtr.NoDefaultConstructorFixture" sourceFile="NoDefaultConstructorFixture.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fit.testFxtr.WouldBeFixture" sourceFile="WouldBeFixture.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse" total_bugs="2" total_types="12" total_size="633" priority_3="1" priority_2="1">
+      <ClassStats class="fitnesse.ConfigurationParameter" sourceFile="ConfigurationParameter.java" interface="false" size="96" bugs="2" priority_3="1" priority_2="1"/>
+      <ClassStats class="fitnesse.ContextConfigurator" sourceFile="ContextConfigurator.java" interface="false" size="145" bugs="0"/>
+      <ClassStats class="fitnesse.ContextConfigurator$1" sourceFile="ContextConfigurator.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesse" sourceFile="FitNesse.java" interface="false" size="59" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesseContext" sourceFile="FitNesseContext.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesseExpediter" sourceFile="FitNesseExpediter.java" interface="false" size="134" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesseExpediter$1" sourceFile="FitNesseExpediter.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesseServer" sourceFile="FitNesseServer.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.FitNesseVersion" sourceFile="FitNesseVersion.java" interface="false" size="39" bugs="0"/>
+      <ClassStats class="fitnesse.Responder" sourceFile="Responder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.Shutdown" sourceFile="Shutdown.java" interface="false" size="62" bugs="0"/>
+      <ClassStats class="fitnesse.Updater" sourceFile="Updater.java" interface="true" size="2" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.authentication" total_bugs="0" total_types="21" total_size="410">
+      <ClassStats class="fitnesse.authentication.AlwaysSecureOperation" sourceFile="AlwaysSecureOperation.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.Authenticator" sourceFile="Authenticator.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.HashingCipher" sourceFile="HashingCipher.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.InsecureOperation" sourceFile="InsecureOperation.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.MultiUserAuthenticator" sourceFile="MultiUserAuthenticator.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.NegotiateAuthenticator" sourceFile="NegotiateAuthenticator.java" interface="false" size="71" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.NegotiateAuthenticator$UnauthenticatedNegotiateResponder" sourceFile="NegotiateAuthenticator.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.OneUserAuthenticator" sourceFile="OneUserAuthenticator.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.Password" sourceFile="Password.java" interface="false" size="75" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.PasswordCipher" sourceFile="PasswordCipher.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.PasswordFile" sourceFile="PasswordFile.java" interface="false" size="67" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.PromiscuousAuthenticator" sourceFile="PromiscuousAuthenticator.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecureOperation" sourceFile="SecureOperation.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecurePageOperation" sourceFile="SecurePageOperation.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecurePageOperation$1" sourceFile="SecurePageOperation.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecureReadOperation" sourceFile="SecureReadOperation.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecureResponder" sourceFile="SecureResponder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecureTestOperation" sourceFile="SecureTestOperation.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.SecureWriteOperation" sourceFile="SecureWriteOperation.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.TransparentCipher" sourceFile="TransparentCipher.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.authentication.UnauthorizedResponder" sourceFile="UnauthorizedResponder.java" interface="false" size="12" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.components" total_bugs="0" total_types="9" total_size="221">
+      <ClassStats class="fitnesse.components.ComponentFactory" sourceFile="ComponentFactory.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="fitnesse.components.ComponentInstantiationException" sourceFile="ComponentInstantiationException.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.components.ContentBuffer" sourceFile="ContentBuffer.java" interface="false" size="52" bugs="0"/>
+      <ClassStats class="fitnesse.components.ContentBuffer$1" sourceFile="ContentBuffer.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.components.LogData" sourceFile="LogData.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.components.Logger" sourceFile="Logger.java" interface="false" size="64" bugs="0"/>
+      <ClassStats class="fitnesse.components.PluginsClassLoader" sourceFile="PluginsClassLoader.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.components.TraversalListener" sourceFile="TraversalListener.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.components.Traverser" sourceFile="Traverser.java" interface="true" size="2" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.fixtures" total_bugs="0" total_types="52" total_size="1119">
+      <ClassStats class="fitnesse.fixtures.ActionFixtureTestFixture" sourceFile="ActionFixtureTestFixture.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.AddTestSystem" sourceFile="AddTestSystem.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.AuthenticatorSetup" sourceFile="AuthenticatorSetup.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ClasspathPrintingFixture" sourceFile="ClasspathPrintingFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ClockFixture" sourceFile="ClockFixture.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ColumnFixtureTestFixture" sourceFile="ColumnFixtureTestFixture.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ComplexAddFixture" sourceFile="ComplexAddFixture.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.CountFixture" sourceFile="CountFixture.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.DelayedCountFixture" sourceFile="DelayedCountFixture.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.DuplicateRows" sourceFile="DuplicateRows.java" interface="false" size="39" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.EchoFixture" sourceFile="EchoFixture.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.EmployeePayRecord" sourceFile="EmployeePayRecord.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.EmployeePayRecordsRowFixture" sourceFile="EmployeePayRecordsRowFixture.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.FileSection" sourceFile="FileSection.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.FileSectionDirectoryListing" sourceFile="FileSectionDirectoryListing.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.FileSectionFileAdder" sourceFile="FileSectionFileAdder.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.FitNesseStatus" sourceFile="FitNesseStatus.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.FitnesseFixtureContext" sourceFile="FitnesseFixtureContext.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.HashFixture" sourceFile="HashFixture.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.JavaProperties" sourceFile="JavaProperties.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.LoopingActionFixture" sourceFile="LoopingActionFixture.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.NullAndBlankFixture" sourceFile="NullAndBlankFixture.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PageBuilder" sourceFile="PageBuilder.java" interface="false" size="47" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PageCreator" sourceFile="PageCreator.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PageDriver" sourceFile="PageDriver.java" interface="false" size="152" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PageDriver$HasAttributePrefixFilter" sourceFile="PageDriver.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PageHistory" sourceFile="PageHistory.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PagesRunInSuite" sourceFile="PagesRunInSuite.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.Pass" sourceFile="Pass.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PayCheckRecord" sourceFile="PayCheckRecord.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PayCheckRecordFixture" sourceFile="PayCheckRecordFixture.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PrimeData" sourceFile="PrimeData.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PrimeFactorsFixture" sourceFile="PrimeFactorsFixture.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PrimeFactorsFixture$Factor" sourceFile="PrimeFactorsFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.PrimeNumberRowFixture" sourceFile="PrimeNumberRowFixture.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.RenderFixture" sourceFile="RenderFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ResponseExaminer" sourceFile="ResponseExaminer.java" interface="false" size="109" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.ResponseRequester" sourceFile="ResponseRequester.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.RowEntryExample" sourceFile="RowEntryExample.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.RowEntryFixture" sourceFile="RowEntryFixture.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SavePageRequester" sourceFile="SavePageRequester.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SetUp" sourceFile="SetUp.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SetUp$1" sourceFile="SetUp.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.Sleep" sourceFile="Sleep.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SplitFixture" sourceFile="SplitFixture.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.StringComparator" sourceFile="StringComparator.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.StringFixture" sourceFile="StringFixture.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SystemExitTable" sourceFile="SystemExitTable.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.SystemPropertySetterFixture" sourceFile="SystemPropertySetterFixture.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.TableFixture" sourceFile="TableFixture.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.TableOrDecisionFixture" sourceFile="TableOrDecisionFixture.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.fixtures.TearDown" sourceFile="TearDown.java" interface="false" size="11" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.html" total_bugs="0" total_types="8" total_size="266">
+      <ClassStats class="fitnesse.html.HtmlElement" sourceFile="HtmlElement.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.html.HtmlTag" sourceFile="HtmlTag.java" interface="false" size="64" bugs="0"/>
+      <ClassStats class="fitnesse.html.HtmlTag$Attribute" sourceFile="HtmlTag.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.html.HtmlTag$HtmlFormatter" sourceFile="HtmlTag.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="fitnesse.html.HtmlText" sourceFile="HtmlText.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.html.HtmlUtil" sourceFile="HtmlUtil.java" interface="false" size="98" bugs="0"/>
+      <ClassStats class="fitnesse.html.RawHtml" sourceFile="RawHtml.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.html.TagGroup" sourceFile="TagGroup.java" interface="false" size="12" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.html.template" total_bugs="0" total_types="8" total_size="277">
+      <ClassStats class="fitnesse.html.template.ClasspathResourceLoader" sourceFile="ClasspathResourceLoader.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.EscapeDirective" sourceFile="EscapeDirective.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.HtmlPage" sourceFile="HtmlPage.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.PageFactory" sourceFile="PageFactory.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.PageTitle" sourceFile="PageTitle.java" interface="false" size="85" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.PageTitle$BreadCrumb" sourceFile="PageTitle.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.TraverseDirective" sourceFile="TraverseDirective.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.html.template.VelocityLogger" sourceFile="VelocityLogger.java" interface="false" size="11" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.http" total_bugs="1" total_types="20" total_size="992" priority_2="1">
+      <ClassStats class="fitnesse.http.ChunkedDataProvider" sourceFile="ChunkedDataProvider.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.http.ChunkedResponse" sourceFile="ChunkedResponse.java" interface="false" size="70" bugs="0"/>
+      <ClassStats class="fitnesse.http.ChunkedResponse$1" sourceFile="ChunkedResponse.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.http.HttpException" sourceFile="HttpException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.http.InputStreamResponse" sourceFile="InputStreamResponse.java" interface="false" size="30" bugs="1" priority_2="1"/>
+      <ClassStats class="fitnesse.http.MockChunkedDataProvider" sourceFile="MockChunkedDataProvider.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.http.MockRequest" sourceFile="MockRequest.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.http.MockRequestBuilder" sourceFile="MockRequestBuilder.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="fitnesse.http.MockResponseSender" sourceFile="MockResponseSender.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.http.MockResponseSender$OutputStreamSender" sourceFile="MockResponseSender.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.http.Request" sourceFile="Request.java" interface="false" size="250" bugs="0"/>
+      <ClassStats class="fitnesse.http.RequestBuilder" sourceFile="RequestBuilder.java" interface="false" size="156" bugs="0"/>
+      <ClassStats class="fitnesse.http.RequestBuilder$InputStreamPart" sourceFile="RequestBuilder.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.http.Response" sourceFile="Response.java" interface="false" size="113" bugs="0"/>
+      <ClassStats class="fitnesse.http.Response$1" sourceFile="Response.java" interface="false" size="44" bugs="0"/>
+      <ClassStats class="fitnesse.http.Response$Format" sourceFile="Response.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.http.ResponseParser" sourceFile="ResponseParser.java" interface="false" size="93" bugs="0"/>
+      <ClassStats class="fitnesse.http.ResponseSender" sourceFile="ResponseSender.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.http.SimpleResponse" sourceFile="SimpleResponse.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fitnesse.http.UploadedFile" sourceFile="UploadedFile.java" interface="false" size="25" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.junit" total_bugs="4" total_types="22" total_size="601" priority_3="2" priority_2="2">
+      <ClassStats class="fitnesse.junit.CommandBuilder" sourceFile="CommandBuilder.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner" sourceFile="FitNesseRunner.java" interface="false" size="200" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$ConfigFile" sourceFile="FitNesseRunner.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$DebugMode" sourceFile="FitNesseRunner.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$ExcludeSuiteFilter" sourceFile="FitNesseRunner.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$FitnesseDir" sourceFile="FitNesseRunner.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$OutputDir" sourceFile="FitNesseRunner.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$Port" sourceFile="FitNesseRunner.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$Suite" sourceFile="FitNesseRunner.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseRunner$SuiteFilter" sourceFile="FitNesseRunner.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseSuite" sourceFile="FitNesseSuite.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.junit.FitNesseSuite$Name" sourceFile="FitNesseSuite.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JUnitHelper" sourceFile="JUnitHelper.java" interface="false" size="72" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JUnitRunNotifierResultsListener" sourceFile="JUnitRunNotifierResultsListener.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter" sourceFile="JavaFormatter.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$FileCopier" sourceFile="JavaFormatter.java" interface="false" size="12" bugs="4" priority_3="2" priority_2="2"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$FolderResultsRepository" sourceFile="JavaFormatter.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$ResultsRepository" sourceFile="JavaFormatter.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$TestResultPage" sourceFile="JavaFormatter.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$TestResultsSummaryTable" sourceFile="JavaFormatter.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.junit.JavaFormatter$TestResultsSummaryTableRow" sourceFile="JavaFormatter.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.junit.PrintTestListener" sourceFile="PrintTestListener.java" interface="false" size="32" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.logging" total_bugs="0" total_types="1" total_size="26">
+      <ClassStats class="fitnesse.logging.LogFormatter" sourceFile="LogFormatter.java" interface="false" size="26" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.plugins" total_bugs="0" total_types="11" total_size="276">
+      <ClassStats class="fitnesse.plugins.LegacyPluginFeatureFactory" sourceFile="LegacyPluginFeatureFactory.java" interface="false" size="44" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PluginException" sourceFile="PluginException.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PluginFeatureFactory" sourceFile="PluginFeatureFactory.java" interface="true" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PluginFeatureFactoryBase" sourceFile="PluginFeatureFactoryBase.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PluginsLoader" sourceFile="PluginsLoader.java" interface="false" size="76" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="false" size="84" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory$1" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory$2" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory$3" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory$4" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.plugins.PropertyBasedPluginFeatureFactory$Registrar" sourceFile="PropertyBasedPluginFeatureFactory.java" interface="true" size="2" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.reporting" total_bugs="0" total_types="7" total_size="363">
+      <ClassStats class="fitnesse.reporting.BaseFormatter" sourceFile="BaseFormatter.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.ExecutionStatus" sourceFile="ExecutionStatus.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.ExitCodeListener" sourceFile="ExitCodeListener.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.InteractiveFormatter" sourceFile="InteractiveFormatter.java" interface="false" size="90" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.PageInProgressFormatter" sourceFile="PageInProgressFormatter.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.SuiteHtmlFormatter" sourceFile="SuiteHtmlFormatter.java" interface="false" size="120" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.TestTextFormatter" sourceFile="TestTextFormatter.java" interface="false" size="48" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.reporting.history" total_bugs="0" total_types="24" total_size="1147">
+      <ClassStats class="fitnesse.reporting.history.ExecutionReport" sourceFile="ExecutionReport.java" interface="false" size="143" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.ExecutionReport$ExecutionLogReport" sourceFile="ExecutionReport.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.HistoryPurger" sourceFile="HistoryPurger.java" interface="false" size="59" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.MostRecentPageHistoryReader" sourceFile="MostRecentPageHistoryReader.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistory" sourceFile="PageHistory.java" interface="false" size="117" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistory$1" sourceFile="PageHistory.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistory$BarGraph" sourceFile="PageHistory.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistory$PassFailBar" sourceFile="PageHistory.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistory$PassFailReport" sourceFile="PageHistory.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.PageHistoryReader" sourceFile="PageHistoryReader.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.SuiteExecutionReport" sourceFile="SuiteExecutionReport.java" interface="false" size="67" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.SuiteExecutionReport$PageHistoryReference" sourceFile="SuiteExecutionReport.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.SuiteHistoryFormatter" sourceFile="SuiteHistoryFormatter.java" interface="false" size="105" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.SuiteXmlReformatter" sourceFile="SuiteXmlReformatter.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport" sourceFile="TestExecutionReport.java" interface="false" size="87" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport$Expectation" sourceFile="TestExecutionReport.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport$InstructionResult" sourceFile="TestExecutionReport.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport$Row" sourceFile="TestExecutionReport.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport$Table" sourceFile="TestExecutionReport.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestExecutionReport$TestResult" sourceFile="TestExecutionReport.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestHistory" sourceFile="TestHistory.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestResultRecord" sourceFile="TestResultRecord.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestXmlFormatter" sourceFile="TestXmlFormatter.java" interface="false" size="146" bugs="0"/>
+      <ClassStats class="fitnesse.reporting.history.TestXmlFormatter$WriterFactory" sourceFile="TestXmlFormatter.java" interface="true" size="2" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders" total_bugs="0" total_types="37" total_size="1234">
+      <ClassStats class="fitnesse.responders.BasicResponder" sourceFile="BasicResponder.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ChunkingResponder" sourceFile="ChunkingResponder.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fitnesse.responders.DefaultResponder" sourceFile="DefaultResponder.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.responders.DisabledResponder" sourceFile="DisabledResponder.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ErrorResponder" sourceFile="ErrorResponder.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.responders.FilteringResponder" sourceFile="FilteringResponder.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ImportAndViewResponder" sourceFile="ImportAndViewResponder.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.responders.MockWikiImporter" sourceFile="MockWikiImporter.java" interface="false" size="26" bugs="0"/>
+      <ClassStats class="fitnesse.responders.NameWikiPageResponder" sourceFile="NameWikiPageResponder.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="fitnesse.responders.NotFoundResponder" sourceFile="NotFoundResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.PacketResponder" sourceFile="PacketResponder.java" interface="false" size="69" bugs="0"/>
+      <ClassStats class="fitnesse.responders.PageDataWikiPageResponder" sourceFile="PageDataWikiPageResponder.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RawContentResponder" sourceFile="RawContentResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ResponderFactory" sourceFile="ResponderFactory.java" interface="false" size="111" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RssResponder" sourceFile="RssResponder.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RssResponder$LinkPrefixBuilder" sourceFile="RssResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RssResponder$RecentChangesPage" sourceFile="RssResponder.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RssResponder$RecentChangesPageEntry" sourceFile="RssResponder.java" interface="false" size="26" bugs="0"/>
+      <ClassStats class="fitnesse.responders.RssResponder$RssFeed" sourceFile="RssResponder.java" interface="false" size="44" bugs="0"/>
+      <ClassStats class="fitnesse.responders.SerializedPageResponder" sourceFile="SerializedPageResponder.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.responders.SerializedPageResponder$1" sourceFile="SerializedPageResponder.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ShutdownResponder" sourceFile="ShutdownResponder.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.responders.ShutdownResponder$1" sourceFile="ShutdownResponder.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporter" sourceFile="WikiImporter.java" interface="false" size="211" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporter$1" sourceFile="WikiImporter.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporter$AuthenticationRequiredException" sourceFile="WikiImporter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporter$NullWikiImporterClient" sourceFile="WikiImporter.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporter$WikiImporterException" sourceFile="WikiImporter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImporterClient" sourceFile="WikiImporterClient.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImportingResponder" sourceFile="WikiImportingResponder.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImportingTraverser" sourceFile="WikiImportingTraverser.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiImportingTraverser$ImportError" sourceFile="WikiImportingTraverser.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiPageActions" sourceFile="WikiPageActions.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiPageResponder" sourceFile="WikiPageResponder.java" interface="false" size="56" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiPageResponder$WikiPageFooterRenderer" sourceFile="WikiPageResponder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiPageResponder$WikiPageRenderer" sourceFile="WikiPageResponder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.responders.WikiPageResponder$WikiTestPageRenderer" sourceFile="WikiPageResponder.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.editing" total_bugs="0" total_types="15" total_size="758">
+      <ClassStats class="fitnesse.responders.editing.AddChildPageResponder" sourceFile="AddChildPageResponder.java" interface="false" size="81" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.ContentFilter" sourceFile="ContentFilter.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.ContentFilterResponder" sourceFile="ContentFilterResponder.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.EditResponder" sourceFile="EditResponder.java" interface="false" size="67" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.MergeResponder" sourceFile="MergeResponder.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.NewPageResponder" sourceFile="NewPageResponder.java" interface="false" size="53" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.PropertiesResponder" sourceFile="PropertiesResponder.java" interface="false" size="146" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.PropertiesResponder$Symlink" sourceFile="PropertiesResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.SavePropertiesResponder" sourceFile="SavePropertiesResponder.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.SaveRecorder" sourceFile="SaveRecorder.java" interface="false" size="28" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.SaveRecorder$MergeDeterminer" sourceFile="SaveRecorder.java" interface="false" size="28" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.SaveResponder" sourceFile="SaveResponder.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.SymbolicLinkResponder" sourceFile="SymbolicLinkResponder.java" interface="false" size="110" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.TemplateUtil" sourceFile="TemplateUtil.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="fitnesse.responders.editing.TemplateUtil$1" sourceFile="TemplateUtil.java" interface="false" size="12" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.files" total_bugs="0" total_types="15" total_size="389">
+      <ClassStats class="fitnesse.responders.files.CreateDirectoryResponder" sourceFile="CreateDirectoryResponder.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.CreateDirectoryResponder$1" sourceFile="CreateDirectoryResponder.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.DeleteConfirmationResponder" sourceFile="DeleteConfirmationResponder.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.DeleteFileResponder" sourceFile="DeleteFileResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.DeleteFileResponder$1" sourceFile="DeleteFileResponder.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.DirectoryResponder" sourceFile="DirectoryResponder.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.DirectoryResponder$FileInfo" sourceFile="DirectoryResponder.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.FileResponder" sourceFile="FileResponder.java" interface="false" size="101" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.FileResponder$1" sourceFile="FileResponder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.RenameFileConfirmationResponder" sourceFile="RenameFileConfirmationResponder.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.RenameFileResponder" sourceFile="RenameFileResponder.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.RenameFileResponder$1" sourceFile="RenameFileResponder.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.UploadResponder" sourceFile="UploadResponder.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.UploadResponder$1" sourceFile="UploadResponder.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.responders.files.UploadResponder$1$1" sourceFile="UploadResponder.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.refactoring" total_bugs="0" total_types="7" total_size="268">
+      <ClassStats class="fitnesse.responders.refactoring.DeletePageResponder" sourceFile="DeletePageResponder.java" interface="false" size="62" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.MovePageResponder" sourceFile="MovePageResponder.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.PageMovementResponder" sourceFile="PageMovementResponder.java" interface="false" size="92" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.RefactorException" sourceFile="RefactorException.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.RefactorPageResponder" sourceFile="RefactorPageResponder.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.RenamePageResponder" sourceFile="RenamePageResponder.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.responders.refactoring.SearchReplaceResponder" sourceFile="SearchReplaceResponder.java" interface="false" size="27" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.run" total_bugs="0" total_types="9" total_size="303">
+      <ClassStats class="fitnesse.responders.run.StopTestResponder" sourceFile="StopTestResponder.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder" sourceFile="SuiteResponder.java" interface="false" size="223" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder$1" sourceFile="SuiteResponder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder$HistoryWriterFactory" sourceFile="SuiteResponder.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder$TestExecutor" sourceFile="SuiteResponder.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder$WikiPageFooterRenderer" sourceFile="SuiteResponder.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.SuiteResponder$WikiPageHeaderRenderer" sourceFile="SuiteResponder.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.TestResponder" sourceFile="TestResponder.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.run.TestResponder$1" sourceFile="TestResponder.java" interface="false" size="6" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.search" total_bugs="0" total_types="6" total_size="145">
+      <ClassStats class="fitnesse.responders.search.ExecuteSearchPropertiesResponder" sourceFile="ExecuteSearchPropertiesResponder.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="fitnesse.responders.search.ResultResponder" sourceFile="ResultResponder.java" interface="false" size="26" bugs="0"/>
+      <ClassStats class="fitnesse.responders.search.ResultResponder$1" sourceFile="ResultResponder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.responders.search.SearchFormResponder" sourceFile="SearchFormResponder.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.responders.search.SearchResponder" sourceFile="SearchResponder.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.responders.search.WhereUsedResponder" sourceFile="WhereUsedResponder.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.testHistory" total_bugs="0" total_types="22" total_size="911">
+      <ClassStats class="fitnesse.responders.testHistory.ExecutionLogResponder" sourceFile="ExecutionLogResponder.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer" sourceFile="HistoryComparer.java" interface="false" size="142" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer$1" sourceFile="HistoryComparer.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer$FirstResultAdjustmentStrategy" sourceFile="HistoryComparer.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer$MatchedPair" sourceFile="HistoryComparer.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer$ResultAdjustmentStrategy" sourceFile="HistoryComparer.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparer$SecondResultAdjustmentStrategy" sourceFile="HistoryComparer.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.HistoryComparerResponder" sourceFile="HistoryComparerResponder.java" interface="false" size="100" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.PageHistoryResponder" sourceFile="PageHistoryResponder.java" interface="false" size="116" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.PurgeHistoryResponder" sourceFile="PurgeHistoryResponder.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewResponder" sourceFile="SuiteOverviewResponder.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree" sourceFile="SuiteOverviewTree.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree$1" sourceFile="SuiteOverviewTree.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree$2" sourceFile="SuiteOverviewTree.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree$3" sourceFile="SuiteOverviewTree.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree$RecursiveTreeMethod" sourceFile="SuiteOverviewTree.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.SuiteOverviewTree$TreeItem" sourceFile="SuiteOverviewTree.java" interface="false" size="116" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.TableListComparer" sourceFile="TableListComparer.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.TableListComparer$1" sourceFile="TableListComparer.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.TableListComparer$2" sourceFile="TableListComparer.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.TableListComparer$TableComparer" sourceFile="TableListComparer.java" interface="false" size="77" bugs="0"/>
+      <ClassStats class="fitnesse.responders.testHistory.TestHistoryResponder" sourceFile="TestHistoryResponder.java" interface="false" size="36" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.responders.versions" total_bugs="0" total_types="6" total_size="212">
+      <ClassStats class="fitnesse.responders.versions.RollbackResponder" sourceFile="RollbackResponder.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.responders.versions.VersionComparer" sourceFile="VersionComparer.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.responders.versions.VersionComparerResponder" sourceFile="VersionComparerResponder.java" interface="false" size="79" bugs="0"/>
+      <ClassStats class="fitnesse.responders.versions.VersionResponder" sourceFile="VersionResponder.java" interface="false" size="56" bugs="0"/>
+      <ClassStats class="fitnesse.responders.versions.VersionResponder$VersionRenderer" sourceFile="VersionResponder.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.responders.versions.VersionSelectionResponder" sourceFile="VersionSelectionResponder.java" interface="false" size="28" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim" total_bugs="0" total_types="46" total_size="1190">
+      <ClassStats class="fitnesse.slim.Converter" sourceFile="Converter.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.slim.ConverterSupport" sourceFile="ConverterSupport.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.slim.FixtureMethodExecutor" sourceFile="FixtureMethodExecutor.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.slim.JavaSlimFactory" sourceFile="JavaSlimFactory.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.slim.Jsr223Bridge" sourceFile="Jsr223Bridge.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.slim.Jsr223SlimFactory" sourceFile="Jsr223SlimFactory.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.slim.Jsr223StatementExecutor" sourceFile="Jsr223StatementExecutor.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="fitnesse.slim.Library" sourceFile="Library.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.LibraryMethodExecutor" sourceFile="LibraryMethodExecutor.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.slim.ListExecutor" sourceFile="ListExecutor.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.slim.ListExecutor$1" sourceFile="ListExecutor.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.slim.ListExecutor$Executive" sourceFile="ListExecutor.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.slim.ListExecutor$LoggingExecutive" sourceFile="ListExecutor.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutionResult" sourceFile="MethodExecutionResult.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutionResult$1" sourceFile="MethodExecutionResult.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutionResult$NoInstance" sourceFile="MethodExecutionResult.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutionResult$NoMethod" sourceFile="MethodExecutionResult.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutionResults" sourceFile="MethodExecutionResults.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.MethodExecutor" sourceFile="MethodExecutor.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.slim.NameTranslator" sourceFile="NameTranslator.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.slim.NameTranslatorIdentity" sourceFile="NameTranslatorIdentity.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.Slim" sourceFile="Slim.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimError" sourceFile="SlimError.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimException" sourceFile="SlimException.java" interface="false" size="81" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimExecutionContext" sourceFile="SlimExecutionContext.java" interface="false" size="92" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimFactory" sourceFile="SlimFactory.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimHelperLibrary" sourceFile="SlimHelperLibrary.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimServer" sourceFile="SlimServer.java" interface="false" size="78" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimService" sourceFile="SlimService.java" interface="false" size="106" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimService$1" sourceFile="SlimService.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimService$2" sourceFile="SlimService.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimService$Options" sourceFile="SlimService.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SlimVersion" sourceFile="SlimVersion.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StackTraceEnricher" sourceFile="StackTraceEnricher.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StackTraceEnricher$ClassMetaInformation" sourceFile="StackTraceEnricher.java" interface="false" size="97" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementExecutor" sourceFile="StatementExecutor.java" interface="false" size="83" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementExecutorConsumer" sourceFile="StatementExecutorConsumer.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementExecutorInterface" sourceFile="StatementExecutorInterface.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementTimeoutExecutor" sourceFile="StatementTimeoutExecutor.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementTimeoutExecutor$1" sourceFile="StatementTimeoutExecutor.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementTimeoutExecutor$2" sourceFile="StatementTimeoutExecutor.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StatementTimeoutExecutor$3" sourceFile="StatementTimeoutExecutor.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.StopTestSlimException" sourceFile="StopTestSlimException.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SystemUnderTest" sourceFile="SystemUnderTest.java" interface="true" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.slim.SystemUnderTestMethodExecutor" sourceFile="SystemUnderTestMethodExecutor.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.slim.VariableStore" sourceFile="VariableStore.java" interface="false" size="58" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.converters" total_bugs="0" total_types="18" total_size="373">
+      <ClassStats class="fitnesse.slim.converters.BooleanConverter" sourceFile="BooleanConverter.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.CharConverter" sourceFile="CharConverter.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.ConverterRegistry" sourceFile="ConverterRegistry.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.DateConverter" sourceFile="DateConverter.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.DoubleConverter" sourceFile="DoubleConverter.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.GenericArrayConverter" sourceFile="GenericArrayConverter.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.GenericCollectionConverter" sourceFile="GenericCollectionConverter.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.GenericEnumConverter" sourceFile="GenericEnumConverter.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.IntConverter" sourceFile="IntConverter.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.ListConverterHelper" sourceFile="ListConverterHelper.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.MapEditor" sourceFile="MapEditor.java" interface="false" size="94" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.PrimitiveBooleanConverter" sourceFile="PrimitiveBooleanConverter.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.PrimitiveCharConverter" sourceFile="PrimitiveCharConverter.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.PrimitiveDoubleConverter" sourceFile="PrimitiveDoubleConverter.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.PrimitiveIntConverter" sourceFile="PrimitiveIntConverter.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.PropertyEditorConverter" sourceFile="PropertyEditorConverter.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.StringConverter" sourceFile="StringConverter.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.converters.VoidConverter" sourceFile="VoidConverter.java" interface="false" size="10" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.fixtureInteraction" total_bugs="0" total_types="5" total_size="36">
+      <ClassStats class="fitnesse.slim.fixtureInteraction.DefaultInteraction" sourceFile="DefaultInteraction.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.slim.fixtureInteraction.FixtureInteraction" sourceFile="FixtureInteraction.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.slim.fixtureInteraction.InteractionDemo" sourceFile="InteractionDemo.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.slim.fixtureInteraction.LoggingInteraction" sourceFile="LoggingInteraction.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.slim.fixtureInteraction.Testee" sourceFile="Testee.java" interface="false" size="10" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.instructions" total_bugs="0" total_types="16" total_size="380">
+      <ClassStats class="fitnesse.slim.instructions.AssignInstruction" sourceFile="AssignInstruction.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.CallAndAssignInstruction" sourceFile="CallAndAssignInstruction.java" interface="false" size="52" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.CallInstruction" sourceFile="CallInstruction.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.ImportInstruction" sourceFile="ImportInstruction.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.Instruction" sourceFile="Instruction.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.Instruction$1" sourceFile="Instruction.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionExecutor" sourceFile="InstructionExecutor.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionFactory" sourceFile="InstructionFactory.java" interface="false" size="64" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionResult" sourceFile="InstructionResult.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionResult$Error" sourceFile="InstructionResult.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionResult$Ok" sourceFile="InstructionResult.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InstructionResult$Void" sourceFile="InstructionResult.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.InvalidInstruction" sourceFile="InvalidInstruction.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.MakeInstruction" sourceFile="MakeInstruction.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.SystemExitSecurityManager" sourceFile="SystemExitSecurityManager.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.slim.instructions.SystemExitSecurityManager$SystemExitException" sourceFile="SystemExitSecurityManager.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.protocol" total_bugs="0" total_types="3" total_size="130">
+      <ClassStats class="fitnesse.slim.protocol.SlimDeserializer" sourceFile="SlimDeserializer.java" interface="false" size="87" bugs="0"/>
+      <ClassStats class="fitnesse.slim.protocol.SlimSerializer" sourceFile="SlimSerializer.java" interface="false" size="35" bugs="0"/>
+      <ClassStats class="fitnesse.slim.protocol.SyntaxError" sourceFile="SyntaxError.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.test" total_bugs="0" total_types="33" total_size="563">
+      <ClassStats class="fitnesse.slim.test.AddUpChange" sourceFile="AddUpChange.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.AnEnum" sourceFile="AnEnum.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.AnotherEnum" sourceFile="AnotherEnum.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.AnotherEnumEditor" sourceFile="AnotherEnumEditor.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.Bowling" sourceFile="Bowling.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.Bowling$1" sourceFile="Bowling.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.Bowling$Game" sourceFile="Bowling.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.Bowling$Game$Scorer" sourceFile="Bowling.java" interface="false" size="44" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.ConstructorThrows" sourceFile="ConstructorThrows.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.DecisionTableExecuteThrows" sourceFile="DecisionTableExecuteThrows.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.DummyDecisionTable" sourceFile="DummyDecisionTable.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.DummyDecisionTableWithExecuteButNoReset" sourceFile="DummyDecisionTableWithExecuteButNoReset.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.DummyQueryTableWithNoTableMethod" sourceFile="DummyQueryTableWithNoTableMethod.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.DummyTableTableReturnsNull" sourceFile="DummyTableTableReturnsNull.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.EchoScript" sourceFile="EchoScript.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.EmployeesHiredBefore" sourceFile="EmployeesHiredBefore.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.ExecuteThrowsReportableException" sourceFile="ExecuteThrowsReportableException.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.LoginDialogDriver" sourceFile="LoginDialogDriver.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.MySystemUnderTest" sourceFile="MySystemUnderTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.MySystemUnderTestDriver" sourceFile="MySystemUnderTestDriver.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.NullFixture" sourceFile="NullFixture.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.ShouldIBuyMilk" sourceFile="ShouldIBuyMilk.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.StopSuiteException" sourceFile="ConstructorThrows.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.StopTestException" sourceFile="ConstructorThrows.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TableResultExtractor" sourceFile="TableResultExtractor.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TableTableIncFirstCol" sourceFile="TableTableIncFirstCol.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TestQuery" sourceFile="TestQuery.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TestSlim" sourceFile="TestSlim.java" interface="false" size="163" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TestSlim$NoSuchConverter" sourceFile="TestSlim.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TestSlim$StopTestException" sourceFile="TestSlim.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.TestSlimInterface" sourceFile="TestSlimInterface.java" interface="true" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.Zork" sourceFile="Zork.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.ZorkEditor" sourceFile="ZorkEditor.java" interface="false" size="10" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.slim.test.library" total_bugs="0" total_types="4" total_size="30">
+      <ClassStats class="fitnesse.slim.test.library.EchoSupport" sourceFile="EchoSupport.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.library.LibraryFixture" sourceFile="LibraryFixture.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.library.LibraryInSetUp" sourceFile="LibraryInSetUp.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.slim.test.library.SpecialEchoSupport" sourceFile="SpecialEchoSupport.java" interface="false" size="9" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.socketservice" total_bugs="0" total_types="6" total_size="122">
+      <ClassStats class="fitnesse.socketservice.SocketFactory" sourceFile="SocketFactory.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.socketservice.SocketServer" sourceFile="SocketServer.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.socketservice.SocketServer$StreamUtility" sourceFile="SocketServer.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.socketservice.SocketService" sourceFile="SocketService.java" interface="false" size="76" bugs="0"/>
+      <ClassStats class="fitnesse.socketservice.SocketService$1" sourceFile="SocketService.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.socketservice.SocketService$ServerRunner" sourceFile="SocketService.java" interface="false" size="15" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testrunner" total_bugs="0" total_types="29" total_size="973">
+      <ClassStats class="fitnesse.testrunner.ClassPathBuilder" sourceFile="ClassPathBuilder.java" interface="false" size="69" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.ClassPathBuilder$1" sourceFile="ClassPathBuilder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.ClassPathBuilder$Wildcard" sourceFile="ClassPathBuilder.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.CompositeFormatter" sourceFile="CompositeFormatter.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestSystemFactory" sourceFile="MultipleTestSystemFactory.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestSystemFactory$FitTestSystemFactory" sourceFile="MultipleTestSystemFactory.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestSystemFactory$HtmlSlimTestSystemFactory" sourceFile="MultipleTestSystemFactory.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestSystemFactory$InProcessFitTestSystemFactory" sourceFile="MultipleTestSystemFactory.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestSystemFactory$InProcessHtmlSlimTestSystemFactory" sourceFile="MultipleTestSystemFactory.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestsRunner" sourceFile="MultipleTestsRunner.java" interface="false" size="104" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestsRunner$1" sourceFile="MultipleTestsRunner.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.MultipleTestsRunner$InternalTestSystemListener" sourceFile="MultipleTestsRunner.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.PageListSetUpTearDownSurrounder" sourceFile="PageListSetUpTearDownSurrounder.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.PagesByTestSystem" sourceFile="PagesByTestSystem.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.RunningTestingTracker" sourceFile="RunningTestingTracker.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.Stoppable" sourceFile="Stoppable.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteContentsFinder" sourceFile="SuiteContentsFinder.java" interface="false" size="72" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteContentsFinder$1" sourceFile="SuiteContentsFinder.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteFilter" sourceFile="SuiteFilter.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteFilter$1" sourceFile="SuiteFilter.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteFilter$SuiteTagMatcher" sourceFile="SuiteFilter.java" interface="false" size="49" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.SuiteSpecificationRunner" sourceFile="SuiteSpecificationRunner.java" interface="false" size="86" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.TestPageWithSuiteSetUpAndTearDown" sourceFile="TestPageWithSuiteSetUpAndTearDown.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.TestSystemFactoryRegistry" sourceFile="TestSystemFactoryRegistry.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.TestsRunnerListener" sourceFile="TestsRunnerListener.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.WikiPageIdentity" sourceFile="WikiPageIdentity.java" interface="false" size="35" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.WikiTestPage" sourceFile="WikiTestPage.java" interface="false" size="114" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.WikiTestPage$1" sourceFile="WikiTestPage.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testrunner.WikiTestPageUtil" sourceFile="WikiTestPageUtil.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems" total_bugs="0" total_types="31" total_size="620">
+      <ClassStats class="fitnesse.testsystems.Assertion" sourceFile="Assertion.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ClassPath" sourceFile="ClassPath.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ClientBuilder" sourceFile="ClientBuilder.java" interface="false" size="114" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ClientBuilder$1" sourceFile="ClientBuilder.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ClientBuilder$DecoratingExecutionLogListener" sourceFile="ClientBuilder.java" interface="false" size="26" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ClientBuilder$DecoratingExecutionLogListener$1" sourceFile="ClientBuilder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner" sourceFile="CommandRunner.java" interface="false" size="109" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner$1" sourceFile="CommandRunner.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner$2" sourceFile="CommandRunner.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner$3" sourceFile="CommandRunner.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner$OutputReadingRunnable" sourceFile="CommandRunner.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CommandRunner$OutputWriter" sourceFile="CommandRunner.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CompositeExecutionLogListener" sourceFile="CompositeExecutionLogListener.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.CompositeTestSystemListener" sourceFile="CompositeTestSystemListener.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ConsoleExecutionLogListener" sourceFile="ConsoleExecutionLogListener.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.Descriptor" sourceFile="Descriptor.java" interface="true" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ExceptionResult" sourceFile="ExceptionResult.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ExecutionLogListener" sourceFile="ExecutionLogListener.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ExecutionLogListener$ExecutionContext" sourceFile="ExecutionLogListener.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.ExecutionResult" sourceFile="ExecutionResult.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.Expectation" sourceFile="Expectation.java" interface="true" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.Instruction" sourceFile="Instruction.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.MockCommandRunner" sourceFile="MockCommandRunner.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TableCell" sourceFile="TableCell.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestPage" sourceFile="TestPage.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestResult" sourceFile="TestResult.java" interface="true" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestSummary" sourceFile="TestSummary.java" interface="false" size="83" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestSummary$1" sourceFile="TestSummary.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestSystem" sourceFile="TestSystem.java" interface="true" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestSystemFactory" sourceFile="TestSystemFactory.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.TestSystemListener" sourceFile="TestSystemListener.java" interface="true" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems.example" total_bugs="0" total_types="2" total_size="32">
+      <ClassStats class="fitnesse.testsystems.example.EchoTestSystemFactory" sourceFile="EchoTestSystemFactory.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.example.EchoTestSystemFactory$EchoTestSystem" sourceFile="EchoTestSystemFactory.java" interface="false" size="27" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems.fit" total_bugs="0" total_types="16" total_size="454">
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient" sourceFile="CommandRunningFitClient.java" interface="false" size="64" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$CommandRunningStrategy" sourceFile="CommandRunningFitClient.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$InProcessCommandRunner" sourceFile="CommandRunningFitClient.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$InProcessCommandRunner$1" sourceFile="CommandRunningFitClient.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$OutOfProcessCommandRunner" sourceFile="CommandRunningFitClient.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$OutOfProcessCommandRunner$EarlyTerminationRunnable" sourceFile="CommandRunningFitClient.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.CommandRunningFitClient$OutOfProcessCommandRunner$TimeoutRunnable" sourceFile="CommandRunningFitClient.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitClient" sourceFile="FitClient.java" interface="false" size="82" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitClient$1" sourceFile="FitClient.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitClient$FitListeningRunnable" sourceFile="FitClient.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitClientBuilder" sourceFile="FitClientBuilder.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitClientListener" sourceFile="FitClientListener.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.FitTestSystem" sourceFile="FitTestSystem.java" interface="false" size="73" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.InProcessFitClientBuilder" sourceFile="InProcessFitClientBuilder.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.SocketAccepter" sourceFile="SocketAccepter.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.fit.SocketCatcher" sourceFile="SocketCatcher.java" interface="false" size="28" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems.slim" total_bugs="0" total_types="21" total_size="913">
+      <ClassStats class="fitnesse.testsystems.slim.CustomComparator" sourceFile="CustomComparator.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.CustomComparatorRegistry" sourceFile="CustomComparatorRegistry.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.GlobComparator" sourceFile="GlobComparator.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlSlimTestSystem" sourceFile="HtmlSlimTestSystem.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlTable" sourceFile="HtmlTable.java" interface="false" size="142" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlTable$1" sourceFile="HtmlTable.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlTable$Cell" sourceFile="HtmlTable.java" interface="false" size="66" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlTable$Row" sourceFile="HtmlTable.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.HtmlTableScanner" sourceFile="HtmlTableScanner.java" interface="false" size="59" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.InProcessSlimClientBuilder" sourceFile="InProcessSlimClientBuilder.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimClient" sourceFile="SlimClient.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimClientBuilder" sourceFile="SlimClientBuilder.java" interface="false" size="115" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimCommandRunningClient" sourceFile="SlimCommandRunningClient.java" interface="false" size="119" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimCommandRunningClient$1" sourceFile="SlimCommandRunningClient.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimCommandRunningClient$ToListExecutor" sourceFile="SlimCommandRunningClient.java" interface="true" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimTestContext" sourceFile="SlimTestContext.java" interface="true" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimTestContextImpl" sourceFile="SlimTestContextImpl.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.SlimTestSystem" sourceFile="SlimTestSystem.java" interface="false" size="137" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.Table" sourceFile="Table.java" interface="true" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.Table$CellContentSubstitution" sourceFile="Table.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.TableScanner" sourceFile="TableScanner.java" interface="true" size="4" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems.slim.results" total_bugs="0" total_types="2" total_size="161">
+      <ClassStats class="fitnesse.testsystems.slim.results.SlimExceptionResult" sourceFile="SlimExceptionResult.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.results.SlimTestResult" sourceFile="SlimTestResult.java" interface="false" size="104" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testsystems.slim.tables" total_bugs="0" total_types="57" total_size="1867">
+      <ClassStats class="fitnesse.testsystems.slim.tables.ComparatorUtil" sourceFile="ComparatorUtil.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTable" sourceFile="DecisionTable.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTable$FixtureCaller" sourceFile="DecisionTable.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTable$ScenarioCaller" sourceFile="DecisionTable.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTable$ScenarioCallerWithConstuctorParameters" sourceFile="DecisionTable.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTableCaller" sourceFile="DecisionTableCaller.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DecisionTableCaller$ColumnHeaderStore" sourceFile="DecisionTableCaller.java" interface="false" size="28" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DynamicDecisionTable" sourceFile="DynamicDecisionTable.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.DynamicDecisionTable$FixtureCaller" sourceFile="DynamicDecisionTable.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ImportTable" sourceFile="ImportTable.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ImportTable$ImportExpectation" sourceFile="ImportTable.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.LibraryTable" sourceFile="LibraryTable.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.OrderedQueryTable" sourceFile="OrderedQueryTable.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable" sourceFile="QueryTable.java" interface="false" size="144" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$1" sourceFile="QueryTable.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$MatchedResult" sourceFile="QueryTable.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$MatchedResult$1" sourceFile="QueryTable.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$QueryResults" sourceFile="QueryTable.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$QueryResults$QueryMatcher" sourceFile="QueryTable.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$QueryResults$QueryResultRow" sourceFile="QueryTable.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.QueryTable$QueryTableExpectation" sourceFile="QueryTable.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScenarioTable" sourceFile="ScenarioTable.java" interface="false" size="152" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScenarioTable$1" sourceFile="ScenarioTable.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScenarioTable$ScenarioExpectation" sourceFile="ScenarioTable.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScenarioTable$ScenarioTestContext" sourceFile="ScenarioTable.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable" sourceFile="ScriptTable.java" interface="false" size="158" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$1" sourceFile="ScriptTable.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$ArgumentExpectation" sourceFile="ScriptTable.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$ArgumentExtractor" sourceFile="ScriptTable.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$EnsureActionExpectation" sourceFile="ScriptTable.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$RejectActionExpectation" sourceFile="ScriptTable.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$ScenarioTableLengthComparator" sourceFile="ScriptTable.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$ScriptActionExpectation" sourceFile="ScriptTable.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.ScriptTable$ShowActionExpectation" sourceFile="ScriptTable.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimAssertion" sourceFile="SlimAssertion.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimAssertion$1" sourceFile="SlimAssertion.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimErrorTable" sourceFile="SlimErrorTable.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimExpectation" sourceFile="SlimExpectation.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimExpectation$1" sourceFile="SlimExpectation.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable" sourceFile="SlimTable.java" interface="false" size="114" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$Comparator" sourceFile="SlimTable.java" interface="false" size="127" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$ConstructionExpectation" sourceFile="SlimTable.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$Disgracer" sourceFile="SlimTable.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$FullExpansionSymbolReplacer" sourceFile="SlimTable.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$RejectedValueExpectation" sourceFile="SlimTable.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$ReturnedSymbolExpectation" sourceFile="SlimTable.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$ReturnedValueExpectation" sourceFile="SlimTable.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$RowExpectation" sourceFile="SlimTable.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$SilentReturnExpectation" sourceFile="SlimTable.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$SymbolAssignmentExpectation" sourceFile="SlimTable.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$SymbolReplacer" sourceFile="SlimTable.java" interface="false" size="41" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTable$VoidReturnExpectation" sourceFile="SlimTable.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SlimTableFactory" sourceFile="SlimTableFactory.java" interface="false" size="91" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SubsetQueryTable" sourceFile="SubsetQueryTable.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.SyntaxError" sourceFile="SyntaxError.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.TableTable" sourceFile="TableTable.java" interface="false" size="84" bugs="0"/>
+      <ClassStats class="fitnesse.testsystems.slim.tables.TableTable$TableTableExpectation" sourceFile="TableTable.java" interface="false" size="21" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.testutil" total_bugs="0" total_types="21" total_size="242">
+      <ClassStats class="fitnesse.testutil.CartesianVector" sourceFile="CartesianVector.java" interface="false" size="39" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ClassNotFoundThrownInConstructor" sourceFile="ClassNotFoundThrownInConstructor.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ClassTranslatePoint" sourceFile="ClassTranslatePoint.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.CrashFixture" sourceFile="CrashFixture.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.CreateFileAndWaitFixture" sourceFile="CreateFileAndWaitFixture.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.DummyClassForWizardTests" sourceFile="DummyClassForWizardTests.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.Echo" sourceFile="Echo.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.EchoFixture" sourceFile="EchoFixture.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ErrorFixture" sourceFile="ErrorFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ErrorWritingFixture" sourceFile="ErrorWritingFixture.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.FailFixture" sourceFile="FailFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.FitNesseUtil" sourceFile="FitNesseUtil.java" interface="false" size="68" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.IgnoreFixture" sourceFile="IgnoreFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ObjectDelegatePointParser" sourceFile="ObjectDelegatePointParser.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.ObjectTranslatePoint" sourceFile="ObjectTranslatePoint.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.OutputWritingFixture" sourceFile="OutputWritingFixture.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.PassFixture" sourceFile="PassFixture.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.SimpleAuthenticator" sourceFile="SimpleAuthenticator.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.TranslatePoint" sourceFile="TranslatePoint.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.VectorSum" sourceFile="VectorSum.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.testutil.WaitFixture" sourceFile="WaitFixture.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.updates" total_bugs="3" total_types="6" total_size="330" priority_3="1" priority_2="2">
+      <ClassStats class="fitnesse.updates.FileUpdate" sourceFile="FileUpdate.java" interface="false" size="46" bugs="2" priority_3="1" priority_2="1"/>
+      <ClassStats class="fitnesse.updates.ReplacingFileUpdate" sourceFile="ReplacingFileUpdate.java" interface="false" size="25" bugs="1" priority_2="1"/>
+      <ClassStats class="fitnesse.updates.Update" sourceFile="Update.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.updates.UpdateFileList" sourceFile="UpdateFileList.java" interface="false" size="112" bugs="0"/>
+      <ClassStats class="fitnesse.updates.UpdaterBase" sourceFile="UpdaterBase.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.updates.UpdaterImplementation" sourceFile="UpdaterImplementation.java" interface="false" size="84" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.util" total_bugs="0" total_types="11" total_size="515">
+      <ClassStats class="fitnesse.util.Base64" sourceFile="Base64.java" interface="false" size="76" bugs="0"/>
+      <ClassStats class="fitnesse.util.Clock" sourceFile="Clock.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.util.DateAlteringClock" sourceFile="DateAlteringClock.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.util.DateTimeUtil" sourceFile="DateTimeUtil.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.util.Expression" sourceFile="Expression.java" interface="false" size="130" bugs="0"/>
+      <ClassStats class="fitnesse.util.HtmlParserTools" sourceFile="HtmlParserTools.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="fitnesse.util.MockSocket" sourceFile="MockSocket.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fitnesse.util.StringUtils" sourceFile="StringUtils.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.util.SystemClock" sourceFile="Clock.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.util.TimeMeasurement" sourceFile="TimeMeasurement.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.util.XmlUtil" sourceFile="XmlUtil.java" interface="false" size="81" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.wiki" total_bugs="0" total_types="42" total_size="1439">
+      <ClassStats class="fitnesse.wiki.ApplicationVariableSource" sourceFile="ApplicationVariableSource.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.BaseWikiPage" sourceFile="BaseWikiPage.java" interface="false" size="74" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.BaseWikiPage$ParentPageVariableSource" sourceFile="BaseWikiPage.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.BaseWikiPage$UserVariableSource" sourceFile="BaseWikiPage.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.MockingPageCrawler" sourceFile="MockingPageCrawler.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.NoSuchVersionException" sourceFile="NoSuchVersionException.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageCrawler" sourceFile="PageCrawler.java" interface="true" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageCrawlerDeadEndStrategy" sourceFile="PageCrawlerDeadEndStrategy.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageCrawlerImpl" sourceFile="PageCrawlerImpl.java" interface="false" size="105" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageCrawlerImpl$1" sourceFile="PageCrawlerImpl.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageCrawlerImpl$2" sourceFile="PageCrawlerImpl.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageData" sourceFile="PageData.java" interface="false" size="82" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageType" sourceFile="PageType.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageType$1" sourceFile="PageType.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageType$2" sourceFile="PageType.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageType$3" sourceFile="PageType.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageVariableSource" sourceFile="PageVariableSource.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PageXmlizer" sourceFile="PageXmlizer.java" interface="false" size="91" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.PathParser" sourceFile="PathParser.java" interface="false" size="59" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.ReadOnlyPageData" sourceFile="ReadOnlyPageData.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.RecentChanges" sourceFile="RecentChanges.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.RecentChangesWikiPage" sourceFile="RecentChangesWikiPage.java" interface="false" size="67" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.SymbolicPage" sourceFile="SymbolicPage.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.SystemVariableSource" sourceFile="SystemVariableSource.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.UrlPathVariableSource" sourceFile="UrlPathVariableSource.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.VariableTool" sourceFile="VariableTool.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.VersionInfo" sourceFile="VersionInfo.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiImportProperty" sourceFile="WikiImportProperty.java" interface="false" size="65" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPage" sourceFile="WikiPage.java" interface="true" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageDummy" sourceFile="WikiPageDummy.java" interface="false" size="50" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageFactory" sourceFile="WikiPageFactory.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageFactoryRegistry" sourceFile="WikiPageFactoryRegistry.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPagePath" sourceFile="WikiPagePath.java" interface="false" size="131" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPagePath$Mode" sourceFile="WikiPagePath.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageProperties" sourceFile="WikiPageProperties.java" interface="false" size="105" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageProperty" sourceFile="WikiPageProperty.java" interface="false" size="68" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageUtil" sourceFile="WikiPageUtil.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiPageUtil$1" sourceFile="WikiPageUtil.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikiWordReference" sourceFile="WikiWordReference.java" interface="false" size="94" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.WikitextPage" sourceFile="WikitextPage.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.XmlizePageCondition" sourceFile="XmlizePageCondition.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.XmlizerPageHandler" sourceFile="XmlizerPageHandler.java" interface="true" size="3" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.wiki.fs" total_bugs="2" total_types="34" total_size="1213" priority_3="1" priority_2="1">
+      <ClassStats class="fitnesse.wiki.fs.DiskFileSystem" sourceFile="DiskFileSystem.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.ExternalSuitePage" sourceFile="ExternalSuitePage.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.ExternalSuitePageFactory" sourceFile="ExternalSuitePageFactory.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.ExternalTestPage" sourceFile="ExternalTestPage.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystem" sourceFile="FileSystem.java" interface="true" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPage" sourceFile="FileSystemPage.java" interface="false" size="135" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPage$1" sourceFile="FileSystemPage.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPage$ContentFileVersion" sourceFile="FileSystemPage.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPage$PropertiesFileVersion" sourceFile="FileSystemPage.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPageFactory" sourceFile="FileSystemPageFactory.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileSystemPageFactory$FileSystemSubWikiPageFactory" sourceFile="FileSystemPageFactory.java" interface="false" size="75" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.FileVersion" sourceFile="FileVersion.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.GitFileVersionsController" sourceFile="GitFileVersionsController.java" interface="false" size="175" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.GitFileVersionsController$1" sourceFile="GitFileVersionsController.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.GitFileVersionsController$2" sourceFile="GitFileVersionsController.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.GitFileVersionsController$GitFileVersion" sourceFile="GitFileVersionsController.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.GitFileVersionsController$GitVersionInfo" sourceFile="GitFileVersionsController.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.InMemoryPage" sourceFile="InMemoryPage.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.LogCommandSpec" sourceFile="GitFileVersionsController.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryFileSystem" sourceFile="MemoryFileSystem.java" interface="false" size="61" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryFileSystem$1" sourceFile="MemoryFileSystem.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryFileSystem$Payload" sourceFile="MemoryFileSystem.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryVersionsController" sourceFile="MemoryVersionsController.java" interface="false" size="34" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryVersionsController$1" sourceFile="MemoryVersionsController.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.MemoryVersionsController$FileVersions" sourceFile="MemoryVersionsController.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.SimpleFileVersionsController" sourceFile="SimpleFileVersionsController.java" interface="false" size="43" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.SimpleFileVersionsController$1" sourceFile="SimpleFileVersionsController.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.SimpleFileVersionsController$RevisionFileVersion" sourceFile="SimpleFileVersionsController.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.SubWikiPageFactory" sourceFile="SubWikiPageFactory.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.VersionsController" sourceFile="VersionsController.java" interface="true" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.VersionsControllerFixture" sourceFile="VersionsControllerFixture.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.ZipFileVersionInfo" sourceFile="ZipFileVersionInfo.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.fs.ZipFileVersionsController" sourceFile="ZipFileVersionsController.java" interface="false" size="163" bugs="2" priority_3="1" priority_2="1"/>
+      <ClassStats class="fitnesse.wiki.fs.ZipFileVersionsController$ZipFileVersion" sourceFile="ZipFileVersionsController.java" interface="false" size="18" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.wiki.refactoring" total_bugs="0" total_types="4" total_size="87">
+      <ClassStats class="fitnesse.wiki.refactoring.ContentReplacingSearchObserver" sourceFile="ContentReplacingSearchObserver.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.refactoring.MovedPageReferenceRenamer" sourceFile="MovedPageReferenceRenamer.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.refactoring.PageReferenceRenamer" sourceFile="PageReferenceRenamer.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.refactoring.ReferenceRenamer" sourceFile="ReferenceRenamer.java" interface="false" size="25" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.wiki.search" total_bugs="0" total_types="8" total_size="185">
+      <ClassStats class="fitnesse.wiki.search.AttributeWikiPageFinder" sourceFile="AttributeWikiPageFinder.java" interface="false" size="79" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.CompositePageFinder" sourceFile="CompositePageFinder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.PageFinder" sourceFile="PageFinder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.RegularExpressionWikiPageFinder" sourceFile="RegularExpressionWikiPageFinder.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.SuiteSpecificationMatchFinder" sourceFile="SuiteSpecificationMatchFinder.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.TitleWikiPageFinder" sourceFile="TitleWikiPageFinder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.WhereUsedPageFinder" sourceFile="WhereUsedPageFinder.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="fitnesse.wiki.search.WikiPageFinder" sourceFile="WikiPageFinder.java" interface="false" size="16" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesse.wikitext.parser" total_bugs="0" total_types="103" total_size="2670">
+      <ClassStats class="fitnesse.wikitext.parser.Alias" sourceFile="Alias.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.AnchorName" sourceFile="AnchorName.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.AnchorReference" sourceFile="AnchorReference.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Collapsible" sourceFile="Collapsible.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ColoredSlimTable" sourceFile="ColoredSlimTable.java" interface="false" size="88" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Comment" sourceFile="Comment.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.CompositeVariableSource" sourceFile="CompositeVariableSource.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Contents" sourceFile="Contents.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ContentsItemBuilder" sourceFile="ContentsItemBuilder.java" interface="false" size="95" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Define" sourceFile="Define.java" interface="false" size="35" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.EqualPairRule" sourceFile="EqualPairRule.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Evaluator" sourceFile="Evaluator.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.FormattedExpression" sourceFile="FormattedExpression.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HashTable" sourceFile="HashTable.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HeaderLine" sourceFile="HeaderLine.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Help" sourceFile="Help.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HorizontalRule" sourceFile="HorizontalRule.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder" sourceFile="HtmlBuilder.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder$1" sourceFile="HtmlBuilder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder$2" sourceFile="HtmlBuilder.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder$3" sourceFile="HtmlBuilder.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder$4" sourceFile="HtmlBuilder.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlBuilder$TagBuilder" sourceFile="HtmlBuilder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlTranslator" sourceFile="HtmlTranslator.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlWriter" sourceFile="HtmlWriter.java" interface="false" size="71" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlWriter$1" sourceFile="HtmlWriter.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlWriter$Tag" sourceFile="HtmlWriter.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.HtmlWriter$Tags" sourceFile="HtmlWriter.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Image" sourceFile="Image.java" interface="false" size="51" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Include" sourceFile="Include.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.LastModified" sourceFile="LastModified.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.LineRule" sourceFile="LineRule.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Link" sourceFile="Link.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Link$Reference" sourceFile="Link.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ListBuilder" sourceFile="ListBuilder.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ListRule" sourceFile="ListRule.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Literal" sourceFile="Literal.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matchable" sourceFile="Matchable.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher" sourceFile="Matcher.java" interface="false" size="73" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$1" sourceFile="Matcher.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$2" sourceFile="Matcher.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$3" sourceFile="Matcher.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$4" sourceFile="Matcher.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$5" sourceFile="Matcher.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$6" sourceFile="Matcher.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$7" sourceFile="Matcher.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$8" sourceFile="Matcher.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$9" sourceFile="Matcher.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Matcher$ScanMatch" sourceFile="Matcher.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Maybe" sourceFile="Maybe.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Nesting" sourceFile="Nesting.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParseSpecification" sourceFile="ParseSpecification.java" interface="false" size="79" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParseSpecification$1" sourceFile="ParseSpecification.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Parser" sourceFile="Parser.java" interface="false" size="101" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParsingPage" sourceFile="ParsingPage.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParsingPage$1" sourceFile="ParsingPage.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParsingPage$Cache" sourceFile="ParsingPage.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ParsingPage$NamedPageVariableSource" sourceFile="ParsingPage.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Path" sourceFile="Path.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Paths" sourceFile="Paths.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Paths$1" sourceFile="Paths.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Paths$TreeWalker" sourceFile="Paths.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.PathsProvider" sourceFile="PathsProvider.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.PlainTextTable" sourceFile="PlainTextTable.java" interface="false" size="35" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Preformat" sourceFile="Preformat.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Rule" sourceFile="Rule.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.ScanString" sourceFile="ScanString.java" interface="false" size="70" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Scanner" sourceFile="Scanner.java" interface="false" size="87" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Scanner$1" sourceFile="Scanner.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Scanner$Step" sourceFile="Scanner.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.See" sourceFile="See.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SourcePage" sourceFile="SourcePage.java" interface="true" size="14" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.StyleRule" sourceFile="StyleRule.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Symbol" sourceFile="Symbol.java" interface="false" size="92" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolMatch" sourceFile="SymbolMatch.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolMatcher" sourceFile="SymbolMatcher.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolProvider" sourceFile="SymbolProvider.java" interface="false" size="71" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolStream" sourceFile="SymbolStream.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolTreeWalker" sourceFile="SymbolTreeWalker.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolType" sourceFile="SymbolType.java" interface="false" size="156" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolType$1" sourceFile="SymbolType.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.SymbolTypeDecorator" sourceFile="SymbolTypeDecorator.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Table" sourceFile="Table.java" interface="false" size="86" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Table$1" sourceFile="Table.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.TextBuilder" sourceFile="TextBuilder.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.TextMaker" sourceFile="TextMaker.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Today" sourceFile="Today.java" interface="false" size="56" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Translation" sourceFile="Translation.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Translator" sourceFile="Translator.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.Variable" sourceFile="Variable.java" interface="false" size="24" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.VariableSource" sourceFile="VariableSource.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder" sourceFile="WikiBuilder.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$1" sourceFile="WikiBuilder.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$2" sourceFile="WikiBuilder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$3" sourceFile="WikiBuilder.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$4" sourceFile="WikiBuilder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$5" sourceFile="WikiBuilder.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$6" sourceFile="WikiBuilder.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiBuilder$WikiStringBuilder" sourceFile="WikiBuilder.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiSourcePage" sourceFile="WikiSourcePage.java" interface="false" size="69" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiTranslator" sourceFile="WikiTranslator.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiWord" sourceFile="WikiWord.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="fitnesse.wikitext.parser.WikiWordBuilder" sourceFile="WikiWordBuilder.java" interface="false" size="59" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="fitnesseMain" total_bugs="1" total_types="2" total_size="181" priority_2="1">
+      <ClassStats class="fitnesseMain.Arguments" sourceFile="Arguments.java" interface="false" size="84" bugs="0"/>
+      <ClassStats class="fitnesseMain.FitNesseMain" sourceFile="FitNesseMain.java" interface="false" size="97" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <PackageStats package="fitnesseMain.ant" total_bugs="0" total_types="3" total_size="171">
+      <ClassStats class="fitnesseMain.ant.ExecuteFitnesseTestsTask" sourceFile="ExecuteFitnesseTestsTask.java" interface="false" size="135" bugs="0"/>
+      <ClassStats class="fitnesseMain.ant.StartFitnesseTask" sourceFile="StartFitnesseTask.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="fitnesseMain.ant.StopFitnesseTask" sourceFile="StopFitnesseTask.java" interface="false" size="16" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="util" total_bugs="1" total_types="15" total_size="536" priority_3="1">
+      <ClassStats class="util.CommandLine" sourceFile="CommandLine.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="util.FileUtil" sourceFile="FileUtil.java" interface="false" size="167" bugs="1" priority_3="1"/>
+      <ClassStats class="util.GracefulNamer" sourceFile="GracefulNamer.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="util.GracefulNamer$1" sourceFile="GracefulNamer.java" interface="false" size="1" bugs="0"/>
+      <ClassStats class="util.GracefulNamer$GracefulNameState" sourceFile="GracefulNamer.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="util.GracefulNamer$InNumberState" sourceFile="GracefulNamer.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="util.GracefulNamer$InWordState" sourceFile="GracefulNamer.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="util.GracefulNamer$OutOfWordState" sourceFile="GracefulNamer.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="util.Option" sourceFile="CommandLine.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="util.StreamReader" sourceFile="StreamReader.java" interface="false" size="117" bugs="0"/>
+      <ClassStats class="util.StreamReader$1" sourceFile="StreamReader.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="util.StreamReader$2" sourceFile="StreamReader.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="util.StreamReader$3" sourceFile="StreamReader.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="util.StreamReader$4" sourceFile="StreamReader.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="util.StreamReader$State" sourceFile="StreamReader.java" interface="false" size="8" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1752" invocations="3150" avgMicrosecondsPerInvocation="556" maxMicrosecondsPerInvocation="44428" standardDeviationMicrosecondsPerInvocation="1588"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="1530" invocations="5490" avgMicrosecondsPerInvocation="278" maxMicrosecondsPerInvocation="18188" standardDeviationMicrosecondsPerInvocation="537"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="1470" invocations="5573" avgMicrosecondsPerInvocation="263" maxMicrosecondsPerInvocation="22037" standardDeviationMicrosecondsPerInvocation="509"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="1338" invocations="5653" avgMicrosecondsPerInvocation="236" maxMicrosecondsPerInvocation="30457" standardDeviationMicrosecondsPerInvocation="663"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="1303" invocations="5679" avgMicrosecondsPerInvocation="229" maxMicrosecondsPerInvocation="21638" standardDeviationMicrosecondsPerInvocation="535"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="1184" invocations="5565" avgMicrosecondsPerInvocation="212" maxMicrosecondsPerInvocation="25245" standardDeviationMicrosecondsPerInvocation="578"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="1161" invocations="1442" avgMicrosecondsPerInvocation="805" maxMicrosecondsPerInvocation="21767" standardDeviationMicrosecondsPerInvocation="1618"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="1079" invocations="1442" avgMicrosecondsPerInvocation="748" maxMicrosecondsPerInvocation="20099" standardDeviationMicrosecondsPerInvocation="1759"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="1020" invocations="5902" avgMicrosecondsPerInvocation="172" maxMicrosecondsPerInvocation="18590" standardDeviationMicrosecondsPerInvocation="391"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="919" invocations="7182" avgMicrosecondsPerInvocation="127" maxMicrosecondsPerInvocation="14163" standardDeviationMicrosecondsPerInvocation="338"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="875" invocations="4718" avgMicrosecondsPerInvocation="185" maxMicrosecondsPerInvocation="5583" standardDeviationMicrosecondsPerInvocation="286"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ConstructorThrow" totalMilliseconds="647" invocations="958" avgMicrosecondsPerInvocation="675" maxMicrosecondsPerInvocation="8972" standardDeviationMicrosecondsPerInvocation="876"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindReturnRef" totalMilliseconds="505" invocations="958" avgMicrosecondsPerInvocation="527" maxMicrosecondsPerInvocation="7696" standardDeviationMicrosecondsPerInvocation="816"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="457" invocations="3156" avgMicrosecondsPerInvocation="145" maxMicrosecondsPerInvocation="5836" standardDeviationMicrosecondsPerInvocation="208"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="410" invocations="958" avgMicrosecondsPerInvocation="428" maxMicrosecondsPerInvocation="8784" standardDeviationMicrosecondsPerInvocation="683"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.UnreadFields" totalMilliseconds="404" invocations="958" avgMicrosecondsPerInvocation="422" maxMicrosecondsPerInvocation="4475" standardDeviationMicrosecondsPerInvocation="485"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="391" invocations="5902" avgMicrosecondsPerInvocation="66" maxMicrosecondsPerInvocation="52132" standardDeviationMicrosecondsPerInvocation="684"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ResourceInMultipleThreadsDetector" totalMilliseconds="377" invocations="958" avgMicrosecondsPerInvocation="394" maxMicrosecondsPerInvocation="7195" standardDeviationMicrosecondsPerInvocation="528"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.LoadOfKnownNullValue" totalMilliseconds="356" invocations="958" avgMicrosecondsPerInvocation="372" maxMicrosecondsPerInvocation="16168" standardDeviationMicrosecondsPerInvocation="724"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantDataflowFactory" totalMilliseconds="347" invocations="5573" avgMicrosecondsPerInvocation="62" maxMicrosecondsPerInvocation="2973" standardDeviationMicrosecondsPerInvocation="116"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="327" invocations="1442" avgMicrosecondsPerInvocation="227" maxMicrosecondsPerInvocation="8022" standardDeviationMicrosecondsPerInvocation="528"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="317" invocations="1657" avgMicrosecondsPerInvocation="191" maxMicrosecondsPerInvocation="49785" standardDeviationMicrosecondsPerInvocation="1263"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindInconsistentSync2" totalMilliseconds="308" invocations="958" avgMicrosecondsPerInvocation="322" maxMicrosecondsPerInvocation="22927" standardDeviationMicrosecondsPerInvocation="853"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="276" invocations="1442" avgMicrosecondsPerInvocation="192" maxMicrosecondsPerInvocation="34451" standardDeviationMicrosecondsPerInvocation="984"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildAccessMethodsDatabase" totalMilliseconds="266" invocations="1442" avgMicrosecondsPerInvocation="184" maxMicrosecondsPerInvocation="55210" standardDeviationMicrosecondsPerInvocation="1702"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.MethodReturnCheck" totalMilliseconds="261" invocations="958" avgMicrosecondsPerInvocation="273" maxMicrosecondsPerInvocation="3316" standardDeviationMicrosecondsPerInvocation="399"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.TypeQualifierNullnessAnnotationDatabase" totalMilliseconds="259" invocations="113913" avgMicrosecondsPerInvocation="2" maxMicrosecondsPerInvocation="1763" standardDeviationMicrosecondsPerInvocation="12"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildStringPassthruGraph" totalMilliseconds="244" invocations="1442" avgMicrosecondsPerInvocation="169" maxMicrosecondsPerInvocation="11555" standardDeviationMicrosecondsPerInvocation="517"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindDeadLocalStores" totalMilliseconds="239" invocations="958" avgMicrosecondsPerInvocation="250" maxMicrosecondsPerInvocation="12876" standardDeviationMicrosecondsPerInvocation="549"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison" totalMilliseconds="234" invocations="958" avgMicrosecondsPerInvocation="244" maxMicrosecondsPerInvocation="20767" standardDeviationMicrosecondsPerInvocation="733"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref$CheckCallSitesAndReturnInstructions" totalMilliseconds="229" invocations="5490" avgMicrosecondsPerInvocation="41" maxMicrosecondsPerInvocation="1580" standardDeviationMicrosecondsPerInvocation="65"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.InfiniteLoop" totalMilliseconds="215" invocations="958" avgMicrosecondsPerInvocation="224" maxMicrosecondsPerInvocation="48975" standardDeviationMicrosecondsPerInvocation="1594"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.MultipleInstantiationsOfSingletons" totalMilliseconds="213" invocations="958" avgMicrosecondsPerInvocation="222" maxMicrosecondsPerInvocation="10224" standardDeviationMicrosecondsPerInvocation="412"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RuntimeExceptionCapture" totalMilliseconds="212" invocations="958" avgMicrosecondsPerInvocation="222" maxMicrosecondsPerInvocation="2199" standardDeviationMicrosecondsPerInvocation="334"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="211" invocations="1442" avgMicrosecondsPerInvocation="146" maxMicrosecondsPerInvocation="6756" standardDeviationMicrosecondsPerInvocation="365"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="210" invocations="1442" avgMicrosecondsPerInvocation="145" maxMicrosecondsPerInvocation="14400" standardDeviationMicrosecondsPerInvocation="493"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DefaultEncodingDetector" totalMilliseconds="209" invocations="958" avgMicrosecondsPerInvocation="218" maxMicrosecondsPerInvocation="2984" standardDeviationMicrosecondsPerInvocation="431"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindUselessObjects" totalMilliseconds="203" invocations="958" avgMicrosecondsPerInvocation="212" maxMicrosecondsPerInvocation="2689" standardDeviationMicrosecondsPerInvocation="275"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueRangeAnalysisFactory" totalMilliseconds="200" invocations="5902" avgMicrosecondsPerInvocation="33" maxMicrosecondsPerInvocation="19473" standardDeviationMicrosecondsPerInvocation="326"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindPublicAttributes" totalMilliseconds="196" invocations="958" avgMicrosecondsPerInvocation="205" maxMicrosecondsPerInvocation="2531" standardDeviationMicrosecondsPerInvocation="299"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindOpenStream" totalMilliseconds="196" invocations="958" avgMicrosecondsPerInvocation="205" maxMicrosecondsPerInvocation="9679" standardDeviationMicrosecondsPerInvocation="777"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindPuzzlers" totalMilliseconds="196" invocations="958" avgMicrosecondsPerInvocation="204" maxMicrosecondsPerInvocation="2999" standardDeviationMicrosecondsPerInvocation="300"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="196" invocations="1442" avgMicrosecondsPerInvocation="135" maxMicrosecondsPerInvocation="5032" standardDeviationMicrosecondsPerInvocation="251"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="195" invocations="3080" avgMicrosecondsPerInvocation="63" maxMicrosecondsPerInvocation="10316" standardDeviationMicrosecondsPerInvocation="230"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="191" invocations="1442" avgMicrosecondsPerInvocation="132" maxMicrosecondsPerInvocation="42226" standardDeviationMicrosecondsPerInvocation="1353"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindHEmismatch" totalMilliseconds="187" invocations="958" avgMicrosecondsPerInvocation="195" maxMicrosecondsPerInvocation="3448" standardDeviationMicrosecondsPerInvocation="252"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref" totalMilliseconds="186" invocations="958" avgMicrosecondsPerInvocation="194" maxMicrosecondsPerInvocation="4993" standardDeviationMicrosecondsPerInvocation="272"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.LiveLocalStoreDataflowFactory" totalMilliseconds="177" invocations="5369" avgMicrosecondsPerInvocation="33" maxMicrosecondsPerInvocation="3437" standardDeviationMicrosecondsPerInvocation="78"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindSelfComparison" totalMilliseconds="170" invocations="958" avgMicrosecondsPerInvocation="177" maxMicrosecondsPerInvocation="10321" standardDeviationMicrosecondsPerInvocation="403"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RepeatedConditionals" totalMilliseconds="168" invocations="958" avgMicrosecondsPerInvocation="176" maxMicrosecondsPerInvocation="2458" standardDeviationMicrosecondsPerInvocation="247"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ThrowingExceptions" totalMilliseconds="166" invocations="958" avgMicrosecondsPerInvocation="174" maxMicrosecondsPerInvocation="2651" standardDeviationMicrosecondsPerInvocation="288"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.IncompatMask" totalMilliseconds="165" invocations="958" avgMicrosecondsPerInvocation="172" maxMicrosecondsPerInvocation="4474" standardDeviationMicrosecondsPerInvocation="262"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ReflectiveClasses" totalMilliseconds="164" invocations="1442" avgMicrosecondsPerInvocation="114" maxMicrosecondsPerInvocation="5609" standardDeviationMicrosecondsPerInvocation="313"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SwitchFallthrough" totalMilliseconds="164" invocations="958" avgMicrosecondsPerInvocation="171" maxMicrosecondsPerInvocation="2092" standardDeviationMicrosecondsPerInvocation="237"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindUncalledPrivateMethods" totalMilliseconds="161" invocations="958" avgMicrosecondsPerInvocation="168" maxMicrosecondsPerInvocation="1608" standardDeviationMicrosecondsPerInvocation="148"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SharedVariableAtomicityDetector" totalMilliseconds="160" invocations="958" avgMicrosecondsPerInvocation="167" maxMicrosecondsPerInvocation="8554" standardDeviationMicrosecondsPerInvocation="554"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

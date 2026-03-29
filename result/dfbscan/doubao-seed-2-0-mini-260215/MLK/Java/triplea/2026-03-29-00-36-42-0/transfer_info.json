@@ -1,0 +1,172 @@
+{
+    "((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new EventChildWriter(m_text, m_renderingData), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, -1), ValueLabel.SRC), ((returned EventChildWriter, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((returned EventChildWriter, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java, 26, 0), ValueLabel.RET)",
+            "terminal_line": 26,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/history/EventChild.java"
+        }
+    ],
+    "((new FileImageOutputStream(file), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java, 58, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new FileImageOutputStream(file), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java, 58, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new FileImageOutputStream(file), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java, 58, -1), ValueLabel.SRC), ((out, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java, 63, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((out, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java, 63, 0), ValueLabel.ARG)",
+            "terminal_line": 63,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java"
+        }
+    ],
+    "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, -1), ValueLabel.SRC), ((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new GameObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java, 28, 0), ValueLabel.RET)",
+            "terminal_line": 28,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java"
+        }
+    ],
+    "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 8,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 12,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 24,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 28,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 20,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 92, 0), ValueLabel.PARA), (((TripleAUnit) u, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleAUnit.java, 93, 0), ValueLabel.RET), ((locksHeldWhenAcquired.get(lock), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, -1), ValueLabel.OUT), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 16,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        },
+        {
+            "src_value": "((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC)",
+            "reason": "terminal value appears in explicit transfer-style method",
+            "rule_hit": "method_name_transfer_hint",
+            "path_key": "[((lock.lock(), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 78, -1), ValueLabel.SRC), ((lock, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java, 56, 0), ValueLabel.ARG), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA), ((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)]",
+            "path_length": 4,
+            "terminal_label": "PARA",
+            "terminal_value": "((map, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java, 91, 0), ValueLabel.PARA)",
+            "terminal_line": 91,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/LinkedIntegerMap.java"
+        }
+    ],
+    "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, -1), ValueLabel.SRC), ((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new ObjectInputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 12, 0), ValueLabel.RET)",
+            "terminal_line": 12,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java"
+        }
+    ],
+    "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC)",
+            "reason": "return from factory/provider style method likely transfers ownership",
+            "rule_hit": "method_name_return_factory_hint",
+            "path_key": "[((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, -1), ValueLabel.SRC), ((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, 0), ValueLabel.RET)]",
+            "path_length": 2,
+            "terminal_label": "RET",
+            "terminal_value": "((new ObjectOutputStream(stream), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java, 17, 0), ValueLabel.RET)",
+            "terminal_line": 17,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/DefaultObjectStreamFactory.java"
+        }
+    ],
+    "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 89, -1), ValueLabel.SRC), ((PrintStream, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 90, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((PrintStream, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 90, 0), ValueLabel.ARG)",
+            "terminal_line": 90,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java"
+        }
+    ],
+    "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((new PrintStream(out), /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 79, -1), ValueLabel.SRC), ((err, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((err, /home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java, 80, 0), ValueLabel.ARG)",
+            "terminal_line": 80,
+            "terminal_file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java"
+        }
+    ]
+}

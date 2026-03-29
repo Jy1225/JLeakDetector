@@ -1,0 +1,62 @@
+{
+    "schema_version": "1.0",
+    "project_name": "toy",
+    "project_path": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy",
+    "model_name": "doubao-seed-2-0-mini-260215",
+    "language": "Java",
+    "bug_type": "MLK",
+    "run_id": "2026-03-28-22-18-09-0",
+    "result_dir": "/home/jiayu/Desktop/JLeakDetector/result/dfbscan/doubao-seed-2-0-mini-260215/MLK/Java/toy/2026-03-28-22-18-09-0",
+    "log_dir": "/home/jiayu/Desktop/JLeakDetector/log/dfbscan/doubao-seed-2-0-mini-260215/MLK/Java/toy/2026-03-28-22-18-09-0",
+    "timing": {
+        "pipeline_total_sec": 426.389,
+        "soot_facts_generation_sec": 0.0,
+        "scan_total_sec": 421.959
+    },
+    "llm_usage": {
+        "model_name": "doubao-seed-2-0-mini-260215",
+        "model_family": "doubao",
+        "token_count_mode": "provider_usage",
+        "token_encoding_name": "o200k_base",
+        "input_tokens": 178601,
+        "output_tokens": 543795,
+        "total_tokens": 722396,
+        "provider_total_tokens": 722396,
+        "reasoning_tokens": 488277,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 0,
+        "query_count": 157,
+        "tool_breakdown": {
+            "IntraDataFlowAnalyzer": {
+                "tool_name": "IntraDataFlowAnalyzer",
+                "model_name": "doubao-seed-2-0-mini-260215",
+                "model_family": "doubao",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 118800,
+                "output_tokens": 485984,
+                "total_tokens": 604784,
+                "provider_total_tokens": 604784,
+                "reasoning_tokens": 434848,
+                "prompt_cache_hit_tokens": 0,
+                "prompt_cache_miss_tokens": 0,
+                "query_count": 97
+            },
+            "PathValidator": {
+                "tool_name": "PathValidator",
+                "model_name": "doubao-seed-2-0-mini-260215",
+                "model_family": "doubao",
+                "token_count_mode": "provider_usage",
+                "token_encoding_name": "o200k_base",
+                "input_tokens": 59801,
+                "output_tokens": 57811,
+                "total_tokens": 117612,
+                "provider_total_tokens": 117612,
+                "reasoning_tokens": 53429,
+                "prompt_cache_hit_tokens": 0,
+                "prompt_cache_miss_tokens": 0,
+                "query_count": 60
+            }
+        }
+    }
+}

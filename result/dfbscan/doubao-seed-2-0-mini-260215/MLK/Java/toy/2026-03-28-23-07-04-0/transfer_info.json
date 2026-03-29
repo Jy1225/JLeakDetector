@@ -1,0 +1,15 @@
+{
+    "((IO.getDBConnection(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 31, -1), ValueLabel.SRC)": [
+        {
+            "src_value": "((IO.getDBConnection(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 31, -1), ValueLabel.SRC)",
+            "reason": "argument likely transfers ownership but inter-procedural chain is missing",
+            "rule_hit": "arg_transfer_method",
+            "path_key": "[((IO.getDBConnection(), /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 31, -1), ValueLabel.SRC), ((dBConnection, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 33, 0), ValueLabel.ARG)]",
+            "path_length": 2,
+            "terminal_label": "ARG",
+            "terminal_value": "((dBConnection, /home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java, 33, 0), ValueLabel.ARG)",
+            "terminal_line": 33,
+            "terminal_file": "/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/MLK/CWE772_Missing_Release_of_Resource__db_Connection_01.java"
+        }
+    ]
+}

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.9.8" sequence="0" timestamp="1773918140291" analysisTimestamp="1774759753556" release="">
+  <Project projectName="">
+    <Jar>/home/jiayu/Desktop/JLeakDetector/benchmark/Java/toy/.repoaudit_soot_classes</Jar>
+  </Project>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01" start="18" end="126" sourcefile="CWE404_Improper_Resource_Shutdown__FileReader_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01" start="22" end="63" startBytecode="0" endBytecode="53" sourcefile="CWE404_Improper_Resource_Shutdown__FileReader_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Reader;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Reader" start="81" end="388" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Type>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01" start="29" end="29" startBytecode="23" endBytecode="23" sourcefile="CWE404_Improper_Resource_Shutdown__FileReader_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__FileReader_01.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="20" end="168" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="24" end="85" startBytecode="0" endBytecode="487" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Method>
+    <Class classname="java.sql.ResultSet" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.ResultSet" start="4186" end="4287" sourcefile="ResultSet.java" sourcepath="java/sql/ResultSet.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="36" end="36" startBytecode="44" endBytecode="44" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="38" end="38" startBytecode="50" endBytecode="50" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="81" end="81" startBytecode="153" endBytecode="153" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="83" end="83" startBytecode="155" endBytecode="155" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="85" end="85" startBytecode="168" endBytecode="168" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="20" end="168" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="24" end="85" startBytecode="0" endBytecode="487" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Method>
+    <Class classname="java.sql.Statement" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.Statement" start="1096" end="1647" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="33" end="33" startBytecode="28" endBytecode="28" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="34" end="34" startBytecode="34" endBytecode="34" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="36" end="36" startBytecode="43" endBytecode="43" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="38" end="38" startBytecode="50" endBytecode="50" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="81" end="81" startBytecode="153" endBytecode="153" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="83" end="83" startBytecode="155" endBytecode="155" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="85" end="85" startBytecode="168" endBytecode="168" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="ODR_OPEN_DATABASE_RESOURCE_EXCEPTION_PATH" priority="3" rank="19" abbrev="ODR" category="BAD_PRACTICE">
+    <Class classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="20" end="168" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="24" end="85" startBytecode="0" endBytecode="71" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/sql/PreparedStatement;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.sql.PreparedStatement" start="1266" end="1319" sourcefile="PreparedStatement.java" sourcepath="java/sql/PreparedStatement.java"/>
+    </Type>
+    <SourceLine classname="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" start="33" end="33" startBytecode="28" endBytecode="28" sourcefile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" sourcepath="juliet/testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__db_Connection_01.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" rank="16" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01">
+      <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01" start="18" end="100" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01" start="22" end="38" startBytecode="0" endBytecode="31" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/io/Reader;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.io.Reader" start="81" end="388" sourcefile="Reader.java" sourcepath="java/io/Reader.java"/>
+    </Type>
+    <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01" start="28" end="28" startBytecode="23" endBytecode="23" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM" priority="2" rank="16" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01">
+      <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01" start="17" end="89" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java"/>
+    </Class>
+    <Method classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01" start="21" end="38" startBytecode="0" endBytecode="25" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/util/zip/ZipFile;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.util.zip.ZipFile" start="128" end="1198" sourcefile="ZipFile.java" sourcepath="java/util/zip/ZipFile.java"/>
+    </Type>
+    <SourceLine classname="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01" start="25" end="25" startBytecode="2" endBytecode="2" sourcefile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java" sourcepath="juliet/testcases/CWE775_Missing_Release_of_File_Descriptor_or_Handle/CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java"/>
+  </BugInstance>
+  <BugInstance type="OS_OPEN_STREAM_EXCEPTION_PATH" priority="3" rank="19" abbrev="OS" category="BAD_PRACTICE">
+    <Class classname="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01">
+      <SourceLine classname="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01" start="17" end="125" sourcefile="CWE404_Improper_Resource_Shutdown__ZipFile_01.java" sourcepath="testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java"/>
+    </Class>
+    <Method classname="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01" start="21" end="62" startBytecode="0" endBytecode="49" sourcefile="CWE404_Improper_Resource_Shutdown__ZipFile_01.java" sourcepath="testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/util/zip/ZipFile;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.util.zip.ZipFile" start="128" end="1198" sourcefile="ZipFile.java" sourcepath="java/util/zip/ZipFile.java"/>
+    </Type>
+    <SourceLine classname="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01" start="37" end="37" startBytecode="29" endBytecode="29" sourcefile="CWE404_Improper_Resource_Shutdown__ZipFile_01.java" sourcepath="testcases/CWE404_Improper_Resource_Shutdown/CWE404_Improper_Resource_Shutdown__ZipFile_01.java"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="19" end="130" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Class>
+    <Method classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="23" end="49" startBytecode="0" endBytecode="261" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Method>
+    <Class classname="java.sql.ResultSet" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.ResultSet" start="4186" end="4287" sourcefile="ResultSet.java" sourcepath="java/sql/ResultSet.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="35" end="35" startBytecode="44" endBytecode="44" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="37" end="37" startBytecode="50" endBytecode="50" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="45" end="45" startBytecode="66" endBytecode="66" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="49" end="49" startBytecode="84" endBytecode="84" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="OBL_UNSATISFIED_OBLIGATION" priority="2" rank="20" abbrev="OBL" category="EXPERIMENTAL">
+    <Class classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="19" end="130" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Class>
+    <Method classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="23" end="49" startBytecode="0" endBytecode="261" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Method>
+    <Class classname="java.sql.Statement" role="CLASS_REFTYPE">
+      <SourceLine classname="java.sql.Statement" start="1096" end="1647" sourcefile="Statement.java" sourcepath="java/sql/Statement.java"/>
+    </Class>
+    <Int value="1" role="INT_OBLIGATIONS_REMAINING"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="32" end="32" startBytecode="28" endBytecode="28" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_OBLIGATION_CREATED"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="33" end="33" startBytecode="34" endBytecode="34" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="35" end="35" startBytecode="43" endBytecode="43" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="37" end="37" startBytecode="50" endBytecode="50" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="45" end="45" startBytecode="66" endBytecode="66" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="49" end="49" startBytecode="84" endBytecode="84" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java" role="SOURCE_LINE_PATH_CONTINUES"/>
+    <String value="{Statement x 1,ResultSet x 1}" role="STRING_REMAINING_OBLIGATIONS"/>
+  </BugInstance>
+  <BugInstance type="ODR_OPEN_DATABASE_RESOURCE" priority="2" rank="16" abbrev="ODR" category="BAD_PRACTICE">
+    <Class classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="19" end="130" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Class>
+    <Method classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" name="bad" signature="()V" isStatic="false">
+      <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="23" end="49" startBytecode="0" endBytecode="38" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+    </Method>
+    <Type descriptor="Ljava/sql/PreparedStatement;" role="TYPE_CLOSEIT">
+      <SourceLine classname="java.sql.PreparedStatement" start="1266" end="1319" sourcefile="PreparedStatement.java" sourcepath="java/sql/PreparedStatement.java"/>
+    </Type>
+    <SourceLine classname="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" start="32" end="32" startBytecode="28" endBytecode="28" sourcefile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" sourcepath="testcases/CWE772_Missing_Release_of_Resource/CWE772_Missing_Release_of_Resource__db_Connection_01.java"/>
+  </BugInstance>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Thu, 19 Mar 2026 19:02:20 +0800" total_classes="44" referenced_classes="84" total_bugs="10" total_size="2085" num_packages="8" java_version="11.0.30" vm_version="11.0.30+7-post-Ubuntu-1ubuntu122.04" cpu_seconds="65.28" clock_seconds="7.71" peak_mbytes="215.09" alloc_mbytes="3232.00" gc_seconds="0.17" priority_3="3" priority_2="7">
+    <PackageStats package="javax.servlet.http" total_bugs="0" total_types="2" total_size="2">
+      <ClassStats class="javax.servlet.http.HttpServletRequest" sourceFile="HttpServletRequest.java" interface="true" size="1" bugs="0"/>
+      <ClassStats class="javax.servlet.http.HttpServletResponse" sourceFile="HttpServletResponse.java" interface="true" size="1" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="juliet.support" total_bugs="0" total_types="3" total_size="52">
+      <ClassStats class="juliet.support.AbstractTestCase" sourceFile="AbstractTestCase.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="juliet.support.AbstractTestCaseServlet" sourceFile="AbstractTestCaseServlet.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="juliet.support.IO" sourceFile="IO.java" interface="false" size="33" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="juliet.testcases.CWE404_Improper_Resource_Shutdown" total_bugs="4" total_types="4" total_size="213" priority_3="2" priority_2="2">
+      <ClassStats class="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__FileReader_01" sourceFile="CWE404_Improper_Resource_Shutdown__FileReader_01.java" interface="false" size="54" bugs="1" priority_3="1"/>
+      <ClassStats class="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01" sourceFile="CWE404_Improper_Resource_Shutdown__ReentrantLock_Thread_01.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01" sourceFile="CWE404_Improper_Resource_Shutdown__console_InputStreamReader_01.java" interface="false" size="52" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__db_Connection_01" sourceFile="CWE404_Improper_Resource_Shutdown__db_Connection_01.java" interface="false" size="70" bugs="3" priority_3="1" priority_2="2"/>
+    </PackageStats>
+    <PackageStats package="juliet.testcases.CWE459_Incomplete_Cleanup" total_bugs="0" total_types="28" total_size="1549">
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_07" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_07.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_08" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_08.java" interface="false" size="62" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_09" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_09.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_10" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_10.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_11" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_11.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_12" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_12.java" interface="false" size="68" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_13" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_13.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_14" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_14.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_15" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_15.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_16" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_16.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__Servlet_temp_file_17" sourceFile="CWE459_Incomplete_Cleanup__Servlet_temp_file_17.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_01" sourceFile="CWE459_Incomplete_Cleanup__temp_file_01.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_02" sourceFile="CWE459_Incomplete_Cleanup__temp_file_02.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_03" sourceFile="CWE459_Incomplete_Cleanup__temp_file_03.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_04" sourceFile="CWE459_Incomplete_Cleanup__temp_file_04.java" interface="false" size="56" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_05" sourceFile="CWE459_Incomplete_Cleanup__temp_file_05.java" interface="false" size="62" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_06" sourceFile="CWE459_Incomplete_Cleanup__temp_file_06.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_07" sourceFile="CWE459_Incomplete_Cleanup__temp_file_07.java" interface="false" size="60" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_08" sourceFile="CWE459_Incomplete_Cleanup__temp_file_08.java" interface="false" size="62" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_09" sourceFile="CWE459_Incomplete_Cleanup__temp_file_09.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_10" sourceFile="CWE459_Incomplete_Cleanup__temp_file_10.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_11" sourceFile="CWE459_Incomplete_Cleanup__temp_file_11.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_12" sourceFile="CWE459_Incomplete_Cleanup__temp_file_12.java" interface="false" size="68" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_13" sourceFile="CWE459_Incomplete_Cleanup__temp_file_13.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_14" sourceFile="CWE459_Incomplete_Cleanup__temp_file_14.java" interface="false" size="58" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_15" sourceFile="CWE459_Incomplete_Cleanup__temp_file_15.java" interface="false" size="63" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_16" sourceFile="CWE459_Incomplete_Cleanup__temp_file_16.java" interface="false" size="40" bugs="0"/>
+      <ClassStats class="juliet.testcases.CWE459_Incomplete_Cleanup.CWE459_Incomplete_Cleanup__temp_file_17" sourceFile="CWE459_Incomplete_Cleanup__temp_file_17.java" interface="false" size="40" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle" total_bugs="2" total_types="2" total_size="79" priority_2="2">
+      <ClassStats class="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01" sourceFile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__FileReader_01.java" interface="false" size="44" bugs="1" priority_2="1"/>
+      <ClassStats class="juliet.testcases.CWE775_Missing_Release_of_File_Descriptor_or_Handle.CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01" sourceFile="CWE775_Missing_Release_of_File_Descriptor_or_Handle__ZipFile_01.java" interface="false" size="35" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <PackageStats package="testcases.CWE404_Improper_Resource_Shutdown" total_bugs="1" total_types="1" total_size="48" priority_3="1">
+      <ClassStats class="testcases.CWE404_Improper_Resource_Shutdown.CWE404_Improper_Resource_Shutdown__ZipFile_01" sourceFile="CWE404_Improper_Resource_Shutdown__ZipFile_01.java" interface="false" size="48" bugs="1" priority_3="1"/>
+    </PackageStats>
+    <PackageStats package="testcases.CWE772_Missing_Release_of_Resource" total_bugs="3" total_types="2" total_size="101" priority_2="3">
+      <ClassStats class="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__console_InputStreamReader_01" sourceFile="CWE772_Missing_Release_of_Resource__console_InputStreamReader_01.java" interface="false" size="46" bugs="0"/>
+      <ClassStats class="testcases.CWE772_Missing_Release_of_Resource.CWE772_Missing_Release_of_Resource__db_Connection_01" sourceFile="CWE772_Missing_Release_of_Resource__db_Connection_01.java" interface="false" size="55" bugs="3" priority_2="3"/>
+    </PackageStats>
+    <PackageStats package="testcasesupport" total_bugs="0" total_types="2" total_size="41">
+      <ClassStats class="testcasesupport.AbstractTestCase" sourceFile="AbstractTestCase.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="testcasesupport.IO" sourceFile="IO.java" interface="false" size="33" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="873" invocations="607" avgMicrosecondsPerInvocation="1439" maxMicrosecondsPerInvocation="39060" standardDeviationMicrosecondsPerInvocation="2757"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="323" invocations="333" avgMicrosecondsPerInvocation="972" maxMicrosecondsPerInvocation="22344" standardDeviationMicrosecondsPerInvocation="2031"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="322" invocations="333" avgMicrosecondsPerInvocation="969" maxMicrosecondsPerInvocation="39699" standardDeviationMicrosecondsPerInvocation="2529"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="305" invocations="240" avgMicrosecondsPerInvocation="1274" maxMicrosecondsPerInvocation="27611" standardDeviationMicrosecondsPerInvocation="2566"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="254" invocations="240" avgMicrosecondsPerInvocation="1061" maxMicrosecondsPerInvocation="34808" standardDeviationMicrosecondsPerInvocation="2625"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="248" invocations="84" avgMicrosecondsPerInvocation="2958" maxMicrosecondsPerInvocation="21351" standardDeviationMicrosecondsPerInvocation="4910"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="226" invocations="244" avgMicrosecondsPerInvocation="927" maxMicrosecondsPerInvocation="148288" standardDeviationMicrosecondsPerInvocation="9465"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="204" invocations="84" avgMicrosecondsPerInvocation="2437" maxMicrosecondsPerInvocation="20087" standardDeviationMicrosecondsPerInvocation="3903"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="201" invocations="244" avgMicrosecondsPerInvocation="824" maxMicrosecondsPerInvocation="26293" standardDeviationMicrosecondsPerInvocation="1828"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="190" invocations="240" avgMicrosecondsPerInvocation="794" maxMicrosecondsPerInvocation="13947" standardDeviationMicrosecondsPerInvocation="1435"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="190" invocations="613" avgMicrosecondsPerInvocation="310" maxMicrosecondsPerInvocation="39609" standardDeviationMicrosecondsPerInvocation="1617"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="178" invocations="348" avgMicrosecondsPerInvocation="514" maxMicrosecondsPerInvocation="11505" standardDeviationMicrosecondsPerInvocation="1073"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ConstructorThrow" totalMilliseconds="127" invocations="44" avgMicrosecondsPerInvocation="2891" maxMicrosecondsPerInvocation="10889" standardDeviationMicrosecondsPerInvocation="2507"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="109" invocations="128" avgMicrosecondsPerInvocation="856" maxMicrosecondsPerInvocation="43060" standardDeviationMicrosecondsPerInvocation="3875"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="97" invocations="228" avgMicrosecondsPerInvocation="428" maxMicrosecondsPerInvocation="6169" standardDeviationMicrosecondsPerInvocation="620"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="89" invocations="84" avgMicrosecondsPerInvocation="1066" maxMicrosecondsPerInvocation="13835" standardDeviationMicrosecondsPerInvocation="2150"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ResourceInMultipleThreadsDetector" totalMilliseconds="84" invocations="44" avgMicrosecondsPerInvocation="1923" maxMicrosecondsPerInvocation="8268" standardDeviationMicrosecondsPerInvocation="1693"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="81" invocations="569" avgMicrosecondsPerInvocation="144" maxMicrosecondsPerInvocation="1811" standardDeviationMicrosecondsPerInvocation="237"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.MethodReturnCheck" totalMilliseconds="73" invocations="44" avgMicrosecondsPerInvocation="1675" maxMicrosecondsPerInvocation="24382" standardDeviationMicrosecondsPerInvocation="3746"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ThrowingExceptions" totalMilliseconds="65" invocations="44" avgMicrosecondsPerInvocation="1485" maxMicrosecondsPerInvocation="15891" standardDeviationMicrosecondsPerInvocation="2316"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="62" invocations="84" avgMicrosecondsPerInvocation="738" maxMicrosecondsPerInvocation="8186" standardDeviationMicrosecondsPerInvocation="1450"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="59" invocations="44" avgMicrosecondsPerInvocation="1345" maxMicrosecondsPerInvocation="6362" standardDeviationMicrosecondsPerInvocation="1319"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="59" invocations="84" avgMicrosecondsPerInvocation="703" maxMicrosecondsPerInvocation="6332" standardDeviationMicrosecondsPerInvocation="1233"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="58" invocations="84" avgMicrosecondsPerInvocation="690" maxMicrosecondsPerInvocation="16380" standardDeviationMicrosecondsPerInvocation="2003"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantDataflowFactory" totalMilliseconds="56" invocations="240" avgMicrosecondsPerInvocation="234" maxMicrosecondsPerInvocation="5476" standardDeviationMicrosecondsPerInvocation="494"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildStringPassthruGraph" totalMilliseconds="56" invocations="84" avgMicrosecondsPerInvocation="668" maxMicrosecondsPerInvocation="8919" standardDeviationMicrosecondsPerInvocation="1419"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.LoadOfKnownNullValue" totalMilliseconds="50" invocations="44" avgMicrosecondsPerInvocation="1151" maxMicrosecondsPerInvocation="4763" standardDeviationMicrosecondsPerInvocation="1005"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UsagesRequiringNonNullValuesFactory" totalMilliseconds="48" invocations="20" avgMicrosecondsPerInvocation="2403" maxMicrosecondsPerInvocation="7869" standardDeviationMicrosecondsPerInvocation="1543"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueRangeAnalysisFactory" totalMilliseconds="45" invocations="244" avgMicrosecondsPerInvocation="186" maxMicrosecondsPerInvocation="16525" standardDeviationMicrosecondsPerInvocation="1123"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="45" invocations="84" avgMicrosecondsPerInvocation="538" maxMicrosecondsPerInvocation="3476" standardDeviationMicrosecondsPerInvocation="810"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindOpenStream" totalMilliseconds="45" invocations="44" avgMicrosecondsPerInvocation="1027" maxMicrosecondsPerInvocation="13264" standardDeviationMicrosecondsPerInvocation="2401"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.UnreadFields" totalMilliseconds="42" invocations="44" avgMicrosecondsPerInvocation="970" maxMicrosecondsPerInvocation="2294" standardDeviationMicrosecondsPerInvocation="514"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindDeadLocalStores" totalMilliseconds="37" invocations="44" avgMicrosecondsPerInvocation="843" maxMicrosecondsPerInvocation="3093" standardDeviationMicrosecondsPerInvocation="584"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CheckRelaxingNullnessAnnotation" totalMilliseconds="37" invocations="44" avgMicrosecondsPerInvocation="842" maxMicrosecondsPerInvocation="9027" standardDeviationMicrosecondsPerInvocation="1381"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RuntimeExceptionCapture" totalMilliseconds="36" invocations="44" avgMicrosecondsPerInvocation="822" maxMicrosecondsPerInvocation="3087" standardDeviationMicrosecondsPerInvocation="600"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindInconsistentSync2" totalMilliseconds="36" invocations="44" avgMicrosecondsPerInvocation="821" maxMicrosecondsPerInvocation="5908" standardDeviationMicrosecondsPerInvocation="961"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindPublicAttributes" totalMilliseconds="35" invocations="44" avgMicrosecondsPerInvocation="804" maxMicrosecondsPerInvocation="2487" standardDeviationMicrosecondsPerInvocation="507"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref$CheckCallSitesAndReturnInstructions" totalMilliseconds="33" invocations="240" avgMicrosecondsPerInvocation="140" maxMicrosecondsPerInvocation="2168" standardDeviationMicrosecondsPerInvocation="256"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>
