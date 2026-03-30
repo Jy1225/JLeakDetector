@@ -1,0 +1,16 @@
+{
+  "controller_run_id": "20260329-232212_qwen-plus",
+  "project_name": "triplea",
+  "project_path": "/home/jiayu/Desktop/real_world_repos/triplea",
+  "variant": "baseline",
+  "variant_description": "soot on + issue_first on",
+  "repeat_index": 1,
+  "model_name": "qwen-plus",
+  "temperature": 0.0,
+  "call_depth": 5,
+  "max_neural_workers": 16,
+  "enable_soot": true,
+  "issue_first": true,
+  "soot_facts_path": "/home/jiayu/Desktop/real_world_repos/triplea/.repoaudit/soot_facts.json",
+  "generated_at": "2026-03-30 01:13:01"
+}

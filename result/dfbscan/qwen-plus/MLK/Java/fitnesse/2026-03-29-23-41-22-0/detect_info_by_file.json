@@ -1,0 +1,3152 @@
+{
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/FileRunner.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/FileRunner.java",
+        "file_name": "FileRunner.java",
+        "report_count": 2,
+        "report_ids": [
+            23,
+            42
+        ],
+        "method_count": 2,
+        "primary_defect_method": "args",
+        "primary_defect_method_uid": "fit.FileRunner.args(String)",
+        "primary_confidence": 0.5396825396825397,
+        "leaking_methods": [
+            {
+                "method_name": "args",
+                "method_uid": "fit.FileRunner.args(String)",
+                "method_start_line": 44,
+                "method_end_line": 61,
+                "source_lines": [
+                    56
+                ],
+                "report_ids": [
+                    42
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "read",
+                "method_uid": "fit.FileRunner.read(File)",
+                "method_start_line": 63,
+                "method_end_line": 69,
+                "source_lines": [
+                    65
+                ],
+                "report_ids": [
+                    23
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.0
+            }
+        ],
+        "supporting_methods": [
+            "read"
+        ],
+        "related_methods": [
+            "args",
+            "read"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/FitServer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/FitServer.java",
+        "file_name": "FitServer.java",
+        "report_count": 2,
+        "report_ids": [
+            40,
+            51
+        ],
+        "method_count": 2,
+        "primary_defect_method": "establishConnection",
+        "primary_defect_method_uid": "fit.FitServer.establishConnection(String)",
+        "primary_confidence": 0.5317460317460317,
+        "leaking_methods": [
+            {
+                "method_name": "establishConnection",
+                "method_uid": "fit.FitServer.establishConnection(String)",
+                "method_start_line": 149,
+                "method_end_line": 157,
+                "source_lines": [
+                    150
+                ],
+                "report_ids": [
+                    51
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "readTable",
+                "method_uid": "fit.FitServer.readTable(Parse)",
+                "method_start_line": 186,
+                "method_end_line": 198,
+                "source_lines": [
+                    188
+                ],
+                "report_ids": [
+                    40
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "readTable"
+        ],
+        "related_methods": [
+            "establishConnection",
+            "readTable"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/Fixture.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fit/Fixture.java",
+        "file_name": "Fixture.java",
+        "report_count": 1,
+        "report_ids": [
+            49
+        ],
+        "method_count": 1,
+        "primary_defect_method": "exception",
+        "primary_defect_method_uid": "fit.Fixture.exception(Parse,Throwable)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "exception",
+                "method_uid": "fit.Fixture.exception(Parse,Throwable)",
+                "method_start_line": 208,
+                "method_end_line": 221,
+                "source_lines": [
+                    216
+                ],
+                "report_ids": [
+                    49
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "exception"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/ConfigurationParameter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/ConfigurationParameter.java",
+        "file_name": "ConfigurationParameter.java",
+        "report_count": 1,
+        "report_ids": [
+            30
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadProperties",
+        "primary_defect_method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadProperties",
+                "method_uid": "fitnesse.ConfigurationParameter.loadProperties(File)",
+                "method_start_line": 68,
+                "method_end_line": 91,
+                "source_lines": [
+                    72
+                ],
+                "report_ids": [
+                    30
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadProperties"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/FitNesse.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/FitNesse.java",
+        "file_name": "FitNesse.java",
+        "report_count": 1,
+        "report_ids": [
+            41
+        ],
+        "method_count": 1,
+        "primary_defect_method": "executeSingleCommand",
+        "primary_defect_method_uid": "fitnesse.FitNesse.executeSingleCommand(String,OutputStream)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "executeSingleCommand",
+                "method_uid": "fitnesse.FitNesse.executeSingleCommand(String,OutputStream)",
+                "method_start_line": 83,
+                "method_end_line": 90,
+                "source_lines": [
+                    85
+                ],
+                "report_ids": [
+                    41
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "executeSingleCommand"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/FitNesseVersion.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/FitNesseVersion.java",
+        "file_name": "FitNesseVersion.java",
+        "report_count": 1,
+        "report_ids": [
+            8
+        ],
+        "method_count": 1,
+        "primary_defect_method": "versionFromMetaInf",
+        "primary_defect_method_uid": "fitnesse.FitNesseVersion.versionFromMetaInf()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "versionFromMetaInf",
+                "method_uid": "fitnesse.FitNesseVersion.versionFromMetaInf()",
+                "method_start_line": 28,
+                "method_end_line": 50,
+                "source_lines": [
+                    31
+                ],
+                "report_ids": [
+                    8
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "versionFromMetaInf"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/HashingCipher.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/HashingCipher.java",
+        "file_name": "HashingCipher.java",
+        "report_count": 1,
+        "report_ids": [
+            2
+        ],
+        "method_count": 1,
+        "primary_defect_method": "encrypt",
+        "primary_defect_method_uid": "fitnesse.authentication.HashingCipher.encrypt(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "encrypt",
+                "method_uid": "fitnesse.authentication.HashingCipher.encrypt(String)",
+                "method_start_line": 14,
+                "method_end_line": 20,
+                "source_lines": [
+                    17
+                ],
+                "report_ids": [
+                    2
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "encrypt"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/NegotiateAuthenticator.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/NegotiateAuthenticator.java",
+        "file_name": "NegotiateAuthenticator.java",
+        "report_count": 1,
+        "report_ids": [
+            3
+        ],
+        "method_count": 1,
+        "primary_defect_method": "setCredentials",
+        "primary_defect_method_uid": "fitnesse.authentication.NegotiateAuthenticator.setCredentials(Request,byte)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "setCredentials",
+                "method_uid": "fitnesse.authentication.NegotiateAuthenticator.setCredentials(Request,byte)",
+                "method_start_line": 155,
+                "method_end_line": 176,
+                "source_lines": [
+                    162
+                ],
+                "report_ids": [
+                    3
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "setCredentials"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/Password.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/authentication/Password.java",
+        "file_name": "Password.java",
+        "report_count": 1,
+        "report_ids": [
+            16
+        ],
+        "method_count": 1,
+        "primary_defect_method": "main",
+        "primary_defect_method_uid": "fitnesse.authentication.Password.main(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "fitnesse.authentication.Password.main(String)",
+                "method_start_line": 19,
+                "method_end_line": 29,
+                "source_lines": [
+                    24
+                ],
+                "report_ids": [
+                    16
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 28.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/ContentBuffer.java",
+        "file_name": "ContentBuffer.java",
+        "report_count": 2,
+        "report_ids": [
+            22,
+            32
+        ],
+        "method_count": 2,
+        "primary_defect_method": "getInputStream",
+        "primary_defect_method_uid": "fitnesse.components.ContentBuffer.getInputStream()",
+        "primary_confidence": 0.5367647058823529,
+        "leaking_methods": [
+            {
+                "method_name": "getInputStream",
+                "method_uid": "fitnesse.components.ContentBuffer.getInputStream()",
+                "method_start_line": 66,
+                "method_end_line": 77,
+                "source_lines": [
+                    68
+                ],
+                "report_ids": [
+                    32
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "open",
+                "method_uid": "fitnesse.components.ContentBuffer.open()",
+                "method_start_line": 30,
+                "method_end_line": 35,
+                "source_lines": [
+                    32
+                ],
+                "report_ids": [
+                    22
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "open"
+        ],
+        "related_methods": [
+            "getInputStream",
+            "open"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/Logger.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/components/Logger.java",
+        "file_name": "Logger.java",
+        "report_count": 2,
+        "report_ids": [
+            34,
+            48
+        ],
+        "method_count": 1,
+        "primary_defect_method": "openNewFile",
+        "primary_defect_method_uid": "fitnesse.components.Logger.openNewFile(LogData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "openNewFile",
+                "method_uid": "fitnesse.components.Logger.openNewFile(LogData)",
+                "method_start_line": 77,
+                "method_end_line": 92,
+                "source_lines": [
+                    85,
+                    91
+                ],
+                "report_ids": [
+                    34,
+                    48
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 65.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "openNewFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/PageDriver.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/PageDriver.java",
+        "file_name": "PageDriver.java",
+        "report_count": 1,
+        "report_ids": [
+            39
+        ],
+        "method_count": 1,
+        "primary_defect_method": "requestPageSaveWithContentsByUserAndPassword",
+        "primary_defect_method_uid": "fitnesse.fixtures.PageDriver.requestPageSaveWithContentsByUserAndPassword(String,String,String,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "requestPageSaveWithContentsByUserAndPassword",
+                "method_uid": "fitnesse.fixtures.PageDriver.requestPageSaveWithContentsByUserAndPassword(String,String,String,String)",
+                "method_start_line": 62,
+                "method_end_line": 78,
+                "source_lines": [
+                    73
+                ],
+                "report_ids": [
+                    39
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "requestPageSaveWithContentsByUserAndPassword"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/ResponseRequester.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/ResponseRequester.java",
+        "file_name": "ResponseRequester.java",
+        "report_count": 1,
+        "report_ids": [
+            38
+        ],
+        "method_count": 1,
+        "primary_defect_method": "execute",
+        "primary_defect_method_uid": "fitnesse.fixtures.ResponseRequester.execute()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "execute",
+                "method_uid": "fitnesse.fixtures.ResponseRequester.execute()",
+                "method_start_line": 25,
+                "method_end_line": 40,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    38
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "execute"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/RowEntryFixture.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/fixtures/RowEntryFixture.java",
+        "file_name": "RowEntryFixture.java",
+        "report_count": 1,
+        "report_ids": [
+            50
+        ],
+        "method_count": 1,
+        "primary_defect_method": "makeMessageCell",
+        "primary_defect_method_uid": "fitnesse.fixtures.RowEntryFixture.makeMessageCell(Exception)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "makeMessageCell",
+                "method_uid": "fitnesse.fixtures.RowEntryFixture.makeMessageCell(Exception)",
+                "method_start_line": 44,
+                "method_end_line": 55,
+                "source_lines": [
+                    48
+                ],
+                "report_ids": [
+                    50
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "makeMessageCell"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/html/template/ClasspathResourceLoader.java",
+        "file_name": "ClasspathResourceLoader.java",
+        "report_count": 1,
+        "report_ids": [
+            4
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getResourceStream",
+        "primary_defect_method_uid": "fitnesse.html.template.ClasspathResourceLoader.getResourceStream(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getResourceStream",
+                "method_uid": "fitnesse.html.template.ClasspathResourceLoader.getResourceStream(String)",
+                "method_start_line": 26,
+                "method_end_line": 47,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    4
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getResourceStream"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ChunkedResponse.java",
+        "file_name": "ChunkedResponse.java",
+        "report_count": 1,
+        "report_ids": [
+            46
+        ],
+        "method_count": 2,
+        "primary_defect_method": "getWriter",
+        "primary_defect_method_uid": "fitnesse.http.ChunkedResponse.getWriter()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getWriter",
+                "method_uid": "fitnesse.http.ChunkedResponse.getWriter()",
+                "method_start_line": 99,
+                "method_end_line": 122,
+                "source_lines": [
+                    100
+                ],
+                "report_ids": [
+                    46
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "newHtmlFormatter",
+                "method_uid": "fitnesse.responders.run.SuiteResponder.newHtmlFormatter()",
+                "method_start_line": 283,
+                "method_end_line": 285,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "newHtmlFormatter"
+        ],
+        "related_methods": [
+            "getWriter",
+            "newHtmlFormatter"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/InputStreamResponse.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/InputStreamResponse.java",
+        "file_name": "InputStreamResponse.java",
+        "report_count": 1,
+        "report_ids": [
+            14
+        ],
+        "method_count": 2,
+        "primary_defect_method": "setBody",
+        "primary_defect_method_uid": "fitnesse.http.InputStreamResponse.setBody(InputStream,int)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "setBody",
+                "method_uid": "fitnesse.http.InputStreamResponse.setBody(File)",
+                "method_start_line": 47,
+                "method_end_line": 52,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "setBody",
+                "method_uid": "fitnesse.http.InputStreamResponse.setBody(InputStream,int)",
+                "method_start_line": 42,
+                "method_end_line": 45,
+                "source_lines": [
+                    43
+                ],
+                "report_ids": [
+                    14
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "setBody"
+        ],
+        "related_methods": [
+            "setBody"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/MockResponseSender.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/MockResponseSender.java",
+        "file_name": "MockResponseSender.java",
+        "report_count": 1,
+        "report_ids": [
+            65
+        ],
+        "method_count": 1,
+        "primary_defect_method": "send",
+        "primary_defect_method_uid": "fitnesse.http.MockResponseSender.send(byte)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "send",
+                "method_uid": "fitnesse.http.MockResponseSender.send(byte)",
+                "method_start_line": 20,
+                "method_end_line": 26,
+                "source_lines": [
+                    22
+                ],
+                "report_ids": [
+                    65
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "send"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/Request.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/Request.java",
+        "file_name": "Request.java",
+        "report_count": 2,
+        "report_ids": [
+            18,
+            21
+        ],
+        "method_count": 3,
+        "primary_defect_method": "createUploadedFile",
+        "primary_defect_method_uid": "fitnesse.http.Request.createUploadedFile(Map,StreamReader,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "put",
+                "method_uid": "fitnesse.html.template.HtmlPage.put(String,Object)",
+                "method_start_line": 69,
+                "method_end_line": 71,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "createUploadedFile",
+                "method_uid": "fitnesse.http.Request.createUploadedFile(Map,StreamReader,String)",
+                "method_start_line": 140,
+                "method_end_line": 154,
+                "source_lines": [
+                    144,
+                    147
+                ],
+                "report_ids": [
+                    18,
+                    21
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 63.5
+            },
+            {
+                "method_name": "parseMultiPartContent",
+                "method_uid": "fitnesse.http.Request.parseMultiPartContent(String)",
+                "method_start_line": 110,
+                "method_end_line": 133,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "parseMultiPartContent",
+            "put"
+        ],
+        "related_methods": [
+            "createUploadedFile",
+            "parseMultiPartContent",
+            "put"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/RequestBuilder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/RequestBuilder.java",
+        "file_name": "RequestBuilder.java",
+        "report_count": 2,
+        "report_ids": [
+            1,
+            53
+        ],
+        "method_count": 2,
+        "primary_defect_method": "sendBody",
+        "primary_defect_method_uid": "fitnesse.http.RequestBuilder.sendBody(OutputStream)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "addCredentials",
+                "method_uid": "fitnesse.http.RequestBuilder.addCredentials(String,String)",
+                "method_start_line": 167,
+                "method_end_line": 171,
+                "source_lines": [
+                    169
+                ],
+                "report_ids": [
+                    1
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "sendBody",
+                "method_uid": "fitnesse.http.RequestBuilder.sendBody(OutputStream)",
+                "method_start_line": 130,
+                "method_end_line": 140,
+                "source_lines": [
+                    134
+                ],
+                "report_ids": [
+                    53
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "addCredentials"
+        ],
+        "related_methods": [
+            "addCredentials",
+            "sendBody"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ResponseParser.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/http/ResponseParser.java",
+        "file_name": "ResponseParser.java",
+        "report_count": 1,
+        "report_ids": [
+            56
+        ],
+        "method_count": 1,
+        "primary_defect_method": "performHttpRequest",
+        "primary_defect_method_uid": "fitnesse.http.ResponseParser.performHttpRequest(String,int,RequestBuilder)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "performHttpRequest",
+                "method_uid": "fitnesse.http.ResponseParser.performHttpRequest(String,int,RequestBuilder)",
+                "method_start_line": 122,
+                "method_end_line": 134,
+                "source_lines": [
+                    124
+                ],
+                "report_ids": [
+                    56
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "performHttpRequest"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/junit/JavaFormatter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/junit/JavaFormatter.java",
+        "file_name": "JavaFormatter.java",
+        "report_count": 2,
+        "report_ids": [
+            0,
+            58
+        ],
+        "method_count": 2,
+        "primary_defect_method": "copy",
+        "primary_defect_method_uid": "fitnesse.junit.JavaFormatter.FileCopier.copy(String,File)",
+        "primary_confidence": 0.5508474576271186,
+        "leaking_methods": [
+            {
+                "method_name": "copy",
+                "method_uid": "fitnesse.junit.JavaFormatter.FileCopier.copy(String,File)",
+                "method_start_line": 39,
+                "method_end_line": 50,
+                "source_lines": [
+                    40
+                ],
+                "report_ids": [
+                    0
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "testStarted",
+                "method_uid": "fitnesse.junit.JavaFormatter.testStarted(WikiTestPage)",
+                "method_start_line": 137,
+                "method_end_line": 140,
+                "source_lines": [
+                    139
+                ],
+                "report_ids": [
+                    58
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [
+            "testStarted"
+        ],
+        "related_methods": [
+            "copy",
+            "testStarted"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/logging/LogFormatter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/logging/LogFormatter.java",
+        "file_name": "LogFormatter.java",
+        "report_count": 1,
+        "report_ids": [
+            47
+        ],
+        "method_count": 1,
+        "primary_defect_method": "format",
+        "primary_defect_method_uid": "fitnesse.logging.LogFormatter.format(LogRecord)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "format",
+                "method_uid": "fitnesse.logging.LogFormatter.format(LogRecord)",
+                "method_start_line": 20,
+                "method_end_line": 43,
+                "source_lines": [
+                    39
+                ],
+                "report_ids": [
+                    47
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "format"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/reporting/history/SuiteHistoryFormatter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/reporting/history/SuiteHistoryFormatter.java",
+        "file_name": "SuiteHistoryFormatter.java",
+        "report_count": 1,
+        "report_ids": [
+            70
+        ],
+        "method_count": 1,
+        "primary_defect_method": "close",
+        "primary_defect_method_uid": "fitnesse.reporting.history.SuiteHistoryFormatter.close()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "close",
+                "method_uid": "fitnesse.reporting.history.SuiteHistoryFormatter.close()",
+                "method_start_line": 96,
+                "method_end_line": 120,
+                "source_lines": [
+                    109
+                ],
+                "report_ids": [
+                    70
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "close"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/reporting/history/TestXmlFormatter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/reporting/history/TestXmlFormatter.java",
+        "file_name": "TestXmlFormatter.java",
+        "report_count": 1,
+        "report_ids": [
+            67
+        ],
+        "method_count": 1,
+        "primary_defect_method": "writeResults",
+        "primary_defect_method_uid": "fitnesse.reporting.history.TestXmlFormatter.writeResults()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "writeResults",
+                "method_uid": "fitnesse.reporting.history.TestXmlFormatter.writeResults()",
+                "method_start_line": 166,
+                "method_end_line": 168,
+                "source_lines": [
+                    167
+                ],
+                "report_ids": [
+                    67
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "writeResults"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/SerializedPageResponder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/SerializedPageResponder.java",
+        "file_name": "SerializedPageResponder.java",
+        "report_count": 1,
+        "report_ids": [
+            36
+        ],
+        "method_count": 1,
+        "primary_defect_method": "serializeToBytes",
+        "primary_defect_method_uid": "fitnesse.responders.SerializedPageResponder.serializeToBytes(Object)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "serializeToBytes",
+                "method_uid": "fitnesse.responders.SerializedPageResponder.serializeToBytes(Object)",
+                "method_start_line": 92,
+                "method_end_line": 99,
+                "source_lines": [
+                    94
+                ],
+                "report_ids": [
+                    36
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "serializeToBytes"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/WikiImportingResponder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/WikiImportingResponder.java",
+        "file_name": "WikiImportingResponder.java",
+        "report_count": 1,
+        "report_ids": [
+            7
+        ],
+        "method_count": 1,
+        "primary_defect_method": "doSending",
+        "primary_defect_method_uid": "fitnesse.responders.WikiImportingResponder.doSending()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "doSending",
+                "method_uid": "fitnesse.responders.WikiImportingResponder.doSending()",
+                "method_start_line": 39,
+                "method_end_line": 48,
+                "source_lines": [
+                    45
+                ],
+                "report_ids": [
+                    7
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "doSending"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/files/FileResponder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/files/FileResponder.java",
+        "file_name": "FileResponder.java",
+        "report_count": 1,
+        "report_ids": [
+            9
+        ],
+        "method_count": 1,
+        "primary_defect_method": "makeClasspathResponse",
+        "primary_defect_method_uid": "fitnesse.responders.files.FileResponder.makeClasspathResponse(FitNesseContext,Request)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "makeClasspathResponse",
+                "method_uid": "fitnesse.responders.files.FileResponder.makeClasspathResponse(FitNesseContext,Request)",
+                "method_start_line": 68,
+                "method_end_line": 91,
+                "source_lines": [
+                    77
+                ],
+                "report_ids": [
+                    9
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "makeClasspathResponse"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/run/SuiteResponder.java",
+        "file_name": "SuiteResponder.java",
+        "report_count": 2,
+        "report_ids": [
+            11,
+            68
+        ],
+        "method_count": 3,
+        "primary_defect_method": "makeHtml",
+        "primary_defect_method_uid": "fitnesse.responders.run.SuiteResponder.makeHtml()",
+        "primary_confidence": 0.5617647058823529,
+        "leaking_methods": [
+            {
+                "method_name": "doSending",
+                "method_uid": "fitnesse.responders.run.SuiteResponder.doSending()",
+                "method_start_line": 104,
+                "method_end_line": 122,
+                "source_lines": [
+                    114
+                ],
+                "report_ids": [
+                    11
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.8
+            },
+            {
+                "method_name": "makeHtml",
+                "method_uid": "fitnesse.responders.run.SuiteResponder.makeHtml()",
+                "method_start_line": 174,
+                "method_end_line": 193,
+                "source_lines": [
+                    184
+                ],
+                "report_ids": [
+                    68
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "newXmlFormatter",
+                "method_uid": "fitnesse.responders.run.SuiteResponder.newXmlFormatter()",
+                "method_start_line": 270,
+                "method_end_line": 277,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "doSending",
+            "newXmlFormatter"
+        ],
+        "related_methods": [
+            "doSending",
+            "makeHtml",
+            "newXmlFormatter"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/search/ResultResponder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/responders/search/ResultResponder.java",
+        "file_name": "ResultResponder.java",
+        "report_count": 1,
+        "report_ids": [
+            5
+        ],
+        "method_count": 1,
+        "primary_defect_method": "doSending",
+        "primary_defect_method_uid": "fitnesse.responders.search.ResultResponder.doSending()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "doSending",
+                "method_uid": "fitnesse.responders.search.ResultResponder.doSending()",
+                "method_start_line": 23,
+                "method_end_line": 51,
+                "source_lines": [
+                    48
+                ],
+                "report_ids": [
+                    5
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "doSending"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/JavaSlimFactory.java",
+        "file_name": "JavaSlimFactory.java",
+        "report_count": 1,
+        "report_ids": [
+            55
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getStatementExecutor",
+        "primary_defect_method_uid": "fitnesse.slim.JavaSlimFactory.getStatementExecutor()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getStatementExecutor",
+                "method_uid": "fitnesse.slim.JavaSlimFactory.getStatementExecutor()",
+                "method_start_line": 12,
+                "method_end_line": 18,
+                "source_lines": [
+                    13
+                ],
+                "report_ids": [
+                    55
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getStatementExecutor"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/Jsr223StatementExecutor.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/Jsr223StatementExecutor.java",
+        "file_name": "Jsr223StatementExecutor.java",
+        "report_count": 1,
+        "report_ids": [
+            43
+        ],
+        "method_count": 1,
+        "primary_defect_method": "exceptionToString",
+        "primary_defect_method_uid": "fitnesse.slim.Jsr223StatementExecutor.exceptionToString(Throwable)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "exceptionToString",
+                "method_uid": "fitnesse.slim.Jsr223StatementExecutor.exceptionToString(Throwable)",
+                "method_start_line": 57,
+                "method_end_line": 62,
+                "source_lines": [
+                    59
+                ],
+                "report_ids": [
+                    43
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "exceptionToString"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimFactory.java",
+        "file_name": "SlimFactory.java",
+        "report_count": 1,
+        "report_ids": [
+            37
+        ],
+        "method_count": 2,
+        "primary_defect_method": "getListExecutor",
+        "primary_defect_method_uid": "fitnesse.slim.SlimFactory.getListExecutor(boolean)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getListExecutor",
+                "method_uid": "fitnesse.slim.SlimFactory.getListExecutor(boolean)",
+                "method_start_line": 13,
+                "method_end_line": 15,
+                "source_lines": [
+                    14
+                ],
+                "report_ids": [
+                    37
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "initialize",
+                "method_uid": "fitnesse.slim.SlimServer.initialize(Socket)",
+                "method_start_line": 58,
+                "method_end_line": 64,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "initialize"
+        ],
+        "related_methods": [
+            "getListExecutor",
+            "initialize"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimServer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimServer.java",
+        "file_name": "SlimServer.java",
+        "report_count": 1,
+        "report_ids": [
+            15
+        ],
+        "method_count": 1,
+        "primary_defect_method": "initialize",
+        "primary_defect_method_uid": "fitnesse.slim.SlimServer.initialize(Socket)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "initialize",
+                "method_uid": "fitnesse.slim.SlimServer.initialize(Socket)",
+                "method_start_line": 58,
+                "method_end_line": 64,
+                "source_lines": [
+                    60
+                ],
+                "report_ids": [
+                    15
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "initialize"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimService.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/SlimService.java",
+        "file_name": "SlimService.java",
+        "report_count": 1,
+        "report_ids": [
+            61
+        ],
+        "method_count": 3,
+        "primary_defect_method": "acceptMany",
+        "primary_defect_method_uid": "fitnesse.slim.SlimService.acceptMany()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "acceptMany",
+                "method_uid": "fitnesse.slim.SlimService.acceptMany()",
+                "method_start_line": 153,
+                "method_end_line": 168,
+                "source_lines": [
+                    155
+                ],
+                "report_ids": [
+                    61
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "acceptOne",
+                "method_uid": "fitnesse.slim.SlimService.acceptOne()",
+                "method_start_line": 178,
+                "method_end_line": 181,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "run",
+                "method_uid": "fitnesse.slim.SlimService.run()",
+                "method_start_line": 158,
+                "method_end_line": 165,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -24.25
+            }
+        ],
+        "supporting_methods": [
+            "acceptOne",
+            "run"
+        ],
+        "related_methods": [
+            "acceptMany",
+            "acceptOne",
+            "run"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/StatementTimeoutExecutor.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/slim/StatementTimeoutExecutor.java",
+        "file_name": "StatementTimeoutExecutor.java",
+        "report_count": 1,
+        "report_ids": [
+            63
+        ],
+        "method_count": 2,
+        "primary_defect_method": "decorate",
+        "primary_defect_method_uid": "fitnesse.slim.StatementTimeoutExecutor.decorate(StatementExecutorInterface,Integer,ExecutorService)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "decorate",
+                "method_uid": "fitnesse.slim.StatementTimeoutExecutor.decorate(StatementExecutorInterface,Integer)",
+                "method_start_line": 19,
+                "method_end_line": 21,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "decorate",
+                "method_uid": "fitnesse.slim.StatementTimeoutExecutor.decorate(StatementExecutorInterface,Integer,ExecutorService)",
+                "method_start_line": 23,
+                "method_end_line": 25,
+                "source_lines": [
+                    24
+                ],
+                "report_ids": [
+                    63
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "decorate"
+        ],
+        "related_methods": [
+            "decorate"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketFactory.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketFactory.java",
+        "file_name": "SocketFactory.java",
+        "report_count": 1,
+        "report_ids": [
+            60
+        ],
+        "method_count": 2,
+        "primary_defect_method": "tryCreateServerSocket",
+        "primary_defect_method_uid": "fitnesse.socketservice.SocketFactory.tryCreateServerSocket(int)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "tryCreateServerSocket",
+                "method_uid": "fitnesse.socketservice.SocketFactory.tryCreateServerSocket(int)",
+                "method_start_line": 12,
+                "method_end_line": 23,
+                "source_lines": [
+                    15
+                ],
+                "report_ids": [
+                    60
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 32.0
+            },
+            {
+                "method_name": "findFreePort",
+                "method_uid": "fitnesse.testsystems.slim.SlimClientBuilder.findFreePort()",
+                "method_start_line": 84,
+                "method_end_line": 94,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "findFreePort"
+        ],
+        "related_methods": [
+            "findFreePort",
+            "tryCreateServerSocket"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketServer.java",
+        "file_name": "SocketServer.java",
+        "report_count": 2,
+        "report_ids": [
+            26,
+            59
+        ],
+        "method_count": 2,
+        "primary_defect_method": "GetPrintStream",
+        "primary_defect_method_uid": "fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream(Socket)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "GetBufferedReader",
+                "method_uid": "fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader(Socket)",
+                "method_start_line": 23,
+                "method_end_line": 27,
+                "source_lines": [
+                    24
+                ],
+                "report_ids": [
+                    26
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "GetPrintStream",
+                "method_uid": "fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream(Socket)",
+                "method_start_line": 18,
+                "method_end_line": 21,
+                "source_lines": [
+                    19
+                ],
+                "report_ids": [
+                    59
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "GetBufferedReader"
+        ],
+        "related_methods": [
+            "GetBufferedReader",
+            "GetPrintStream"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketService.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/socketservice/SocketService.java",
+        "file_name": "SocketService.java",
+        "report_count": 1,
+        "report_ids": [
+            66
+        ],
+        "method_count": 1,
+        "primary_defect_method": "serviceThread",
+        "primary_defect_method_uid": "fitnesse.socketservice.SocketService.serviceThread()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "serviceThread",
+                "method_uid": "fitnesse.socketservice.SocketService.serviceThread()",
+                "method_start_line": 62,
+                "method_end_line": 78,
+                "source_lines": [
+                    67
+                ],
+                "report_ids": [
+                    66
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 32.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "serviceThread"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/updates/FileUpdate.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/updates/FileUpdate.java",
+        "file_name": "FileUpdate.java",
+        "report_count": 1,
+        "report_ids": [
+            31
+        ],
+        "method_count": 1,
+        "primary_defect_method": "copyResource",
+        "primary_defect_method_uid": "fitnesse.updates.FileUpdate.copyResource()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "copyResource",
+                "method_uid": "fitnesse.updates.FileUpdate.copyResource()",
+                "method_start_line": 37,
+                "method_end_line": 57,
+                "source_lines": [
+                    44
+                ],
+                "report_ids": [
+                    31
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "copyResource"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/updates/ReplacingFileUpdate.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/updates/ReplacingFileUpdate.java",
+        "file_name": "ReplacingFileUpdate.java",
+        "report_count": 1,
+        "report_ids": [
+            17
+        ],
+        "method_count": 1,
+        "primary_defect_method": "shouldBeApplied",
+        "primary_defect_method_uid": "fitnesse.updates.ReplacingFileUpdate.shouldBeApplied()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "shouldBeApplied",
+                "method_uid": "fitnesse.updates.ReplacingFileUpdate.shouldBeApplied()",
+                "method_start_line": 21,
+                "method_end_line": 34,
+                "source_lines": [
+                    28
+                ],
+                "report_ids": [
+                    17
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "shouldBeApplied"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/util/XmlUtil.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/util/XmlUtil.java",
+        "file_name": "XmlUtil.java",
+        "report_count": 1,
+        "report_ids": [
+            29
+        ],
+        "method_count": 1,
+        "primary_defect_method": "newDocument",
+        "primary_defect_method_uid": "fitnesse.util.XmlUtil.newDocument(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "newDocument",
+                "method_uid": "fitnesse.util.XmlUtil.newDocument(File)",
+                "method_start_line": 56,
+                "method_end_line": 62,
+                "source_lines": [
+                    58
+                ],
+                "report_ids": [
+                    29
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "newDocument"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/RecentChangesWikiPage.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/RecentChangesWikiPage.java",
+        "file_name": "RecentChangesWikiPage.java",
+        "report_count": 1,
+        "report_ids": [
+            12
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getRecentChangesLines",
+        "primary_defect_method_uid": "fitnesse.wiki.RecentChangesWikiPage.getRecentChangesLines(PageData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getRecentChangesLines",
+                "method_uid": "fitnesse.wiki.RecentChangesWikiPage.getRecentChangesLines(PageData)",
+                "method_start_line": 36,
+                "method_end_line": 49,
+                "source_lines": [
+                    38
+                ],
+                "report_ids": [
+                    12
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getRecentChangesLines"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/DiskFileSystem.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/DiskFileSystem.java",
+        "file_name": "DiskFileSystem.java",
+        "report_count": 1,
+        "report_ids": [
+            13
+        ],
+        "method_count": 2,
+        "primary_defect_method": "getInputStream",
+        "primary_defect_method_uid": "fitnesse.wiki.fs.DiskFileSystem.getInputStream(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getInputStream",
+                "method_uid": "fitnesse.wiki.fs.DiskFileSystem.getInputStream(File)",
+                "method_start_line": 44,
+                "method_end_line": 47,
+                "source_lines": [
+                    46
+                ],
+                "report_ids": [
+                    13
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "getContent",
+                "method_uid": "fitnesse.wiki.fs.SimpleFileVersionsController.RevisionFileVersion.getContent()",
+                "method_start_line": 50,
+                "method_end_line": 53,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "getContent"
+        ],
+        "related_methods": [
+            "getContent",
+            "getInputStream"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/GitFileVersionsController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/GitFileVersionsController.java",
+        "file_name": "GitFileVersionsController.java",
+        "report_count": 2,
+        "report_ids": [
+            27,
+            64
+        ],
+        "method_count": 2,
+        "primary_defect_method": "createInMemoryRecentChangesPage",
+        "primary_defect_method_uid": "fitnesse.wiki.fs.GitFileVersionsController.createInMemoryRecentChangesPage(FileSystemPage)",
+        "primary_confidence": 0.6111111111111112,
+        "leaking_methods": [
+            {
+                "method_name": "createInMemoryRecentChangesPage",
+                "method_uid": "fitnesse.wiki.fs.GitFileVersionsController.createInMemoryRecentChangesPage(FileSystemPage)",
+                "method_start_line": 257,
+                "method_end_line": 260,
+                "source_lines": [
+                    258
+                ],
+                "report_ids": [
+                    27
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "getRepositoryContent",
+                "method_uid": "fitnesse.wiki.fs.GitFileVersionsController.getRepositoryContent(Repository,RevCommit,String)",
+                "method_start_line": 89,
+                "method_end_line": 97,
+                "source_lines": [
+                    93
+                ],
+                "report_ids": [
+                    64
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 24.5
+            }
+        ],
+        "supporting_methods": [
+            "getRepositoryContent"
+        ],
+        "related_methods": [
+            "createInMemoryRecentChangesPage",
+            "getRepositoryContent"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/InMemoryPage.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/InMemoryPage.java",
+        "file_name": "InMemoryPage.java",
+        "report_count": 2,
+        "report_ids": [
+            28,
+            69
+        ],
+        "method_count": 4,
+        "primary_defect_method": "makeRoot",
+        "primary_defect_method_uid": "fitnesse.wiki.fs.InMemoryPage.makeRoot(String,Properties)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "makeTestContext",
+                "method_uid": "fitnesse.testutil.FitNesseUtil.makeTestContext()",
+                "method_start_line": 39,
+                "method_end_line": 43,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "makeRoot",
+                "method_uid": "fitnesse.wiki.fs.InMemoryPage.makeRoot(String)",
+                "method_start_line": 15,
+                "method_end_line": 17,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "makeRoot",
+                "method_uid": "fitnesse.wiki.fs.InMemoryPage.makeRoot(String,Properties)",
+                "method_start_line": 23,
+                "method_end_line": 25,
+                "source_lines": [
+                    16
+                ],
+                "report_ids": [
+                    28
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "newInstance",
+                "method_uid": "fitnesse.wiki.fs.InMemoryPage.newInstance()",
+                "method_start_line": 33,
+                "method_end_line": 36,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    69
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "makeRoot",
+            "makeTestContext",
+            "newInstance"
+        ],
+        "related_methods": [
+            "makeRoot",
+            "makeTestContext",
+            "newInstance"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/SimpleFileVersionsController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/SimpleFileVersionsController.java",
+        "file_name": "SimpleFileVersionsController.java",
+        "report_count": 1,
+        "report_ids": [
+            19
+        ],
+        "method_count": 2,
+        "primary_defect_method": "getContent",
+        "primary_defect_method_uid": "fitnesse.wiki.fs.SimpleFileVersionsController.RevisionFileVersion.getContent()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "contentIsTableOfContents",
+                "method_uid": "fitnesse.wiki.fs.ExternalSuitePageTest.contentIsTableOfContents()",
+                "method_start_line": 24,
+                "method_end_line": 27,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "getContent",
+                "method_uid": "fitnesse.wiki.fs.SimpleFileVersionsController.RevisionFileVersion.getContent()",
+                "method_start_line": 50,
+                "method_end_line": 53,
+                "source_lines": [
+                    52
+                ],
+                "report_ids": [
+                    19
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "contentIsTableOfContents"
+        ],
+        "related_methods": [
+            "contentIsTableOfContents",
+            "getContent"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/ZipFileVersionsController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wiki/fs/ZipFileVersionsController.java",
+        "file_name": "ZipFileVersionsController.java",
+        "report_count": 2,
+        "report_ids": [
+            20,
+            62
+        ],
+        "method_count": 2,
+        "primary_defect_method": "loadZipEntry",
+        "primary_defect_method_uid": "fitnesse.wiki.fs.ZipFileVersionsController.loadZipEntry(ZipFile,File)",
+        "primary_confidence": 0.5317460317460317,
+        "leaking_methods": [
+            {
+                "method_name": "addToZip",
+                "method_uid": "fitnesse.wiki.fs.ZipFileVersionsController.addToZip(File,ZipOutputStream)",
+                "method_start_line": 170,
+                "method_end_line": 185,
+                "source_lines": [
+                    173
+                ],
+                "report_ids": [
+                    20
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "loadZipEntry",
+                "method_uid": "fitnesse.wiki.fs.ZipFileVersionsController.loadZipEntry(ZipFile,File)",
+                "method_start_line": 191,
+                "method_end_line": 211,
+                "source_lines": [
+                    196
+                ],
+                "report_ids": [
+                    62
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "addToZip"
+        ],
+        "related_methods": [
+            "addToZip",
+            "loadZipEntry"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/ColoredSlimTable.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/ColoredSlimTable.java",
+        "file_name": "ColoredSlimTable.java",
+        "report_count": 1,
+        "report_ids": [
+            33
+        ],
+        "method_count": 1,
+        "primary_defect_method": "toTarget",
+        "primary_defect_method_uid": "fitnesse.wikitext.parser.ColoredSlimTable.toTarget(Translator,Symbol)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "toTarget",
+                "method_uid": "fitnesse.wikitext.parser.ColoredSlimTable.toTarget(Translator,Symbol)",
+                "method_start_line": 25,
+                "method_end_line": 115,
+                "source_lines": [
+                    26
+                ],
+                "report_ids": [
+                    33
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "toTarget"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/ParseSpecification.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/ParseSpecification.java",
+        "file_name": "ParseSpecification.java",
+        "report_count": 1,
+        "report_ids": [
+            52
+        ],
+        "method_count": 1,
+        "primary_defect_method": "parse",
+        "primary_defect_method_uid": "fitnesse.wikitext.parser.ParseSpecification.parse(Parser,Scanner)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "parse",
+                "method_uid": "fitnesse.wikitext.parser.ParseSpecification.parse(Parser,Scanner)",
+                "method_start_line": 83,
+                "method_end_line": 107,
+                "source_lines": [
+                    86
+                ],
+                "report_ids": [
+                    52
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "parse"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Parser.java",
+        "file_name": "Parser.java",
+        "report_count": 1,
+        "report_ids": [
+            44
+        ],
+        "method_count": 2,
+        "primary_defect_method": "make",
+        "primary_defect_method_uid": "fitnesse.wikitext.parser.Parser.make(ParsingPage,String,SymbolProvider)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "make",
+                "method_uid": "fitnesse.wikitext.parser.Parser.make(ParsingPage,String,SymbolProvider)",
+                "method_start_line": 13,
+                "method_end_line": 16,
+                "source_lines": [
+                    15
+                ],
+                "report_ids": [
+                    44
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "parseWithParent",
+                "method_uid": "fitnesse.wikitext.parser.Parser.parseWithParent(String,Parser)",
+                "method_start_line": 86,
+                "method_end_line": 88,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "parseWithParent"
+        ],
+        "related_methods": [
+            "make",
+            "parseWithParent"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Scanner.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Scanner.java",
+        "file_name": "Scanner.java",
+        "report_count": 1,
+        "report_ids": [
+            57
+        ],
+        "method_count": 1,
+        "primary_defect_method": "copy",
+        "primary_defect_method_uid": "fitnesse.wikitext.parser.Scanner.copy(Scanner)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "copy",
+                "method_uid": "fitnesse.wikitext.parser.Scanner.copy(Scanner)",
+                "method_start_line": 48,
+                "method_end_line": 53,
+                "source_lines": [
+                    52
+                ],
+                "report_ids": [
+                    57
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "copy"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Table.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesse/wikitext/parser/Table.java",
+        "file_name": "Table.java",
+        "report_count": 1,
+        "report_ids": [
+            25
+        ],
+        "method_count": 1,
+        "primary_defect_method": "toTarget",
+        "primary_defect_method_uid": "fitnesse.wikitext.parser.Table.toTarget(Translator,Symbol)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "toTarget",
+                "method_uid": "fitnesse.wikitext.parser.Table.toTarget(Translator,Symbol)",
+                "method_start_line": 61,
+                "method_end_line": 90,
+                "source_lines": [
+                    62
+                ],
+                "report_ids": [
+                    25
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "toTarget"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesseMain/FitNesseMain.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/fitnesseMain/FitNesseMain.java",
+        "file_name": "FitNesseMain.java",
+        "report_count": 2,
+        "report_ids": [
+            6,
+            24
+        ],
+        "method_count": 2,
+        "primary_defect_method": "executeSingleCommand",
+        "primary_defect_method_uid": "fitnesseMain.FitNesseMain.executeSingleCommand(FitNesse,String,String)",
+        "primary_confidence": 0.5078125,
+        "leaking_methods": [
+            {
+                "method_name": "configureLogging",
+                "method_uid": "fitnesseMain.FitNesseMain.configureLogging(boolean)",
+                "method_start_line": 138,
+                "method_end_line": 158,
+                "source_lines": [
+                    143
+                ],
+                "report_ids": [
+                    6
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "executeSingleCommand",
+                "method_uid": "fitnesseMain.FitNesseMain.executeSingleCommand(FitNesse,String,String)",
+                "method_start_line": 99,
+                "method_end_line": 123,
+                "source_lines": [
+                    109
+                ],
+                "report_ids": [
+                    24
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 32.0
+            }
+        ],
+        "supporting_methods": [
+            "configureLogging"
+        ],
+        "related_methods": [
+            "configureLogging",
+            "executeSingleCommand"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/fitnesse/src/util/FileUtil.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/fitnesse/src/util/FileUtil.java",
+        "file_name": "FileUtil.java",
+        "report_count": 4,
+        "report_ids": [
+            10,
+            35,
+            45,
+            54
+        ],
+        "method_count": 5,
+        "primary_defect_method": "getFileBytes",
+        "primary_defect_method_uid": "util.FileUtil.getFileBytes(File)",
+        "primary_confidence": 0.5317460317460317,
+        "leaking_methods": [
+            {
+                "method_name": "copyBytes",
+                "method_uid": "util.FileUtil.copyBytes(InputStream,OutputStream)",
+                "method_start_line": 161,
+                "method_end_line": 165,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "getFileBytes",
+                "method_uid": "util.FileUtil.getFileBytes(File)",
+                "method_start_line": 128,
+                "method_end_line": 139,
+                "source_lines": [
+                    133
+                ],
+                "report_ids": [
+                    54
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "getFileLines",
+                "method_uid": "util.FileUtil.getFileLines(File)",
+                "method_start_line": 141,
+                "method_end_line": 150,
+                "source_lines": [
+                    143
+                ],
+                "report_ids": [
+                    10
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "toString",
+                "method_uid": "util.FileUtil.toString(InputStream)",
+                "method_start_line": 167,
+                "method_end_line": 174,
+                "source_lines": [
+                    169
+                ],
+                "report_ids": [
+                    45
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "writeLinesToFile",
+                "method_uid": "util.FileUtil.writeLinesToFile(File,List)",
+                "method_start_line": 152,
+                "method_end_line": 159,
+                "source_lines": [
+                    153
+                ],
+                "report_ids": [
+                    35
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "copyBytes",
+            "getFileLines",
+            "toString",
+            "writeLinesToFile"
+        ],
+        "related_methods": [
+            "copyBytes",
+            "getFileBytes",
+            "getFileLines",
+            "toString",
+            "writeLinesToFile"
+        ]
+    }
+}
