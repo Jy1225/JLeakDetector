@@ -2,7 +2,7 @@
   "model_name": "qwen-plus",
   "temperature": 0.0,
   "call_depth": 15,
-  "max_neural_workers": 4,
+  "max_neural_workers": 8,
   "bug_type": "MLK",
   "language": "Java",
   "repeat_count": 3,

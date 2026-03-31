@@ -1,0 +1,16 @@
+{
+  "controller_run_id": "20260330-111248_qwen-plus",
+  "project_name": "fitnesse",
+  "project_path": "/home/jiayu/Desktop/real_world_repos/fitnesse",
+  "variant": "no_soot_no_issue_first",
+  "variant_description": "soot off + issue_first off",
+  "repeat_index": 3,
+  "model_name": "qwen-plus",
+  "temperature": 0.0,
+  "call_depth": 15,
+  "max_neural_workers": 8,
+  "enable_soot": false,
+  "issue_first": false,
+  "soot_facts_path": "",
+  "generated_at": "2026-03-30 13:17:51"
+}

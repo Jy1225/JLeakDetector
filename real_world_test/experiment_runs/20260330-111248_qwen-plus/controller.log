@@ -1,0 +1,72 @@
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-17-26-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-17-26-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-29-58-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-29-58-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-37-53-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-37-53-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-45-54-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-45-54-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-58-41-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-11-58-41-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-10-50-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-10-50-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-18-58-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-18-58-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-26-01-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-26-01-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-37-01-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-37-01-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-44-09-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-44-09-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-56-13-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-12-56-13-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-13-09-52-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/fitnesse/2026-03-30-13-09-52-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-13-21-36-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-13-21-36-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-13-43-09-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-13-43-09-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-04-32-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-04-32-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-25-20-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-25-20-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-49-25-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-14-49-25-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-10-56-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-10-56-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-34-33-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-34-33-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-56-57-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-15-56-57-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-16-19-49-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-16-19-49-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-16-43-09-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-16-43-09-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-17-11-38-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-17-11-38-0/real_world_metrics.json
+
+$ /home/jiayu/anaconda3/envs/repoaudit/bin/python3 /home/jiayu/Desktop/JLeakDetector/real_world_test/summarize_real_world_metrics.py --result-dir /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-17-33-11-0 --topk-percentages 5,10,20,50
+[OK] real-world metrics written to: /home/jiayu/Desktop/JLeakDetector/result/dfbscan/qwen-plus/MLK/Java/triplea/2026-03-30-17-33-11-0/real_world_metrics.json
+

@@ -1,0 +1,18 @@
+{
+    "total": 113,
+    "passed": 113,
+    "blocked": 0,
+    "unknown": 0,
+    "disabled": 0,
+    "skipped_by_soot": 0,
+    "unreachable": 0,
+    "safe_must_close": 0,
+    "safe_method_all_sources_hard": 0,
+    "facts_unavailable": 0,
+    "method_unmapped": 0,
+    "no_candidate_line": 0,
+    "malformed_facts": 0,
+    "source_skipped_before_path_search": 7,
+    "source_skip_suppressed_by_strict": 1,
+    "source_bad_method_blocked": 0
+}

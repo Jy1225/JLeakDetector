@@ -1,0 +1,4115 @@
+{
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/debug/GenericConsole.java",
+        "file_name": "GenericConsole.java",
+        "report_count": 1,
+        "report_ids": [
+            14
+        ],
+        "method_count": 2,
+        "primary_defect_method": "displayStandardError",
+        "primary_defect_method_uid": "games.strategy.debug.GenericConsole.displayStandardError()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "displayStandardError",
+                "method_uid": "games.strategy.debug.GenericConsole.displayStandardError()",
+                "method_start_line": 73,
+                "method_end_line": 81,
+                "source_lines": [
+                    74
+                ],
+                "report_ids": [
+                    14
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "displayStandardOutput",
+                "method_uid": "games.strategy.debug.GenericConsole.displayStandardOutput()",
+                "method_start_line": 83,
+                "method_end_line": 91,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "displayStandardOutput"
+        ],
+        "related_methods": [
+            "displayStandardError",
+            "displayStandardOutput"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/ClientFileSystemHelper.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/ClientFileSystemHelper.java",
+        "file_name": "ClientFileSystemHelper.java",
+        "report_count": 1,
+        "report_ids": [
+            40
+        ],
+        "method_count": 2,
+        "primary_defect_method": "createTempFile",
+        "primary_defect_method_uid": "games.strategy.engine.ClientFileSystemHelper.createTempFile()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "createTempFile",
+                "method_uid": "games.strategy.engine.ClientFileSystemHelper.createTempFile()",
+                "method_start_line": 178,
+                "method_end_line": 184,
+                "source_lines": [
+                    180
+                ],
+                "report_ids": [
+                    40
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 24.5
+            },
+            {
+                "method_name": "downloadToFile",
+                "method_uid": "games.strategy.engine.framework.map.download.DownloadUtils.downloadToFile(String)",
+                "method_start_line": 115,
+                "method_end_line": 126,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "downloadToFile"
+        ],
+        "related_methods": [
+            "createTempFile",
+            "downloadToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/config/PropertyFileReader.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/config/PropertyFileReader.java",
+        "file_name": "PropertyFileReader.java",
+        "report_count": 1,
+        "report_ids": [
+            63
+        ],
+        "method_count": 1,
+        "primary_defect_method": "readProperty",
+        "primary_defect_method_uid": "games.strategy.engine.config.PropertyFileReader.readProperty(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "readProperty",
+                "method_uid": "games.strategy.engine.config.PropertyFileReader.readProperty(String)",
+                "method_start_line": 49,
+                "method_end_line": 63,
+                "source_lines": [
+                    53
+                ],
+                "report_ids": [
+                    63
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "readProperty"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/data/export/GameDataExporter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/data/export/GameDataExporter.java",
+        "file_name": "GameDataExporter.java",
+        "report_count": 1,
+        "report_ids": [
+            61
+        ],
+        "method_count": 1,
+        "primary_defect_method": "connections",
+        "primary_defect_method_uid": "games.strategy.engine.data.export.GameDataExporter.connections(GameData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "connections",
+                "method_uid": "games.strategy.engine.data.export.GameDataExporter.connections(GameData)",
+                "method_start_line": 667,
+                "method_end_line": 680,
+                "source_lines": [
+                    673
+                ],
+                "report_ids": [
+                    61
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "connections"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/data/properties/GameProperties.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/data/properties/GameProperties.java",
+        "file_name": "GameProperties.java",
+        "report_count": 1,
+        "report_ids": [
+            27
+        ],
+        "method_count": 1,
+        "primary_defect_method": "streamToIEditablePropertiesList",
+        "primary_defect_method_uid": "games.strategy.engine.data.properties.GameProperties.streamToIEditablePropertiesList(byte)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "streamToIEditablePropertiesList",
+                "method_uid": "games.strategy.engine.data.properties.GameProperties.streamToIEditablePropertiesList(byte)",
+                "method_start_line": 170,
+                "method_end_line": 184,
+                "source_lines": [
+                    177
+                ],
+                "report_ids": [
+                    27
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "streamToIEditablePropertiesList"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/delegate/DelegateExecutionManager.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/delegate/DelegateExecutionManager.java",
+        "file_name": "DelegateExecutionManager.java",
+        "report_count": 2,
+        "report_ids": [
+            32,
+            33
+        ],
+        "method_count": 3,
+        "primary_defect_method": "blockDelegateExecution",
+        "primary_defect_method_uid": "games.strategy.engine.delegate.DelegateExecutionManager.blockDelegateExecution(int)",
+        "primary_confidence": 0.5367647058823529,
+        "leaking_methods": [
+            {
+                "method_name": "blockDelegateExecution",
+                "method_uid": "games.strategy.engine.delegate.DelegateExecutionManager.blockDelegateExecution(int)",
+                "method_start_line": 59,
+                "method_end_line": 83,
+                "source_lines": [
+                    60
+                ],
+                "report_ids": [
+                    33
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "enterDelegateExecution",
+                "method_uid": "games.strategy.engine.delegate.DelegateExecutionManager.enterDelegateExecution()",
+                "method_start_line": 179,
+                "method_end_line": 188,
+                "source_lines": [
+                    186
+                ],
+                "report_ids": [
+                    32
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "stopGame",
+                "method_uid": "games.strategy.engine.framework.ServerGame.stopGame()",
+                "method_start_line": 281,
+                "method_end_line": 347,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "enterDelegateExecution",
+            "stopGame"
+        ],
+        "related_methods": [
+            "blockDelegateExecution",
+            "enterDelegateExecution",
+            "stopGame"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/EngineVersionProperties.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/EngineVersionProperties.java",
+        "file_name": "EngineVersionProperties.java",
+        "report_count": 1,
+        "report_ids": [
+            13
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getProperties",
+        "primary_defect_method_uid": "games.strategy.engine.framework.EngineVersionProperties.getProperties()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getProperties",
+                "method_uid": "games.strategy.engine.framework.EngineVersionProperties.getProperties()",
+                "method_start_line": 73,
+                "method_end_line": 81,
+                "source_lines": [
+                    76
+                ],
+                "report_ids": [
+                    13
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getProperties"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameDataManager.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameDataManager.java",
+        "file_name": "GameDataManager.java",
+        "report_count": 5,
+        "report_ids": [
+            6,
+            10,
+            22,
+            36,
+            58
+        ],
+        "method_count": 6,
+        "primary_defect_method": "saveGameInProxySerializationFormat",
+        "primary_defect_method_uid": "games.strategy.engine.framework.GameDataManager.saveGameInProxySerializationFormat(OutputStream,GameData,Map)",
+        "primary_confidence": 0.5367647058823529,
+        "leaking_methods": [
+            {
+                "method_name": "loadGame",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.loadGame(File)",
+                "method_start_line": 67,
+                "method_end_line": 74,
+                "source_lines": [
+                    71
+                ],
+                "report_ids": [
+                    22
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "loadGameInProxySerializationFormat",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.loadGameInProxySerializationFormat(InputStream)",
+                "method_start_line": 103,
+                "method_end_line": 106,
+                "source_lines": [
+                    105
+                ],
+                "report_ids": [
+                    10
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "loadGameInSerializationFormat",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.loadGameInSerializationFormat(InputStream,String)",
+                "method_start_line": 126,
+                "method_end_line": 227,
+                "source_lines": [
+                    130
+                ],
+                "report_ids": [
+                    58
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "loadMemento",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.loadMemento(InputStream)",
+                "method_start_line": 108,
+                "method_end_line": 115,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "saveGameInProxySerializationFormat",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.saveGameInProxySerializationFormat(OutputStream,GameData,Map)",
+                "method_start_line": 320,
+                "method_end_line": 327,
+                "source_lines": [
+                    326
+                ],
+                "report_ids": [
+                    6
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            },
+            {
+                "method_name": "saveGameInSerializationFormat",
+                "method_uid": "games.strategy.engine.framework.GameDataManager.saveGameInSerializationFormat(OutputStream,GameData,boolean)",
+                "method_start_line": 348,
+                "method_end_line": 372,
+                "source_lines": [
+                    355
+                ],
+                "report_ids": [
+                    36
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "loadGame",
+            "loadGameInProxySerializationFormat",
+            "loadGameInSerializationFormat",
+            "loadMemento",
+            "saveGameInSerializationFormat"
+        ],
+        "related_methods": [
+            "loadGame",
+            "loadGameInProxySerializationFormat",
+            "loadGameInSerializationFormat",
+            "loadMemento",
+            "saveGameInProxySerializationFormat",
+            "saveGameInSerializationFormat"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameDataUtils.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameDataUtils.java",
+        "file_name": "GameDataUtils.java",
+        "report_count": 1,
+        "report_ids": [
+            53
+        ],
+        "method_count": 1,
+        "primary_defect_method": "translateIntoOtherGameData",
+        "primary_defect_method_uid": "games.strategy.engine.framework.GameDataUtils.translateIntoOtherGameData(T,GameData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "translateIntoOtherGameData",
+                "method_uid": "games.strategy.engine.framework.GameDataUtils.translateIntoOtherGameData(T,GameData)",
+                "method_start_line": 39,
+                "method_end_line": 60,
+                "source_lines": [
+                    43
+                ],
+                "report_ids": [
+                    53
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "translateIntoOtherGameData"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/GameObjectStreamFactory.java",
+        "file_name": "GameObjectStreamFactory.java",
+        "report_count": 1,
+        "report_ids": [
+            25
+        ],
+        "method_count": 2,
+        "primary_defect_method": "create",
+        "primary_defect_method_uid": "games.strategy.engine.framework.GameObjectStreamFactory.create(InputStream)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "translateIntoOtherGameData",
+                "method_uid": "games.strategy.engine.framework.GameDataUtils.translateIntoOtherGameData(T,GameData)",
+                "method_start_line": 39,
+                "method_end_line": 60,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "create",
+                "method_uid": "games.strategy.engine.framework.GameObjectStreamFactory.create(InputStream)",
+                "method_start_line": 21,
+                "method_end_line": 24,
+                "source_lines": [
+                    23
+                ],
+                "report_ids": [
+                    25
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "translateIntoOtherGameData"
+        ],
+        "related_methods": [
+            "create",
+            "translateIntoOtherGameData"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ProcessRunnerUtil.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ProcessRunnerUtil.java",
+        "file_name": "ProcessRunnerUtil.java",
+        "report_count": 2,
+        "report_ids": [
+            35,
+            38
+        ],
+        "method_count": 1,
+        "primary_defect_method": "exec",
+        "primary_defect_method_uid": "games.strategy.engine.framework.ProcessRunnerUtil.exec(List)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "exec",
+                "method_uid": "games.strategy.engine.framework.ProcessRunnerUtil.exec(List)",
+                "method_start_line": 76,
+                "method_end_line": 98,
+                "source_lines": [
+                    78,
+                    82
+                ],
+                "report_ids": [
+                    35,
+                    38
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 65.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "exec"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ServerGame.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ServerGame.java",
+        "file_name": "ServerGame.java",
+        "report_count": 1,
+        "report_ids": [
+            60
+        ],
+        "method_count": 2,
+        "primary_defect_method": "startStep",
+        "primary_defect_method_uid": "games.strategy.engine.framework.ServerGame.startStep(boolean)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "startPersistentDelegates",
+                "method_uid": "games.strategy.engine.framework.ServerGame.startPersistentDelegates()",
+                "method_start_line": 469,
+                "method_end_line": 489,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "startStep",
+                "method_uid": "games.strategy.engine.framework.ServerGame.startStep(boolean)",
+                "method_start_line": 491,
+                "method_end_line": 515,
+                "source_lines": [
+                    475
+                ],
+                "report_ids": [
+                    60
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "startPersistentDelegates"
+        ],
+        "related_methods": [
+            "startPersistentDelegates",
+            "startStep"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/headlessGameServer/AvailableGames.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/headlessGameServer/AvailableGames.java",
+        "file_name": "AvailableGames.java",
+        "report_count": 1,
+        "report_ids": [
+            66
+        ],
+        "method_count": 2,
+        "primary_defect_method": "addToAvailableGames",
+        "primary_defect_method_uid": "games.strategy.engine.framework.headlessGameServer.AvailableGames.addToAvailableGames(URI,Map,Set)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "addToAvailableGames",
+                "method_uid": "games.strategy.engine.framework.headlessGameServer.AvailableGames.addToAvailableGames(URI,Map,Set)",
+                "method_start_line": 159,
+                "method_end_line": 185,
+                "source_lines": [
+                    166
+                ],
+                "report_ids": [
+                    66
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            },
+            {
+                "method_name": "getGameDataFromXML",
+                "method_uid": "games.strategy.engine.framework.headlessGameServer.AvailableGames.getGameDataFromXML(URI)",
+                "method_start_line": 187,
+                "method_end_line": 203,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "getGameDataFromXML"
+        ],
+        "related_methods": [
+            "addToAvailableGames",
+            "getGameDataFromXML"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/map/download/DownloadUtils.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/map/download/DownloadUtils.java",
+        "file_name": "DownloadUtils.java",
+        "report_count": 1,
+        "report_ids": [
+            64
+        ],
+        "method_count": 1,
+        "primary_defect_method": "downloadToFile",
+        "primary_defect_method_uid": "games.strategy.engine.framework.map.download.DownloadUtils.downloadToFile(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "downloadToFile",
+                "method_uid": "games.strategy.engine.framework.map.download.DownloadUtils.downloadToFile(String)",
+                "method_start_line": 115,
+                "method_end_line": 126,
+                "source_lines": [
+                    116
+                ],
+                "report_ids": [
+                    64
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 24.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "downloadToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/mc/ServerModel.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/mc/ServerModel.java",
+        "file_name": "ServerModel.java",
+        "report_count": 1,
+        "report_ids": [
+            57
+        ],
+        "method_count": 1,
+        "primary_defect_method": "changeToGameSave",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.mc.ServerModel.changeToGameSave(byte,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "changeToGameSave",
+                "method_uid": "games.strategy.engine.framework.startup.mc.ServerModel.changeToGameSave(byte,String)",
+                "method_start_line": 396,
+                "method_end_line": 410,
+                "source_lines": [
+                    405
+                ],
+                "report_ids": [
+                    57
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "changeToGameSave"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/FileBackedGamePropertiesCache.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/FileBackedGamePropertiesCache.java",
+        "file_name": "FileBackedGamePropertiesCache.java",
+        "report_count": 2,
+        "report_ids": [
+            7,
+            59
+        ],
+        "method_count": 2,
+        "primary_defect_method": "cacheGameProperties",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.FileBackedGamePropertiesCache.cacheGameProperties(GameData)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "cacheGameProperties",
+                "method_uid": "games.strategy.engine.framework.startup.ui.FileBackedGamePropertiesCache.cacheGameProperties(GameData)",
+                "method_start_line": 35,
+                "method_end_line": 55,
+                "source_lines": [
+                    49
+                ],
+                "report_ids": [
+                    7
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "loadCachedGamePropertiesInto",
+                "method_uid": "games.strategy.engine.framework.startup.ui.FileBackedGamePropertiesCache.loadCachedGamePropertiesInto(GameData)",
+                "method_start_line": 63,
+                "method_end_line": 83,
+                "source_lines": [
+                    70
+                ],
+                "report_ids": [
+                    59
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "loadCachedGamePropertiesInto"
+        ],
+        "related_methods": [
+            "cacheGameProperties",
+            "loadCachedGamePropertiesInto"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/PBEMSetupPanel.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/PBEMSetupPanel.java",
+        "file_name": "PBEMSetupPanel.java",
+        "report_count": 1,
+        "report_ids": [
+            62
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadMap",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.PBEMSetupPanel.LocalBeanCache.loadMap()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadMap",
+                "method_uid": "games.strategy.engine.framework.startup.ui.PBEMSetupPanel.LocalBeanCache.loadMap()",
+                "method_start_line": 429,
+                "method_end_line": 454,
+                "source_lines": [
+                    432
+                ],
+                "report_ids": [
+                    62
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadMap"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/editors/EmailSenderEditor.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/editors/EmailSenderEditor.java",
+        "file_name": "EmailSenderEditor.java",
+        "report_count": 1,
+        "report_ids": [
+            52
+        ],
+        "method_count": 1,
+        "primary_defect_method": "testEmail",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "testEmail",
+                "method_uid": "games.strategy.engine.framework.startup.ui.editors.EmailSenderEditor.testEmail()",
+                "method_start_line": 148,
+                "method_end_line": 188,
+                "source_lines": [
+                    159
+                ],
+                "report_ids": [
+                    52
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "testEmail"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/editors/ForumPosterEditor.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/startup/ui/editors/ForumPosterEditor.java",
+        "file_name": "ForumPosterEditor.java",
+        "report_count": 1,
+        "report_ids": [
+            56
+        ],
+        "method_count": 1,
+        "primary_defect_method": "testForum",
+        "primary_defect_method_uid": "games.strategy.engine.framework.startup.ui.editors.ForumPosterEditor.testForum()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "testForum",
+                "method_uid": "games.strategy.engine.framework.startup.ui.editors.ForumPosterEditor.testForum()",
+                "method_start_line": 113,
+                "method_end_line": 163,
+                "source_lines": [
+                    120
+                ],
+                "report_ids": [
+                    56
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 22.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "testForum"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/systemcheck/LocalSystemChecker.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/systemcheck/LocalSystemChecker.java",
+        "file_name": "LocalSystemChecker.java",
+        "report_count": 1,
+        "report_ids": [
+            55
+        ],
+        "method_count": 1,
+        "primary_defect_method": "defaultNetworkCheck",
+        "primary_defect_method_uid": "games.strategy.engine.framework.systemcheck.LocalSystemChecker.defaultNetworkCheck()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "defaultNetworkCheck",
+                "method_uid": "games.strategy.engine.framework.systemcheck.LocalSystemChecker.defaultNetworkCheck()",
+                "method_start_line": 31,
+                "method_end_line": 43,
+                "source_lines": [
+                    36
+                ],
+                "report_ids": [
+                    55
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "defaultNetworkCheck"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ui/NewGameChooserEntry.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ui/NewGameChooserEntry.java",
+        "file_name": "NewGameChooserEntry.java",
+        "report_count": 1,
+        "report_ids": [
+            72
+        ],
+        "method_count": 2,
+        "primary_defect_method": "fullyParseGameData",
+        "primary_defect_method_uid": "games.strategy.engine.framework.ui.NewGameChooserEntry.fullyParseGameData()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "delayParseGameData",
+                "method_uid": "games.strategy.engine.framework.ui.NewGameChooserEntry.delayParseGameData()",
+                "method_start_line": 96,
+                "method_end_line": 117,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "fullyParseGameData",
+                "method_uid": "games.strategy.engine.framework.ui.NewGameChooserEntry.fullyParseGameData()",
+                "method_start_line": 61,
+                "method_end_line": 90,
+                "source_lines": [
+                    68
+                ],
+                "report_ids": [
+                    72
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [
+            "delayParseGameData"
+        ],
+        "related_methods": [
+            "delayParseGameData",
+            "fullyParseGameData"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ui/NewGameChooserModel.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/framework/ui/NewGameChooserModel.java",
+        "file_name": "NewGameChooserModel.java",
+        "report_count": 1,
+        "report_ids": [
+            67
+        ],
+        "method_count": 1,
+        "primary_defect_method": "populateFromZip",
+        "primary_defect_method_uid": "games.strategy.engine.framework.ui.NewGameChooserModel.populateFromZip(File)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "populateFromZip",
+                "method_uid": "games.strategy.engine.framework.ui.NewGameChooserModel.populateFromZip(File)",
+                "method_start_line": 83,
+                "method_end_line": 108,
+                "source_lines": [
+                    87
+                ],
+                "report_ids": [
+                    67
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "populateFromZip"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/LobbyGameController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/LobbyGameController.java",
+        "file_name": "LobbyGameController.java",
+        "report_count": 1,
+        "report_ids": [
+            28
+        ],
+        "method_count": 1,
+        "primary_defect_method": "testGame",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.LobbyGameController.testGame(GUID)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "testGame",
+                "method_uid": "games.strategy.engine.lobby.server.LobbyGameController.testGame(GUID)",
+                "method_start_line": 111,
+                "method_end_line": 136,
+                "source_lines": [
+                    126
+                ],
+                "report_ids": [
+                    28
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "testGame"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BadWordController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BadWordController.java",
+        "file_name": "BadWordController.java",
+        "report_count": 3,
+        "report_ids": [
+            29,
+            34,
+            37
+        ],
+        "method_count": 3,
+        "primary_defect_method": "addBadWord",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.BadWordController.addBadWord(String)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "addBadWord",
+                "method_uid": "games.strategy.engine.lobby.server.db.BadWordController.addBadWord(String)",
+                "method_start_line": 17,
+                "method_end_line": 37,
+                "source_lines": [
+                    21
+                ],
+                "report_ids": [
+                    37
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "list",
+                "method_uid": "games.strategy.engine.lobby.server.db.BadWordController.list()",
+                "method_start_line": 55,
+                "method_end_line": 73,
+                "source_lines": [
+                    59
+                ],
+                "report_ids": [
+                    29
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "removeBannedWord",
+                "method_uid": "games.strategy.engine.lobby.server.db.BadWordController.removeBannedWord(String)",
+                "method_start_line": 39,
+                "method_end_line": 53,
+                "source_lines": [
+                    43
+                ],
+                "report_ids": [
+                    34
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [
+            "list",
+            "removeBannedWord"
+        ],
+        "related_methods": [
+            "addBadWord",
+            "list",
+            "removeBannedWord"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BannedMacController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BannedMacController.java",
+        "file_name": "BannedMacController.java",
+        "report_count": 3,
+        "report_ids": [
+            4,
+            39,
+            43
+        ],
+        "method_count": 3,
+        "primary_defect_method": "addBannedMac",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.BannedMacController.addBannedMac(String,Instant)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "addBannedMac",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedMacController.addBannedMac(String,Instant)",
+                "method_start_line": 33,
+                "method_end_line": 61,
+                "source_lines": [
+                    44
+                ],
+                "report_ids": [
+                    4
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "isMacBanned",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedMacController.isMacBanned(String)",
+                "method_start_line": 83,
+                "method_end_line": 114,
+                "source_lines": [
+                    90
+                ],
+                "report_ids": [
+                    39
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "removeBannedMac",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedMacController.removeBannedMac(String)",
+                "method_start_line": 63,
+                "method_end_line": 77,
+                "source_lines": [
+                    67
+                ],
+                "report_ids": [
+                    43
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [
+            "isMacBanned",
+            "removeBannedMac"
+        ],
+        "related_methods": [
+            "addBannedMac",
+            "isMacBanned",
+            "removeBannedMac"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BannedUsernameController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/BannedUsernameController.java",
+        "file_name": "BannedUsernameController.java",
+        "report_count": 3,
+        "report_ids": [
+            3,
+            42,
+            46
+        ],
+        "method_count": 3,
+        "primary_defect_method": "addBannedUsername",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.BannedUsernameController.addBannedUsername(String,Instant)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "addBannedUsername",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedUsernameController.addBannedUsername(String,Instant)",
+                "method_start_line": 33,
+                "method_end_line": 62,
+                "source_lines": [
+                    45
+                ],
+                "report_ids": [
+                    3
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "isUsernameBanned",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedUsernameController.isUsernameBanned(String)",
+                "method_start_line": 84,
+                "method_end_line": 115,
+                "source_lines": [
+                    91
+                ],
+                "report_ids": [
+                    42
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "removeBannedUsername",
+                "method_uid": "games.strategy.engine.lobby.server.db.BannedUsernameController.removeBannedUsername(String)",
+                "method_start_line": 64,
+                "method_end_line": 78,
+                "source_lines": [
+                    68
+                ],
+                "report_ids": [
+                    46
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [
+            "isUsernameBanned",
+            "removeBannedUsername"
+        ],
+        "related_methods": [
+            "addBannedUsername",
+            "isUsernameBanned",
+            "removeBannedUsername"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/Database.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/Database.java",
+        "file_name": "Database.java",
+        "report_count": 2,
+        "report_ids": [
+            2,
+            18
+        ],
+        "method_count": 6,
+        "primary_defect_method": "getDerbyConnection",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.Database.getDerbyConnection()",
+        "primary_confidence": 0.5083333333333333,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "games.strategy.engine.lobby.server.LobbyServer.main(String)",
+                "method_start_line": 55,
+                "method_end_line": 69,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -24.25
+            },
+            {
+                "method_name": "backup",
+                "method_uid": "games.strategy.engine.lobby.server.db.Database.backup()",
+                "method_start_line": 228,
+                "method_end_line": 249,
+                "source_lines": [
+                    241
+                ],
+                "report_ids": [
+                    2
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "ensureDbTablesAreCreated",
+                "method_uid": "games.strategy.engine.lobby.server.db.Database.ensureDbTablesAreCreated(Connection)",
+                "method_start_line": 111,
+                "method_end_line": 183,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "getConnection",
+                "method_uid": "games.strategy.engine.lobby.server.db.Database.getConnection(String,Properties)",
+                "method_start_line": 87,
+                "method_end_line": 106,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "getDerbyConnection",
+                "method_uid": "games.strategy.engine.lobby.server.db.Database.getDerbyConnection()",
+                "method_start_line": 72,
+                "method_end_line": 75,
+                "source_lines": [
+                    74
+                ],
+                "report_ids": [
+                    18
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 30.0
+            },
+            {
+                "method_name": "getPostgresConnection",
+                "method_uid": "games.strategy.engine.lobby.server.db.Database.getPostgresConnection()",
+                "method_start_line": 77,
+                "method_end_line": 85,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            }
+        ],
+        "supporting_methods": [
+            "backup",
+            "ensureDbTablesAreCreated",
+            "getConnection",
+            "getPostgresConnection",
+            "main"
+        ],
+        "related_methods": [
+            "backup",
+            "ensureDbTablesAreCreated",
+            "getConnection",
+            "getDerbyConnection",
+            "getPostgresConnection",
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/MutedMacController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/MutedMacController.java",
+        "file_name": "MutedMacController.java",
+        "report_count": 3,
+        "report_ids": [
+            0,
+            12,
+            44
+        ],
+        "method_count": 3,
+        "primary_defect_method": "addMutedMac",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.MutedMacController.addMutedMac(String,Instant)",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "addMutedMac",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedMacController.addMutedMac(String,Instant)",
+                "method_start_line": 31,
+                "method_end_line": 59,
+                "source_lines": [
+                    42
+                ],
+                "report_ids": [
+                    12
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "getMacUnmuteTime",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedMacController.getMacUnmuteTime(String)",
+                "method_start_line": 89,
+                "method_end_line": 123,
+                "source_lines": [
+                    95
+                ],
+                "report_ids": [
+                    44
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "removeMutedMac",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedMacController.removeMutedMac(String)",
+                "method_start_line": 61,
+                "method_end_line": 75,
+                "source_lines": [
+                    65
+                ],
+                "report_ids": [
+                    0
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [
+            "getMacUnmuteTime",
+            "removeMutedMac"
+        ],
+        "related_methods": [
+            "addMutedMac",
+            "getMacUnmuteTime",
+            "removeMutedMac"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/MutedUsernameController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/MutedUsernameController.java",
+        "file_name": "MutedUsernameController.java",
+        "report_count": 3,
+        "report_ids": [
+            30,
+            41,
+            51
+        ],
+        "method_count": 3,
+        "primary_defect_method": "addMutedUsername",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.MutedUsernameController.addMutedUsername(String,Instant)",
+        "primary_confidence": 0.5338983050847458,
+        "leaking_methods": [
+            {
+                "method_name": "addMutedUsername",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedUsernameController.addMutedUsername(String,Instant)",
+                "method_start_line": 31,
+                "method_end_line": 60,
+                "source_lines": [
+                    43
+                ],
+                "report_ids": [
+                    51
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "getUsernameUnmuteTime",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedUsernameController.getUsernameUnmuteTime(String)",
+                "method_start_line": 90,
+                "method_end_line": 124,
+                "source_lines": [
+                    96
+                ],
+                "report_ids": [
+                    30
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            },
+            {
+                "method_name": "removeMutedUsername",
+                "method_uid": "games.strategy.engine.lobby.server.db.MutedUsernameController.removeMutedUsername(String)",
+                "method_start_line": 62,
+                "method_end_line": 76,
+                "source_lines": [
+                    66
+                ],
+                "report_ids": [
+                    41
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 27.5
+            }
+        ],
+        "supporting_methods": [
+            "getUsernameUnmuteTime",
+            "removeMutedUsername"
+        ],
+        "related_methods": [
+            "addMutedUsername",
+            "getUsernameUnmuteTime",
+            "removeMutedUsername"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/UserController.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/lobby/server/db/UserController.java",
+        "file_name": "UserController.java",
+        "report_count": 1,
+        "report_ids": [
+            23
+        ],
+        "method_count": 3,
+        "primary_defect_method": "getUserByName",
+        "primary_defect_method_uid": "games.strategy.engine.lobby.server.db.UserController.getUserByName(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "doesUserExist",
+                "method_uid": "games.strategy.engine.lobby.server.db.UserController.doesUserExist(String)",
+                "method_start_line": 49,
+                "method_end_line": 66,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "getPassword",
+                "method_uid": "games.strategy.engine.lobby.server.db.UserController.getPassword(String)",
+                "method_start_line": 27,
+                "method_end_line": 47,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "getUserByName",
+                "method_uid": "games.strategy.engine.lobby.server.db.UserController.getUserByName(String)",
+                "method_start_line": 155,
+                "method_end_line": 178,
+                "source_lines": [
+                    32
+                ],
+                "report_ids": [
+                    23
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "doesUserExist",
+            "getPassword"
+        ],
+        "related_methods": [
+            "doesUserExist",
+            "getPassword",
+            "getUserByName"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/CredentialManager.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/CredentialManager.java",
+        "file_name": "CredentialManager.java",
+        "report_count": 2,
+        "report_ids": [
+            65,
+            69
+        ],
+        "method_count": 2,
+        "primary_defect_method": "newMasterPassword",
+        "primary_defect_method_uid": "games.strategy.engine.pbem.CredentialManager.newMasterPassword()",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "encodeCharsToBytes",
+                "method_uid": "games.strategy.engine.pbem.CredentialManager.encodeCharsToBytes(char)",
+                "method_start_line": 132,
+                "method_end_line": 139,
+                "source_lines": [
+                    134
+                ],
+                "report_ids": [
+                    69
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "newMasterPassword",
+                "method_uid": "games.strategy.engine.pbem.CredentialManager.newMasterPassword()",
+                "method_start_line": 106,
+                "method_end_line": 122,
+                "source_lines": [
+                    117
+                ],
+                "report_ids": [
+                    65
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "encodeCharsToBytes"
+        ],
+        "related_methods": [
+            "encodeCharsToBytes",
+            "newMasterPassword"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/GenericEmailSender.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/GenericEmailSender.java",
+        "file_name": "GenericEmailSender.java",
+        "report_count": 1,
+        "report_ids": [
+            68
+        ],
+        "method_count": 1,
+        "primary_defect_method": "sendEmail",
+        "primary_defect_method_uid": "games.strategy.engine.pbem.GenericEmailSender.sendEmail(String,String,File,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "sendEmail",
+                "method_uid": "games.strategy.engine.pbem.GenericEmailSender.sendEmail(String,String,File,String)",
+                "method_start_line": 123,
+                "method_end_line": 193,
+                "source_lines": [
+                    167
+                ],
+                "report_ids": [
+                    68
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "sendEmail"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/PBEMMessagePoster.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/PBEMMessagePoster.java",
+        "file_name": "PBEMMessagePoster.java",
+        "report_count": 1,
+        "report_ids": [
+            74
+        ],
+        "method_count": 1,
+        "primary_defect_method": "postTurn",
+        "primary_defect_method_uid": "games.strategy.engine.pbem.PBEMMessagePoster.postTurn(String,HistoryLog,boolean,PBEMMessagePoster,IAbstractForumPosterDelegate,MainGameFrame,JComponent)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "postTurn",
+                "method_uid": "games.strategy.engine.pbem.PBEMMessagePoster.postTurn(String,HistoryLog,boolean,PBEMMessagePoster,IAbstractForumPosterDelegate,MainGameFrame,JComponent)",
+                "method_start_line": 191,
+                "method_end_line": 300,
+                "source_lines": [
+                    223
+                ],
+                "report_ids": [
+                    74
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 22.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "postTurn"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/TripleAWarClubForumPoster.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/pbem/TripleAWarClubForumPoster.java",
+        "file_name": "TripleAWarClubForumPoster.java",
+        "report_count": 1,
+        "report_ids": [
+            75
+        ],
+        "method_count": 1,
+        "primary_defect_method": "postTurnSummary",
+        "primary_defect_method_uid": "games.strategy.engine.pbem.TripleAWarClubForumPoster.postTurnSummary(String,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "postTurnSummary",
+                "method_uid": "games.strategy.engine.pbem.TripleAWarClubForumPoster.postTurnSummary(String,String)",
+                "method_start_line": 94,
+                "method_end_line": 166,
+                "source_lines": [
+                    102
+                ],
+                "report_ids": [
+                    75
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "postTurnSummary"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/random/CryptoRandomSource.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/random/CryptoRandomSource.java",
+        "file_name": "CryptoRandomSource.java",
+        "report_count": 1,
+        "report_ids": [
+            21
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getRandom",
+        "primary_defect_method_uid": "games.strategy.engine.random.CryptoRandomSource.getRandom(int,int,String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getRandom",
+                "method_uid": "games.strategy.engine.random.CryptoRandomSource.getRandom(int,int,String)",
+                "method_start_line": 77,
+                "method_end_line": 103,
+                "source_lines": [
+                    87
+                ],
+                "report_ids": [
+                    21
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getRandom"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/random/PBEMDiceRoller.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/engine/random/PBEMDiceRoller.java",
+        "file_name": "PBEMDiceRoller.java",
+        "report_count": 1,
+        "report_ids": [
+            54
+        ],
+        "method_count": 1,
+        "primary_defect_method": "rollInSeperateThread",
+        "primary_defect_method_uid": "games.strategy.engine.random.PBEMDiceRoller.HttpDiceRollerDialog.rollInSeperateThread()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "rollInSeperateThread",
+                "method_uid": "games.strategy.engine.random.PBEMDiceRoller.HttpDiceRollerDialog.rollInSeperateThread()",
+                "method_start_line": 245,
+                "method_end_line": 299,
+                "source_lines": [
+                    291
+                ],
+                "report_ids": [
+                    54
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "rollInSeperateThread"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/MacFinder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/MacFinder.java",
+        "file_name": "MacFinder.java",
+        "report_count": 2,
+        "report_ids": [
+            73,
+            76
+        ],
+        "method_count": 1,
+        "primary_defect_method": "executeCommandAndGetResults",
+        "primary_defect_method_uid": "games.strategy.net.MacFinder.executeCommandAndGetResults(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "executeCommandAndGetResults",
+                "method_uid": "games.strategy.net.MacFinder.executeCommandAndGetResults(String)",
+                "method_start_line": 162,
+                "method_end_line": 196,
+                "source_lines": [
+                    165,
+                    178
+                ],
+                "report_ids": [
+                    73,
+                    76
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 63.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "executeCommandAndGetResults"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/OpenFileUtility.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/OpenFileUtility.java",
+        "file_name": "OpenFileUtility.java",
+        "report_count": 1,
+        "report_ids": [
+            71
+        ],
+        "method_count": 1,
+        "primary_defect_method": "openFile",
+        "primary_defect_method_uid": "games.strategy.net.OpenFileUtility.openFile(File,Runnable)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "openFile",
+                "method_uid": "games.strategy.net.OpenFileUtility.openFile(File,Runnable)",
+                "method_start_line": 31,
+                "method_end_line": 41,
+                "source_lines": [
+                    34
+                ],
+                "report_ids": [
+                    71
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "openFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/ServerMessenger.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/net/ServerMessenger.java",
+        "file_name": "ServerMessenger.java",
+        "report_count": 1,
+        "report_ids": [
+            98
+        ],
+        "method_count": 1,
+        "primary_defect_method": "run",
+        "primary_defect_method_uid": "games.strategy.net.ServerMessenger.ConnectionHandler.run()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "run",
+                "method_uid": "games.strategy.net.ServerMessenger.ConnectionHandler.run()",
+                "method_start_line": 562,
+                "method_end_line": 624,
+                "source_lines": [
+                    590
+                ],
+                "report_ids": [
+                    98
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "run"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/sound/ClipPlayer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/sound/ClipPlayer.java",
+        "file_name": "ClipPlayer.java",
+        "report_count": 1,
+        "report_ids": [
+            17
+        ],
+        "method_count": 1,
+        "primary_defect_method": "playClip",
+        "primary_defect_method_uid": "games.strategy.sound.ClipPlayer.playClip(String,PlayerID)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "playClip",
+                "method_uid": "games.strategy.sound.ClipPlayer.playClip(String,PlayerID)",
+                "method_start_line": 262,
+                "method_end_line": 289,
+                "source_lines": [
+                    279
+                ],
+                "report_ids": [
+                    17
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "playClip"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/thread/LockUtil.java",
+        "file_name": "LockUtil.java",
+        "report_count": 1,
+        "report_ids": [
+            70
+        ],
+        "method_count": 1,
+        "primary_defect_method": "acquireLock",
+        "primary_defect_method_uid": "games.strategy.thread.LockUtil.acquireLock(Lock)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "acquireLock",
+                "method_uid": "games.strategy.thread.LockUtil.acquireLock(Lock)",
+                "method_start_line": 44,
+                "method_end_line": 79,
+                "source_lines": [
+                    78
+                ],
+                "report_ids": [
+                    70
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "acquireLock"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ResourceLoader.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ResourceLoader.java",
+        "file_name": "ResourceLoader.java",
+        "report_count": 1,
+        "report_ids": [
+            49
+        ],
+        "method_count": 1,
+        "primary_defect_method": "getPaths",
+        "primary_defect_method_uid": "games.strategy.triplea.ResourceLoader.getPaths(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "getPaths",
+                "method_uid": "games.strategy.triplea.ResourceLoader.getPaths(String)",
+                "method_start_line": 112,
+                "method_end_line": 156,
+                "source_lines": [
+                    138
+                ],
+                "report_ids": [
+                    49
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "getPaths"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleA.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/TripleA.java",
+        "file_name": "TripleA.java",
+        "report_count": 2,
+        "report_ids": [
+            5,
+            8
+        ],
+        "method_count": 1,
+        "primary_defect_method": "startGame",
+        "primary_defect_method_uid": "games.strategy.triplea.TripleA.startGame(IGame,Set,boolean)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "startGame",
+                "method_uid": "games.strategy.triplea.TripleA.startGame(IGame,Set,boolean)",
+                "method_start_line": 95,
+                "method_end_line": 141,
+                "source_lines": [
+                    114,
+                    127
+                ],
+                "report_ids": [
+                    5,
+                    8
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 65.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "startGame"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ai/proAI/logging/ProLogSettings.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ai/proAI/logging/ProLogSettings.java",
+        "file_name": "ProLogSettings.java",
+        "report_count": 1,
+        "report_ids": [
+            1
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadSettings",
+        "primary_defect_method_uid": "games.strategy.triplea.ai.proAI.logging.ProLogSettings.loadSettings()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadSettings",
+                "method_uid": "games.strategy.triplea.ai.proAI.logging.ProLogSettings.loadSettings()",
+                "method_start_line": 27,
+                "method_end_line": 46,
+                "source_lines": [
+                    33
+                ],
+                "report_ids": [
+                    1
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadSettings"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/help/HelpSupport.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/help/HelpSupport.java",
+        "file_name": "HelpSupport.java",
+        "report_count": 1,
+        "report_ids": [
+            31
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadHelp",
+        "primary_defect_method_uid": "games.strategy.triplea.help.HelpSupport.loadHelp(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadHelp",
+                "method_uid": "games.strategy.triplea.help.HelpSupport.loadHelp(String)",
+                "method_start_line": 12,
+                "method_end_line": 28,
+                "source_lines": [
+                    14
+                ],
+                "report_ids": [
+                    31
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadHelp"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/CountryChart.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/CountryChart.java",
+        "file_name": "CountryChart.java",
+        "report_count": 1,
+        "report_ids": [
+            50
+        ],
+        "method_count": 1,
+        "primary_defect_method": "saveToFile",
+        "primary_defect_method_uid": "games.strategy.triplea.printgenerator.CountryChart.saveToFile(PlayerID,PrintGenerationData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "saveToFile",
+                "method_uid": "games.strategy.triplea.printgenerator.CountryChart.saveToFile(PlayerID,PrintGenerationData)",
+                "method_start_line": 25,
+                "method_end_line": 90,
+                "source_lines": [
+                    48
+                ],
+                "report_ids": [
+                    50
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "saveToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/PUInfo.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/PUInfo.java",
+        "file_name": "PUInfo.java",
+        "report_count": 1,
+        "report_ids": [
+            48
+        ],
+        "method_count": 1,
+        "primary_defect_method": "saveToFile",
+        "primary_defect_method_uid": "games.strategy.triplea.printgenerator.PUInfo.saveToFile(PrintGenerationData)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "saveToFile",
+                "method_uid": "games.strategy.triplea.printgenerator.PUInfo.saveToFile(PrintGenerationData)",
+                "method_start_line": 18,
+                "method_end_line": 73,
+                "source_lines": [
+                    35
+                ],
+                "report_ids": [
+                    48
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "saveToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/UnitInformation.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/printgenerator/UnitInformation.java",
+        "file_name": "UnitInformation.java",
+        "report_count": 1,
+        "report_ids": [
+            47
+        ],
+        "method_count": 1,
+        "primary_defect_method": "saveToFile",
+        "primary_defect_method_uid": "games.strategy.triplea.printgenerator.UnitInformation.saveToFile(PrintGenerationData,Map)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "saveToFile",
+                "method_uid": "games.strategy.triplea.printgenerator.UnitInformation.saveToFile(PrintGenerationData,Map)",
+                "method_start_line": 28,
+                "method_end_line": 84,
+                "source_lines": [
+                    37
+                ],
+                "report_ids": [
+                    47
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "saveToFile"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/TripleAFrame.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/TripleAFrame.java",
+        "file_name": "TripleAFrame.java",
+        "report_count": 1,
+        "report_ids": [
+            9
+        ],
+        "method_count": 1,
+        "primary_defect_method": "showHistory",
+        "primary_defect_method_uid": "games.strategy.triplea.ui.TripleAFrame.showHistory()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "showHistory",
+                "method_uid": "games.strategy.triplea.ui.TripleAFrame.showHistory()",
+                "method_start_line": 1594,
+                "method_end_line": 1757,
+                "source_lines": [
+                    1703
+                ],
+                "report_ids": [
+                    9
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "showHistory"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/mapdata/MapData.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/mapdata/MapData.java",
+        "file_name": "MapData.java",
+        "report_count": 1,
+        "report_ids": [
+            26
+        ],
+        "method_count": 1,
+        "primary_defect_method": "loadDecorations",
+        "primary_defect_method_uid": "games.strategy.triplea.ui.mapdata.MapData.loadDecorations()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "loadDecorations",
+                "method_uid": "games.strategy.triplea.ui.mapdata.MapData.loadDecorations()",
+                "method_start_line": 222,
+                "method_end_line": 239,
+                "source_lines": [
+                    228
+                ],
+                "report_ids": [
+                    26
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "loadDecorations"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/menubar/ExportMenu.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/triplea/ui/menubar/ExportMenu.java",
+        "file_name": "ExportMenu.java",
+        "report_count": 1,
+        "report_ids": [
+            19
+        ],
+        "method_count": 2,
+        "primary_defect_method": "createAndSaveStats",
+        "primary_defect_method_uid": "games.strategy.triplea.ui.menubar.ExportMenu.createAndSaveStats(boolean)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "addExportUnitStats",
+                "method_uid": "games.strategy.triplea.ui.menubar.ExportMenu.addExportUnitStats(JMenu)",
+                "method_start_line": 397,
+                "method_end_line": 420,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            },
+            {
+                "method_name": "createAndSaveStats",
+                "method_uid": "games.strategy.triplea.ui.menubar.ExportMenu.createAndSaveStats(boolean)",
+                "method_start_line": 146,
+                "method_end_line": 395,
+                "source_lines": [
+                    390
+                ],
+                "report_ids": [
+                    19
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "addExportUnitStats"
+        ],
+        "related_methods": [
+            "addExportUnitStats",
+            "createAndSaveStats"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/ui/SwingComponents.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/ui/SwingComponents.java",
+        "file_name": "SwingComponents.java",
+        "report_count": 1,
+        "report_ids": [
+            97
+        ],
+        "method_count": 2,
+        "primary_defect_method": "runWithProgressBar",
+        "primary_defect_method_uid": "games.strategy.ui.SwingComponents.runWithProgressBar(Frame,String,Callable)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "runSave",
+                "method_uid": "games.strategy.triplea.ui.export.ScreenshotExporter.runSave(GameData,HistoryNode,File)",
+                "method_start_line": 56,
+                "method_end_line": 70,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "runWithProgressBar",
+                "method_uid": "games.strategy.ui.SwingComponents.runWithProgressBar(Frame,String,Callable)",
+                "method_start_line": 437,
+                "method_end_line": 467,
+                "source_lines": [
+                    444
+                ],
+                "report_ids": [
+                    97
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 34.0
+            }
+        ],
+        "supporting_methods": [
+            "runSave"
+        ],
+        "related_methods": [
+            "runSave",
+            "runWithProgressBar"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/PointFileReaderWriter.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/PointFileReaderWriter.java",
+        "file_name": "PointFileReaderWriter.java",
+        "report_count": 3,
+        "report_ids": [
+            11,
+            16,
+            24
+        ],
+        "method_count": 3,
+        "primary_defect_method": "readOneToMany",
+        "primary_defect_method_uid": "games.strategy.util.PointFileReaderWriter.readOneToMany(InputStream)",
+        "primary_confidence": 0.5079365079365079,
+        "leaking_methods": [
+            {
+                "method_name": "readOneToMany",
+                "method_uid": "games.strategy.util.PointFileReaderWriter.readOneToMany(InputStream)",
+                "method_start_line": 160,
+                "method_end_line": 186,
+                "source_lines": [
+                    166
+                ],
+                "report_ids": [
+                    16
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "readOneToManyPolygons",
+                "method_uid": "games.strategy.util.PointFileReaderWriter.readOneToManyPolygons(InputStream)",
+                "method_start_line": 191,
+                "method_end_line": 215,
+                "source_lines": [
+                    194
+                ],
+                "report_ids": [
+                    11
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "write",
+                "method_uid": "games.strategy.util.PointFileReaderWriter.write(StringBuilder,OutputStream)",
+                "method_start_line": 126,
+                "method_end_line": 130,
+                "source_lines": [
+                    127
+                ],
+                "report_ids": [
+                    24
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.0
+            }
+        ],
+        "supporting_methods": [
+            "readOneToManyPolygons",
+            "write"
+        ],
+        "related_methods": [
+            "readOneToMany",
+            "readOneToManyPolygons",
+            "write"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/UrlStreams.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/UrlStreams.java",
+        "file_name": "UrlStreams.java",
+        "report_count": 2,
+        "report_ids": [
+            15,
+            20
+        ],
+        "method_count": 5,
+        "primary_defect_method": "openStream",
+        "primary_defect_method_uid": "games.strategy.util.UrlStreams.openStream(URI)",
+        "primary_confidence": 0.5859375,
+        "leaking_methods": [
+            {
+                "method_name": "getGameDataFromXML",
+                "method_uid": "games.strategy.engine.framework.headlessGameServer.AvailableGames.getGameDataFromXML(URI)",
+                "method_start_line": 187,
+                "method_end_line": 203,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "loadDecorations",
+                "method_uid": "games.strategy.triplea.ui.mapdata.MapData.loadDecorations()",
+                "method_start_line": 222,
+                "method_end_line": 239,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -21.25
+            },
+            {
+                "method_name": "newStream",
+                "method_uid": "games.strategy.util.UrlStreams.newStream(URL)",
+                "method_start_line": 69,
+                "method_end_line": 81,
+                "source_lines": [
+                    77
+                ],
+                "report_ids": [
+                    20
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            },
+            {
+                "method_name": "openStream",
+                "method_uid": "games.strategy.util.UrlStreams.openStream(URI)",
+                "method_start_line": 39,
+                "method_end_line": 45,
+                "source_lines": [
+                    41
+                ],
+                "report_ids": [
+                    15
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 1,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 32.0
+            },
+            {
+                "method_name": "openStream",
+                "method_uid": "games.strategy.util.UrlStreams.openStream(URL)",
+                "method_start_line": 26,
+                "method_end_line": 28,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "getGameDataFromXML",
+            "loadDecorations",
+            "newStream",
+            "openStream"
+        ],
+        "related_methods": [
+            "getGameDataFromXML",
+            "loadDecorations",
+            "newStream",
+            "openStream"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/Util.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/games/strategy/util/Util.java",
+        "file_name": "Util.java",
+        "report_count": 1,
+        "report_ids": [
+            45
+        ],
+        "method_count": 1,
+        "primary_defect_method": "sha512",
+        "primary_defect_method_uid": "games.strategy.util.Util.sha512(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "sha512",
+                "method_uid": "games.strategy.util.Util.sha512(String)",
+                "method_start_line": 141,
+                "method_end_line": 149,
+                "source_lines": [
+                    145
+                ],
+                "report_ids": [
+                    45
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "sha512"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/org/triplea/client/ui/javafx/MainMenuPane.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/org/triplea/client/ui/javafx/MainMenuPane.java",
+        "file_name": "MainMenuPane.java",
+        "report_count": 1,
+        "report_ids": [
+            89
+        ],
+        "method_count": 2,
+        "primary_defect_method": "showHelp",
+        "primary_defect_method_uid": "org.triplea.client.ui.javafx.MainMenuPane.showHelp()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "showHelp",
+                "method_uid": "org.triplea.client.ui.javafx.MainMenuPane.showHelp()",
+                "method_start_line": 81,
+                "method_end_line": 84,
+                "source_lines": [
+                    83
+                ],
+                "report_ids": [
+                    89
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 1,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 26.5
+            },
+            {
+                "method_name": "showRuleBook",
+                "method_uid": "org.triplea.client.ui.javafx.MainMenuPane.showRuleBook()",
+                "method_start_line": 86,
+                "method_end_line": 89,
+                "source_lines": [],
+                "report_ids": [],
+                "report_count": 0,
+                "helper_like": false,
+                "weak_evidence_count": 0,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 1,
+                "leak_root_hit_count": 0,
+                "forwarding_suspect": false,
+                "method_score": -23.75
+            }
+        ],
+        "supporting_methods": [
+            "showRuleBook"
+        ],
+        "related_methods": [
+            "showHelp",
+            "showRuleBook"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/org/triplea/client/ui/javafx/TripleA.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/org/triplea/client/ui/javafx/TripleA.java",
+        "file_name": "TripleA.java",
+        "report_count": 2,
+        "report_ids": [
+            82,
+            86
+        ],
+        "method_count": 1,
+        "primary_defect_method": "start",
+        "primary_defect_method_uid": "org.triplea.client.ui.javafx.TripleA.start(Stage)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "start",
+                "method_uid": "org.triplea.client.ui.javafx.TripleA.start(Stage)",
+                "method_start_line": 43,
+                "method_end_line": 57,
+                "source_lines": [
+                    48,
+                    54
+                ],
+                "report_ids": [
+                    82,
+                    86
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 0,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 2,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 55.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "start"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/AutoPlacementFinder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/AutoPlacementFinder.java",
+        "file_name": "AutoPlacementFinder.java",
+        "report_count": 2,
+        "report_ids": [
+            84,
+            88
+        ],
+        "method_count": 1,
+        "primary_defect_method": "calculate",
+        "primary_defect_method_uid": "tools.image.AutoPlacementFinder.calculate()",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "calculate",
+                "method_uid": "tools.image.AutoPlacementFinder.calculate()",
+                "method_start_line": 77,
+                "method_end_line": 247,
+                "source_lines": [
+                    101,
+                    237
+                ],
+                "report_ids": [
+                    84,
+                    88
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 2,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 63.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "calculate"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/CenterPicker.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/CenterPicker.java",
+        "file_name": "CenterPicker.java",
+        "report_count": 2,
+        "report_ids": [
+            83,
+            85
+        ],
+        "method_count": 2,
+        "primary_defect_method": "saveCenters",
+        "primary_defect_method_uid": "tools.image.CenterPicker.saveCenters()",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "loadCenters",
+                "method_uid": "tools.image.CenterPicker.loadCenters()",
+                "method_start_line": 253,
+                "method_end_line": 266,
+                "source_lines": [
+                    260
+                ],
+                "report_ids": [
+                    83
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "saveCenters",
+                "method_uid": "tools.image.CenterPicker.saveCenters()",
+                "method_start_line": 232,
+                "method_end_line": 247,
+                "source_lines": [
+                    239
+                ],
+                "report_ids": [
+                    85
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "loadCenters"
+        ],
+        "related_methods": [
+            "loadCenters",
+            "saveCenters"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/DecorationPlacer.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/DecorationPlacer.java",
+        "file_name": "DecorationPlacer.java",
+        "report_count": 2,
+        "report_ids": [
+            94,
+            96
+        ],
+        "method_count": 2,
+        "primary_defect_method": "saveImagePoints",
+        "primary_defect_method_uid": "tools.image.DecorationPlacer.saveImagePoints()",
+        "primary_confidence": 0.5317460317460317,
+        "leaking_methods": [
+            {
+                "method_name": "loadImagePointTextFile",
+                "method_uid": "tools.image.DecorationPlacer.loadImagePointTextFile()",
+                "method_start_line": 601,
+                "method_end_line": 616,
+                "source_lines": [
+                    608
+                ],
+                "report_ids": [
+                    96
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            },
+            {
+                "method_name": "saveImagePoints",
+                "method_uid": "tools.image.DecorationPlacer.saveImagePoints()",
+                "method_start_line": 449,
+                "method_end_line": 476,
+                "source_lines": [
+                    465
+                ],
+                "report_ids": [
+                    94
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "loadImagePointTextFile"
+        ],
+        "related_methods": [
+            "loadImagePointTextFile",
+            "saveImagePoints"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/PolygonGrabber.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/PolygonGrabber.java",
+        "file_name": "PolygonGrabber.java",
+        "report_count": 2,
+        "report_ids": [
+            87,
+            91
+        ],
+        "method_count": 2,
+        "primary_defect_method": "savePolygons",
+        "primary_defect_method_uid": "tools.image.PolygonGrabber.savePolygons()",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "loadPolygons",
+                "method_uid": "tools.image.PolygonGrabber.loadPolygons()",
+                "method_start_line": 392,
+                "method_end_line": 408,
+                "source_lines": [
+                    399
+                ],
+                "report_ids": [
+                    91
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "savePolygons",
+                "method_uid": "tools.image.PolygonGrabber.savePolygons()",
+                "method_start_line": 371,
+                "method_end_line": 386,
+                "source_lines": [
+                    378
+                ],
+                "report_ids": [
+                    87
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "loadPolygons"
+        ],
+        "related_methods": [
+            "loadPolygons",
+            "savePolygons"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/TileImageReconstructor.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/TileImageReconstructor.java",
+        "file_name": "TileImageReconstructor.java",
+        "report_count": 1,
+        "report_ids": [
+            78
+        ],
+        "method_count": 1,
+        "primary_defect_method": "main",
+        "primary_defect_method_uid": "tools.image.TileImageReconstructor.main(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "tools.image.TileImageReconstructor.main(String)",
+                "method_start_line": 46,
+                "method_end_line": 125,
+                "source_lines": [
+                    117
+                ],
+                "report_ids": [
+                    78
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 1,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/XmlUpdater.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/image/XmlUpdater.java",
+        "file_name": "XmlUpdater.java",
+        "report_count": 1,
+        "report_ids": [
+            77
+        ],
+        "method_count": 1,
+        "primary_defect_method": "main",
+        "primary_defect_method_uid": "tools.image.XmlUpdater.main(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "tools.image.XmlUpdater.main(String)",
+                "method_start_line": 25,
+                "method_end_line": 56,
+                "source_lines": [
+                    32
+                ],
+                "report_ids": [
+                    77
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 28.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ConnectionFinder.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ConnectionFinder.java",
+        "file_name": "ConnectionFinder.java",
+        "report_count": 2,
+        "report_ids": [
+            79,
+            80
+        ],
+        "method_count": 1,
+        "primary_defect_method": "main",
+        "primary_defect_method_uid": "tools.map.making.ConnectionFinder.main(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "tools.map.making.ConnectionFinder.main(String)",
+                "method_start_line": 57,
+                "method_end_line": 200,
+                "source_lines": [
+                    88,
+                    188
+                ],
+                "report_ids": [
+                    79,
+                    80
+                ],
+                "report_count": 2,
+                "helper_like": false,
+                "weak_evidence_count": 2,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 2,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 2,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 2,
+                "forwarding_suspect": false,
+                "method_score": 63.0
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/ImageShrinker.java",
+        "file_name": "ImageShrinker.java",
+        "report_count": 1,
+        "report_ids": [
+            81
+        ],
+        "method_count": 1,
+        "primary_defect_method": "main",
+        "primary_defect_method_uid": "tools.map.making.ImageShrinker.main(String)",
+        "primary_confidence": 1.0,
+        "leaking_methods": [
+            {
+                "method_name": "main",
+                "method_uid": "tools.map.making.ImageShrinker.main(String)",
+                "method_start_line": 27,
+                "method_end_line": 68,
+                "source_lines": [
+                    58
+                ],
+                "report_ids": [
+                    81
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 28.5
+            }
+        ],
+        "supporting_methods": [],
+        "related_methods": [
+            "main"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/MapPropertiesMaker.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/MapPropertiesMaker.java",
+        "file_name": "MapPropertiesMaker.java",
+        "report_count": 2,
+        "report_ids": [
+            93,
+            95
+        ],
+        "method_count": 2,
+        "primary_defect_method": "loadProperties",
+        "primary_defect_method_uid": "tools.map.making.MapPropertiesMaker.loadProperties()",
+        "primary_confidence": 0.5317460317460317,
+        "leaking_methods": [
+            {
+                "method_name": "loadProperties",
+                "method_uid": "tools.map.making.MapPropertiesMaker.loadProperties()",
+                "method_start_line": 311,
+                "method_end_line": 335,
+                "source_lines": [
+                    320
+                ],
+                "report_ids": [
+                    93
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "saveProperties",
+                "method_uid": "tools.map.making.MapPropertiesMaker.saveProperties()",
+                "method_start_line": 337,
+                "method_end_line": 357,
+                "source_lines": [
+                    344
+                ],
+                "report_ids": [
+                    95
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 0,
+                "weak_release_marker_count": 1,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 29.5
+            }
+        ],
+        "supporting_methods": [
+            "saveProperties"
+        ],
+        "related_methods": [
+            "loadProperties",
+            "saveProperties"
+        ]
+    },
+    "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/PlacementPicker.java": {
+        "file": "/home/jiayu/Desktop/real_world_repos/triplea/src/main/java/tools/map/making/PlacementPicker.java",
+        "file_name": "PlacementPicker.java",
+        "report_count": 2,
+        "report_ids": [
+            90,
+            92
+        ],
+        "method_count": 2,
+        "primary_defect_method": "savePlacements",
+        "primary_defect_method_uid": "tools.map.making.PlacementPicker.savePlacements()",
+        "primary_confidence": 0.5,
+        "leaking_methods": [
+            {
+                "method_name": "loadPlacements",
+                "method_uid": "tools.map.making.PlacementPicker.loadPlacements()",
+                "method_start_line": 506,
+                "method_end_line": 519,
+                "source_lines": [
+                    513
+                ],
+                "report_ids": [
+                    92
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            },
+            {
+                "method_name": "savePlacements",
+                "method_uid": "tools.map.making.PlacementPicker.savePlacements()",
+                "method_start_line": 485,
+                "method_end_line": 500,
+                "source_lines": [
+                    492
+                ],
+                "report_ids": [
+                    90
+                ],
+                "report_count": 1,
+                "helper_like": false,
+                "weak_evidence_count": 1,
+                "no_sink_marker_count": 1,
+                "weak_release_marker_count": 0,
+                "source_high_confidence_count": 1,
+                "source_medium_confidence_count": 0,
+                "source_low_confidence_count": 0,
+                "explanation_hit_count": 0,
+                "chain_support_count": 0,
+                "leak_root_hit_count": 1,
+                "forwarding_suspect": false,
+                "method_score": 31.5
+            }
+        ],
+        "supporting_methods": [
+            "loadPlacements"
+        ],
+        "related_methods": [
+            "loadPlacements",
+            "savePlacements"
+        ]
+    }
+}
